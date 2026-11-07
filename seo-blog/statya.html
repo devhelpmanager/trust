@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robots.txt: как проверить файл и не закрыть сайт от поиска — [Бренд]</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&amp;family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+/* Post */
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:#FFFFFF}
+a{color:#6D28D9}a:hover{color:#4C1D95}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #8B5CF6;outline-offset:2px}
+.dc-dd a:hover{background:#F8F5FF}
+.dc-navlink:hover{background:#312E5F !important;color:#FFFFFF !important}
+.dc-foot a:hover{color:#FFFFFF !important}
+.dc-toc a:hover{background:#F8F5FF}
+.dc-tag:hover{background:#EEE7FE !important;color:#4C1D95 !important}
+.dc-hero-tag:hover{background:rgba(255,255,255,0.14) !important;color:#FFFFFF !important}
+.dc-cta-light:hover{background:#F3EEFF !important;color:#0E0B14 !important;box-shadow:0 16px 34px rgba(20,8,60,0.40) !important}
+.dc-cta-light:hover .dc-cta-arrow{transform:translateX(3px)}
+@media (max-width: 520px){.dc-cta-light{flex:1 1 100% !important;justify-content:space-between;gap:10px !important;padding:6px 6px 6px 18px !important;font-size:15px !important}.dc-cta-arrow{width:40px !important;height:40px !important}}
+@media (max-width: 400px){.dc-summary{padding:24px 20px !important}.dc-cta-light{gap:8px !important;padding-left:16px !important}.dc-cta-arrow{width:36px !important;height:36px !important;border-radius:10px !important}}
+@media (max-width: 1179px){.dc-nav{display:none !important}.dc-burger{display:flex !important}.dc-email{display:none !important}.dc-tagline{display:none !important}}
+@media (min-width: 1180px){.dc-mobile-menu{display:none !important}}
+@media (max-width: 760px){.dc-contacts{display:none !important}}
+@media (max-width: 520px){.dc-callback{display:none !important}.dc-callback-sm{display:flex !important}}
+@media (max-width: 1179px){.dc-foot-list{gap:0 !important}.dc-foot-contacts{gap:4px !important}.dc-foot-contacts > a:last-child{margin-top:14px !important}.dc-foot-tap{display:flex !important;align-items:center;align-self:flex-start;min-height:44px}}
+@media (max-width: 1023px){.dc-toc-side{display:none !important}.dc-toc-bar{display:block !important}}
+@media (min-width: 1280px){.dc-hero-art{display:block !important}}
+@container (max-width: 660px){.dc-dir-table{min-width:0 !important}.dc-dir-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.dc-dir-table tbody,.dc-dir-table tr,.dc-dir-table th,.dc-dir-table td{display:block}.dc-dir-table tbody tr{padding:14px 16px;border-top:1px solid #EFE8FF}.dc-dir-table tbody tr:first-child{border-top:0}.dc-dir-table tbody th,.dc-dir-table tbody td{padding:0 !important;border-top:0 !important;white-space:normal !important;overflow-wrap:anywhere}.dc-dir-table tbody th{margin-bottom:6px;font-size:15px !important}.dc-dir-table tbody td + td{margin-top:10px}.dc-dir-table td[data-label]::before{content:attr(data-label);display:block;margin-bottom:2px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#6B6677}}
+@media (max-height: 500px) and (orientation: landscape){.dc-cover{aspect-ratio:21 / 9 !important}}
+@media (max-width: 1279px){.dc-hero-text{max-width:none !important}.dc-hero-text h1{text-wrap:wrap !important;font-size:clamp(28px, 4.4vw, 52px) !important}}
+@media (max-width: 480px){.dc-replies{padding-left:10px !important}.dc-c-ava{width:36px !important;height:36px !important}.dc-comment{gap:10px !important}}
+</style>
+</head>
+<body>
+<div id="dc-root"></div>
+<template id="dc-tpl-Post">
+<div style="background: #FFFFFF; color: #0E0B14; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+
+<dc-import name="Header" active="blog" hint-size="100%,133px"></dc-import>
+
+<main>
+
+<div style="padding: 28px clamp(20px, 4vw, 48px) 20px">
+<nav aria-label="Хлебные крошки" style="max-width: 1200px; margin: 0 auto"><ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; font-size: 14px; color: #5A5566"><li><a href="#home" style="display: inline-flex; align-items: center; min-height: 44px; color: #5A5566; text-decoration: none">Главная</a></li><li aria-hidden="true" style="color: #B9A8E8">/</li><li><a href="blog.html" style="display: inline-flex; align-items: center; min-height: 44px; color: #5A5566; text-decoration: none">Блог</a></li><li aria-hidden="true" style="color: #B9A8E8">/</li><li><a href="#tag-audit" style="display: inline-flex; align-items: center; min-height: 44px; color: #5A5566; text-decoration: none">Технический аудит</a></li><li aria-hidden="true" style="color: #B9A8E8">/</li><li aria-current="page" style="min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #0E0B14; font-weight: 500">Robots.txt: как проверить файл и не закрыть сайт от поиска</li></ol></nav>
+</div>
+
+<section aria-labelledby="post-title" style="padding: 0 clamp(20px, 4vw, 48px)">
+<div class="dc-hero" style="max-width: 1200px; margin: 0 auto; position: relative; isolation: isolate; overflow: hidden; border-radius: 28px; background: #1E1B4B">
+<span aria-hidden="true" style="position: absolute; z-index: -1; top: -170px; right: -150px; width: 460px; height: 460px; border-radius: 50%; background: #25215C"></span>
+<span aria-hidden="true" style="position: absolute; z-index: -1; bottom: -110px; left: -70px; width: 240px; height: 240px; border-radius: 50%; background: #23205A"></span>
+<span class="dc-hero-art" aria-hidden="true" style="display: none; position: absolute; z-index: -1; top: 36px; right: 34%; width: 14px; height: 14px; border-radius: 50%; border: 3px solid #4B4690"></span>
+<svg class="dc-hero-art" aria-hidden="true" width="280" height="240" viewBox="0 0 280 240" fill="none" style="display: none; position: absolute; z-index: -1; right: 40px; top: 50%; transform: translateY(-50%)">
+<circle cx="150" cy="122" r="104" fill="#29256A"></circle>
+<rect x="40" y="52" width="190" height="140" rx="14" fill="#FFFFFF"></rect>
+<rect x="58" y="70" width="72" height="8" rx="4" fill="#6D28D9"></rect>
+<rect x="58" y="84" width="44" height="6" rx="3" fill="#DCCFFD"></rect>
+<path d="M58 172h154" stroke="#EFE8FF" stroke-width="2" stroke-linecap="round"></path>
+<rect x="62" y="142" width="18" height="30" rx="4" fill="#DCCFFD"></rect>
+<rect x="90" y="126" width="18" height="46" rx="4" fill="#C4B5FD"></rect>
+<rect x="118" y="134" width="18" height="38" rx="4" fill="#DCCFFD"></rect>
+<rect x="146" y="110" width="18" height="62" rx="4" fill="#C4B5FD"></rect>
+<rect x="174" y="92" width="18" height="80" rx="4" fill="#6D28D9"></rect>
+<path d="M71 128l28-16 28 8 28-24 28-18" stroke="#8B5CF6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+<circle cx="71" cy="128" r="4" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="2.5"></circle>
+<circle cx="99" cy="112" r="4" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="2.5"></circle>
+<circle cx="127" cy="120" r="4" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="2.5"></circle>
+<circle cx="155" cy="96" r="4" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="2.5"></circle>
+<circle cx="183" cy="78" r="4" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="2.5"></circle>
+<circle cx="226" cy="54" r="26" fill="#8B5CF6"></circle>
+<path d="M216 64l20-20M223 44h13v13" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+<circle cx="30" cy="204" r="12" stroke="#4B4690" stroke-width="3"></circle>
+<path d="M18 62v16M10 70h16" stroke="#6D5FD0" stroke-width="3" stroke-linecap="round"></path>
+<circle cx="244" cy="200" r="2.4" fill="#4B4690"></circle><circle cx="256" cy="200" r="2.4" fill="#4B4690"></circle><circle cx="268" cy="200" r="2.4" fill="#4B4690"></circle>
+<circle cx="244" cy="212" r="2.4" fill="#4B4690"></circle><circle cx="256" cy="212" r="2.4" fill="#4B4690"></circle><circle cx="268" cy="212" r="2.4" fill="#4B4690"></circle>
+<circle cx="244" cy="224" r="2.4" fill="#4B4690"></circle><circle cx="256" cy="224" r="2.4" fill="#4B4690"></circle><circle cx="268" cy="224" r="2.4" fill="#4B4690"></circle>
+</svg>
+<div class="dc-hero-text" style="position: relative; box-sizing: border-box; width: 100%; max-width: 900px; padding: clamp(28px, 5vw, 56px); display: flex; flex-direction: column; gap: 22px; color: #FFFFFF">
+<h1 id="post-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.8vw, 48px); line-height: 1.14; letter-spacing: -0.015em; text-wrap: balance">Robots.txt: как проверить файл и не закрыть сайт от поиска</h1>
+<a href="avtor.html" style="align-self: flex-start; display: flex; align-items: center; gap: 14px; color: #FFFFFF; text-decoration: none">
+<span aria-hidden="true" style="flex: none; box-sizing: border-box; width: 52px; height: 52px; border-radius: 999px; border: 2px solid #8B5CF6; background: #6D28D9; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600">ИФ</span>
+<span style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 17px; font-weight: 600; text-decoration: underline; text-decoration-color: rgba(255, 255, 255, 0.4); text-underline-offset: 4px">[Имя Фамилия]</span><span style="font-size: 14px; line-height: 1.4; color: #D4D2F0">[Должность] · опыт в SEO — [N] лет</span></span>
+</a>
+<ul aria-label="О статье" style="list-style: none; margin: 0; padding: 18px 0 0; border-top: 1px solid rgba(255, 255, 255, 0.16); display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 15px; color: #E6E4F7">
+<li style="display: inline-flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><time datetime="2026-11-05">5 ноября 2026</time></li>
+<li style="display: inline-flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>9 мин чтения</li>
+<li style="display: inline-flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg>1 248 просмотров</li>
+<li style="display: inline-flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="{{heroHeart}}" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-9.2-9A5 5 0 0 1 12 6a5 5 0 0 1 9.2 5c-2.2 4.6-9.2 9-9.2 9z"></path></svg>{{likes}} лайков</li>
+<li style="display: inline-flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>12 комментариев</li>
+</ul>
+<ul aria-label="Ключевые слова" style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px">
+<li><a href="#tag-audit" class="dc-hero-tag" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #4B4690; background: rgba(255, 255, 255, 0.06); color: #E2D8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none">Технический аудит</a></li>
+<li><a href="#tag-robots" class="dc-hero-tag" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #4B4690; background: rgba(255, 255, 255, 0.06); color: #E2D8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-decoration: none">robots.txt</a></li>
+<li><a href="#tag-index" class="dc-hero-tag" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #4B4690; background: rgba(255, 255, 255, 0.06); color: #E2D8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none">Индексация</a></li>
+<li><a href="#tag-webmaster" class="dc-hero-tag" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #4B4690; background: rgba(255, 255, 255, 0.06); color: #E2D8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none">Яндекс Вебмастер</a></li>
+<li><a href="#tag-gsc" class="dc-hero-tag" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #4B4690; background: rgba(255, 255, 255, 0.06); color: #E2D8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none">Google Search Console</a></li>
+</ul>
+</div>
+</div>
+</section>
+
+<section style="padding: 64px clamp(20px, 4vw, 48px) 96px">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 64px">
+
+<aside class="dc-toc-side" style="flex: 0 0 280px; position: sticky; top: 24px; display: flex; flex-direction: column; gap: 12px">
+<nav class="dc-toc" aria-label="Содержание статьи" style="box-sizing: border-box; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 20px; padding: 20px 14px 14px; box-shadow: 0 10px 30px rgba(46, 16, 101, 0.06)">
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 0 10px 10px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Содержание</span>
+<span style="font-size: 13px; color: #5A5566">Прочитано {{progress}}%</span>
+</div>
+<div aria-hidden="true" style="height: 4px; margin: 0 10px 12px; border-radius: 2px; background: #EFE8FF; overflow: hidden"><div style="width: {{progressW}}; height: 100%; border-radius: 2px; background: #6D28D9; transition: width 0.2s"></div></div>
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px">
+<li><a href="#s-what" onClick="{{go}}" aria-current="{{t1Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t1Bg}}; color: {{t1Fg}}; font-size: 15px; font-weight: {{t1W}}; line-height: 1.35; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t1Num}}">01</span>Что такое robots.txt</a></li>
+<li><a href="#s-directives" onClick="{{go}}" aria-current="{{t2Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t2Bg}}; color: {{t2Fg}}; font-size: 15px; font-weight: {{t2W}}; line-height: 1.35; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t2Num}}">02</span>Основные директивы</a></li>
+<li><a href="#s-check" onClick="{{go}}" aria-current="{{t3Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t3Bg}}; color: {{t3Fg}}; font-size: 15px; font-weight: {{t3W}}; line-height: 1.35; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t3Num}}">03</span>Как проверить файл: 5 шагов</a></li>
+<li><a href="#s-rules" onClick="{{go}}" aria-current="{{t4Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t4Bg}}; color: {{t4Fg}}; font-size: 15px; font-weight: {{t4W}}; line-height: 1.35; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t4Num}}">04</span>Что закрывать, а что нет</a></li>
+<li><a href="#s-mistakes" onClick="{{go}}" aria-current="{{t5Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t5Bg}}; color: {{t5Fg}}; font-size: 15px; font-weight: {{t5W}}; line-height: 1.35; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t5Num}}">05</span>Частые ошибки</a></li>
+<li><a href="#s-video" onClick="{{go}}" aria-current="{{t6Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t6Bg}}; color: {{t6Fg}}; font-size: 15px; font-weight: {{t6W}}; line-height: 1.35; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t6Num}}">06</span>Видеоразбор</a></li>
+<li><a href="#s-summary" onClick="{{go}}" aria-current="{{t7Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t7Bg}}; color: {{t7Fg}}; font-size: 15px; font-weight: {{t7W}}; line-height: 1.35; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t7Num}}">07</span>Коротко: чек-лист</a></li>
+<li><a href="#s-comments" onClick="{{go}}" aria-current="{{t8Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t8Bg}}; color: {{t8Fg}}; font-size: 15px; font-weight: {{t8W}}; line-height: 1.35; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t8Num}}">08</span>Комментарии · 12</a></li>
+</ol>
+</nav>
+<div style="display: flex; gap: 10px">
+<button type="button" onClick="{{toggleLike}}" aria-pressed="{{liked}}" aria-label="Нравится: {{likes}}" style="flex: 1 1 0; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; border-radius: 12px; border: 1.5px solid #6D28D9; background: {{likeBg}}; color: {{likeFg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s"><svg width="18" height="18" viewBox="0 0 24 24" fill="{{heartFill}}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-9.2-9A5 5 0 0 1 12 6a5 5 0 0 1 9.2 5c-2.2 4.6-9.2 9-9.2 9z"></path></svg>{{likes}}</button>
+<a href="#s-comments" onClick="{{go}}" aria-label="Комментарии: 12" style="flex: 1 1 0; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; box-sizing: border-box; border-radius: 12px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #2B2733; font-size: 15px; font-weight: 600; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>12</a>
+</div>
+</aside>
+
+<div style="flex: 999 1 560px; min-width: 0; max-width: 760px">
+
+<div class="dc-toc-bar" style="display: none; position: sticky; top: 0; z-index: 20; margin: -24px calc(-1 * clamp(20px, 4vw, 48px)) 32px; background: #FFFFFF; border-bottom: 1px solid #E0D7F5; box-shadow: 0 8px 20px rgba(46, 16, 101, 0.06)">
+<button type="button" onClick="{{toggleToc}}" aria-expanded="{{tocOpen}}" style="width: 100%; display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 clamp(20px, 4vw, 48px); border: 0; background: transparent; font-family: inherit; color: #0E0B14; text-align: left; cursor: pointer">
+<span style="flex: none; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Содержание</span>
+<span style="flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 600">{{activeTitle}}</span>
+<span style="flex: none; font-size: 13px; color: #5A5566">{{progress}}%</span>
+<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; transform: {{tocRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg>
+</button>
+<div aria-hidden="true" style="height: 3px; background: #EFE8FF"><div style="width: {{progressW}}; height: 100%; background: #6D28D9; transition: width 0.2s"></div></div>
+<sc-if value="{{tocOpen}}" hint-placeholder-val="{{ false }}">
+<nav class="dc-toc" aria-label="Содержание статьи" style="position: relative; padding: 8px clamp(12px, 4vw, 40px) 14px; max-height: 60vh; overflow-y: auto">
+<ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px">
+<li><a href="#s-what" onClick="{{go}}" aria-current="{{t1Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t1Bg}}; color: {{t1Fg}}; font-size: 15px; font-weight: {{t1W}}; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t1Num}}">01</span>Что такое robots.txt</a></li>
+<li><a href="#s-directives" onClick="{{go}}" aria-current="{{t2Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t2Bg}}; color: {{t2Fg}}; font-size: 15px; font-weight: {{t2W}}; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t2Num}}">02</span>Основные директивы</a></li>
+<li><a href="#s-check" onClick="{{go}}" aria-current="{{t3Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t3Bg}}; color: {{t3Fg}}; font-size: 15px; font-weight: {{t3W}}; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t3Num}}">03</span>Как проверить файл: 5 шагов</a></li>
+<li><a href="#s-rules" onClick="{{go}}" aria-current="{{t4Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t4Bg}}; color: {{t4Fg}}; font-size: 15px; font-weight: {{t4W}}; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t4Num}}">04</span>Что закрывать, а что нет</a></li>
+<li><a href="#s-mistakes" onClick="{{go}}" aria-current="{{t5Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t5Bg}}; color: {{t5Fg}}; font-size: 15px; font-weight: {{t5W}}; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t5Num}}">05</span>Частые ошибки</a></li>
+<li><a href="#s-video" onClick="{{go}}" aria-current="{{t6Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t6Bg}}; color: {{t6Fg}}; font-size: 15px; font-weight: {{t6W}}; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t6Num}}">06</span>Видеоразбор</a></li>
+<li><a href="#s-summary" onClick="{{go}}" aria-current="{{t7Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t7Bg}}; color: {{t7Fg}}; font-size: 15px; font-weight: {{t7W}}; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t7Num}}">07</span>Коротко: чек-лист</a></li>
+<li><a href="#s-comments" onClick="{{go}}" aria-current="{{t8Cur}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; box-sizing: border-box; border-radius: 10px; background: {{t8Bg}}; color: {{t8Fg}}; font-size: 15px; font-weight: {{t8W}}; text-decoration: none"><span style="flex: none; width: 22px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; color: {{t8Num}}">08</span>Комментарии · 12</a></li>
+</ol>
+</nav>
+</sc-if>
+</div>
+
+<article id="post-article" aria-labelledby="post-title" style="font-size: 18px; line-height: 1.7; color: #2B2733; overflow-wrap: break-word">
+
+<figure style="margin: 0 0 32px"><img class="dc-cover" src="images/cover-robots-wide.jpg" alt="Иллюстрация: файл robots.txt с правилами для поисковых роботов" style="display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 20px; background: #1E1B4B"></figure>
+
+<p style="margin: 0 0 8px; font-size: 21px; line-height: 1.6; color: #0E0B14; text-wrap: pretty">Одна неверная строка в robots.txt может закрыть от поисковых роботов весь сайт. Разбираем, как устроен файл, как его проверить и какие ошибки встречаются чаще всего.</p>
+
+<h2 id="s-what" style="margin: 52px 0 18px; scroll-margin-top: 88px; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; letter-spacing: -0.01em; color: #0E0B14">Что такое robots.txt и где он лежит</h2>
+<p style="margin: 0 0 18px; text-wrap: pretty">Robots.txt — текстовый файл в корне сайта. В нём владелец сайта сообщает поисковым роботам, какие разделы можно сканировать, а какие нет. Прежде чем обходить страницы, робот Яндекса или Google запрашивает адрес <code style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.86em; padding: 2px 6px; border-radius: 6px; background: #F3EEFF; color: #5B21B6">site.ru/robots.txt</code> и читает правила.</p>
+<p style="margin: 0 0 18px; text-wrap: pretty">Файл должен лежать в корне домена и называться строчными буквами. Правила действуют только для того домена и протокола, где лежит файл: robots.txt с <code style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.86em; padding: 2px 6px; border-radius: 6px; background: #F3EEFF; color: #5B21B6">https://site.ru</code> не управляет поддоменом <code style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.86em; padding: 2px 6px; border-radius: 6px; background: #F3EEFF; color: #5B21B6">https://shop.site.ru</code> — для него нужен свой файл.</p>
+<p style="margin: 0 0 18px; text-wrap: pretty">Важно помнить: robots.txt управляет сканированием, а не индексацией. Если на закрытую страницу ведут ссылки, Google может показать её адрес в поиске без описания. Чтобы надёжно убрать страницу из выдачи, используют метатег <code style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.86em; padding: 2px 6px; border-radius: 6px; background: #F3EEFF; color: #5B21B6">noindex</code> и не закрывают её в robots.txt — иначе робот этот метатег не увидит.</p>
+
+<h2 id="s-directives" style="margin: 52px 0 18px; scroll-margin-top: 88px; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; letter-spacing: -0.01em; color: #0E0B14">Основные директивы</h2>
+<p style="margin: 0 0 20px; text-wrap: pretty">Файл состоит из групп правил. Каждая группа начинается со строки <code style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.86em; padding: 2px 6px; border-radius: 6px; background: #F3EEFF; color: #5B21B6">User-agent</code> — она указывает, к какому роботу относятся правила ниже.</p>
+<div style="margin: 0 0 22px; overflow-x: auto; border: 1px solid #E0D7F5; border-radius: 16px; container-type: inline-size">
+<table class="dc-dir-table" style="width: 100%; min-width: 640px; border-collapse: collapse; font-size: 16px; line-height: 1.5">
+<caption style="caption-side: bottom; padding: 12px 18px; text-align: left; font-size: 14px; color: #6B6677; border-top: 1px solid #EFE8FF">Директивы, которые понимают Яндекс и Google, кроме отмеченных отдельно</caption>
+<thead>
+<tr style="background: #F3EEFF">
+<th scope="col" style="padding: 14px 18px; text-align: left; font-size: 14px; font-weight: 600; color: #4C1D95">Директива</th>
+<th scope="col" style="padding: 14px 18px; text-align: left; font-size: 14px; font-weight: 600; color: #4C1D95">Что делает</th>
+<th scope="col" style="padding: 14px 18px; text-align: left; font-size: 14px; font-weight: 600; color: #4C1D95">Пример</th>
+</tr>
+</thead>
+<tbody>
+<tr><th scope="row" style="padding: 14px 18px; text-align: left; vertical-align: top; border-top: 1px solid #EFE8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 500; color: #5B21B6; white-space: nowrap">User-agent</th><td data-label="Что делает" style="padding: 14px 18px; vertical-align: top; border-top: 1px solid #EFE8FF">Указывает робота, для которого написаны правила. Звёздочка — все роботы</td><td data-label="Пример" style="padding: 14px 18px; vertical-align: top; border-top: 1px solid #EFE8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; white-space: nowrap">User-agent: *</td></tr>
+<tr><th scope="row" style="padding: 14px 18px; text-align: left; vertical-align: top; border-top: 1px solid #EFE8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 500; color: #5B21B6; white-space: nowrap">Disallow</th><td data-label="Что делает" style="padding: 14px 18px; vertical-align: top; border-top: 1px solid #EFE8FF">Запрещает сканировать адреса, которые начинаются с указанного пути</td><td data-label="Пример" style="padding: 14px 18px; vertical-align: top; border-top: 1px solid #EFE8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; white-space: nowrap">Disallow: /cart/</td></tr>
+<tr><th scope="row" style="padding: 14px 18px; text-align: left; vertical-align: top; border-top: 1px solid #EFE8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 500; color: #5B21B6; white-space: nowrap">Allow</th><td data-label="Что делает" style="padding: 14px 18px; vertical-align: top; border-top: 1px solid #EFE8FF">Разрешает сканировать путь внутри закрытого раздела</td><td data-label="Пример" style="padding: 14px 18px; vertical-align: top; border-top: 1px solid #EFE8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; white-space: nowrap">Allow: /catalog/sale/</td></tr>
+<tr><th scope="row" style="padding: 14px 18px; text-align: left; vertical-align: top; border-top: 1px solid #EFE8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 500; color: #5B21B6; white-space: nowrap">Sitemap</th><td data-label="Что делает" style="padding: 14px 18px; vertical-align: top; border-top: 1px solid #EFE8FF">Сообщает роботам адрес карты сайта</td><td data-label="Пример" style="padding: 14px 18px; vertical-align: top; border-top: 1px solid #EFE8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; white-space: nowrap">Sitemap: https://site.ru/sitemap.xml</td></tr>
+<tr><th scope="row" style="padding: 14px 18px; text-align: left; vertical-align: top; border-top: 1px solid #EFE8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 500; color: #5B21B6; white-space: nowrap">Clean-param</th><td data-label="Что делает" style="padding: 14px 18px; vertical-align: top; border-top: 1px solid #EFE8FF">Только для Яндекса: GET-параметры, которые не меняют содержимое страницы</td><td data-label="Пример" style="padding: 14px 18px; vertical-align: top; border-top: 1px solid #EFE8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; white-space: nowrap">Clean-param: utm_source&amp;utm_medium</td></tr>
+</tbody>
+</table>
+</div>
+<p style="margin: 0 0 18px; text-wrap: pretty">Спецсимвол <code style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.86em; padding: 2px 6px; border-radius: 6px; background: #F3EEFF; color: #5B21B6">*</code> заменяет любую последовательность символов, а <code style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.86em; padding: 2px 6px; border-radius: 6px; background: #F3EEFF; color: #5B21B6">$</code> обозначает конец адреса. Например, <code style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.86em; padding: 2px 6px; border-radius: 6px; background: #F3EEFF; color: #5B21B6">Disallow: /*sort=</code> закроет все адреса с параметром сортировки, а <code style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.86em; padding: 2px 6px; border-radius: 6px; background: #F3EEFF; color: #5B21B6">Disallow: /*.pdf$</code> — все PDF-файлы.</p>
+<p style="margin: 0 0 18px; text-wrap: pretty">Директивы Host и Crawl-delay Яндекс больше не учитывает: главное зеркало сайта задают 301-редиректом, а скорость обхода настраивают в Яндекс Вебмастере.</p>
+
+<h2 id="s-check" style="margin: 52px 0 22px; scroll-margin-top: 88px; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; letter-spacing: -0.01em; color: #0E0B14">Как проверить robots.txt: 5 шагов</h2>
+<ol style="list-style: none; margin: 0 0 32px; padding: 0; display: flex; flex-direction: column; gap: 20px">
+<li style="display: flex; gap: 16px"><span aria-hidden="true" style="flex: none; width: 34px; height: 34px; border-radius: 999px; background: #6D28D9; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 500">1</span><div><strong style="display: block; margin-bottom: 4px; font-size: 18px; font-weight: 600; color: #0E0B14">Откройте файл в браузере</strong>Наберите адрес site.ru/robots.txt. Файл должен открываться и отдавать код ответа 200. Если сервер отвечает ошибкой 5xx, роботы могут временно перестать сканировать сайт.</div></li>
+<li style="display: flex; gap: 16px"><span aria-hidden="true" style="flex: none; width: 34px; height: 34px; border-radius: 999px; background: #6D28D9; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 500">2</span><div><strong style="display: block; margin-bottom: 4px; font-size: 18px; font-weight: 600; color: #0E0B14">Найдите строку <span style="white-space: nowrap">«Disallow: /»</span></strong>Она закрывает от сканирования весь сайт. Такая строка часто остаётся после разработки, когда сайт переносят с тестового сервера.</div></li>
+<li style="display: flex; gap: 16px"><span aria-hidden="true" style="flex: none; width: 34px; height: 34px; border-radius: 999px; background: #6D28D9; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 500">3</span><div><strong style="display: block; margin-bottom: 4px; font-size: 18px; font-weight: 600; color: #0E0B14">Проверьте файл в Яндекс Вебмастере</strong>В разделе «Инструменты» откройте «Анализ robots.txt»: сервис покажет ошибки в синтаксисе и подскажет, разрешена ли конкретная страница.</div></li>
+<li style="display: flex; gap: 16px"><span aria-hidden="true" style="flex: none; width: 34px; height: 34px; border-radius: 999px; background: #6D28D9; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 500">4</span><div><strong style="display: block; margin-bottom: 4px; font-size: 18px; font-weight: 600; color: #0E0B14">Посмотрите отчёт в Google Search Console</strong>Отчёт robots.txt находится в настройках ресурса. В нём видно, какую версию файла получил Google и были ли ошибки при загрузке.</div></li>
+<li style="display: flex; gap: 16px"><span aria-hidden="true" style="flex: none; width: 34px; height: 34px; border-radius: 999px; background: #6D28D9; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 500">5</span><div><strong style="display: block; margin-bottom: 4px; font-size: 18px; font-weight: 600; color: #0E0B14">Проверьте важные страницы</strong>Вставьте в инструмент Яндекса адреса главной, разделов каталога и карточек товаров и убедитесь, что ни одна из них не закрыта случайно.</div></li>
+</ol>
+<figure style="margin: 0 0 18px">
+<img src="images/article-robots-error.jpg" alt="Пример файла robots.txt: строка «Disallow: /» подсвечена как ошибка, которая закрывает весь сайт" style="display: block; box-sizing: border-box; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 18px; border: 1px solid #E0D7F5">
+<figcaption style="margin-top: 12px; font-size: 14px; line-height: 1.5; color: #6B6677">Строка <span style="white-space: nowrap">«Disallow: /»</span> закрывает от сканирования весь сайт — одна из самых частых и дорогих ошибок.</figcaption>
+</figure>
+
+<h2 id="s-rules" style="margin: 52px 0 18px; scroll-margin-top: 88px; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; letter-spacing: -0.01em; color: #0E0B14">Что закрывать, а что оставлять открытым</h2>
+<p style="margin: 0 0 14px; text-wrap: pretty">Закрывать стоит страницы, которые не нужны в поиске и только тратят время робота:</p>
+<ul style="list-style: none; margin: 0 0 22px; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<li style="display: flex; gap: 14px"><span aria-hidden="true" style="flex: none; width: 8px; height: 8px; margin-top: 12px; border-radius: 999px; background: #6D28D9"></span>Корзина, оформление заказа и личный кабинет</li>
+<li style="display: flex; gap: 14px"><span aria-hidden="true" style="flex: none; width: 8px; height: 8px; margin-top: 12px; border-radius: 999px; background: #6D28D9"></span>Результаты поиска по сайту</li>
+<li style="display: flex; gap: 14px"><span aria-hidden="true" style="flex: none; width: 8px; height: 8px; margin-top: 12px; border-radius: 999px; background: #6D28D9"></span>Служебные разделы и страницы администрирования</li>
+<li style="display: flex; gap: 14px"><span aria-hidden="true" style="flex: none; width: 8px; height: 8px; margin-top: 12px; border-radius: 999px; background: #6D28D9"></span>Страницы сортировки и фильтров, которые дублируют каталог</li>
+<li style="display: flex; gap: 14px"><span aria-hidden="true" style="flex: none; width: 8px; height: 8px; margin-top: 12px; border-radius: 999px; background: #6D28D9"></span>Адреса с UTM-метками и другими служебными параметрами</li>
+</ul>
+<p style="margin: 0 0 18px; text-wrap: pretty">Открытыми оставляют файлы стилей и скриптов (CSS и JS) и изображения: без них поисковик не сможет правильно отрисовать страницу и понять, удобна ли она на телефоне.</p>
+
+<h2 id="s-mistakes" style="margin: 52px 0 18px; scroll-margin-top: 88px; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; letter-spacing: -0.01em; color: #0E0B14">Частые ошибки</h2>
+<p style="margin: 0 0 22px; text-wrap: pretty">Большинство проблем с robots.txt появляются не при создании файла, а при изменениях на сайте: переезде на новый домен, редизайне или обновлении CMS.</p>
+<figure style="margin: 0 0 24px; padding: clamp(24px, 4vw, 36px); border-radius: 22px; background: #F8F5FF; display: flex; flex-direction: column; gap: 18px">
+<svg width="36" height="36" viewBox="0 0 24 24" fill="#6D28D9" aria-hidden="true"><path d="M4 18v-5.5C4 8.4 6.2 6 9.8 5.2l.7 1.6C8.4 7.6 7.4 9 7.3 11H10v7H4zm10 0v-5.5c0-4.1 2.2-6.5 5.8-7.3l.7 1.6c-2.1.8-3.1 2.2-3.2 4.2H20v7h-6z"></path></svg>
+<blockquote style="margin: 0; font-size: clamp(19px, 2vw, 22px); line-height: 1.55; font-weight: 500; color: #0E0B14; text-wrap: pretty">Robots.txt стоит проверять после каждого релиза, а не раз в год. Одна строка, оставшаяся с тестового сервера, может закрыть от поиска весь сайт.</blockquote>
+<figcaption style="display: flex; align-items: center; gap: 12px">
+<span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 999px; background: #6D28D9; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600">ИФ</span>
+<span style="display: flex; flex-direction: column; gap: 2px; line-height: 1.3"><span style="font-size: 15px; font-weight: 600; color: #0E0B14">[Имя Фамилия]</span><span style="font-size: 14px; color: #5A5566">[Должность]</span></span>
+</figcaption>
+</figure>
+<p style="margin: 0 0 18px; text-wrap: pretty">Ещё одна частая ошибка — неправильный регистр. Пути в robots.txt чувствительны к регистру: правило <code style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.86em; padding: 2px 6px; border-radius: 6px; background: #F3EEFF; color: #5B21B6">Disallow: /Catalog/</code> не закроет раздел <code style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.86em; padding: 2px 6px; border-radius: 6px; background: #F3EEFF; color: #5B21B6">/catalog/</code>.</p>
+
+<h2 id="s-video" style="margin: 52px 0 18px; scroll-margin-top: 88px; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; letter-spacing: -0.01em; color: #0E0B14">Видеоразбор</h2>
+<p style="margin: 0 0 20px; text-wrap: pretty">В видео показываем, как проверить robots.txt в Яндекс Вебмастере и Google Search Console и как исправить найденные ошибки.</p>
+<figure style="margin: 0 0 18px">
+<div style="position: relative; overflow: hidden; border-radius: 18px; aspect-ratio: 16 / 9; background: #1E1B4B">
+<img src="images/video-poster.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+<button type="button" aria-label="Смотреть видео: как проверить robots.txt" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 84px; height: 84px; padding: 0; border: 0; border-radius: 999px; background: #FFFFFF; box-shadow: 0 12px 32px rgba(14, 11, 20, 0.35); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="30" height="30" viewBox="0 0 24 24" fill="#6D28D9" aria-hidden="true" style="margin-left: 4px"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"></path></svg></button>
+<span style="position: absolute; right: 14px; bottom: 14px; padding: 4px 10px; border-radius: 8px; background: rgba(14, 11, 20, 0.72); color: #FFFFFF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px">12:40</span>
+</div>
+<figcaption style="margin-top: 12px; font-size: 14px; line-height: 1.5; color: #6B6677">Видео: проверяем robots.txt в Яндекс Вебмастере и Google Search Console.</figcaption>
+</figure>
+
+<div class="dc-summary" style="margin-top: 52px; padding: clamp(24px, 4vw, 40px); border-radius: 24px; background: #5B21B6; color: #FFFFFF">
+<h2 id="s-summary" style="margin: 0 0 22px; scroll-margin-top: 88px; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; letter-spacing: -0.01em; color: #FFFFFF">Коротко: чек-лист</h2>
+<ul style="list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-direction: column; gap: 12px; font-size: 17px; line-height: 1.55; color: #F1ECFE">
+<li style="display: flex; gap: 12px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex: none; margin-top: 1px"><circle cx="12" cy="12" r="11" fill="#4A1A99"></circle><path d="M7.5 12.2l3 3 6-6.2" stroke="#E2D8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Файл открывается по адресу site.ru/robots.txt и отдаёт код 200</li>
+<li style="display: flex; gap: 12px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex: none; margin-top: 1px"><circle cx="12" cy="12" r="11" fill="#4A1A99"></circle><path d="M7.5 12.2l3 3 6-6.2" stroke="#E2D8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>В файле нет строки <span style="white-space: nowrap">«Disallow: /»</span> для всех роботов</span></li>
+<li style="display: flex; gap: 12px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex: none; margin-top: 1px"><circle cx="12" cy="12" r="11" fill="#4A1A99"></circle><path d="M7.5 12.2l3 3 6-6.2" stroke="#E2D8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>CSS, JS и изображения открыты для сканирования</li>
+<li style="display: flex; gap: 12px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex: none; margin-top: 1px"><circle cx="12" cy="12" r="11" fill="#4A1A99"></circle><path d="M7.5 12.2l3 3 6-6.2" stroke="#E2D8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>В файле указан адрес карты сайта</li>
+<li style="display: flex; gap: 12px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex: none; margin-top: 1px"><circle cx="12" cy="12" r="11" fill="#4A1A99"></circle><path d="M7.5 12.2l3 3 6-6.2" stroke="#E2D8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Важные страницы разрешены в инструменте Яндекс Вебмастера</li>
+</ul>
+<div style="margin-top: 4px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.18); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 28px">
+<p style="flex: 1 1 280px; margin: 0; font-size: 17px; line-height: 1.6; color: #E6DEFA; text-wrap: pretty">Проверим robots.txt вместе с остальными техническими параметрами сайта в рамках технического аудита.</p>
+<a href="#seo-audit" class="dc-cta-light" style="flex: 0 1 auto; max-width: 100%; display: inline-flex; align-items: center; gap: 16px; min-height: 60px; padding: 8px 8px 8px 22px; box-sizing: border-box; border-radius: 16px; background: #FFFFFF; color: #0E0B14; text-decoration: none; font-size: 16px; font-weight: 600; line-height: 1.3; box-shadow: 0 12px 28px rgba(20, 8, 60, 0.32); transition: background 0.2s, box-shadow 0.2s"><span style="flex: 1 1 auto; min-width: 0">Заказать технический аудит</span><span class="dc-cta-arrow" aria-hidden="true" style="flex: none; width: 44px; height: 44px; border-radius: 12px; background: #6D28D9; display: flex; align-items: center; justify-content: center; transition: transform 0.2s"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span></a>
+</div>
+</div>
+
+</article>
+
+<div style="margin-top: 40px; padding-top: 28px; border-top: 1px solid #E0D7F5; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 14px; font-weight: 600; color: #5A5566">Ключевые слова</span>
+<ul aria-label="Ключевые слова" style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px">
+<li><a href="#tag-audit" class="dc-tag" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; background: #F3EEFF; color: #5B21B6; font-size: 14px; font-weight: 500; text-decoration: none">Технический аудит</a></li>
+<li><a href="#tag-robots" class="dc-tag" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; background: #F3EEFF; color: #5B21B6; font-size: 14px; font-weight: 500; text-decoration: none">robots.txt</a></li>
+<li><a href="#tag-index" class="dc-tag" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; background: #F3EEFF; color: #5B21B6; font-size: 14px; font-weight: 500; text-decoration: none">Индексация</a></li>
+<li><a href="#tag-webmaster" class="dc-tag" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; background: #F3EEFF; color: #5B21B6; font-size: 14px; font-weight: 500; text-decoration: none">Яндекс Вебмастер</a></li>
+<li><a href="#tag-gsc" class="dc-tag" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; background: #F3EEFF; color: #5B21B6; font-size: 14px; font-weight: 500; text-decoration: none">Google Search Console</a></li>
+</ul>
+</div>
+<div style="display: flex; align-items: center; gap: 14px">
+<span style="font-size: 15px; color: #5A5566">Статья была полезной?</span>
+<button type="button" onClick="{{toggleLike}}" aria-pressed="{{liked}}" aria-label="Нравится: {{likes}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 18px; border-radius: 12px; border: 1.5px solid #6D28D9; background: {{likeBg}}; color: {{likeFg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s"><svg width="18" height="18" viewBox="0 0 24 24" fill="{{heartFill}}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-9.2-9A5 5 0 0 1 12 6a5 5 0 0 1 9.2 5c-2.2 4.6-9.2 9-9.2 9z"></path></svg>{{likes}}</button>
+</div>
+</div>
+
+<section aria-labelledby="s-comments" style="margin-top: 64px; overflow-wrap: anywhere; hyphens: auto">
+<h2 id="s-comments" style="margin: 0 0 24px; scroll-margin-top: 88px; display: flex; align-items: baseline; gap: 12px; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; letter-spacing: -0.01em; color: #0E0B14">Комментарии<span style="font-family: Onest, system-ui, sans-serif; font-size: 18px; font-weight: 500; color: #6B6677">12</span></h2>
+
+<sc-if value="{{notSent}}" hint-placeholder-val="{{ true }}">
+<form onSubmit="{{send}}" style="display: flex; flex-direction: column; gap: 14px; padding: clamp(18px, 3vw, 24px); border-radius: 20px; background: #F8F5FF; border: 1px solid #E0D7F5">
+<label for="comment-name" style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; color: #2B2733">Имя
+<input id="comment-name" type="text" autocomplete="name" placeholder="Как к вам обращаться" onInput="{{onName}}" style="min-height: 48px; padding: 0 14px; box-sizing: border-box; border-radius: 12px; border: 1px solid #D9CFF2; background: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 400; color: #0E0B14">
+</label>
+<label for="comment-text" style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 600; color: #2B2733">Комментарий
+<textarea id="comment-text" rows="4" placeholder="Поделитесь опытом или задайте вопрос автору" onInput="{{onText}}" style="min-height: 120px; padding: 12px 14px; box-sizing: border-box; border-radius: 12px; border: 1px solid #D9CFF2; background: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 400; line-height: 1.5; color: #0E0B14; resize: vertical"></textarea>
+</label>
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<span style="font-size: 13px; line-height: 1.5; color: #5A5566">Комментарий появится после проверки модератором.</span>
+<button type="submit" disabled="{{sendDisabled}}" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; border: 0; border-radius: 12px; background: #6D28D9; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; opacity: {{sendOpacity}}">Отправить</button>
+</div>
+</form>
+</sc-if>
+<sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding: 20px 24px; border-radius: 20px; background: #E2F3E9; color: #0E5A31">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex: none"><circle cx="12" cy="12" r="11" fill="#17914F"></circle><path d="M7.5 12.2l3 3 6-6.2" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span style="flex: 1 1 240px; font-size: 16px; line-height: 1.5; font-weight: 500">Спасибо! Комментарий появится после проверки модератором.</span>
+<button type="button" onClick="{{writeMore}}" style="min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #17914F; background: transparent; color: #0E5A31; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Написать ещё</button>
+</div>
+</sc-if>
+
+<ol style="list-style: none; margin: 32px 0 0; padding: 0; display: flex; flex-direction: column; gap: 28px">
+
+<li class="dc-comment" style="display: flex; gap: 14px">
+<span class="dc-c-ava" aria-hidden="true" style="flex: none; width: 44px; height: 44px; border-radius: 999px; background: #EEE7FE; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg></span>
+<div style="flex: 1 1 auto; min-width: 0">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px"><span style="font-size: 16px; font-weight: 600; color: #0E0B14">[Имя читателя]</span><time datetime="2026-11-06" style="font-size: 14px; color: #6B6677">6 ноября 2026</time></div>
+<p style="margin: 6px 0 4px; font-size: 17px; line-height: 1.6; color: #2B2733">Если закрыть страницы фильтров в robots.txt, они сразу пропадут из поиска?</p>
+<div style="display: flex; align-items: center; gap: 4px; margin-left: -10px">
+<button type="button" aria-label="Нравится: 5" style="display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; color: #5A5566; font-family: inherit; font-size: 14px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-9.2-9A5 5 0 0 1 12 6a5 5 0 0 1 9.2 5c-2.2 4.6-9.2 9-9.2 9z"></path></svg>5</button>
+<button type="button" onClick="{{openR1}}" aria-expanded="{{r1Open}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; color: #5B21B6; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Ответить</button>
+</div>
+<sc-if value="{{r1Open}}" hint-placeholder-val="{{ false }}">
+<form onSubmit="{{sendR}}" style="display: flex; flex-direction: column; gap: 10px; margin-top: 8px">
+<label for="reply-1" style="font-size: 14px; font-weight: 600; color: #2B2733">Ваш ответ</label>
+<textarea id="reply-1" rows="3" style="min-height: 96px; padding: 12px 14px; box-sizing: border-box; border-radius: 12px; border: 1px solid #D9CFF2; background: #FFFFFF; font-family: inherit; font-size: 16px; line-height: 1.5; color: #0E0B14; resize: vertical"></textarea>
+<div style="display: flex; gap: 10px"><button type="submit" style="min-height: 44px; padding: 0 18px; border: 0; border-radius: 10px; background: #6D28D9; color: #FFFFFF; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Отправить</button><button type="button" onClick="{{cancelR}}" style="min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #2B2733; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Отмена</button></div>
+</form>
+</sc-if>
+<sc-if value="{{r1Sent}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 4px 0 0; font-size: 14px; color: #17914F">Ответ отправлен на модерацию.</p></sc-if>
+
+<ol class="dc-replies" style="list-style: none; margin: 18px 0 0; padding: 0 0 0 18px; border-left: 2px solid #EFE8FF">
+<li class="dc-comment" style="display: flex; gap: 14px">
+<span class="dc-c-ava" aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 999px; background: #6D28D9; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600">ИФ</span>
+<div style="flex: 1 1 auto; min-width: 0">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px"><span style="font-size: 16px; font-weight: 600; color: #0E0B14">[Имя Фамилия]</span><span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; background: #6D28D9; color: #FFFFFF">Автор</span><time datetime="2026-11-06" style="font-size: 14px; color: #6B6677">6 ноября 2026</time></div>
+<p style="margin: 6px 0 4px; font-size: 17px; line-height: 1.6; color: #2B2733">Не сразу и не всегда. Robots.txt запрещает сканирование, но уже проиндексированные страницы могут остаться в поиске. Если страницы фильтров уже в индексе, сначала добавьте на них метатег noindex, дождитесь, пока они выпадут из поиска, и только потом закрывайте их в robots.txt.</p>
+<div style="display: flex; align-items: center; gap: 4px; margin-left: -10px">
+<button type="button" aria-label="Нравится: 9" style="display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; color: #5A5566; font-family: inherit; font-size: 14px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-9.2-9A5 5 0 0 1 12 6a5 5 0 0 1 9.2 5c-2.2 4.6-9.2 9-9.2 9z"></path></svg>9</button>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+
+<li class="dc-comment" style="display: flex; gap: 14px">
+<span class="dc-c-ava" aria-hidden="true" style="flex: none; width: 44px; height: 44px; border-radius: 999px; background: #EEE7FE; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg></span>
+<div style="flex: 1 1 auto; min-width: 0">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px"><span style="font-size: 16px; font-weight: 600; color: #0E0B14">[Имя читателя]</span><time datetime="2026-11-05" style="font-size: 14px; color: #6B6677">5 ноября 2026</time></div>
+<p style="margin: 6px 0 4px; font-size: 17px; line-height: 1.6; color: #2B2733">Нужно ли писать отдельные правила для Яндекса и Google или хватит одной группы User-agent: *?</p>
+<div style="display: flex; align-items: center; gap: 4px; margin-left: -10px">
+<button type="button" aria-label="Нравится: 3" style="display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; color: #5A5566; font-family: inherit; font-size: 14px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-9.2-9A5 5 0 0 1 12 6a5 5 0 0 1 9.2 5c-2.2 4.6-9.2 9-9.2 9z"></path></svg>3</button>
+<button type="button" onClick="{{openR2}}" aria-expanded="{{r2Open}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; color: #5B21B6; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Ответить</button>
+</div>
+<sc-if value="{{r2Open}}" hint-placeholder-val="{{ false }}">
+<form onSubmit="{{sendR}}" style="display: flex; flex-direction: column; gap: 10px; margin-top: 8px">
+<label for="reply-2" style="font-size: 14px; font-weight: 600; color: #2B2733">Ваш ответ</label>
+<textarea id="reply-2" rows="3" style="min-height: 96px; padding: 12px 14px; box-sizing: border-box; border-radius: 12px; border: 1px solid #D9CFF2; background: #FFFFFF; font-family: inherit; font-size: 16px; line-height: 1.5; color: #0E0B14; resize: vertical"></textarea>
+<div style="display: flex; gap: 10px"><button type="submit" style="min-height: 44px; padding: 0 18px; border: 0; border-radius: 10px; background: #6D28D9; color: #FFFFFF; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Отправить</button><button type="button" onClick="{{cancelR}}" style="min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #2B2733; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Отмена</button></div>
+</form>
+</sc-if>
+<sc-if value="{{r2Sent}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 4px 0 0; font-size: 14px; color: #17914F">Ответ отправлен на модерацию.</p></sc-if>
+</div>
+</li>
+
+<li class="dc-comment" style="display: flex; gap: 14px">
+<span class="dc-c-ava" aria-hidden="true" style="flex: none; width: 44px; height: 44px; border-radius: 999px; background: #EEE7FE; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg></span>
+<div style="flex: 1 1 auto; min-width: 0">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px"><span style="font-size: 16px; font-weight: 600; color: #0E0B14">[Имя читателя]</span><time datetime="2026-11-05" style="font-size: 14px; color: #6B6677">5 ноября 2026</time></div>
+<p style="margin: 6px 0 4px; font-size: 17px; line-height: 1.6; color: #2B2733">У нас магазин на поддомене shop.site.ru. Правильно понимаю, что ему нужен свой robots.txt?</p>
+<div style="display: flex; align-items: center; gap: 4px; margin-left: -10px">
+<button type="button" aria-label="Нравится: 2" style="display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; color: #5A5566; font-family: inherit; font-size: 14px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-9.2-9A5 5 0 0 1 12 6a5 5 0 0 1 9.2 5c-2.2 4.6-9.2 9-9.2 9z"></path></svg>2</button>
+<button type="button" onClick="{{openR3}}" aria-expanded="{{r3Open}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; color: #5B21B6; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Ответить</button>
+</div>
+<sc-if value="{{r3Open}}" hint-placeholder-val="{{ false }}">
+<form onSubmit="{{sendR}}" style="display: flex; flex-direction: column; gap: 10px; margin-top: 8px">
+<label for="reply-3" style="font-size: 14px; font-weight: 600; color: #2B2733">Ваш ответ</label>
+<textarea id="reply-3" rows="3" style="min-height: 96px; padding: 12px 14px; box-sizing: border-box; border-radius: 12px; border: 1px solid #D9CFF2; background: #FFFFFF; font-family: inherit; font-size: 16px; line-height: 1.5; color: #0E0B14; resize: vertical"></textarea>
+<div style="display: flex; gap: 10px"><button type="submit" style="min-height: 44px; padding: 0 18px; border: 0; border-radius: 10px; background: #6D28D9; color: #FFFFFF; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Отправить</button><button type="button" onClick="{{cancelR}}" style="min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #2B2733; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Отмена</button></div>
+</form>
+</sc-if>
+<sc-if value="{{r3Sent}}" hint-placeholder-val="{{ false }}"><p role="status" style="margin: 4px 0 0; font-size: 14px; color: #17914F">Ответ отправлен на модерацию.</p></sc-if>
+</div>
+</li>
+
+</ol>
+
+<button type="button" style="margin-top: 32px; width: 100%; min-height: 52px; border-radius: 12px; border: 1.5px solid #6D28D9; background: #FFFFFF; color: #5B21B6; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Показать ещё 8 комментариев</button>
+</section>
+
+</div>
+</div>
+</section>
+
+<dc-import name="RecentPosts" variant="related" background="lavender" hint-size="100%,760px"></dc-import>
+
+</main>
+
+<dc-import name="Footer" hint-size="100%,500px"></dc-import>
+
+</div>
+</template>
+<template id="dc-tpl-Header">
+<header style="position: relative; z-index: 30; background: #1E1B4B; color: #FFFFFF; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 6px 24px rgba(30, 27, 75, 0.18); padding: 0 clamp(16px, 4vw, 48px)">
+<div style="max-width: 1200px; margin: 0 auto">
+
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 76px">
+<a href="#home" aria-label="[Бренд] — на главную" style="display: flex; align-items: center; gap: 12px; color: #FFFFFF; text-decoration: none">
+<span aria-hidden="true" style="flex: none; width: 42px; height: 42px; border-radius: 12px; background: #6D28D9; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-5 4 4 7-8"></path><path d="M15 8h5v5"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 4px; line-height: 1.1">
+<span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-size: 19px; font-weight: 600">[Бренд]</span>
+<span class="dc-tagline" style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; color: #C4B5FD">SEO · сайты · реклама</span>
+</span>
+</a>
+
+<div class="dc-contacts" style="display: flex; align-items: center; gap: 28px">
+<a href="tel:+70000000000" style="display: flex; flex-direction: column; justify-content: center; gap: 2px; min-height: 44px; color: #FFFFFF; text-decoration: none; white-space: nowrap"><span style="font-size: 17px; font-weight: 700">+7 (000) 000-00-00</span><span style="font-size: 12px; color: #A5A2CC">[Часы работы]</span></a>
+<a href="mailto:hello@example.ru" class="dc-email" style="display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; font-weight: 500; color: #D4D2F0; text-decoration: none; white-space: nowrap">hello@example.ru</a>
+</div>
+
+<div style="display: flex; align-items: center; gap: 10px">
+<a href="#callback" class="dc-callback" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 12px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-size: 15px; font-weight: 600; white-space: nowrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg>Заказать обратный звонок</a>
+<a href="#callback" class="dc-callback-sm" aria-label="Заказать обратный звонок" style="display: none; width: 48px; height: 48px; border-radius: 12px; background: #6D28D9; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg></a>
+<button type="button" class="dc-burger" aria-label="Меню" aria-expanded="{{mobileOpen}}" onClick="{{toggleMobile}}" style="display: none; width: 48px; height: 48px; padding: 0; border-radius: 12px; border: 1px solid #423E73; background: transparent; align-items: center; justify-content: center; cursor: pointer"><sc-if value="{{mobileClosed}}" hint-placeholder-val="{{ true }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></sc-if><sc-if value="{{mobileOpen}}" hint-placeholder-val="{{ false }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></sc-if></button>
+</div>
+</div>
+
+<nav class="dc-nav" aria-label="Основное меню" style="border-top: 1px solid #312E5F">
+<ul style="list-style: none; margin: 0 -10px; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 4px; min-height: 56px">
+<li><a href="#design" class="dc-navlink" aria-current="{{designCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{designBg}}; font-size: 15px; font-weight: 500; color: {{designFg}}; text-decoration: none; white-space: nowrap">Дизайн</a></li>
+<li><a href="#sites" class="dc-navlink" aria-current="{{sitesCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{sitesBg}}; font-size: 15px; font-weight: 500; color: {{sitesFg}}; text-decoration: none; white-space: nowrap">Создание сайтов</a></li>
+<li><a href="#support" class="dc-navlink" aria-current="{{supportCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{supportBg}}; font-size: 15px; font-weight: 500; color: {{supportFg}}; text-decoration: none; white-space: nowrap">Сопровождение сайтов</a></li>
+
+<li style="position: relative" onMouseEnter="{{seoEnter}}" onMouseLeave="{{leave}}">
+<button type="button" aria-expanded="{{seoOpen}}" aria-haspopup="true" onClick="{{seoToggle}}" style="display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: {{seoBg}}; color: {{seoFg}}; font-family: inherit; font-size: 15px; font-weight: 500; white-space: nowrap; cursor: pointer">SEO<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{seoRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{seoOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 100%; left: -8px; padding-top: 8px; z-index: 50">
+<ul class="dc-dd" style="list-style: none; margin: 0; padding: 8px; width: 320px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 16px; box-shadow: 0 16px 40px rgba(46, 16, 101, 0.14); display: flex; flex-direction: column; gap: 2px">
+<li><a href="#seo-audit" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Аудит</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Технический и SEO-аудит сайта</span></a></li>
+<li><a href="#seo-hourly" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">SEO с почасовой оплатой</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Оплата за фактически отработанные часы</span></a></li>
+<li><a href="#seo-scope" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">За объём работы</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Фиксированный набор работ в месяц</span></a></li>
+</ul>
+</div>
+</sc-if>
+</li>
+
+<li style="position: relative" onMouseEnter="{{geoEnter}}" onMouseLeave="{{leave}}">
+<button type="button" aria-expanded="{{geoOpen}}" aria-haspopup="true" onClick="{{geoToggle}}" style="display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: {{geoBg}}; color: {{geoFg}}; font-family: inherit; font-size: 15px; font-weight: 500; white-space: nowrap; cursor: pointer">GEO<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{geoRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{geoOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 100%; left: -8px; padding-top: 8px; z-index: 50">
+<ul class="dc-dd" style="list-style: none; margin: 0; padding: 8px; width: 320px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 16px; box-shadow: 0 16px 40px rgba(46, 16, 101, 0.14); display: flex; flex-direction: column; gap: 2px">
+<li><a href="#geo-ai" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Продвижение в ИИ</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Чтобы нейросети рекомендовали ваш сайт</span></a></li>
+<li><a href="#geo-audit" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Аудит видимости</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Как ваш бренд видят ChatGPT, Алиса и другие</span></a></li>
+</ul>
+</div>
+</sc-if>
+</li>
+
+<li style="position: relative" onMouseEnter="{{ppcEnter}}" onMouseLeave="{{leave}}">
+<button type="button" aria-expanded="{{ppcOpen}}" aria-haspopup="true" onClick="{{ppcToggle}}" style="display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: {{ppcBg}}; color: {{ppcFg}}; font-family: inherit; font-size: 15px; font-weight: 500; white-space: nowrap; cursor: pointer">Контекстная реклама<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{ppcRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{ppcOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 100%; left: -8px; padding-top: 8px; z-index: 50">
+<ul class="dc-dd" style="list-style: none; margin: 0; padding: 8px; width: 320px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 16px; box-shadow: 0 16px 40px rgba(46, 16, 101, 0.14); display: flex; flex-direction: column; gap: 2px">
+<li><a href="#yandex-direct" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Яндекс Директ</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Настройка и ведение рекламных кампаний</span></a></li>
+<li><a href="#google-ads" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Google Реклама</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Поисковые и медийные кампании</span></a></li>
+</ul>
+</div>
+</sc-if>
+</li>
+
+<li><a href="#ai" class="dc-navlink" aria-current="{{aiCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{aiBg}}; font-size: 15px; font-weight: 500; color: {{aiFg}}; text-decoration: none; white-space: nowrap">AI</a></li>
+<li><a href="#portfolio" class="dc-navlink" aria-current="{{portfolioCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{portfolioBg}}; font-size: 15px; font-weight: 500; color: {{portfolioFg}}; text-decoration: none; white-space: nowrap">Портфолио</a></li>
+<li><a href="blog.html" class="dc-navlink" aria-current="{{blogCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{blogBg}}; font-size: 15px; font-weight: 500; color: {{blogFg}}; text-decoration: none; white-space: nowrap">Блог</a></li>
+
+<li style="position: relative" onMouseEnter="{{aboutEnter}}" onMouseLeave="{{leave}}">
+<button type="button" aria-expanded="{{aboutOpen}}" aria-haspopup="true" onClick="{{aboutToggle}}" style="display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: {{aboutBg}}; color: {{aboutFg}}; font-family: inherit; font-size: 15px; font-weight: 500; white-space: nowrap; cursor: pointer">О нас<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{aboutRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{aboutOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 100%; right: -8px; padding-top: 8px; z-index: 50">
+<ul class="dc-dd" style="list-style: none; margin: 0; padding: 8px; width: 240px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 16px; box-shadow: 0 16px 40px rgba(46, 16, 101, 0.14); display: flex; flex-direction: column; gap: 2px">
+<li><a href="#contacts" style="display: flex; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none; font-size: 15px; font-weight: 600">Контакты</a></li>
+<li><a href="#company" style="display: flex; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none; font-size: 15px; font-weight: 600">О компании</a></li>
+<li><a href="#team" style="display: flex; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none; font-size: 15px; font-weight: 600">Наша команда</a></li>
+<li><a href="#reviews" style="display: flex; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none; font-size: 15px; font-weight: 600">Отзывы о нас</a></li>
+<li><a href="#career" style="display: flex; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none; font-size: 15px; font-weight: 600">Карьера</a></li>
+<li><a href="#offer" style="display: flex; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none; font-size: 15px; font-weight: 600">Публичная оферта</a></li>
+</ul>
+</div>
+</sc-if>
+</li>
+</ul>
+</nav>
+
+<sc-if value="{{mobileOpen}}" hint-placeholder-val="{{ false }}">
+<nav class="dc-mobile-menu" aria-label="Меню" style="border-top: 1px solid #312E5F; padding: 8px 0 24px">
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+<li style="border-bottom: 1px solid #312E5F"><a href="#design" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Дизайн</a></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="#sites" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Создание сайтов</a></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="#support" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Сопровождение сайтов</a></li>
+<li style="border-bottom: 1px solid #312E5F"><button type="button" aria-expanded="{{mseo}}" onClick="{{mseoToggle}}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 17px; font-weight: 500; color: #FFFFFF; text-align: left; cursor: pointer">SEO<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{mseoRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{mseo}}" hint-placeholder-val="{{ false }}"><ul style="list-style: none; margin: 0 0 12px; padding: 0 0 0 16px; display: flex; flex-direction: column"><li><a href="#seo-audit" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Аудит</a></li><li><a href="#seo-hourly" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">SEO с почасовой оплатой</a></li><li><a href="#seo-scope" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">За объём работы</a></li></ul></sc-if></li>
+<li style="border-bottom: 1px solid #312E5F"><button type="button" aria-expanded="{{mgeo}}" onClick="{{mgeoToggle}}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 17px; font-weight: 500; color: #FFFFFF; text-align: left; cursor: pointer">GEO<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{mgeoRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{mgeo}}" hint-placeholder-val="{{ false }}"><ul style="list-style: none; margin: 0 0 12px; padding: 0 0 0 16px; display: flex; flex-direction: column"><li><a href="#geo-ai" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Продвижение в ИИ</a></li><li><a href="#geo-audit" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Аудит видимости</a></li></ul></sc-if></li>
+<li style="border-bottom: 1px solid #312E5F"><button type="button" aria-expanded="{{mppc}}" onClick="{{mppcToggle}}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 17px; font-weight: 500; color: #FFFFFF; text-align: left; cursor: pointer">Контекстная реклама<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{mppcRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{mppc}}" hint-placeholder-val="{{ false }}"><ul style="list-style: none; margin: 0 0 12px; padding: 0 0 0 16px; display: flex; flex-direction: column"><li><a href="#yandex-direct" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Яндекс Директ</a></li><li><a href="#google-ads" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Google Реклама</a></li></ul></sc-if></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="#ai" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">AI</a></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="#portfolio" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Портфолио</a></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="blog.html" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Блог</a></li>
+<li style="border-bottom: 1px solid #312E5F"><button type="button" aria-expanded="{{mabout}}" onClick="{{maboutToggle}}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 17px; font-weight: 500; color: #FFFFFF; text-align: left; cursor: pointer">О нас<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{maboutRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{mabout}}" hint-placeholder-val="{{ false }}"><ul style="list-style: none; margin: 0 0 12px; padding: 0 0 0 16px; display: flex; flex-direction: column"><li><a href="#contacts" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Контакты</a></li><li><a href="#company" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">О компании</a></li><li><a href="#team" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Наша команда</a></li><li><a href="#reviews" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Отзывы о нас</a></li><li><a href="#career" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Карьера</a></li><li><a href="#offer" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Публичная оферта</a></li></ul></sc-if></li>
+</ul>
+<div style="display: flex; flex-direction: column; gap: 4px; padding-top: 16px">
+<a href="tel:+70000000000" style="align-self: flex-start; display: flex; align-items: center; min-height: 44px; font-size: 18px; font-weight: 700; color: #FFFFFF; text-decoration: none">+7 (000) 000-00-00</a>
+<a href="mailto:hello@example.ru" style="align-self: flex-start; display: flex; align-items: center; min-height: 44px; margin-bottom: 8px; font-size: 15px; color: #D4D2F0; text-decoration: none">hello@example.ru</a>
+<a href="#callback" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 12px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-size: 16px; font-weight: 600">Заказать обратный звонок</a>
+</div>
+</nav>
+</sc-if>
+
+</div>
+</header>
+</template>
+<template id="dc-tpl-Footer">
+<footer class="dc-foot" style="background: #1E1B4B; color: #FFFFFF; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 72px clamp(20px, 4vw, 48px) 32px">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 40px 48px">
+<div style="flex: 2 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<a href="#home" style="align-self: flex-start; display: flex; align-items: center; gap: 12px; color: #FFFFFF; text-decoration: none">
+<span aria-hidden="true" style="flex: none; width: 42px; height: 42px; border-radius: 12px; background: #6D28D9; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-5 4 4 7-8"></path><path d="M15 8h5v5"></path></svg></span>
+<span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-size: 19px; font-weight: 600">[Бренд]</span>
+</a>
+<p style="margin: 0; max-width: 420px; font-size: 15px; line-height: 1.65; color: #C9C7EA; text-wrap: pretty">Продвигаем сайты в Яндексе, Google и нейросетях, создаём и сопровождаем сайты, настраиваем контекстную рекламу. Открыто пишем, что входит в каждую услугу.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">SEO</span>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">GEO</span>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">Сайты</span>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">Контекстная реклама</span>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">AI</span>
+</div>
+</div>
+
+<nav aria-label="Услуги" style="flex: 1 1 180px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #C4B5FD">Услуги</span>
+<ul class="dc-foot-list" style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; font-size: 15px">
+<li><a href="#design" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Дизайн</a></li>
+<li><a href="#sites" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Создание сайтов</a></li>
+<li><a href="#support" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Сопровождение сайтов</a></li>
+<li><a href="#seo" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">SEO-продвижение</a></li>
+<li><a href="#geo" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">GEO-продвижение</a></li>
+<li><a href="#ppc" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Контекстная реклама</a></li>
+<li><a href="#ai" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">AI-решения</a></li>
+</ul>
+</nav>
+
+<nav aria-label="Компания" style="flex: 1 1 180px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #C4B5FD">Компания</span>
+<ul class="dc-foot-list" style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; font-size: 15px">
+<li><a href="#company" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">О компании</a></li>
+<li><a href="#team" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Наша команда</a></li>
+<li><a href="#portfolio" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Портфолио</a></li>
+<li><a href="#reviews" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Отзывы о нас</a></li>
+<li><a href="blog.html" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Блог</a></li>
+<li><a href="#career" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Карьера</a></li>
+</ul>
+</nav>
+
+<div class="dc-foot-contacts" style="flex: 1 1 240px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #C4B5FD">Контакты</span>
+<a href="tel:+70000000000" class="dc-foot-tap" style="font-size: 20px; font-weight: 700; color: #FFFFFF; text-decoration: none">+7 (000) 000-00-00</a>
+<a href="mailto:hello@example.ru" class="dc-foot-tap" style="font-size: 15px; color: #D4D2F0; text-decoration: none">hello@example.ru</a>
+<span style="font-size: 15px; line-height: 1.5; color: #C9C7EA">[Адрес офиса]<br>[Часы работы]</span>
+<a href="#callback" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; margin-top: 4px; padding: 0 20px; border-radius: 12px; background: #FFFFFF; color: #5B21B6; text-decoration: none; font-size: 15px; font-weight: 600">Заказать обратный звонок</a>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; padding-top: 24px; border-top: 1px solid #312E5F; font-size: 13px; line-height: 1.6; color: #A5A2CC">
+<span>© [год] [Юридическое название] · ИНН [0000000000] · ОГРН [0000000000000] · [Юридический адрес]</span>
+<nav aria-label="Юридическая информация" style="display: flex; flex-wrap: wrap; gap: 0 24px">
+<a href="#offer" style="display: inline-flex; align-items: center; min-height: 44px; color: #D4D2F0; text-decoration: none">Публичная оферта</a>
+<a href="#privacy" style="display: inline-flex; align-items: center; min-height: 44px; color: #D4D2F0; text-decoration: none">Политика конфиденциальности</a>
+<a href="#cookie-policy" style="display: inline-flex; align-items: center; min-height: 44px; color: #D4D2F0; text-decoration: none">Политика cookie</a>
+</nav>
+</div>
+
+</div>
+</footer>
+</template>
+<template id="dc-tpl-RecentPosts">
+<section aria-labelledby="recent-posts-title" style="background: {{bg}}; color: #0E0B14; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 88px clamp(20px, 4vw, 48px); box-sizing: border-box">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px">
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px">
+<header style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: {{eyebrow}}">Блог</span>
+<h2 id="recent-posts-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.15; letter-spacing: -0.01em; color: {{head}}">{{heading}}</h2>
+</header>
+<a href="blog.html" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; box-sizing: border-box; border: 1.5px solid {{linkBorder}}; border-radius: 12px; background: {{linkBg}}; color: {{linkFg}}; text-decoration: none; font-size: 15px; font-weight: 600">Все статьи<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></a>
+</div>
+
+<ul aria-label="Статьи" style="list-style: none; margin: 0 calc(-1 * clamp(20px, 4vw, 48px)); padding: 4px clamp(20px, 4vw, 48px) 12px; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(min(300px, 82%), 1fr); gap: clamp(14px, 2vw, 24px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: clamp(20px, 4vw, 48px); overscroll-behavior-x: contain">
+<li style="min-width: 0; scroll-snap-align: start"><a href="statya.html" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 20px; overflow: hidden; color: #0E0B14; text-decoration: none"><img src="images/cover-02-index.jpg" alt="" style="display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: #F3EEFF"><div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 12px; padding: 20px 22px 22px"><span style="align-self: flex-start; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; background: #EEE7FE; color: #5B21B6">Индексация</span><h3 style="margin: 0; font-size: 18px; font-weight: 600; line-height: 1.35; text-wrap: pretty">Почему страницы выпадают из индекса и как это исправить</h3><div style="margin-top: auto; padding-top: 6px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; font-size: 14px; color: #5A5566"><time datetime="2026-11-02">2 ноября 2026</time><span style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Лайки"><path d="M12 20s-7-4.4-9.2-9A5 5 0 0 1 12 6a5 5 0 0 1 9.2 5c-2.2 4.6-9.2 9-9.2 9z"></path></svg>64</span><span style="display: inline-flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Комментарии"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>9</span></div></div></a></li>
+<li style="min-width: 0; scroll-snap-align: start"><a href="statya.html" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 20px; overflow: hidden; color: #0E0B14; text-decoration: none"><img src="images/cover-03-geo.jpg" alt="" style="display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: #F3EEFF"><div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 12px; padding: 20px 22px 22px"><span style="align-self: flex-start; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; background: #EEE7FE; color: #5B21B6">GEO-продвижение</span><h3 style="margin: 0; font-size: 18px; font-weight: 600; line-height: 1.35; text-wrap: pretty">GEO: как подготовить сайт к ответам нейросетей</h3><div style="margin-top: auto; padding-top: 6px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; font-size: 14px; color: #5A5566"><time datetime="2026-10-29">29 октября 2026</time><span style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Лайки"><path d="M12 20s-7-4.4-9.2-9A5 5 0 0 1 12 6a5 5 0 0 1 9.2 5c-2.2 4.6-9.2 9-9.2 9z"></path></svg>118</span><span style="display: inline-flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Комментарии"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>21</span></div></div></a></li>
+<li style="min-width: 0; scroll-snap-align: start"><a href="statya.html" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 20px; overflow: hidden; color: #0E0B14; text-decoration: none"><img src="images/cover-04-balance.jpg" alt="" style="display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; background: #F3EEFF"><div style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 12px; padding: 20px 22px 22px"><span style="align-self: flex-start; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; background: #EEE7FE; color: #5B21B6">Контекстная реклама</span><h3 style="margin: 0; font-size: 18px; font-weight: 600; line-height: 1.35; text-wrap: pretty">Яндекс Директ или SEO: что выбрать для нового сайта</h3><div style="margin-top: auto; padding-top: 6px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; font-size: 14px; color: #5A5566"><time datetime="2026-10-27">27 октября 2026</time><span style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Лайки"><path d="M12 20s-7-4.4-9.2-9A5 5 0 0 1 12 6a5 5 0 0 1 9.2 5c-2.2 4.6-9.2 9-9.2 9z"></path></svg>52</span><span style="display: inline-flex; align-items: center; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="Комментарии"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"></path></svg>14</span></div></div></a></li>
+</ul>
+
+</div>
+</section>
+</template>
+<script>
+/* Мини-движок страницы: подставляет значения {{...}}, показывает/скрывает <sc-if>,
+   навешивает обработчики событий, подключает блоки <dc-import> и перерисовывает
+   каждый блок отдельно при его setState(). */
+(function () {
+  class DCLogic {
+    constructor(props) { this.props = props || {}; this.state = undefined; this._render = function () {}; }
+    setState(patch, cb) {
+      var p = typeof patch === 'function' ? patch(this.state || {}, this.props) : patch;
+      this.state = Object.assign({}, this.state || {}, p);
+      this._render();
+      if (cb) cb();
+    }
+    forceUpdate() { this._render(); }
+  }
+  window.DCLogic = DCLogic;
+
+  var registry = {};
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  var WHOLE = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/;
+  var BOOL_PROPS = { checked: 'checked', disabled: 'disabled', selected: 'selected', required: 'required', readonly: 'readOnly', open: 'open', hidden: 'hidden' };
+
+  function lookup(vals, path) {
+    path = path.trim();
+    if (path === 'true') return true;
+    if (path === 'false') return false;
+    if (path === 'null') return null;
+    if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+    return path.split('.').reduce(function (o, k) { return o == null ? undefined : o[k]; }, vals);
+  }
+  function interp(str, vals) {
+    return str.replace(HOLE, function (_, p) { var v = lookup(vals, p); return v == null ? '' : String(v); });
+  }
+
+  function compile(root, ctx) {
+    var ups = [];
+    walk(root);
+    return ups;
+
+    function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 1 && n.localName === 'sc-if') { handleIf(n); return; }
+        if (n.nodeType === 1 && n.localName === 'dc-import') { handleImport(n); return; }
+        if (n.nodeType === 1) { handleAttrs(n); walk(n); return; }
+        if (n.nodeType === 3 && n.nodeValue.indexOf('{{') !== -1) {
+          var tpl = n.nodeValue;
+          ups.push(function (v) { var t = interp(tpl, v); if (n.nodeValue !== t) n.nodeValue = t; });
+        }
+      });
+    }
+
+    function handleImport(el) {
+      var name = el.getAttribute('name');
+      var extra = {};
+      Array.prototype.slice.call(el.attributes).forEach(function (a) {
+        if (a.name === 'name' || a.name.indexOf('hint-') === 0) return;
+        extra[a.name.replace(/-([a-z])/g, function (_, c) { return c.toUpperCase(); })] = a.value;
+      });
+      var host = document.createElement('div');
+      host.setAttribute('data-block', name);
+      el.parentNode.replaceChild(host, el);
+      mountInto(name, host, extra);
+    }
+
+    function handleIf(el) {
+      var expr = el.getAttribute('value') || '';
+      var m = expr.match(WHOLE);
+      var anchor = document.createComment('sc-if');
+      el.parentNode.replaceChild(anchor, el);
+      var frag = document.createDocumentFragment();
+      while (el.firstChild) frag.appendChild(el.firstChild);
+      var mounted = null;
+      ups.push(function (v) {
+        var cond = !!(m ? lookup(v, m[1]) : expr);
+        if (cond && !mounted) {
+          var clone = frag.cloneNode(true);
+          var inner = compile(clone, ctx);
+          var nodes = Array.prototype.slice.call(clone.childNodes);
+          anchor.parentNode.insertBefore(clone, anchor.nextSibling);
+          mounted = { nodes: nodes, inner: inner };
+        } else if (!cond && mounted) {
+          mounted.nodes.forEach(function (x) { if (x.parentNode) x.parentNode.removeChild(x); });
+          mounted = null;
+        }
+        if (mounted) mounted.inner.forEach(function (f) { f(v); });
+      });
+    }
+
+    function handleAttrs(el) {
+      Array.prototype.slice.call(el.attributes).forEach(function (a) {
+        var name = a.name, val = a.value;
+        if (name.indexOf('hint-') === 0) { el.removeAttribute(name); return; }
+        if (val.indexOf('{{') === -1) return;
+        var m = val.match(WHOLE);
+        el.removeAttribute(name);
+        if (name.indexOf('on') === 0 && m) {
+          var key = m[1];
+          el.addEventListener(name.slice(2), function (e) {
+            var f = lookup(ctx.vals, key);
+            if (typeof f === 'function') f(e);
+          });
+          return;
+        }
+        if (BOOL_PROPS[name] && m) {
+          var prop = BOOL_PROPS[name], k = m[1];
+          ups.push(function (v) { var b = !!lookup(v, k); if (el[prop] !== b) el[prop] = b; });
+          return;
+        }
+        ups.push(function (v) {
+          var out;
+          if (m) { var r = lookup(v, m[1]); out = r == null ? null : String(r); }
+          else out = interp(val, v);
+          if (out === null) el.removeAttribute(name);
+          else if (el.getAttribute(name) !== out) el.setAttribute(name, out);
+        });
+      });
+    }
+  }
+
+  function mountInto(name, host, extra) {
+    var entry = registry[name];
+    if (!entry) throw new Error('Блок не найден: ' + name);
+    var inst = new entry.Component(Object.assign({}, entry.props, extra || {}));
+    var ctx = { vals: {} };
+    var frag = document.getElementById('dc-tpl-' + name).content.cloneNode(true);
+    var ups = compile(frag, ctx);
+    inst._render = function () {
+      ctx.vals = inst.renderVals() || {};
+      ups.forEach(function (f) { f(ctx.vals); });
+    };
+    inst._render();
+    host.appendChild(frag);
+    if (inst.componentDidMount) inst.componentDidMount();
+    window.addEventListener('pagehide', function () { if (inst.componentWillUnmount) inst.componentWillUnmount(); });
+    return inst;
+  }
+
+  window.DC = {
+    register: function (name, Component, props) { registry[name] = { Component: Component, props: props || {} }; },
+    mount: function (name, host) { return mountInto(name, host); }
+  };
+})();
+
+</script>
+<script>
+DC.register("Post", (function () {
+class Component extends DCLogic {
+  sections() {
+    return [
+      ['s-what', 'Что такое robots.txt'],
+      ['s-directives', 'Основные директивы'],
+      ['s-check', 'Как проверить файл: 5 шагов'],
+      ['s-rules', 'Что закрывать, а что нет'],
+      ['s-mistakes', 'Частые ошибки'],
+      ['s-video', 'Видеоразбор'],
+      ['s-summary', 'Коротко: чек-лист'],
+      ['s-comments', 'Комментарии']
+    ];
+  }
+
+  componentDidMount() {
+    this._onScroll = () => {
+      if (this._raf) return;
+      this._raf = window.requestAnimationFrame(() => {
+        this._raf = 0;
+        this.spy();
+      });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    window.addEventListener('resize', this._onScroll);
+    this.spy();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll);
+    window.removeEventListener('resize', this._onScroll);
+    if (this._raf) window.cancelAnimationFrame(this._raf);
+  }
+
+  spy() {
+    const line = Math.min(160, window.innerHeight * 0.3);
+    const secs = this.sections();
+    let active = secs[0][0];
+    secs.forEach((s) => {
+      const el = document.getElementById(s[0]);
+      if (el && el.getBoundingClientRect().top <= line) active = s[0];
+    });
+    let progress = 0;
+    const art = document.getElementById('post-article');
+    if (art) {
+      const r = art.getBoundingClientRect();
+      const total = r.height - line;
+      progress = total > 0 ? Math.round(Math.min(1, Math.max(0, (line - r.top) / total)) * 100) : 0;
+    }
+    const st = this.state || {};
+    if (st.active !== active || st.progress !== progress) this.setState({ active: active, progress: progress });
+  }
+
+  renderVals() {
+    const st = this.state || {};
+    const secs = this.sections();
+    const active = st.active || secs[0][0];
+    const progress = st.progress || 0;
+    const liked = !!st.liked;
+    const text = st.text || '';
+    const current = secs.find((s) => s[0] === active) || secs[0];
+    const v = {
+      progress: progress,
+      progressW: progress + '%',
+      activeTitle: current[1],
+      tocOpen: !!st.tocOpen,
+      tocRot: st.tocOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+      toggleToc: () => {
+        const open = !(this.state && this.state.tocOpen);
+        this.setState({ tocOpen: open }, () => {
+          if (!open) return;
+          window.setTimeout(() => {
+            const nav = document.querySelector('.dc-toc-bar nav');
+            const cur = nav && nav.querySelector('a[aria-current]');
+            if (nav && cur) nav.scrollTop = Math.max(0, cur.offsetTop - (nav.clientHeight - cur.offsetHeight) / 2);
+          }, 0);
+        });
+      },
+      go: (e) => {
+        const href = e && e.currentTarget ? e.currentTarget.getAttribute('href') : null;
+        this.setState({ tocOpen: false, active: href ? href.slice(1) : active });
+      },
+      liked: liked,
+      likes: 86 + (liked ? 1 : 0),
+      likeBg: liked ? '#6D28D9' : '#FFFFFF',
+      likeFg: liked ? '#FFFFFF' : '#5B21B6',
+      heartFill: liked ? '#FFFFFF' : 'none',
+      heroHeart: liked ? '#C4B5FD' : 'none',
+      toggleLike: () => this.setState({ liked: !(this.state && this.state.liked) }),
+      onName: (e) => this.setState({ name: e.target.value }),
+      onText: (e) => this.setState({ text: e.target.value }),
+      sendDisabled: !text.trim(),
+      sendOpacity: text.trim() ? '1' : '0.5',
+      send: (e) => {
+        if (e) e.preventDefault();
+        const t = (this.state && this.state.text) || '';
+        if (!t.trim()) return;
+        this.setState({ sent: true, text: '', name: '' });
+      },
+      sent: !!st.sent,
+      notSent: !st.sent,
+      writeMore: () => this.setState({ sent: false }),
+      sendR: (e) => {
+        if (e) e.preventDefault();
+        const open = (this.state && this.state.rOpen) || null;
+        this.setState({ rOpen: null, rSent: open });
+      },
+      cancelR: () => this.setState({ rOpen: null })
+    };
+    secs.forEach((s, i) => {
+      const n = i + 1;
+      const on = s[0] === active;
+      v['t' + n + 'Bg'] = on ? '#F3EEFF' : 'transparent';
+      v['t' + n + 'Fg'] = on ? '#4C1D95' : '#5A5566';
+      v['t' + n + 'W'] = on ? '600' : '500';
+      v['t' + n + 'Num'] = on ? '#6D28D9' : '#6B6677';
+      v['t' + n + 'Cur'] = on ? 'location' : undefined;
+    });
+    [1, 2, 3].forEach((i) => {
+      v['r' + i + 'Open'] = st.rOpen === i;
+      v['r' + i + 'Sent'] = st.rSent === i && st.rOpen !== i;
+      v['openR' + i] = () => {
+        const cur = (this.state && this.state.rOpen) || null;
+        this.setState({ rOpen: cur === i ? null : i, rSent: null });
+      };
+    });
+    return v;
+  }
+}
+return Component;
+})(), {});
+
+DC.register("Header", (function () {
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const open = st.open || null;
+    const sub = st.sub || null;
+    const mobile = !!st.mobile;
+    const active = this.props.active ?? 'none';
+    const v = {
+      mobileOpen: mobile,
+      mobileClosed: !mobile,
+      toggleMobile: () => this.setState({ mobile: !mobile }),
+      leave: () => this.setState({ open: null })
+    };
+    ['design', 'sites', 'support', 'ai', 'portfolio', 'blog'].forEach((k) => {
+      const on = active === k;
+      v[k + 'Bg'] = on ? '#312E5F' : 'transparent';
+      v[k + 'Fg'] = on ? '#FFFFFF' : '#E6E4F7';
+      v[k + 'Cur'] = on ? 'page' : undefined;
+    });
+    ['seo', 'geo', 'ppc', 'about'].forEach((k) => {
+      const on = open === k;
+      v[k + 'Open'] = on;
+      v[k + 'Bg'] = on ? '#312E5F' : 'transparent';
+      v[k + 'Fg'] = on ? '#FFFFFF' : '#E6E4F7';
+      v[k + 'Rot'] = on ? 'rotate(180deg)' : 'rotate(0deg)';
+      v[k + 'Enter'] = () => {
+        if (window.matchMedia && !window.matchMedia('(hover: hover)').matches) return;
+        this._hoverAt = Date.now();
+        this.setState({ open: k });
+      };
+      v[k + 'Toggle'] = () => {
+        const cur = (this.state && this.state.open) || null;
+        if (cur === k && Date.now() - (this._hoverAt || 0) < 600) return;
+        this.setState({ open: cur === k ? null : k });
+      };
+      const ms = sub === k;
+      v['m' + k] = ms;
+      v['m' + k + 'Rot'] = ms ? 'rotate(180deg)' : 'rotate(0deg)';
+      v['m' + k + 'Toggle'] = () => {
+        const cur = (this.state && this.state.sub) || null;
+        this.setState({ sub: cur === k ? null : k });
+      };
+    });
+    return v;
+  }
+}
+return Component;
+})(), {"active":"none"});
+
+DC.register("Footer", (function () {
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+return Component;
+})(), {});
+
+DC.register("RecentPosts", (function () {
+class Component extends DCLogic {
+  renderVals() {
+    const variant = this.props.variant ?? 'recent';
+    const background = this.props.background ?? 'lavender';
+    const purple = background === 'purple';
+    return {
+      heading: variant === 'related' ? 'Читайте также' : 'Свежие статьи из блога',
+      bg: purple ? '#5B21B6' : (background === 'white' ? '#FFFFFF' : '#F8F5FF'),
+      eyebrow: purple ? '#E2D8FF' : '#6D28D9',
+      head: purple ? '#FFFFFF' : '#0E0B14',
+      linkBg: purple ? 'transparent' : '#FFFFFF',
+      linkBorder: purple ? '#E2D8FF' : '#6D28D9',
+      linkFg: purple ? '#FFFFFF' : '#5B21B6'
+    };
+  }
+}
+return Component;
+})(), {"variant":"recent","background":"lavender"});
+</script>
+<script>
+DC.mount("Post", document.getElementById('dc-root'));
+</script>
+</body>
+</html>
