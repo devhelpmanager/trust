@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блок «Карусель кейсов»</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&amp;family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#5B21B6}
+a{color:#FFFFFF}a:hover{color:#E2D8FF}
+.dc-track{--slide-w:60%;--slide-gap:24px}
+@media (max-width: 640px){.dc-track{--slide-w:86%;--slide-gap:16px}}
+</style>
+</head>
+<body>
+<div id="dc-root"></div>
+<template id="dc-template">
+<section aria-roledescription="карусель" aria-label="Кейсы" style="background: #5B21B6; color: #FFFFFF; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 96px clamp(20px, 4vw, 48px); box-sizing: border-box; overflow: hidden">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px">
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px">
+<header style="flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #E2D8FF">Кейсы</span>
+<h2 style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance">Результаты наших клиентов</h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: #E6DEFA; text-wrap: pretty">Скриншоты из систем аналитики: позиции, трафик и заявки до и после работы.</p>
+</header>
+<div style="display: flex; align-items: center; gap: 12px">
+<span aria-live="polite" style="min-width: 72px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 14px; font-weight: 500; letter-spacing: 0.06em; color: #E2D8FF">{{counter}}</span>
+<button type="button" aria-label="Предыдущий кейс" onClick="{{prev}}" style="width: 52px; height: 52px; border-radius: 999px; border: 1.5px solid #8F6BD8; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6"></path></svg></button>
+<button type="button" aria-label="Следующий кейс" onClick="{{next}}" style="width: 52px; height: 52px; border-radius: 999px; border: 0; background: #FFFFFF; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5B21B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></button>
+</div>
+</div>
+
+<div class="dc-track" style="display: flex; gap: var(--slide-gap); transform: translateX(calc({{offset}})); transition: transform 0.5s ease">
+
+<div role="group" aria-roledescription="слайд" aria-label="1 из 4" style="flex: 0 0 var(--slide-w); min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<img src="images/case-traffic.jpg" alt="График визитов из поисковых систем: рост трафика из Яндекса и Google в течение года" style="display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 20px; background: #4A1A99; opacity: {{op0}}; transition: opacity 0.4s">
+<div style="display: flex; flex-direction: column; gap: 8px; opacity: {{cop0}}; transform: translateY({{cty0}}); transition: opacity 0.4s, transform 0.4s">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #E2D8FF">Интернет-магазин мебели</span>
+<h3 style="margin: 0; font-size: 22px; font-weight: 600; line-height: 1.3">Трафик из поиска вырос в [N] раза за год</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #E6DEFA; text-wrap: pretty">Исправили технические ошибки, расширили семантику и переработали карточки товаров.</p>
+</div>
+</div>
+
+<div role="group" aria-roledescription="слайд" aria-label="2 из 4" style="flex: 0 0 var(--slide-w); min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<img src="images/case-positions.jpg" alt="Таблица позиций по ключевым запросам: было и стало после продвижения" style="display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 20px; background: #4A1A99; opacity: {{op1}}; transition: opacity 0.4s">
+<div style="display: flex; flex-direction: column; gap: 8px; opacity: {{cop1}}; transform: translateY({{cty1}}); transition: opacity 0.4s, transform 0.4s">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #E2D8FF">Ремонт квартир</span>
+<h3 style="margin: 0; font-size: 22px; font-weight: 600; line-height: 1.3">Ключевые запросы — в топ-10</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #E6DEFA; text-wrap: pretty">Выстроили структуру сайта под коммерческие запросы и оптимизировали страницы услуг.</p>
+</div>
+</div>
+
+<div role="group" aria-roledescription="слайд" aria-label="3 из 4" style="flex: 0 0 var(--slide-w); min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<img src="images/case-leads.jpg" alt="Столбчатая диаграмма заявок с сайта по месяцам с ростом во второй половине года" style="display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 20px; background: #4A1A99; opacity: {{op2}}; transition: opacity 0.4s">
+<div style="display: flex; flex-direction: column; gap: 8px; opacity: {{cop2}}; transform: translateY({{cty2}}); transition: opacity 0.4s, transform 0.4s">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #E2D8FF">Стоматологическая клиника</span>
+<h3 style="margin: 0; font-size: 22px; font-weight: 600; line-height: 1.3">Заявок с сайта стало в [N] раз больше</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #E6DEFA; text-wrap: pretty">Сделали отдельные страницы под каждую услугу и упростили онлайн-запись.</p>
+</div>
+</div>
+
+<div role="group" aria-roledescription="слайд" aria-label="4 из 4" style="flex: 0 0 var(--slide-w); min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<img src="images/case-visibility.jpg" alt="График видимости сайта в поиске в сравнении со средней видимостью конкурентов" style="display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 20px; background: #4A1A99; opacity: {{op3}}; transition: opacity 0.4s">
+<div style="display: flex; flex-direction: column; gap: 8px; opacity: {{cop3}}; transform: translateY({{cty3}}); transition: opacity 0.4s, transform 0.4s">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #E2D8FF">Юридическая компания</span>
+<h3 style="margin: 0; font-size: 22px; font-weight: 600; line-height: 1.3">Видимость в поиске обогнала конкурентов</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.55; color: #E6DEFA; text-wrap: pretty">Переработали структуру сайта и добавили экспертные статьи по основным услугам.</p>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+</template>
+<script>
+/* Мини-движок блоков: подставляет значения {{...}}, показывает/скрывает <sc-if>,
+   навешивает обработчики событий и перерисовывает блок при setState(). */
+(function () {
+  class DCLogic {
+    constructor(props) { this.props = props || {}; this.state = undefined; this._render = function () {}; }
+    setState(patch, cb) {
+      var p = typeof patch === 'function' ? patch(this.state || {}, this.props) : patch;
+      this.state = Object.assign({}, this.state || {}, p);
+      this._render();
+      if (cb) cb();
+    }
+    forceUpdate() { this._render(); }
+  }
+  window.DCLogic = DCLogic;
+
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  var WHOLE = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/;
+  var BOOL_PROPS = { checked: 'checked', disabled: 'disabled', selected: 'selected', required: 'required', readonly: 'readOnly', open: 'open', hidden: 'hidden' };
+
+  function lookup(vals, path) {
+    path = path.trim();
+    if (path === 'true') return true;
+    if (path === 'false') return false;
+    if (path === 'null') return null;
+    if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+    return path.split('.').reduce(function (o, k) { return o == null ? undefined : o[k]; }, vals);
+  }
+  function interp(str, vals) {
+    return str.replace(HOLE, function (_, p) { var v = lookup(vals, p); return v == null ? '' : String(v); });
+  }
+
+  function compile(root, ctx) {
+    var ups = [];
+    walk(root);
+    return ups;
+
+    function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 1 && n.localName === 'sc-if') { handleIf(n); return; }
+        if (n.nodeType === 1) { handleAttrs(n); walk(n); return; }
+        if (n.nodeType === 3 && n.nodeValue.indexOf('{{') !== -1) {
+          var tpl = n.nodeValue;
+          ups.push(function (v) { var t = interp(tpl, v); if (n.nodeValue !== t) n.nodeValue = t; });
+        }
+      });
+    }
+
+    function handleIf(el) {
+      var expr = el.getAttribute('value') || '';
+      var m = expr.match(WHOLE);
+      var anchor = document.createComment('sc-if');
+      el.parentNode.replaceChild(anchor, el);
+      var frag = document.createDocumentFragment();
+      while (el.firstChild) frag.appendChild(el.firstChild);
+      var mounted = null;
+      ups.push(function (v) {
+        var cond = !!(m ? lookup(v, m[1]) : expr);
+        if (cond && !mounted) {
+          var clone = frag.cloneNode(true);
+          var inner = compile(clone, ctx);
+          var nodes = Array.prototype.slice.call(clone.childNodes);
+          anchor.parentNode.insertBefore(clone, anchor.nextSibling);
+          mounted = { nodes: nodes, inner: inner };
+        } else if (!cond && mounted) {
+          mounted.nodes.forEach(function (x) { if (x.parentNode) x.parentNode.removeChild(x); });
+          mounted = null;
+        }
+        if (mounted) mounted.inner.forEach(function (f) { f(v); });
+      });
+    }
+
+    function handleAttrs(el) {
+      Array.prototype.slice.call(el.attributes).forEach(function (a) {
+        var name = a.name, val = a.value;
+        if (name.indexOf('hint-') === 0) { el.removeAttribute(name); return; }
+        if (val.indexOf('{{') === -1) return;
+        var m = val.match(WHOLE);
+        el.removeAttribute(name);
+        if (name.indexOf('on') === 0 && m) {
+          var key = m[1];
+          el.addEventListener(name.slice(2), function (e) {
+            var f = lookup(ctx.vals, key);
+            if (typeof f === 'function') f(e);
+          });
+          return;
+        }
+        if (BOOL_PROPS[name] && m) {
+          var prop = BOOL_PROPS[name], k = m[1];
+          ups.push(function (v) { var b = !!lookup(v, k); if (el[prop] !== b) el[prop] = b; });
+          return;
+        }
+        ups.push(function (v) {
+          var out;
+          if (m) { var r = lookup(v, m[1]); out = r == null ? null : String(r); }
+          else out = interp(val, v);
+          if (out === null) el.removeAttribute(name);
+          else if (el.getAttribute(name) !== out) el.setAttribute(name, out);
+        });
+      });
+    }
+  }
+
+  var rootForHeight = null;
+  function postHeight() {
+    if (window.parent === window || !rootForHeight) return;
+    try { window.parent.postMessage({ dcBlockHeight: rootForHeight.getBoundingClientRect().height }, '*'); } catch (e) {}
+  }
+
+  window.DC = {
+    mount: function (Component, tplEl, rootEl, props) {
+      var inst = new Component(props || {});
+      var ctx = { vals: {} };
+      var frag = tplEl.content.cloneNode(true);
+      var ups = compile(frag, ctx);
+      var render = function () {
+        ctx.vals = inst.renderVals() || {};
+        ups.forEach(function (f) { f(ctx.vals); });
+      };
+      inst._render = render;
+      render();
+      rootEl.appendChild(frag);
+      if (inst.componentDidMount) inst.componentDidMount();
+      window.addEventListener('pagehide', function () { if (inst.componentWillUnmount) inst.componentWillUnmount(); });
+      rootForHeight = rootEl;
+      if (window.ResizeObserver) new ResizeObserver(postHeight).observe(rootEl);
+      window.addEventListener('load', postHeight);
+      postHeight();
+    }
+  };
+})();
+
+</script>
+<script>
+class Component extends DCLogic {
+  renderVals() {
+    const n = 4;
+    const idx = (this.state && this.state.idx) || 0;
+    const v = {
+      offset: (-idx) + ' * (var(--slide-w) + var(--slide-gap))',
+      counter: '0' + (idx + 1) + ' / 0' + n,
+      prev: () => this.setState({ idx: (idx - 1 + n) % n }),
+      next: () => this.setState({ idx: (idx + 1) % n })
+    };
+    for (let i = 0; i < n; i++) {
+      const on = i === idx;
+      v['op' + i] = on ? '1' : '0.45';
+      v['cop' + i] = on ? '1' : '0';
+      v['cty' + i] = on ? '0px' : '12px';
+    }
+    return v;
+  }
+}
+</script>
+<script>
+DC.mount(Component, document.getElementById('dc-template'), document.getElementById('dc-root'), {});
+</script>
+</body>
+</html>

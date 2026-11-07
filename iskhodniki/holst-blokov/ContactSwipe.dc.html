@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Блок «Кнопка связи»</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&amp;family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#5B21B6}
+a{color:#6D28D9}a:hover{color:#4C1D95}
+</style>
+</helmet>
+<section style="background: #5B21B6; color: #FFFFFF; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 96px clamp(20px, 4vw, 48px); box-sizing: border-box">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 40px 80px; align-items: center">
+
+<div style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #E2D8FF">Связаться с нами</span>
+<h2 style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance">Перезвоним и ответим на ваши вопросы</h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: #E6DEFA; text-wrap: pretty">Оставьте имя и телефон — специалист свяжется с вами и поможет выбрать услугу.</p>
+</div>
+
+<form onSubmit="{{onSubmit}}" style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; color: #0E0B14; border-radius: 24px; padding: clamp(20px, 3vw, 28px); display: flex; flex-direction: column; gap: 12px; box-sizing: border-box">
+<span style="margin-bottom: 4px; text-align: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Обратный звонок</span>
+<input name="name" type="text" aria-label="Имя" placeholder="Ваше имя" style="box-sizing: border-box; width: 100%; height: 52px; padding: 0 16px; border: 1px solid #D9CFF2; border-radius: 12px; background: #FFFFFF; font-family: inherit; font-size: 16px; color: #0E0B14">
+<input name="phone" type="tel" aria-label="Телефон" placeholder="+7 900 000-00-00" style="box-sizing: border-box; width: 100%; height: 52px; padding: 0 16px; border: 1px solid #D9CFF2; border-radius: 12px; background: #FFFFFF; font-family: inherit; font-size: 16px; color: #0E0B14">
+
+<sc-if value="{{notSent}}" hint-placeholder-val="{{ true }}">
+<div style="position: relative; align-self: center; width: 224px; max-width: 100%; margin-top: 4px; height: 46px; border-radius: 999px; background: #F3EEFF; border: 1px solid #E0D7F5; overflow: hidden; user-select: none; touch-action: none; box-sizing: border-box">
+<span aria-hidden="true" style="position: absolute; left: 0; top: 0; bottom: 0; width: {{fillW}}px; border-radius: 999px; background: #6D28D9; transition: {{trans}}"></span>
+<span aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 0; bottom: 0; padding-left: 44px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 600; color: #5B21B6; opacity: {{labelOp}}">Свайпните<svg width="18" height="12" viewBox="0 0 22 14" fill="none" stroke="#6D28D9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l5 5-5 5" opacity="0.35"></path><path d="M9 2l5 5-5 5" opacity="0.65"></path><path d="M16 2l5 5-5 5"></path></svg></span>
+<span aria-hidden="true" style="position: absolute; left: 0; top: 0; bottom: 0; width: {{sendW}}px; display: flex; align-items: center; justify-content: center; overflow: hidden; white-space: nowrap; font-size: 13px; font-weight: 600; color: #FFFFFF; opacity: {{sendOp}}; transition: {{trans}}">Отправка…</span>
+<button type="button" aria-label="Отправить заявку: потяните вправо или нажмите Enter" onPointerDown="{{down}}" onPointerMove="{{move}}" onPointerUp="{{up}}" onPointerCancel="{{up}}" onClick="{{kbd}}" style="position: absolute; left: 2px; top: 2px; width: 40px; height: 40px; padding: 0; border-radius: 999px; border: 0; background: #FFFFFF; box-shadow: 0 2px 6px rgba(14, 11, 20, 0.18); display: flex; align-items: center; justify-content: center; cursor: grab; touch-action: none; transform: translateX({{kx}}px); transition: {{trans}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg></button>
+</div>
+</sc-if>
+
+<sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="align-self: center; max-width: 100%; margin-top: 4px; display: flex; align-items: center; gap: 12px; min-height: 46px; padding: 3px 18px 3px 3px; border-radius: 999px; background: #6D28D9; color: #FFFFFF; box-sizing: border-box">
+<span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 999px; background: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+<span style="display: flex; flex-direction: column; line-height: 1.3">
+<span style="font-size: 15px; font-weight: 600">Заявка отправлена</span>
+<span style="font-size: 13px; color: #E6DEFA">Мы перезвоним вам в ближайшее время</span>
+</span>
+</div>
+<button type="button" onClick="{{reset}}" style="align-self: center; min-height: 44px; padding: 0 12px; background: transparent; border: 0; font-family: inherit; font-size: 14px; font-weight: 500; color: #6D28D9; text-decoration: underline; text-underline-offset: 3px; cursor: pointer">Отправить ещё одну заявку</button>
+</sc-if>
+
+<p style="margin: 0; font-size: 12px; line-height: 1.5; color: #5A5566; text-align: center">Отправляя заявку, вы соглашаетесь с <a href="#privacy" style="text-decoration: underline; text-underline-offset: 3px">политикой обработки персональных данных</a>.</p>
+</form>
+
+</div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showSent":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":560}}'>
+class Component extends DCLogic {
+  componentWillUnmount() {
+    if (this._timer) clearTimeout(this._timer);
+  }
+  renderVals() {
+    const st = this.state || {};
+    const sent = (this.props.showSent ?? false) || !!st.sent;
+    const dx = st.dx || 0;
+    const max = this._max || 178;
+    const p = Math.min(1, dx / max);
+    const finish = (maxW) => {
+      this._max = maxW;
+      this.setState({ dragging: false, dx: maxW, sending: true });
+      if (this._timer) clearTimeout(this._timer);
+      this._timer = setTimeout(() => this.setState({ sending: false, sent: true }), 1200);
+    };
+    return {
+      sent: sent,
+      notSent: !sent,
+      kx: dx,
+      fillW: dx + 44,
+      sendW: dx + 2,
+      labelOp: Math.max(0, 1 - p * 2.2),
+      sendOp: Math.max(0, Math.min(1, (p - 0.3) / 0.3)),
+      trans: st.dragging ? 'none' : 'transform 0.25s ease, width 0.25s ease, opacity 0.25s ease',
+      onSubmit: (e) => { if (e && e.preventDefault) e.preventDefault(); },
+      down: (e) => {
+        if (this.state && this.state.sending) return;
+        const t = e.currentTarget;
+        try { t.setPointerCapture(e.pointerId); } catch (err) {}
+        this._max = t.parentElement.clientWidth - 44;
+        this._startX = e.clientX - ((this.state && this.state.dx) || 0);
+        this.setState({ dragging: true });
+      },
+      move: (e) => {
+        if (!this.state || !this.state.dragging) return;
+        const next = Math.max(0, Math.min(this._max, e.clientX - this._startX));
+        this.setState({ dx: next });
+      },
+      up: () => {
+        if (!this.state || !this.state.dragging) return;
+        if ((this.state.dx || 0) >= this._max * 0.9) finish(this._max);
+        else this.setState({ dragging: false, dx: 0 });
+      },
+      kbd: (e) => {
+        if (!e || e.detail !== 0 || (this.state && this.state.sending)) return;
+        finish(e.currentTarget.parentElement.clientWidth - 44);
+      },
+      reset: () => {
+        if (this._timer) clearTimeout(this._timer);
+        this.setState({ sent: false, sending: false, dx: 0, dragging: false });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

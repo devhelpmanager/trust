@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блок «Выбор тарифа»</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&amp;family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#F8F5FF}
+a{color:#6D28D9}a:hover{color:#4C1D95}
+</style>
+</head>
+<body>
+<div id="dc-root"></div>
+<template id="dc-template">
+<section style="background: #F8F5FF; color: #0E0B14; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 96px clamp(20px, 4vw, 48px); box-sizing: border-box">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px">
+
+<header style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Тарифы</span>
+<h2 style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance">Выберите тариф SEO-продвижения</h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: #5A5566; text-wrap: pretty">Сравните, что входит в каждый тариф. Состав работ и стоимость фиксируются в договоре.</p>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 24px; align-items: stretch">
+
+<article style="background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 30px">
+<h3 style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: 24px; line-height: 1.2">Старт</h3>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: #5A5566; text-wrap: pretty">Для небольших сайтов и локального бизнеса: наводим порядок в технической части и выводим сайт в поиск по основным запросам.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 10px">
+<s style="font-size: 17px; color: #6B6677">XX XXX ₽</s>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; padding: 4px 8px; border-radius: 999px; background: #EEE7FE; color: #6D28D9">−XX%</span>
+</div>
+<div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap">
+<span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: 40px; line-height: 1.1; letter-spacing: -0.02em">XX XXX ₽</span>
+<span style="font-size: 15px; color: #5A5566">/ месяц</span>
+</div>
+</div>
+<ul style="list-style: none; margin: 0; padding: 24px 0 0; border-top: 1px solid #E0D7F5; display: flex; flex-direction: column; gap: 14px; flex-grow: 1">
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#E2F3E9"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#17914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Технический аудит сайта</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#E2F3E9"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#17914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Сбор семантического ядра</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#E2F3E9"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#17914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Оптимизация мета-тегов</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#E2F3E9"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#17914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Настройка Яндекс Вебмастера и Google Search Console</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Не включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#FBE6E4"></circle><path d="M7.8 7.8l6.4 6.4M14.2 7.8l-6.4 6.4" fill="none" stroke="#D63A2F" stroke-width="2" stroke-linecap="round"></path></svg><span style="color: #6B6677">Внутренняя перелинковка</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Не включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#FBE6E4"></circle><path d="M7.8 7.8l6.4 6.4M14.2 7.8l-6.4 6.4" fill="none" stroke="#D63A2F" stroke-width="2" stroke-linecap="round"></path></svg><span style="color: #6B6677">Тексты для продвигаемых страниц</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Не включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#FBE6E4"></circle><path d="M7.8 7.8l6.4 6.4M14.2 7.8l-6.4 6.4" fill="none" stroke="#D63A2F" stroke-width="2" stroke-linecap="round"></path></svg><span style="color: #6B6677">Работа с внешними ссылками</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#E2F3E9"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#17914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Ежемесячный отчёт с рекомендациями</span></li>
+</ul>
+<a href="#order" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 12px; border: 1.5px solid #0E0B14; color: #0E0B14; text-decoration: none; font-weight: 600; font-size: 16px">Выбрать «Старт»</a>
+</article>
+
+<article style="background: #0E0B14; color: #FFFFFF; border: 1px solid #0E0B14; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 30px">
+<h3 style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: 24px; line-height: 1.2">Бизнес</h3>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; background: #B9A2FF; color: #0E0B14">Рекомендуем</span>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: #BDB6CC; text-wrap: pretty">Для компаний, которым нужен стабильный поток заявок из поиска: системная работа со структурой сайта, семантикой и текстами.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 10px">
+<s style="font-size: 17px; color: #8F889E">XX XXX ₽</s>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; padding: 4px 8px; border-radius: 999px; background: #2A1F4A; color: #CDBDFF">−XX%</span>
+</div>
+<div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap">
+<span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: 40px; line-height: 1.1; letter-spacing: -0.02em">XX XXX ₽</span>
+<span style="font-size: 15px; color: #BDB6CC">/ месяц</span>
+</div>
+</div>
+<ul style="list-style: none; margin: 0; padding: 24px 0 0; border-top: 1px solid #2A2533; display: flex; flex-direction: column; gap: 14px; flex-grow: 1">
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#183B2A"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#4CD38B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Технический аудит сайта</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#183B2A"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#4CD38B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Сбор семантического ядра</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#183B2A"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#4CD38B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Оптимизация мета-тегов</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#183B2A"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#4CD38B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Настройка Яндекс Вебмастера и Google Search Console</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#183B2A"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#4CD38B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Внутренняя перелинковка</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#183B2A"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#4CD38B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Тексты для продвигаемых страниц</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Не включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#3F2220"></circle><path d="M7.8 7.8l6.4 6.4M14.2 7.8l-6.4 6.4" fill="none" stroke="#FF8074" stroke-width="2" stroke-linecap="round"></path></svg><span style="color: #8F889E">Работа с внешними ссылками</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#183B2A"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#4CD38B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Ежемесячный отчёт с рекомендациями</span></li>
+</ul>
+<a href="#order" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 12px; border: 1.5px solid #7C3AED; background: #7C3AED; color: #FFFFFF; text-decoration: none; font-weight: 600; font-size: 16px">Выбрать «Бизнес»</a>
+</article>
+
+<article style="background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 20px; padding: 32px; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 30px">
+<h3 style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: 24px; line-height: 1.2">Максимум</h3>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: #5A5566; text-wrap: pretty">Для интернет-магазинов и сайтов в конкурентных нишах, где без работы с внешними ссылками рост упирается в потолок.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 10px">
+<s style="font-size: 17px; color: #6B6677">XX XXX ₽</s>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; padding: 4px 8px; border-radius: 999px; background: #EEE7FE; color: #6D28D9">−XX%</span>
+</div>
+<div style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap">
+<span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: 40px; line-height: 1.1; letter-spacing: -0.02em">XX XXX ₽</span>
+<span style="font-size: 15px; color: #5A5566">/ месяц</span>
+</div>
+</div>
+<ul style="list-style: none; margin: 0; padding: 24px 0 0; border-top: 1px solid #E0D7F5; display: flex; flex-direction: column; gap: 14px; flex-grow: 1">
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#E2F3E9"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#17914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Технический аудит сайта</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#E2F3E9"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#17914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Сбор семантического ядра</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#E2F3E9"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#17914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Оптимизация мета-тегов</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#E2F3E9"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#17914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Настройка Яндекс Вебмастера и Google Search Console</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#E2F3E9"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#17914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Внутренняя перелинковка</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#E2F3E9"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#17914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Тексты для продвигаемых страниц</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#E2F3E9"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#17914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Работа с внешними ссылками</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 22px"><svg width="22" height="22" viewBox="0 0 22 22" role="img" aria-label="Включено" style="flex: none"><circle cx="11" cy="11" r="11" fill="#E2F3E9"></circle><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#17914F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Ежемесячный отчёт с рекомендациями</span></li>
+</ul>
+<a href="#order" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 12px; border: 1.5px solid #0E0B14; color: #0E0B14; text-decoration: none; font-weight: 600; font-size: 16px">Выбрать «Максимум»</a>
+</article>
+
+</div>
+</div>
+</section>
+</template>
+<script>
+/* Мини-движок блоков: подставляет значения {{...}}, показывает/скрывает <sc-if>,
+   навешивает обработчики событий и перерисовывает блок при setState(). */
+(function () {
+  class DCLogic {
+    constructor(props) { this.props = props || {}; this.state = undefined; this._render = function () {}; }
+    setState(patch, cb) {
+      var p = typeof patch === 'function' ? patch(this.state || {}, this.props) : patch;
+      this.state = Object.assign({}, this.state || {}, p);
+      this._render();
+      if (cb) cb();
+    }
+    forceUpdate() { this._render(); }
+  }
+  window.DCLogic = DCLogic;
+
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  var WHOLE = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/;
+  var BOOL_PROPS = { checked: 'checked', disabled: 'disabled', selected: 'selected', required: 'required', readonly: 'readOnly', open: 'open', hidden: 'hidden' };
+
+  function lookup(vals, path) {
+    path = path.trim();
+    if (path === 'true') return true;
+    if (path === 'false') return false;
+    if (path === 'null') return null;
+    if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+    return path.split('.').reduce(function (o, k) { return o == null ? undefined : o[k]; }, vals);
+  }
+  function interp(str, vals) {
+    return str.replace(HOLE, function (_, p) { var v = lookup(vals, p); return v == null ? '' : String(v); });
+  }
+
+  function compile(root, ctx) {
+    var ups = [];
+    walk(root);
+    return ups;
+
+    function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 1 && n.localName === 'sc-if') { handleIf(n); return; }
+        if (n.nodeType === 1) { handleAttrs(n); walk(n); return; }
+        if (n.nodeType === 3 && n.nodeValue.indexOf('{{') !== -1) {
+          var tpl = n.nodeValue;
+          ups.push(function (v) { var t = interp(tpl, v); if (n.nodeValue !== t) n.nodeValue = t; });
+        }
+      });
+    }
+
+    function handleIf(el) {
+      var expr = el.getAttribute('value') || '';
+      var m = expr.match(WHOLE);
+      var anchor = document.createComment('sc-if');
+      el.parentNode.replaceChild(anchor, el);
+      var frag = document.createDocumentFragment();
+      while (el.firstChild) frag.appendChild(el.firstChild);
+      var mounted = null;
+      ups.push(function (v) {
+        var cond = !!(m ? lookup(v, m[1]) : expr);
+        if (cond && !mounted) {
+          var clone = frag.cloneNode(true);
+          var inner = compile(clone, ctx);
+          var nodes = Array.prototype.slice.call(clone.childNodes);
+          anchor.parentNode.insertBefore(clone, anchor.nextSibling);
+          mounted = { nodes: nodes, inner: inner };
+        } else if (!cond && mounted) {
+          mounted.nodes.forEach(function (x) { if (x.parentNode) x.parentNode.removeChild(x); });
+          mounted = null;
+        }
+        if (mounted) mounted.inner.forEach(function (f) { f(v); });
+      });
+    }
+
+    function handleAttrs(el) {
+      Array.prototype.slice.call(el.attributes).forEach(function (a) {
+        var name = a.name, val = a.value;
+        if (name.indexOf('hint-') === 0) { el.removeAttribute(name); return; }
+        if (val.indexOf('{{') === -1) return;
+        var m = val.match(WHOLE);
+        el.removeAttribute(name);
+        if (name.indexOf('on') === 0 && m) {
+          var key = m[1];
+          el.addEventListener(name.slice(2), function (e) {
+            var f = lookup(ctx.vals, key);
+            if (typeof f === 'function') f(e);
+          });
+          return;
+        }
+        if (BOOL_PROPS[name] && m) {
+          var prop = BOOL_PROPS[name], k = m[1];
+          ups.push(function (v) { var b = !!lookup(v, k); if (el[prop] !== b) el[prop] = b; });
+          return;
+        }
+        ups.push(function (v) {
+          var out;
+          if (m) { var r = lookup(v, m[1]); out = r == null ? null : String(r); }
+          else out = interp(val, v);
+          if (out === null) el.removeAttribute(name);
+          else if (el.getAttribute(name) !== out) el.setAttribute(name, out);
+        });
+      });
+    }
+  }
+
+  var rootForHeight = null;
+  function postHeight() {
+    if (window.parent === window || !rootForHeight) return;
+    try { window.parent.postMessage({ dcBlockHeight: rootForHeight.getBoundingClientRect().height }, '*'); } catch (e) {}
+  }
+
+  window.DC = {
+    mount: function (Component, tplEl, rootEl, props) {
+      var inst = new Component(props || {});
+      var ctx = { vals: {} };
+      var frag = tplEl.content.cloneNode(true);
+      var ups = compile(frag, ctx);
+      var render = function () {
+        ctx.vals = inst.renderVals() || {};
+        ups.forEach(function (f) { f(ctx.vals); });
+      };
+      inst._render = render;
+      render();
+      rootEl.appendChild(frag);
+      if (inst.componentDidMount) inst.componentDidMount();
+      window.addEventListener('pagehide', function () { if (inst.componentWillUnmount) inst.componentWillUnmount(); });
+      rootForHeight = rootEl;
+      if (window.ResizeObserver) new ResizeObserver(postHeight).observe(rootEl);
+      window.addEventListener('load', postHeight);
+      postHeight();
+    }
+  };
+})();
+
+</script>
+<script>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+<script>
+DC.mount(Component, document.getElementById('dc-template'), document.getElementById('dc-root'), {});
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+{
+  "v": 3,
+  "createdOnFiles": {"v": 1, "at": "2026-11-07T10:46:00Z"},
+  "title": "Блоки страниц услуг",
+  "launch": {"view": "canvas"},
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {"x": 0, "y": 0, "w": 1280, "h": 1240, "title": "1. Выбор тарифа", "expand": "fill"},
+    "Advantages.dc.html": {"x": 1360, "y": 0, "w": 1280, "h": 900, "title": "2. Наши преимущества", "expand": "fill"},
+    "TextBlock.dc.html": {"x": 0, "y": 1360, "w": 1280, "h": 2000, "title": "3. Блок с текстом", "expand": "fill"},
+    "ServiceIncludes.dc.html": {"x": 1360, "y": 1360, "w": 1280, "h": 1100, "title": "4. Что включает услуга", "expand": "fill", "is_interactive": true},
+    "OpenApproach.dc.html": {"x": 0, "y": 3480, "w": 1280, "h": 700, "title": "5. Почему мы открыто пишем про всё", "expand": "fill"},
+    "Stages.dc.html": {"x": 1360, "y": 3480, "w": 1280, "h": 760, "title": "6. Этапы работы", "expand": "fill", "is_interactive": true},
+    "Problems.dc.html": {"x": 0, "y": 4420, "w": 1280, "h": 1080, "title": "7. С какими проблемами вы можете столкнуться", "expand": "fill", "is_interactive": true},
+    "ImageBlock.dc.html": {"x": 1360, "y": 4420, "w": 1280, "h": 880, "title": "8. Картинка", "expand": "fill"},
+    "ContactSwipe.dc.html": {"x": 0, "y": 5620, "w": 1280, "h": 560, "title": "9. Кнопка связи", "expand": "fill", "is_interactive": true},
+    "Faq.dc.html": {"x": 1360, "y": 5620, "w": 1280, "h": 720, "title": "10. Вопрос-ответ", "expand": "fill", "is_interactive": true},
+    "Brief.dc.html": {"x": 0, "y": 6460, "w": 1280, "h": 1100, "title": "11. Бриф — полный", "expand": "fill", "is_interactive": true},
+    "BriefQuick.dc.html": {"x": 1360, "y": 6460, "w": 1280, "h": 660, "title": "11. Бриф — короткий", "expand": "fill", "is_interactive": true},
+    "Projects.dc.html": {"x": 0, "y": 7680, "w": 1280, "h": 1060, "title": "12. Наши проекты в топе", "expand": "fill"},
+    "Calculator.dc.html": {"x": 1360, "y": 7680, "w": 1280, "h": 1000, "title": "13. Калькулятор стоимости", "expand": "fill", "is_interactive": true},
+    "CasesCarousel.dc.html": {"x": 0, "y": 8860, "w": 1280, "h": 980, "title": "14. Карусель кейсов", "expand": "fill", "is_interactive": true},
+    "Reviews.dc.html": {"x": 1360, "y": 8860, "w": 1280, "h": 760, "title": "15. Отзывы клиентов", "expand": "fill"},
+    "Blog.dc.html": {"x": 0, "y": 9960, "w": 1280, "h": 820, "title": "16. Статьи из блога", "expand": "fill"},
+    "Cookies.dc.html": {"x": 1360, "y": 9960, "w": 1280, "h": 520, "title": "17. Мы используем файлы cookie", "expand": "fill", "is_interactive": true}
+  },
+  "order": [
+    "Main.dc.html",
+    "Advantages.dc.html",
+    "TextBlock.dc.html",
+    "ServiceIncludes.dc.html",
+    "OpenApproach.dc.html",
+    "Stages.dc.html",
+    "Problems.dc.html",
+    "ImageBlock.dc.html",
+    "ContactSwipe.dc.html",
+    "Faq.dc.html",
+    "Brief.dc.html",
+    "BriefQuick.dc.html",
+    "Projects.dc.html",
+    "Calculator.dc.html",
+    "CasesCarousel.dc.html",
+    "Reviews.dc.html",
+    "Blog.dc.html",
+    "Cookies.dc.html"
+  ],
+  "notes": {
+    "title": {"x": 0, "y": -300, "text": "Блоки для страниц услуг: SEO, сайты, контекстная реклама", "kind": "title1", "maxW": 2640},
+    "projectsNote": {"x": -440, "y": 7680, "text": "Блоки 12 и 14: названия проектов, запросы, позиции и графики — примеры для макета. Замените их реальными данными и скриншотами ваших проектов.", "w": 360, "fill": "purple"},
+    "reviewsNote": {"x": 2720, "y": 8860, "text": "Блок 15: имена, фото и тексты отзывов — места для реальных отзывов ваших клиентов (с их согласия).", "w": 340, "fill": "purple"}
+  },
+  "designSystems": []
+}

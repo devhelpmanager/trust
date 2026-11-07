@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Блок «Этапы работы»</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&amp;family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<section style="background: #FFFFFF; color: #0E0B14; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 96px clamp(20px, 4vw, 48px); box-sizing: border-box">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px">
+
+<header style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Как мы работаем</span>
+<h2 style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance">Этапы работы</h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: #5A5566; text-wrap: pretty">Пять шагов от заявки до отчёта. Нажмите на этап, чтобы узнать, что на нём происходит.</p>
+</header>
+
+<ol class="dc-steps" style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 32px 20px">
+
+<li style="min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<div aria-hidden="true" style="display: flex; align-items: center; gap: 8px">
+<span style="flex: none; box-sizing: border-box; width: 36px; height: 36px; border-radius: 999px; border: 2px solid #6D28D9; background: #FFFFFF; color: #6D28D9; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center">01</span>
+<span class="dc-step-line" style="flex: 1 1 auto; height: 2px; background: #D9CFF2"></span>
+<svg class="dc-step-arrow" width="10" height="12" viewBox="0 0 10 12" style="flex: none"><path d="M1.5 1l7 5-7 5" fill="none" stroke="#B9A2FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</div>
+<button type="button" onClick="{{t1}}" aria-expanded="{{o1}}" style="flex: 1 1 auto; width: 100%; display: flex; flex-direction: column; gap: 12px; padding: 12px 12px 16px; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 18px; font-family: inherit; text-align: left; color: #0E0B14; cursor: pointer">
+<sc-if value="{{c1}}" hint-placeholder-val="{{ true }}">
+<span style="display: block; width: 100%; aspect-ratio: 16 / 10; border-radius: 12px; background: #F3EEFF; overflow: hidden"><svg viewBox="0 0 160 100" width="100%" height="100%" aria-hidden="true"><rect x="30" y="14" width="100" height="72" rx="7" fill="#FFFFFF" stroke="#6D28D9" stroke-width="1.6"></rect><path d="M30 27h100" stroke="#E0D7F5" stroke-width="1.6"></path><circle cx="38" cy="20.5" r="2" fill="#DCCFFD"></circle><circle cx="45" cy="20.5" r="2" fill="#DCCFFD"></circle><circle cx="52" cy="20.5" r="2" fill="#DCCFFD"></circle><rect x="42" y="36" width="76" height="10" rx="3" fill="#EFE8FF"></rect><rect x="42" y="51" width="76" height="10" rx="3" fill="#EFE8FF"></rect><rect x="42" y="67" width="44" height="11" rx="3" fill="#6D28D9"></rect><path d="M84 70v16l4.2-4 3.4 7.4 3.4-1.6-3.4-7.2 6-0.4z" fill="#FFFFFF" stroke="#0E0B14" stroke-width="1.5" stroke-linejoin="round"></path></svg></span>
+</sc-if>
+<span style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 0 4px">
+<span style="padding-top: 3px; font-size: 17px; font-weight: 600; line-height: 1.3">Заявка</span>
+<span aria-hidden="true" style="flex: none; width: 30px; height: 30px; border-radius: 999px; background: {{bg1}}; display: flex; align-items: center; justify-content: center; transition: background 0.2s"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="{{fg1}}" stroke-width="2" stroke-linecap="round" style="transform: {{r1}}; transition: transform 0.2s"><path d="M7 2v10M2 7h10"></path></svg></span>
+</span>
+<sc-if value="{{c1}}" hint-placeholder-val="{{ true }}">
+<span style="display: block; padding: 0 4px; font-size: 14px; line-height: 1.5; color: #5A5566; text-wrap: pretty">Оставляете заявку на сайте или звоните нам</span>
+</sc-if>
+<sc-if value="{{o1}}" hint-placeholder-val="{{ false }}">
+<span style="display: block; padding: 0 4px; font-size: 14px; line-height: 1.55; color: #2B2733; text-wrap: pretty">Уточняем задачу, адрес сайта и желаемые сроки. Если услуга не подходит под вашу ситуацию, скажем об этом сразу и предложим подходящую.</span>
+</sc-if>
+</button>
+<span class="dc-step-down" aria-hidden="true" style="display: none; width: 36px; justify-content: center"><svg width="12" height="22" viewBox="0 0 12 22" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 1v18" stroke="#D9CFF2"></path><path d="M1.5 15l4.5 4.5 4.5-4.5" stroke="#B9A2FF"></path></svg></span>
+</li>
+
+<li style="min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<div aria-hidden="true" style="display: flex; align-items: center; gap: 8px">
+<span style="flex: none; box-sizing: border-box; width: 36px; height: 36px; border-radius: 999px; border: 2px solid #6D28D9; background: #FFFFFF; color: #6D28D9; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center">02</span>
+<span class="dc-step-line" style="flex: 1 1 auto; height: 2px; background: #D9CFF2"></span>
+<svg class="dc-step-arrow" width="10" height="12" viewBox="0 0 10 12" style="flex: none"><path d="M1.5 1l7 5-7 5" fill="none" stroke="#B9A2FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</div>
+<button type="button" onClick="{{t2}}" aria-expanded="{{o2}}" style="flex: 1 1 auto; width: 100%; display: flex; flex-direction: column; gap: 12px; padding: 12px 12px 16px; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 18px; font-family: inherit; text-align: left; color: #0E0B14; cursor: pointer">
+<sc-if value="{{c2}}" hint-placeholder-val="{{ true }}">
+<span style="display: block; width: 100%; aspect-ratio: 16 / 10; border-radius: 12px; background: #F3EEFF; overflow: hidden"><svg viewBox="0 0 160 100" width="100%" height="100%" aria-hidden="true"><rect x="26" y="18" width="80" height="64" rx="7" fill="#FFFFFF" stroke="#6D28D9" stroke-width="1.6"></rect><rect x="38" y="56" width="9" height="16" rx="2" fill="#DCCFFD"></rect><rect x="51" y="46" width="9" height="26" rx="2" fill="#DCCFFD"></rect><rect x="64" y="36" width="9" height="36" rx="2" fill="#6D28D9"></rect><rect x="77" y="50" width="9" height="22" rx="2" fill="#DCCFFD"></rect><path d="M120 64l13 13" stroke="#0E0B14" stroke-width="6" stroke-linecap="round"></path><circle cx="108" cy="52" r="17" fill="#FFFFFF" stroke="#6D28D9" stroke-width="3"></circle><path d="M99 57l5-6 5 3 7-8" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+</sc-if>
+<span style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 0 4px">
+<span style="padding-top: 3px; font-size: 17px; font-weight: 600; line-height: 1.3">Анализ и предложение</span>
+<span aria-hidden="true" style="flex: none; width: 30px; height: 30px; border-radius: 999px; background: {{bg2}}; display: flex; align-items: center; justify-content: center; transition: background 0.2s"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="{{fg2}}" stroke-width="2" stroke-linecap="round" style="transform: {{r2}}; transition: transform 0.2s"><path d="M7 2v10M2 7h10"></path></svg></span>
+</span>
+<sc-if value="{{c2}}" hint-placeholder-val="{{ true }}">
+<span style="display: block; padding: 0 4px; font-size: 14px; line-height: 1.5; color: #5A5566; text-wrap: pretty">Изучаем сайт и готовим коммерческое предложение</span>
+</sc-if>
+<sc-if value="{{o2}}" hint-placeholder-val="{{ false }}">
+<span style="display: block; padding: 0 4px; font-size: 14px; line-height: 1.55; color: #2B2733; text-wrap: pretty">Смотрим сайт, нишу и конкурентов, определяем объём работ. В предложении — состав работ, сроки и фиксированная стоимость.</span>
+</sc-if>
+</button>
+<span class="dc-step-down" aria-hidden="true" style="display: none; width: 36px; justify-content: center"><svg width="12" height="22" viewBox="0 0 12 22" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 1v18" stroke="#D9CFF2"></path><path d="M1.5 15l4.5 4.5 4.5-4.5" stroke="#B9A2FF"></path></svg></span>
+</li>
+
+<li style="min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<div aria-hidden="true" style="display: flex; align-items: center; gap: 8px">
+<span style="flex: none; box-sizing: border-box; width: 36px; height: 36px; border-radius: 999px; border: 2px solid #6D28D9; background: #FFFFFF; color: #6D28D9; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center">03</span>
+<span class="dc-step-line" style="flex: 1 1 auto; height: 2px; background: #D9CFF2"></span>
+<svg class="dc-step-arrow" width="10" height="12" viewBox="0 0 10 12" style="flex: none"><path d="M1.5 1l7 5-7 5" fill="none" stroke="#B9A2FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</div>
+<button type="button" onClick="{{t3}}" aria-expanded="{{o3}}" style="flex: 1 1 auto; width: 100%; display: flex; flex-direction: column; gap: 12px; padding: 12px 12px 16px; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 18px; font-family: inherit; text-align: left; color: #0E0B14; cursor: pointer">
+<sc-if value="{{c3}}" hint-placeholder-val="{{ true }}">
+<span style="display: block; width: 100%; aspect-ratio: 16 / 10; border-radius: 12px; background: #F3EEFF; overflow: hidden"><svg viewBox="0 0 160 100" width="100%" height="100%" aria-hidden="true"><rect x="46" y="10" width="60" height="80" rx="6" fill="#FFFFFF" stroke="#6D28D9" stroke-width="1.6"></rect><path d="M56 24h40M56 32h40M56 40h28" stroke="#DCCFFD" stroke-width="3" stroke-linecap="round"></path><circle cx="90" cy="58" r="8" fill="#EFE8FF" stroke="#6D28D9" stroke-width="1.4" stroke-dasharray="2 2"></circle><path d="M56 74c4-8 7 6 11-2s7-4 10 1" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round"></path><path d="M56 80h40" stroke="#E0D7F5" stroke-width="1.4"></path><path d="M110 82l3-12 16-26 5 3-16 26z" fill="#6D28D9"></path><path d="M110 82l3-12 5 3z" fill="#0E0B14"></path></svg></span>
+</sc-if>
+<span style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 0 4px">
+<span style="padding-top: 3px; font-size: 17px; font-weight: 600; line-height: 1.3">Договор</span>
+<span aria-hidden="true" style="flex: none; width: 30px; height: 30px; border-radius: 999px; background: {{bg3}}; display: flex; align-items: center; justify-content: center; transition: background 0.2s"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="{{fg3}}" stroke-width="2" stroke-linecap="round" style="transform: {{r3}}; transition: transform 0.2s"><path d="M7 2v10M2 7h10"></path></svg></span>
+</span>
+<sc-if value="{{c3}}" hint-placeholder-val="{{ true }}">
+<span style="display: block; padding: 0 4px; font-size: 14px; line-height: 1.5; color: #5A5566; text-wrap: pretty">Фиксируем состав работ, сроки и стоимость</span>
+</sc-if>
+<sc-if value="{{o3}}" hint-placeholder-val="{{ false }}">
+<span style="display: block; padding: 0 4px; font-size: 14px; line-height: 1.55; color: #2B2733; text-wrap: pretty">Закрепляем в договоре состав работ, стоимость и даты сдачи этапов. После подписания запрашиваем доступы к сайту и сервисам аналитики.</span>
+</sc-if>
+</button>
+<span class="dc-step-down" aria-hidden="true" style="display: none; width: 36px; justify-content: center"><svg width="12" height="22" viewBox="0 0 12 22" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 1v18" stroke="#D9CFF2"></path><path d="M1.5 15l4.5 4.5 4.5-4.5" stroke="#B9A2FF"></path></svg></span>
+</li>
+
+<li style="min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<div aria-hidden="true" style="display: flex; align-items: center; gap: 8px">
+<span style="flex: none; box-sizing: border-box; width: 36px; height: 36px; border-radius: 999px; border: 2px solid #6D28D9; background: #FFFFFF; color: #6D28D9; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center">04</span>
+<span class="dc-step-line" style="flex: 1 1 auto; height: 2px; background: #D9CFF2"></span>
+<svg class="dc-step-arrow" width="10" height="12" viewBox="0 0 10 12" style="flex: none"><path d="M1.5 1l7 5-7 5" fill="none" stroke="#B9A2FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</div>
+<button type="button" onClick="{{t4}}" aria-expanded="{{o4}}" style="flex: 1 1 auto; width: 100%; display: flex; flex-direction: column; gap: 12px; padding: 12px 12px 16px; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 18px; font-family: inherit; text-align: left; color: #0E0B14; cursor: pointer">
+<sc-if value="{{c4}}" hint-placeholder-val="{{ true }}">
+<span style="display: block; width: 100%; aspect-ratio: 16 / 10; border-radius: 12px; background: #F3EEFF; overflow: hidden"><svg viewBox="0 0 160 100" width="100%" height="100%" aria-hidden="true"><rect x="30" y="16" width="62" height="76" rx="7" fill="#FFFFFF" stroke="#6D28D9" stroke-width="1.6"></rect><rect x="48" y="11" width="26" height="10" rx="3" fill="#6D28D9"></rect><rect x="40" y="32" width="10" height="10" rx="2.5" fill="#6D28D9"></rect><path d="M42.5 37l2 2 3.5-4" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M56 37h26" stroke="#DCCFFD" stroke-width="3" stroke-linecap="round"></path><rect x="40" y="50" width="10" height="10" rx="2.5" fill="#6D28D9"></rect><path d="M42.5 55l2 2 3.5-4" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M56 55h22" stroke="#DCCFFD" stroke-width="3" stroke-linecap="round"></path><rect x="40.8" y="68.8" width="8.4" height="8.4" rx="2" fill="none" stroke="#6D28D9" stroke-width="1.6"></rect><path d="M56 73h24" stroke="#DCCFFD" stroke-width="3" stroke-linecap="round"></path><circle cx="116" cy="56" r="18" fill="none" stroke="#DCCFFD" stroke-width="7" stroke-dasharray="6 5.3"></circle><circle cx="116" cy="56" r="14" fill="#6D28D9"></circle><circle cx="116" cy="56" r="5" fill="#F3EEFF"></circle></svg></span>
+</sc-if>
+<span style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 0 4px">
+<span style="padding-top: 3px; font-size: 17px; font-weight: 600; line-height: 1.3">Выполнение работ</span>
+<span aria-hidden="true" style="flex: none; width: 30px; height: 30px; border-radius: 999px; background: {{bg4}}; display: flex; align-items: center; justify-content: center; transition: background 0.2s"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="{{fg4}}" stroke-width="2" stroke-linecap="round" style="transform: {{r4}}; transition: transform 0.2s"><path d="M7 2v10M2 7h10"></path></svg></span>
+</span>
+<sc-if value="{{c4}}" hint-placeholder-val="{{ true }}">
+<span style="display: block; padding: 0 4px; font-size: 14px; line-height: 1.5; color: #5A5566; text-wrap: pretty">Специалист выполняет работы по согласованному плану</span>
+</sc-if>
+<sc-if value="{{o4}}" hint-placeholder-val="{{ false }}">
+<span style="display: block; padding: 0 4px; font-size: 14px; line-height: 1.55; color: #2B2733; text-wrap: pretty">Ответственный специалист на связи и сообщает о важных находках сразу, не дожидаясь финального отчёта.</span>
+</sc-if>
+</button>
+<span class="dc-step-down" aria-hidden="true" style="display: none; width: 36px; justify-content: center"><svg width="12" height="22" viewBox="0 0 12 22" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 1v18" stroke="#D9CFF2"></path><path d="M1.5 15l4.5 4.5 4.5-4.5" stroke="#B9A2FF"></path></svg></span>
+</li>
+
+<li style="min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<div aria-hidden="true" style="display: flex; align-items: center; gap: 10px">
+<span style="flex: none; box-sizing: border-box; width: 36px; height: 36px; border-radius: 999px; border: 2px solid #5B21B6; background: #5B21B6; color: #FFFFFF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center">05</span>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Результат</span>
+</div>
+<button type="button" onClick="{{t5}}" aria-expanded="{{o5}}" style="flex: 1 1 auto; width: 100%; display: flex; flex-direction: column; gap: 12px; padding: 12px 12px 16px; background: #5B21B6; border: 1px solid #5B21B6; border-radius: 18px; font-family: inherit; text-align: left; color: #FFFFFF; cursor: pointer">
+<sc-if value="{{c5}}" hint-placeholder-val="{{ true }}">
+<span style="display: block; width: 100%; aspect-ratio: 16 / 10; border-radius: 12px; background: #4A1A99; overflow: hidden"><svg viewBox="0 0 160 100" width="100%" height="100%" aria-hidden="true"><rect x="40" y="10" width="66" height="80" rx="7" fill="#FFFFFF"></rect><path d="M50 23h30" stroke="#DCCFFD" stroke-width="3" stroke-linecap="round"></path><path d="M50 30h20" stroke="#EFE8FF" stroke-width="3" stroke-linecap="round"></path><path d="M50 76h46M50 76V42" stroke="#E0D7F5" stroke-width="1.4"></path><path d="M52 70l10-9 9 4 12-15 11-8" fill="none" stroke="#6D28D9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="112" cy="70" r="14" fill="#E2D8FF" stroke="#4A1A99" stroke-width="3"></circle><path d="M105.5 70l4.5 4.5 8-8.5" fill="none" stroke="#5B21B6" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+</sc-if>
+<span style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 0 4px">
+<span style="padding-top: 3px; font-size: 17px; font-weight: 600; line-height: 1.3">Отчёт</span>
+<span aria-hidden="true" style="flex: none; width: 30px; height: 30px; border-radius: 999px; background: {{bg5}}; display: flex; align-items: center; justify-content: center; transition: background 0.2s"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="{{fg5}}" stroke-width="2" stroke-linecap="round" style="transform: {{r5}}; transition: transform 0.2s"><path d="M7 2v10M2 7h10"></path></svg></span>
+</span>
+<sc-if value="{{c5}}" hint-placeholder-val="{{ true }}">
+<span style="display: block; padding: 0 4px; font-size: 14px; line-height: 1.5; color: #E6DEFA; text-wrap: pretty">Передаём отчёт с найденными проблемами и рекомендациями</span>
+</sc-if>
+<sc-if value="{{o5}}" hint-placeholder-val="{{ false }}">
+<span style="display: block; padding: 0 4px; font-size: 14px; line-height: 1.55; color: #F1ECFE; text-wrap: pretty">В отчёте — что проверено, какие ошибки найдены, как их исправить и в каком порядке. Разбираем его вместе и отвечаем на вопросы.</span>
+</sc-if>
+</button>
+</li>
+
+</ol>
+</div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"expandAll":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":760}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const all = this.props.expandAll ?? false;
+    const open = (this.state && this.state.open) || {};
+    const vals = {};
+    [1, 2, 3, 4, 5].forEach((i) => {
+      const isOpen = all || !!open[i];
+      const last = i === 5;
+      vals['o' + i] = isOpen;
+      vals['c' + i] = !isOpen;
+      vals['bg' + i] = isOpen ? (last ? '#FFFFFF' : '#6D28D9') : (last ? '#7444C8' : '#EEE7FE');
+      vals['fg' + i] = isOpen ? (last ? '#5B21B6' : '#FFFFFF') : (last ? '#FFFFFF' : '#6D28D9');
+      vals['r' + i] = isOpen ? 'rotate(45deg)' : 'rotate(0deg)';
+      vals['t' + i] = () => {
+        const cur = (this.state && this.state.open) || {};
+        const next = Object.assign({}, cur);
+        next[i] = !cur[i];
+        this.setState({ open: next });
+      };
+    });
+    return vals;
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блок «Почему мы открыто пишем про всё»</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&amp;family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#5B21B6}
+a{color:#E2D8FF}a:hover{color:#FFFFFF}
+</style>
+</head>
+<body>
+<div id="dc-root"></div>
+<template id="dc-template">
+<section style="background-color: #5B21B6; background-image: radial-gradient(#6E38C9 1px, transparent 1px); background-size: 24px 24px; color: #FFFFFF; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 112px clamp(20px, 4vw, 48px); box-sizing: border-box">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 48px 80px; align-items: flex-start">
+
+<header style="flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #E2D8FF">Открытость</span>
+<h2 style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(26px, 2.8vw, 36px); line-height: 1.2; letter-spacing: -0.01em; text-wrap: balance">Почему мы открыто пишем про всё</h2>
+</header>
+
+<figure style="flex: 999 1 560px; min-width: 0; margin: 0; display: flex; flex-direction: column; gap: 28px">
+<svg width="52" height="40" viewBox="0 0 44 34" aria-hidden="true"><path d="M0 34V20.4C0 8.9 6.2 2.1 17.4 0l1.9 4.6C13 6.4 10.2 10 9.8 15.3H18V34H0zm25 0V20.4C25 8.9 31.2 2.1 42.4 0l1.6 4.6c-6.3 1.8-9.1 5.4-9.5 10.7H43V34H25z" fill="#E2D8FF"></path></svg>
+<blockquote style="margin: 0; display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 500; font-size: clamp(22px, 2.5vw, 30px); line-height: 1.4; letter-spacing: -0.01em; text-wrap: pretty">Мы открыто пишем, что входит в каждую услугу, потому что список работ — это только названия.</p>
+<p style="margin: 0; font-size: 18px; line-height: 1.7; color: #E6DEFA; text-wrap: pretty">Прочитать «проверка robots.txt» может любой. Но что именно проверять, как трактовать найденное и что исправлять в первую очередь — это опыт и экспертиза, и они остаются нашими. А вы заранее видите, за что платите, и можете спокойно сравнить нас с другими подрядчиками.</p>
+</blockquote>
+<figcaption style="display: flex; align-items: center; gap: 14px; padding-top: 24px; border-top: 1px solid #8456D2">
+<span aria-hidden="true" style="flex: none; width: 48px; height: 48px; border-radius: 999px; background: #4A1A99; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E2D8FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg></span>
+<span style="display: flex; flex-direction: column; line-height: 1.35">
+<span style="font-size: 16px; font-weight: 600">[Имя Фамилия]</span>
+<span style="font-size: 14px; color: #E6DEFA">руководитель агентства</span>
+</span>
+</figcaption>
+</figure>
+
+</div>
+</section>
+</template>
+<script>
+/* Мини-движок блоков: подставляет значения {{...}}, показывает/скрывает <sc-if>,
+   навешивает обработчики событий и перерисовывает блок при setState(). */
+(function () {
+  class DCLogic {
+    constructor(props) { this.props = props || {}; this.state = undefined; this._render = function () {}; }
+    setState(patch, cb) {
+      var p = typeof patch === 'function' ? patch(this.state || {}, this.props) : patch;
+      this.state = Object.assign({}, this.state || {}, p);
+      this._render();
+      if (cb) cb();
+    }
+    forceUpdate() { this._render(); }
+  }
+  window.DCLogic = DCLogic;
+
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  var WHOLE = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/;
+  var BOOL_PROPS = { checked: 'checked', disabled: 'disabled', selected: 'selected', required: 'required', readonly: 'readOnly', open: 'open', hidden: 'hidden' };
+
+  function lookup(vals, path) {
+    path = path.trim();
+    if (path === 'true') return true;
+    if (path === 'false') return false;
+    if (path === 'null') return null;
+    if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+    return path.split('.').reduce(function (o, k) { return o == null ? undefined : o[k]; }, vals);
+  }
+  function interp(str, vals) {
+    return str.replace(HOLE, function (_, p) { var v = lookup(vals, p); return v == null ? '' : String(v); });
+  }
+
+  function compile(root, ctx) {
+    var ups = [];
+    walk(root);
+    return ups;
+
+    function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 1 && n.localName === 'sc-if') { handleIf(n); return; }
+        if (n.nodeType === 1) { handleAttrs(n); walk(n); return; }
+        if (n.nodeType === 3 && n.nodeValue.indexOf('{{') !== -1) {
+          var tpl = n.nodeValue;
+          ups.push(function (v) { var t = interp(tpl, v); if (n.nodeValue !== t) n.nodeValue = t; });
+        }
+      });
+    }
+
+    function handleIf(el) {
+      var expr = el.getAttribute('value') || '';
+      var m = expr.match(WHOLE);
+      var anchor = document.createComment('sc-if');
+      el.parentNode.replaceChild(anchor, el);
+      var frag = document.createDocumentFragment();
+      while (el.firstChild) frag.appendChild(el.firstChild);
+      var mounted = null;
+      ups.push(function (v) {
+        var cond = !!(m ? lookup(v, m[1]) : expr);
+        if (cond && !mounted) {
+          var clone = frag.cloneNode(true);
+          var inner = compile(clone, ctx);
+          var nodes = Array.prototype.slice.call(clone.childNodes);
+          anchor.parentNode.insertBefore(clone, anchor.nextSibling);
+          mounted = { nodes: nodes, inner: inner };
+        } else if (!cond && mounted) {
+          mounted.nodes.forEach(function (x) { if (x.parentNode) x.parentNode.removeChild(x); });
+          mounted = null;
+        }
+        if (mounted) mounted.inner.forEach(function (f) { f(v); });
+      });
+    }
+
+    function handleAttrs(el) {
+      Array.prototype.slice.call(el.attributes).forEach(function (a) {
+        var name = a.name, val = a.value;
+        if (name.indexOf('hint-') === 0) { el.removeAttribute(name); return; }
+        if (val.indexOf('{{') === -1) return;
+        var m = val.match(WHOLE);
+        el.removeAttribute(name);
+        if (name.indexOf('on') === 0 && m) {
+          var key = m[1];
+          el.addEventListener(name.slice(2), function (e) {
+            var f = lookup(ctx.vals, key);
+            if (typeof f === 'function') f(e);
+          });
+          return;
+        }
+        if (BOOL_PROPS[name] && m) {
+          var prop = BOOL_PROPS[name], k = m[1];
+          ups.push(function (v) { var b = !!lookup(v, k); if (el[prop] !== b) el[prop] = b; });
+          return;
+        }
+        ups.push(function (v) {
+          var out;
+          if (m) { var r = lookup(v, m[1]); out = r == null ? null : String(r); }
+          else out = interp(val, v);
+          if (out === null) el.removeAttribute(name);
+          else if (el.getAttribute(name) !== out) el.setAttribute(name, out);
+        });
+      });
+    }
+  }
+
+  var rootForHeight = null;
+  function postHeight() {
+    if (window.parent === window || !rootForHeight) return;
+    try { window.parent.postMessage({ dcBlockHeight: rootForHeight.getBoundingClientRect().height }, '*'); } catch (e) {}
+  }
+
+  window.DC = {
+    mount: function (Component, tplEl, rootEl, props) {
+      var inst = new Component(props || {});
+      var ctx = { vals: {} };
+      var frag = tplEl.content.cloneNode(true);
+      var ups = compile(frag, ctx);
+      var render = function () {
+        ctx.vals = inst.renderVals() || {};
+        ups.forEach(function (f) { f(ctx.vals); });
+      };
+      inst._render = render;
+      render();
+      rootEl.appendChild(frag);
+      if (inst.componentDidMount) inst.componentDidMount();
+      window.addEventListener('pagehide', function () { if (inst.componentWillUnmount) inst.componentWillUnmount(); });
+      rootForHeight = rootEl;
+      if (window.ResizeObserver) new ResizeObserver(postHeight).observe(rootEl);
+      window.addEventListener('load', postHeight);
+      postHeight();
+    }
+  };
+})();
+
+</script>
+<script>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+<script>
+DC.mount(Component, document.getElementById('dc-template'), document.getElementById('dc-root'), {});
+</script>
+</body>
+</html>

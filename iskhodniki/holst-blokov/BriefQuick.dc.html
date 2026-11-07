@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Блок «Заполните бриф» — короткий</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&amp;family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#F8F5FF}
+a{color:#6D28D9}a:hover{color:#4C1D95}
+</style>
+</helmet>
+<section id="free-audit" style="background: #F8F5FF; color: #0E0B14; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 96px clamp(20px, 4vw, 48px); box-sizing: border-box">
+<div style="max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px">
+
+<header style="display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Бесплатный аудит</span>
+<h2 style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance">Получите бесплатный аудит сайта</h2>
+<p style="margin: 0; max-width: 600px; font-size: 18px; line-height: 1.55; color: #5A5566; text-wrap: pretty">Укажите адрес сайта — проверим его и пришлём список ключевых ошибок с рекомендациями.</p>
+</header>
+
+<form onSubmit="{{onSubmit}}" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 8px; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 18px">
+<input name="url" type="url" aria-label="Адрес сайта" placeholder="https://example.ru" style="flex: 1 1 260px; min-width: 0; box-sizing: border-box; height: 56px; padding: 0 18px; border: 0; border-radius: 12px; background: #F8F5FF; font-family: inherit; font-size: 17px; color: #0E0B14">
+<button type="submit" style="flex: 1 0 auto; display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 0 28px; border: 0; border-radius: 12px; background: #6D28D9; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Получить бесплатный аудит<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></button>
+</form>
+
+<div style="display: flex; align-items: center; gap: 16px">
+<span aria-hidden="true" style="flex: 1 1 auto; height: 1px; background: #E0D7F5"></span>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6B6677; white-space: nowrap">Также советуем</span>
+<span aria-hidden="true" style="flex: 1 1 auto; height: 1px; background: #E0D7F5"></span>
+</div>
+
+<div style="background: #FFFFFF; border: 1.5px solid {{shareBd}}; border-radius: 18px; overflow: hidden; transition: border-color 0.2s">
+<label style="display: flex; align-items: center; gap: 16px; padding: 18px 20px; cursor: pointer">
+<input type="checkbox" checked="{{shared}}" onChange="{{toggleShare}}" style="flex: none; width: 22px; height: 22px; margin: 0; accent-color: #6D28D9; cursor: pointer">
+<span style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 17px; font-weight: 600; line-height: 1.3; color: #0E0B14">Расшарить доступ к статистике</span>
+<span style="font-size: 14px; line-height: 1.5; color: #5A5566; text-wrap: pretty">Яндекс Метрика, Вебмастер или Google Search Console — с данными аудит будет точнее</span>
+</span>
+<span aria-hidden="true" style="flex: none; width: 44px; height: 44px; border-radius: 12px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"></circle><circle cx="6" cy="12" r="2.5"></circle><circle cx="18" cy="19" r="2.5"></circle><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"></path></svg></span>
+</label>
+<sc-if value="{{shared}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px 18px 58px; border-top: 1px solid #EFE8FF; background: #F8F5FF; font-size: 15px; line-height: 1.5; color: #2B2733">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>
+<span>Предоставьте нам доступ к статистике на email <a href="mailto:example@site.com" style="font-weight: 600">example@site.com</a></span>
+</div>
+</sc-if>
+</div>
+
+</div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":660}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const shared = !!(this.state && this.state.shared);
+    return {
+      shared: shared,
+      shareBd: shared ? '#6D28D9' : '#E0D7F5',
+      toggleShare: () => this.setState({ shared: !shared }),
+      onSubmit: (e) => { if (e && e.preventDefault) e.preventDefault(); }
+    };
+  }
+}
+</script>
+</body>
+</html>

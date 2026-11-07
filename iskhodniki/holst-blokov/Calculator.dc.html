@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Блок «Калькулятор стоимости»</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&amp;family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#F8F5FF}
+a{color:#6D28D9}a:hover{color:#4C1D95}
+</style>
+</helmet>
+<section id="calculator" style="background: #F8F5FF; color: #0E0B14; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 96px clamp(20px, 4vw, 48px); box-sizing: border-box">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px">
+
+<header style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Калькулятор</span>
+<h2 style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance">Рассчитайте стоимость продвижения</h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: #5A5566; text-wrap: pretty">Ответьте на 7 вопросов — покажем предварительную стоимость работ.</p>
+</header>
+
+<form onSubmit="{{onSubmit}}" style="background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 20px; overflow: hidden">
+
+<div role="tablist" aria-label="Этапы расчёта" style="display: flex; gap: 4px; padding: 8px 8px 0; background: #EAE3FB; overflow-x: auto">
+<button type="button" role="tab" aria-selected="{{a1}}" onClick="{{go1}}" style="flex: 1 0 auto; max-width: 240px; display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 16px; border: 0; border-top: 3px solid {{tt1}}; border-radius: 12px 12px 0 0; background: {{tb1}}; color: {{tf1}}; font-family: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer"><span style="flex: none; box-sizing: border-box; width: 24px; height: 24px; border-radius: 999px; border: 1.5px solid {{nbd1}}; background: {{nb1}}; color: {{nf1}}; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 11px"><sc-if value="{{d1}}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.5l2.2 2.2 4.8-5"></path></svg></sc-if><sc-if value="{{nd1}}" hint-placeholder-val="{{ true }}">1</sc-if></span><span>Регион</span></button>
+<button type="button" role="tab" aria-selected="{{a2}}" onClick="{{go2}}" style="flex: 1 0 auto; max-width: 240px; display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 16px; border: 0; border-top: 3px solid {{tt2}}; border-radius: 12px 12px 0 0; background: {{tb2}}; color: {{tf2}}; font-family: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer"><span style="flex: none; box-sizing: border-box; width: 24px; height: 24px; border-radius: 999px; border: 1.5px solid {{nbd2}}; background: {{nb2}}; color: {{nf2}}; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 11px"><sc-if value="{{d2}}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.5l2.2 2.2 4.8-5"></path></svg></sc-if><sc-if value="{{nd2}}" hint-placeholder-val="{{ true }}">2</sc-if></span><span>Запросы</span></button>
+<button type="button" role="tab" aria-selected="{{a3}}" onClick="{{go3}}" style="flex: 1 0 auto; max-width: 240px; display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 16px; border: 0; border-top: 3px solid {{tt3}}; border-radius: 12px 12px 0 0; background: {{tb3}}; color: {{tf3}}; font-family: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer"><span style="flex: none; box-sizing: border-box; width: 24px; height: 24px; border-radius: 999px; border: 1.5px solid {{nbd3}}; background: {{nb3}}; color: {{nf3}}; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 11px"><sc-if value="{{d3}}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.5l2.2 2.2 4.8-5"></path></svg></sc-if><sc-if value="{{nd3}}" hint-placeholder-val="{{ true }}">3</sc-if></span><span>Контент</span></button>
+<button type="button" role="tab" aria-selected="{{a4}}" onClick="{{go4}}" style="flex: 1 0 auto; max-width: 240px; display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 16px; border: 0; border-top: 3px solid {{tt4}}; border-radius: 12px 12px 0 0; background: {{tb4}}; color: {{tf4}}; font-family: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer"><span style="flex: none; box-sizing: border-box; width: 24px; height: 24px; border-radius: 999px; border: 1.5px solid {{nbd4}}; background: {{nb4}}; color: {{nf4}}; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 11px"><sc-if value="{{d4}}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.5l2.2 2.2 4.8-5"></path></svg></sc-if><sc-if value="{{nd4}}" hint-placeholder-val="{{ true }}">4</sc-if></span><span>Внешняя оптимизация</span></button>
+<button type="button" role="tab" aria-selected="{{a5}}" onClick="{{go5}}" style="flex: 1 0 auto; max-width: 240px; display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 16px; border: 0; border-top: 3px solid {{tt5}}; border-radius: 12px 12px 0 0; background: {{tb5}}; color: {{tf5}}; font-family: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer"><span style="flex: none; box-sizing: border-box; width: 24px; height: 24px; border-radius: 999px; border: 1.5px solid {{nbd5}}; background: {{nb5}}; color: {{nf5}}; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 11px"><sc-if value="{{d5}}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.5l2.2 2.2 4.8-5"></path></svg></sc-if><sc-if value="{{nd5}}" hint-placeholder-val="{{ true }}">5</sc-if></span><span>Репутация</span></button>
+<button type="button" role="tab" aria-selected="{{a6}}" onClick="{{go6}}" style="flex: 1 0 auto; max-width: 240px; display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 16px; border: 0; border-top: 3px solid {{tt6}}; border-radius: 12px 12px 0 0; background: {{tb6}}; color: {{tf6}}; font-family: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer"><span style="flex: none; box-sizing: border-box; width: 24px; height: 24px; border-radius: 999px; border: 1.5px solid {{nbd6}}; background: {{nb6}}; color: {{nf6}}; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 11px"><sc-if value="{{d6}}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.5l2.2 2.2 4.8-5"></path></svg></sc-if><sc-if value="{{nd6}}" hint-placeholder-val="{{ true }}">6</sc-if></span><span>GEO</span></button>
+<button type="button" role="tab" aria-selected="{{a7}}" onClick="{{go7}}" style="flex: 1 0 auto; max-width: 240px; display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 16px; border: 0; border-top: 3px solid {{tt7}}; border-radius: 12px 12px 0 0; background: {{tb7}}; color: {{tf7}}; font-family: inherit; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer"><span style="flex: none; box-sizing: border-box; width: 24px; height: 24px; border-radius: 999px; border: 1.5px solid {{nbd7}}; background: {{nb7}}; color: {{nf7}}; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 11px"><sc-if value="{{d7}}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.5l2.2 2.2 4.8-5"></path></svg></sc-if><sc-if value="{{nd7}}" hint-placeholder-val="{{ true }}">7</sc-if></span><span>О сайте</span></button>
+</div>
+
+<sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
+<div role="tabpanel" style="min-height: 400px; padding: clamp(20px, 4vw, 36px); box-sizing: border-box">
+
+<sc-if value="{{s1}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px"><h3 style="margin: 0; font-size: 22px; font-weight: 600">Регион продвижения</h3><p style="margin: 0; font-size: 15px; line-height: 1.5; color: #5A5566">Выберите один или несколько регионов или впишите свой.</p></div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<button type="button" aria-pressed="{{rOn1}}" onClick="{{rTg1}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 12px; border-radius: 999px; border: 1px solid {{rBd1}}; background: {{rBg1}}; color: {{rFg1}}; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer"><sc-if value="{{rOff1}}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg></sc-if><sc-if value="{{rOn1}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-6.5"></path></svg></sc-if><span>Москва</span></button>
+<button type="button" aria-pressed="{{rOn2}}" onClick="{{rTg2}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 12px; border-radius: 999px; border: 1px solid {{rBd2}}; background: {{rBg2}}; color: {{rFg2}}; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer"><sc-if value="{{rOff2}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg></sc-if><sc-if value="{{rOn2}}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-6.5"></path></svg></sc-if><span>Санкт-Петербург</span></button>
+<button type="button" aria-pressed="{{rOn3}}" onClick="{{rTg3}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 12px; border-radius: 999px; border: 1px solid {{rBd3}}; background: {{rBg3}}; color: {{rFg3}}; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer"><sc-if value="{{rOff3}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg></sc-if><sc-if value="{{rOn3}}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-6.5"></path></svg></sc-if><span>Новосибирск</span></button>
+<button type="button" aria-pressed="{{rOn4}}" onClick="{{rTg4}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 12px; border-radius: 999px; border: 1px solid {{rBd4}}; background: {{rBg4}}; color: {{rFg4}}; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer"><sc-if value="{{rOff4}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg></sc-if><sc-if value="{{rOn4}}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-6.5"></path></svg></sc-if><span>Екатеринбург</span></button>
+<button type="button" aria-pressed="{{rOn5}}" onClick="{{rTg5}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 12px; border-radius: 999px; border: 1px solid {{rBd5}}; background: {{rBg5}}; color: {{rFg5}}; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer"><sc-if value="{{rOff5}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg></sc-if><sc-if value="{{rOn5}}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-6.5"></path></svg></sc-if><span>Казань</span></button>
+<button type="button" aria-pressed="{{rOn6}}" onClick="{{rTg6}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 12px; border-radius: 999px; border: 1px solid {{rBd6}}; background: {{rBg6}}; color: {{rFg6}}; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer"><sc-if value="{{rOff6}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg></sc-if><sc-if value="{{rOn6}}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-6.5"></path></svg></sc-if><span>Нижний Новгород</span></button>
+<button type="button" aria-pressed="{{rOn7}}" onClick="{{rTg7}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 12px; border-radius: 999px; border: 1px solid {{rBd7}}; background: {{rBg7}}; color: {{rFg7}}; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer"><sc-if value="{{rOff7}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg></sc-if><sc-if value="{{rOn7}}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-6.5"></path></svg></sc-if><span>Краснодар</span></button>
+<button type="button" aria-pressed="{{rOn8}}" onClick="{{rTg8}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 12px; border-radius: 999px; border: 1px solid {{rBd8}}; background: {{rBg8}}; color: {{rFg8}}; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer"><sc-if value="{{rOff8}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg></sc-if><sc-if value="{{rOn8}}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-6.5"></path></svg></sc-if><span>Вся Россия</span></button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 480px">
+<label for="calc-region" style="font-size: 14px; font-weight: 600">Другой регион</label>
+<input id="calc-region" type="text" placeholder="Например, Тверь и Тверская область" style="box-sizing: border-box; width: 100%; height: 52px; padding: 0 16px; border: 1px solid #D9CFF2; border-radius: 12px; background: #FFFFFF; font-family: inherit; font-size: 16px; color: #0E0B14">
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{s2}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px"><h3 style="margin: 0; font-size: 22px; font-weight: 600">Ключевые запросы</h3><p style="margin: 0; font-size: 15px; line-height: 1.5; color: #5A5566">По каким запросам вы хотите видеть сайт в поиске? Если не знаете — оставьте поле пустым, подберём запросы сами.</p></div>
+<label for="calc-keys" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Ключевые запросы</label>
+<textarea id="calc-keys" rows="7" placeholder="Каждый запрос с новой строки, например:&#10;ремонт квартир под ключ&#10;дизайн-проект квартиры" style="box-sizing: border-box; width: 100%; min-height: 200px; padding: 14px 16px; border: 1px solid #D9CFF2; border-radius: 12px; background: #FFFFFF; font-family: inherit; font-size: 16px; line-height: 1.5; color: #0E0B14; resize: vertical"></textarea>
+</div>
+</sc-if>
+
+<sc-if value="{{s3}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px"><h3 style="margin: 0; font-size: 22px; font-weight: 600">Кто будет создавать контент</h3><p style="margin: 0; font-size: 15px; line-height: 1.5; color: #5A5566">Тексты для продвигаемых страниц, статьи и описания.</p></div>
+<div role="radiogroup" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 12px">
+<label style="display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; border-radius: 14px; border: 1.5px solid {{cBd1}}; background: {{cBg1}}; cursor: pointer"><input type="radio" name="content" checked="{{cOn1}}" onChange="{{cPk1}}" style="flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: #6D28D9; cursor: pointer"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; line-height: 1.35">Ваш специалист</span><span style="font-size: 14px; line-height: 1.5; color: #5A5566">Мы готовим техническое задание, тексты пишет специалист с вашей стороны.</span></span></label>
+<label style="display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; border-radius: 14px; border: 1.5px solid {{cBd2}}; background: {{cBg2}}; cursor: pointer"><input type="radio" name="content" checked="{{cOn2}}" onChange="{{cPk2}}" style="flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: #6D28D9; cursor: pointer"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; line-height: 1.35">Специалист с биржи</span><span style="font-size: 14px; line-height: 1.5; color: #5A5566">Готовим ТЗ, подбираем исполнителя на бирже и проверяем его работу.</span></span></label>
+<label style="display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; border-radius: 14px; border: 1.5px solid {{cBd3}}; background: {{cBg3}}; cursor: pointer"><input type="radio" name="content" checked="{{cOn3}}" onChange="{{cPk3}}" style="flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: #6D28D9; cursor: pointer"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; line-height: 1.35">Наш специалист</span><span style="font-size: 14px; line-height: 1.5; color: #5A5566">Контент полностью готовит наша команда.</span></span></label>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{s4}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px"><h3 style="margin: 0; font-size: 22px; font-weight: 600">Внешняя оптимизация</h3><p style="margin: 0; font-size: 15px; line-height: 1.5; color: #5A5566">Работа с внешними факторами: ссылки, упоминания, площадки.</p></div>
+<div role="radiogroup" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 12px">
+<label style="display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; border-radius: 14px; border: 1.5px solid {{eBd1}}; background: {{eBg1}}; cursor: pointer"><input type="radio" name="external" checked="{{eOn1}}" onChange="{{ePk1}}" style="flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: #6D28D9; cursor: pointer"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; line-height: 1.35">Минимально необходимые работы</span><span style="font-size: 14px; line-height: 1.5; color: #5A5566">Только то, без чего сайту сложно расти в выдаче.</span></span></label>
+<label style="display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; border-radius: 14px; border: 1.5px solid {{eBd2}}; background: {{eBg2}}; cursor: pointer"><input type="radio" name="external" checked="{{eOn2}}" onChange="{{ePk2}}" style="flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: #6D28D9; cursor: pointer"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; line-height: 1.35">Весь комплекс работ</span><span style="font-size: 14px; line-height: 1.5; color: #5A5566">Системная работа со ссылками и упоминаниями на протяжении проекта.</span></span></label>
+<label style="display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; border-radius: 14px; border: 1.5px solid {{eBd3}}; background: {{eBg3}}; cursor: pointer"><input type="radio" name="external" checked="{{eOn3}}" onChange="{{ePk3}}" style="flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: #6D28D9; cursor: pointer"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; line-height: 1.35">Без внешней оптимизации</span><span style="font-size: 14px; line-height: 1.5; color: #5A5566">Работаем только с самим сайтом.</span></span></label>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{s5}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px"><h3 style="margin: 0; font-size: 22px; font-weight: 600">Работа с репутацией</h3><p style="margin: 0; font-size: 15px; line-height: 1.5; color: #5A5566">Насколько внимательно следить за тем, что пишут о вашей компании.</p></div>
+<div role="radiogroup" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 12px">
+<label style="display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; border-radius: 14px; border: 1.5px solid {{rpBd1}}; background: {{rpBg1}}; cursor: pointer"><input type="radio" name="reputation" checked="{{rpOn1}}" onChange="{{rpPk1}}" style="flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: #6D28D9; cursor: pointer"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; line-height: 1.35">Не следим за репутацией</span><span style="font-size: 14px; line-height: 1.5; color: #5A5566">Работаем только с поисковым продвижением.</span></span></label>
+<label style="display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; border-radius: 14px; border: 1.5px solid {{rpBd2}}; background: {{rpBg2}}; cursor: pointer"><input type="radio" name="reputation" checked="{{rpOn2}}" onChange="{{rpPk2}}" style="flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: #6D28D9; cursor: pointer"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; line-height: 1.35">Только отзывы</span><span style="font-size: 14px; line-height: 1.5; color: #5A5566">Отслеживаем отзывы на картах и сайтах-отзовиках.</span></span></label>
+<label style="display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; border-radius: 14px; border: 1.5px solid {{rpBd3}}; background: {{rpBg3}}; cursor: pointer"><input type="radio" name="reputation" checked="{{rpOn3}}" onChange="{{rpPk3}}" style="flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: #6D28D9; cursor: pointer"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; line-height: 1.35">Все упоминания бренда</span><span style="font-size: 14px; line-height: 1.5; color: #5A5566">Следим за упоминаниями компании на любых сайтах.</span></span></label>
+<label style="display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; border-radius: 14px; border: 1.5px solid {{rpBd4}}; background: {{rpBg4}}; cursor: pointer"><input type="radio" name="reputation" checked="{{rpOn4}}" onChange="{{rpPk4}}" style="flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: #6D28D9; cursor: pointer"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; line-height: 1.35">Репутация в соцсетях</span><span style="font-size: 14px; line-height: 1.5; color: #5A5566">Отслеживаем упоминания и обсуждения в социальных сетях.</span></span></label>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{s6}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px"><h3 style="margin: 0; font-size: 22px; font-weight: 600">GEO-продвижение</h3><p style="margin: 0; font-size: 15px; line-height: 1.5; color: #5A5566">Адаптация сайта под ответы нейросетей, чтобы они находили и упоминали ваш сайт.</p></div>
+<div role="radiogroup" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 12px">
+<label style="display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; border-radius: 14px; border: 1.5px solid {{gBd1}}; background: {{gBg1}}; cursor: pointer"><input type="radio" name="geo" checked="{{gOn1}}" onChange="{{gPk1}}" style="flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: #6D28D9; cursor: pointer"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; line-height: 1.35">Не адаптируем под AI-системы</span><span style="font-size: 14px; line-height: 1.5; color: #5A5566">Продвигаем сайт только в классическом поиске.</span></span></label>
+<label style="display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; border-radius: 14px; border: 1.5px solid {{gBd2}}; background: {{gBg2}}; cursor: pointer"><input type="radio" name="geo" checked="{{gOn2}}" onChange="{{gPk2}}" style="flex: none; width: 20px; height: 20px; margin: 2px 0 0; accent-color: #6D28D9; cursor: pointer"><span style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 600; line-height: 1.35">Адаптируем под AI-системы</span><span style="font-size: 14px; line-height: 1.5; color: #5A5566">Выберите системы, под которые нужно адаптировать сайт.</span></span></label>
+</div>
+<sc-if value="{{showAi}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px 20px; border-radius: 14px; background: #F8F5FF">
+<span style="font-size: 14px; font-weight: 600">AI-системы</span>
+<div style="display: flex; flex-wrap: wrap; gap: 4px 28px">
+<label style="display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 15px; font-weight: 500; cursor: pointer"><input type="checkbox" checked="{{aiOn1}}" onChange="{{aiTg1}}" style="width: 20px; height: 20px; margin: 0; accent-color: #6D28D9; cursor: pointer">Claude</label>
+<label style="display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 15px; font-weight: 500; cursor: pointer"><input type="checkbox" checked="{{aiOn2}}" onChange="{{aiTg2}}" style="width: 20px; height: 20px; margin: 0; accent-color: #6D28D9; cursor: pointer">Gemini</label>
+<label style="display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 15px; font-weight: 500; cursor: pointer"><input type="checkbox" checked="{{aiOn3}}" onChange="{{aiTg3}}" style="width: 20px; height: 20px; margin: 0; accent-color: #6D28D9; cursor: pointer">ChatGPT</label>
+<label style="display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 15px; font-weight: 500; cursor: pointer"><input type="checkbox" checked="{{aiOn4}}" onChange="{{aiTg4}}" style="width: 20px; height: 20px; margin: 0; accent-color: #6D28D9; cursor: pointer">Алиса</label>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{s7}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px"><h3 style="margin: 0; font-size: 22px; font-weight: 600">О сайте</h3><p style="margin: 0; font-size: 15px; line-height: 1.5; color: #5A5566">Последний шаг — расскажите о сайте и цели продвижения.</p></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 18px 20px">
+<div style="display: flex; flex-direction: column; gap: 8px"><label for="calc-url" style="font-size: 14px; font-weight: 600">Адрес сайта</label><input id="calc-url" type="url" placeholder="https://example.ru" style="box-sizing: border-box; width: 100%; height: 52px; padding: 0 16px; border: 1px solid #D9CFF2; border-radius: 12px; background: #FFFFFF; font-family: inherit; font-size: 16px; color: #0E0B14"></div>
+<div style="display: flex; flex-direction: column; gap: 8px"><label for="calc-topic" style="font-size: 14px; font-weight: 600">Тематика сайта</label><input id="calc-topic" type="text" placeholder="Например, ремонт квартир" style="box-sizing: border-box; width: 100%; height: 52px; padding: 0 16px; border: 1px solid #D9CFF2; border-radius: 12px; background: #FFFFFF; font-family: inherit; font-size: 16px; color: #0E0B14"></div>
+<div style="display: flex; flex-direction: column; gap: 8px"><label for="calc-pages" style="font-size: 14px; font-weight: 600">Количество продвигаемых страниц</label><input id="calc-pages" type="number" min="1" placeholder="Например, 30" style="box-sizing: border-box; width: 100%; height: 52px; padding: 0 16px; border: 1px solid #D9CFF2; border-radius: 12px; background: #FFFFFF; font-family: inherit; font-size: 16px; color: #0E0B14"></div>
+<div style="display: flex; flex-direction: column; gap: 8px"><label for="calc-goal" style="font-size: 14px; font-weight: 600">Цель по трафику или заказам</label><input id="calc-goal" type="text" placeholder="Например, 50 заявок в месяц" style="box-sizing: border-box; width: 100%; height: 52px; padding: 0 16px; border: 1px solid #D9CFF2; border-radius: 12px; background: #FFFFFF; font-family: inherit; font-size: 16px; color: #0E0B14"></div>
+<div role="group" aria-label="Возраст сайта" style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 14px; font-weight: 600">Возраст сайта</span><div style="display: flex; flex-wrap: wrap; gap: 8px">
+<button type="button" aria-pressed="{{agOn1}}" onClick="{{agPk1}}" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid {{agBd1}}; background: {{agBg1}}; color: {{agFg1}}; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer">Новый</button>
+<button type="button" aria-pressed="{{agOn2}}" onClick="{{agPk2}}" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid {{agBd2}}; background: {{agBg2}}; color: {{agFg2}}; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer">До 1 года</button>
+<button type="button" aria-pressed="{{agOn3}}" onClick="{{agPk3}}" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid {{agBd3}}; background: {{agBg3}}; color: {{agFg3}}; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer">1–3 года</button>
+<button type="button" aria-pressed="{{agOn4}}" onClick="{{agPk4}}" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid {{agBd4}}; background: {{agBg4}}; color: {{agFg4}}; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer">Более 3 лет</button>
+</div></div>
+<div role="group" aria-label="Есть ли сейчас трафик или заказы" style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 14px; font-weight: 600">Есть ли сейчас трафик или заказы с сайта</span><div style="display: flex; flex-wrap: wrap; gap: 8px">
+<button type="button" aria-pressed="{{trOn1}}" onClick="{{trPk1}}" style="min-height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid {{trBd1}}; background: {{trBg1}}; color: {{trFg1}}; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer">Да</button>
+<button type="button" aria-pressed="{{trOn2}}" onClick="{{trPk2}}" style="min-height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid {{trBd2}}; background: {{trBg2}}; color: {{trFg2}}; font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer">Нет</button>
+</div></div>
+</div>
+</div>
+</sc-if>
+
+</div>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 24px; padding: 18px clamp(20px, 4vw, 36px); border-top: 1px solid #EFE8FF">
+<button type="button" onClick="{{prev}}" disabled="{{isFirst}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; border: 1.5px solid #D9CFF2; border-radius: 12px; background: #FFFFFF; color: #0E0B14; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; opacity: {{backOp}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0E0B14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6"></path></svg>Назад</button>
+<div style="flex: 1 1 220px; max-width: 420px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #5A5566">{{stepLabel}}</span>
+<span aria-hidden="true" style="display: block; height: 6px; border-radius: 999px; background: #EEE7FE; overflow: hidden"><span style="display: block; width: {{pct}}%; height: 100%; border-radius: 999px; background: #6D28D9; transition: width 0.25s"></span></span>
+</div>
+<sc-if value="{{notLast}}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{next}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 24px; border: 0; border-radius: 12px; background: #6D28D9; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Далее<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></button>
+</sc-if>
+<sc-if value="{{isLast}}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{calculate}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 24px; border: 0; border-radius: 12px; background: #6D28D9; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Рассчитать стоимость<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></button>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{showResult}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="min-height: 400px; padding: clamp(24px, 5vw, 56px); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Предварительный расчёт</span>
+<span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-size: clamp(32px, 4vw, 52px); font-weight: 600; letter-spacing: -0.02em">от XX XXX ₽ <span style="font-family: Onest, system-ui, sans-serif; font-size: 20px; font-weight: 500; letter-spacing: 0; color: #5A5566">/ месяц</span></span>
+<p style="margin: 0; max-width: 520px; font-size: 16px; line-height: 1.6; color: #5A5566; text-wrap: pretty">Точную стоимость назовём после анализа сайта — пришлём расчёт с составом работ.</p>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 8px">
+<a href="#contact" style="display: inline-flex; align-items: center; min-height: 52px; padding: 0 26px; border-radius: 12px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-size: 16px; font-weight: 600">Получить точный расчёт</a>
+<button type="button" onClick="{{edit}}" style="min-height: 52px; padding: 0 24px; border: 1.5px solid #D9CFF2; border-radius: 12px; background: #FFFFFF; color: #0E0B14; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Изменить параметры</button>
+</div>
+</div>
+</sc-if>
+
+</form>
+</div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const D = { regions: { 1: true }, ai: { 1: true, 2: true, 3: true, 4: true } };
+    const step = st.step || 1;
+    const calc = !!st.calculated;
+    const labels = ['Регион', 'Запросы', 'Контент', 'Внешняя оптимизация', 'Репутация', 'GEO', 'О сайте'];
+    const v = {};
+    for (let i = 1; i <= 7; i++) {
+      const active = !calc && i === step;
+      const done = (calc || i < step) && !active;
+      v['s' + i] = active;
+      v['a' + i] = active;
+      v['d' + i] = done;
+      v['nd' + i] = !done;
+      v['tb' + i] = active ? '#FFFFFF' : 'transparent';
+      v['tt' + i] = active ? '#6D28D9' : 'transparent';
+      v['tf' + i] = active ? '#0E0B14' : (done ? '#5B21B6' : '#5A5566');
+      v['nb' + i] = active ? '#6D28D9' : (done ? '#FFFFFF' : 'transparent');
+      v['nbd' + i] = active ? '#6D28D9' : (done ? '#FFFFFF' : '#B9A8E8');
+      v['nf' + i] = active ? '#FFFFFF' : (done ? '#6D28D9' : '#5A5566');
+      v['go' + i] = () => this.setState({ step: i, calculated: false });
+    }
+    v.showForm = !calc;
+    v.showResult = calc;
+    v.isFirst = step === 1;
+    v.notLast = step < 7;
+    v.isLast = step === 7;
+    v.backOp = step === 1 ? '0.4' : '1';
+    v.stepLabel = 'Шаг ' + step + ' из 7 · ' + labels[step - 1];
+    v.pct = Math.round((step / 7) * 100);
+    v.prev = () => this.setState({ step: Math.max(1, step - 1) });
+    v.next = () => this.setState({ step: Math.min(7, step + 1) });
+    v.calculate = () => this.setState({ calculated: true });
+    v.edit = () => this.setState({ calculated: false, step: 7 });
+    v.onSubmit = (e) => { if (e && e.preventDefault) e.preventDefault(); };
+
+    const multi = (p, n, key) => {
+      const sel = st[key] || D[key];
+      for (let i = 1; i <= n; i++) {
+        const on = !!sel[i];
+        v[p + 'On' + i] = on;
+        v[p + 'Off' + i] = !on;
+        v[p + 'Bg' + i] = on ? '#6D28D9' : '#FFFFFF';
+        v[p + 'Fg' + i] = on ? '#FFFFFF' : '#0E0B14';
+        v[p + 'Bd' + i] = on ? '#6D28D9' : '#D9CFF2';
+        v[p + 'Tg' + i] = () => {
+          const cur = Object.assign({}, (this.state && this.state[key]) || D[key]);
+          cur[i] = !cur[i];
+          this.setState({ [key]: cur });
+        };
+      }
+    };
+    const single = (p, n, key, def, card) => {
+      const cur = st[key] || def;
+      for (let i = 1; i <= n; i++) {
+        const on = cur === i;
+        v[p + 'On' + i] = on;
+        v[p + 'Bd' + i] = on ? '#6D28D9' : (card ? '#E0D7F5' : '#D9CFF2');
+        v[p + 'Bg' + i] = on ? (card ? '#F8F5FF' : '#6D28D9') : '#FFFFFF';
+        v[p + 'Fg' + i] = on && !card ? '#FFFFFF' : '#0E0B14';
+        v[p + 'Pk' + i] = () => this.setState({ [key]: i });
+      }
+      return cur;
+    };
+    multi('r', 8, 'regions');
+    multi('ai', 4, 'ai');
+    single('c', 3, 'content', 2, true);
+    single('e', 3, 'ext', 1, true);
+    single('rp', 4, 'rep', 2, true);
+    v.showAi = single('g', 2, 'geo', 2, true) === 2;
+    single('ag', 4, 'age', 3, false);
+    single('tr', 2, 'traffic', 1, false);
+    return v;
+  }
+}
+</script>
+</body>
+</html>

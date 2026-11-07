@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Блок «Что включает услуга»</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&amp;family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#F8F5FF}
+a{color:#6D28D9}a:hover{color:#4C1D95}
+</style>
+</head>
+<body>
+<div id="dc-root"></div>
+<template id="dc-template">
+<section id="includes" style="background: #F8F5FF; color: #0E0B14; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 96px clamp(20px, 4vw, 48px); box-sizing: border-box">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px">
+
+<header style="display: flex; flex-direction: column; gap: 16px; max-width: 760px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Состав услуги</span>
+<h2 style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.15; letter-spacing: -0.01em; text-wrap: balance">Что включает технический аудит</h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: #5A5566; text-wrap: pretty">Нажмите на работу, чтобы узнать подробности. Каждую из них можно заказать отдельно — у неё есть своя страница с описанием и стоимостью.</p>
+</header>
+
+<ol style="list-style: none; margin: 0; padding: 0; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 20px; overflow: hidden">
+
+<li>
+<h3 style="margin: 0">
+<button type="button" onClick="{{t1}}" aria-expanded="{{o1}}" style="width: 100%; display: flex; align-items: center; gap: 20px; padding: 22px clamp(16px, 3vw, 32px); background: transparent; border: 0; font-family: inherit; text-align: left; color: #0E0B14; cursor: pointer">
+<span style="flex: none; display: flex; align-items: center; gap: 12px"><span style="width: 24px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">01</span><span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 10px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="14" height="11" rx="3"></rect><path d="M12 4.5V8"></path><circle cx="12" cy="3.5" r="1"></circle><path d="M9.5 12.5v1M14.5 12.5v1"></path><path d="M3 12v3M21 12v3"></path></svg></span></span>
+<span style="flex: 1 1 auto; min-width: 0; font-size: 20px; font-weight: 600; line-height: 1.3">Проверка robots.txt</span>
+<span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 999px; background: {{bg1}}; display: flex; align-items: center; justify-content: center; transition: background 0.2s"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="{{fg1}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: {{r1}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></span>
+</button>
+</h3>
+<sc-if value="{{o1}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 0 clamp(16px, 3vw, 32px) 32px calc(clamp(16px, 3vw, 32px) + clamp(0px, 7.5vw, 96px)); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 24px 48px">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; font-size: 16px; line-height: 1.65; color: #2B2733; text-wrap: pretty">Файл robots.txt подсказывает поисковым роботам, какие разделы сайта сканировать, а какие нет. Одна ошибка в нём может закрыть от индексации весь каталог или, наоборот, открыть служебные страницы.</p>
+<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap">
+<span style="font-size: 17px; font-weight: 600">от X XXX ₽</span>
+<a href="#robots" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-weight: 600; font-size: 15px">Подробнее об услуге<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+<div style="background: #F8F5FF; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Что проверяем</span>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Синтаксис и корректность директив</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Важные разделы, случайно закрытые от индексации</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Служебные страницы, открытые для роботов</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Отдельные правила для Яндекса и Google, ссылка на карту сайта</span></li>
+</ul>
+</div>
+</div>
+</sc-if>
+</li>
+
+<li style="border-top: 1px solid #E0D7F5">
+<h3 style="margin: 0">
+<button type="button" onClick="{{t2}}" aria-expanded="{{o2}}" style="width: 100%; display: flex; align-items: center; gap: 20px; padding: 22px clamp(16px, 3vw, 32px); background: transparent; border: 0; font-family: inherit; text-align: left; color: #0E0B14; cursor: pointer">
+<span style="flex: none; display: flex; align-items: center; gap: 12px"><span style="width: 24px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">02</span><span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 10px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="5" rx="1"></rect><rect x="3" y="16" width="6" height="5" rx="1"></rect><rect x="15" y="16" width="6" height="5" rx="1"></rect><path d="M12 8v4M6 16v-4h12v4"></path></svg></span></span>
+<span style="flex: 1 1 auto; min-width: 0; font-size: 20px; font-weight: 600; line-height: 1.3">Анализ карты сайта</span>
+<span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 999px; background: {{bg2}}; display: flex; align-items: center; justify-content: center; transition: background 0.2s"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="{{fg2}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: {{r2}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></span>
+</button>
+</h3>
+<sc-if value="{{o2}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 0 clamp(16px, 3vw, 32px) 32px calc(clamp(16px, 3vw, 32px) + clamp(0px, 7.5vw, 96px)); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 24px 48px">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; font-size: 16px; line-height: 1.65; color: #2B2733; text-wrap: pretty">Карта сайта sitemap.xml помогает поисковым системам быстрее находить новые и обновлённые страницы. Если в ней остались устаревшие или закрытые адреса, робот тратит время впустую.</p>
+<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap">
+<span style="font-size: 17px; font-weight: 600">от X XXX ₽</span>
+<a href="#sitemap" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-weight: 600; font-size: 15px">Подробнее об услуге<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+<div style="background: #F8F5FF; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Что проверяем</span>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Наличие и доступность файла</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Адреса с ошибками, редиректами и запретом индексации</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Пропущенные важные страницы</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Актуальность дат изменения страниц</span></li>
+</ul>
+</div>
+</div>
+</sc-if>
+</li>
+
+<li style="border-top: 1px solid #E0D7F5">
+<h3 style="margin: 0">
+<button type="button" onClick="{{t3}}" aria-expanded="{{o3}}" style="width: 100%; display: flex; align-items: center; gap: 20px; padding: 22px clamp(16px, 3vw, 32px); background: transparent; border: 0; font-family: inherit; text-align: left; color: #0E0B14; cursor: pointer">
+<span style="flex: none; display: flex; align-items: center; gap: 12px"><span style="width: 24px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">03</span><span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 10px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="2"></rect><rect x="3" y="13" width="18" height="7" rx="2"></rect><path d="M7 7.5h.01M7 16.5h.01"></path><path d="M11 7.5h6M11 16.5h6"></path></svg></span></span>
+<span style="flex: 1 1 auto; min-width: 0; font-size: 20px; font-weight: 600; line-height: 1.3">Коды ответа сервера</span>
+<span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 999px; background: {{bg3}}; display: flex; align-items: center; justify-content: center; transition: background 0.2s"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="{{fg3}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: {{r3}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></span>
+</button>
+</h3>
+<sc-if value="{{o3}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 0 clamp(16px, 3vw, 32px) 32px calc(clamp(16px, 3vw, 32px) + clamp(0px, 7.5vw, 96px)); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 24px 48px">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; font-size: 16px; line-height: 1.65; color: #2B2733; text-wrap: pretty">Каждая страница сообщает роботу код ответа: 200 — всё в порядке, 301 — страница переехала, 404 — не найдена. Неверные коды мешают индексации и расходуют время, которое робот тратит на обход сайта.</p>
+<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap">
+<span style="font-size: 17px; font-weight: 600">от X XXX ₽</span>
+<a href="#server-codes" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-weight: 600; font-size: 15px">Подробнее об услуге<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+<div style="background: #F8F5FF; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Что проверяем</span>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Битые внутренние ссылки (404)</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Цепочки и циклы редиректов</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Ошибки сервера 5xx</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Пустые страницы, которые отдают код 200 вместо 404</span></li>
+</ul>
+</div>
+</div>
+</sc-if>
+</li>
+
+<li style="border-top: 1px solid #E0D7F5">
+<h3 style="margin: 0">
+<button type="button" onClick="{{t4}}" aria-expanded="{{o4}}" style="width: 100%; display: flex; align-items: center; gap: 20px; padding: 22px clamp(16px, 3vw, 32px); background: transparent; border: 0; font-family: inherit; text-align: left; color: #0E0B14; cursor: pointer">
+<span style="flex: none; display: flex; align-items: center; gap: 12px"><span style="width: 24px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">04</span><span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 10px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"></rect><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"></path></svg></span></span>
+<span style="flex: 1 1 auto; min-width: 0; font-size: 20px; font-weight: 600; line-height: 1.3">Поиск дублей страниц</span>
+<span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 999px; background: {{bg4}}; display: flex; align-items: center; justify-content: center; transition: background 0.2s"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="{{fg4}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: {{r4}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></span>
+</button>
+</h3>
+<sc-if value="{{o4}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 0 clamp(16px, 3vw, 32px) 32px calc(clamp(16px, 3vw, 32px) + clamp(0px, 7.5vw, 96px)); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 24px 48px">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; font-size: 16px; line-height: 1.65; color: #2B2733; text-wrap: pretty">Дубли — это одинаковые или почти одинаковые страницы по разным адресам. Поисковая система сама выбирает, какую из них показывать, и нередко выбирает не ту.</p>
+<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap">
+<span style="font-size: 17px; font-weight: 600">от X XXX ₽</span>
+<a href="#duplicates" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-weight: 600; font-size: 15px">Подробнее об услуге<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+<div style="background: #F8F5FF; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Что проверяем</span>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Адреса с www и без, со слешем на конце и без</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Дубли из-за GET-параметров и фильтров</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Настройку канонических адресов (rel=canonical)</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Одинаковые заголовки и описания страниц</span></li>
+</ul>
+</div>
+</div>
+</sc-if>
+</li>
+
+<li style="border-top: 1px solid #E0D7F5">
+<h3 style="margin: 0">
+<button type="button" onClick="{{t5}}" aria-expanded="{{o5}}" style="width: 100%; display: flex; align-items: center; gap: 20px; padding: 22px clamp(16px, 3vw, 32px); background: transparent; border: 0; font-family: inherit; text-align: left; color: #0E0B14; cursor: pointer">
+<span style="flex: none; display: flex; align-items: center; gap: 12px"><span style="width: 24px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">05</span><span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 10px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"></path></svg></span></span>
+<span style="flex: 1 1 auto; min-width: 0; font-size: 20px; font-weight: 600; line-height: 1.3">Скорость загрузки</span>
+<span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 999px; background: {{bg5}}; display: flex; align-items: center; justify-content: center; transition: background 0.2s"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="{{fg5}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: {{r5}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></span>
+</button>
+</h3>
+<sc-if value="{{o5}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 0 clamp(16px, 3vw, 32px) 32px calc(clamp(16px, 3vw, 32px) + clamp(0px, 7.5vw, 96px)); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 24px 48px">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; font-size: 16px; line-height: 1.65; color: #2B2733; text-wrap: pretty">Скорость влияет и на позиции в поиске, и на поведение посетителей. Измеряем показатели Core Web Vitals и находим, что именно замедляет страницы.</p>
+<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap">
+<span style="font-size: 17px; font-weight: 600">от X XXX ₽</span>
+<a href="#speed" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-weight: 600; font-size: 15px">Подробнее об услуге<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+<div style="background: #F8F5FF; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Что проверяем</span>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Показатели LCP, INP и CLS</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Вес и формат изображений</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Скрипты и стили, блокирующие отрисовку</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Кеширование и сжатие на сервере</span></li>
+</ul>
+</div>
+</div>
+</sc-if>
+</li>
+
+<li style="border-top: 1px solid #E0D7F5">
+<h3 style="margin: 0">
+<button type="button" onClick="{{t6}}" aria-expanded="{{o6}}" style="width: 100%; display: flex; align-items: center; gap: 20px; padding: 22px clamp(16px, 3vw, 32px); background: transparent; border: 0; font-family: inherit; text-align: left; color: #0E0B14; cursor: pointer">
+<span style="flex: none; display: flex; align-items: center; gap: 12px"><span style="width: 24px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">06</span><span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 10px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"></rect><path d="M11 18.5h2"></path></svg></span></span>
+<span style="flex: 1 1 auto; min-width: 0; font-size: 20px; font-weight: 600; line-height: 1.3">Мобильная версия</span>
+<span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 999px; background: {{bg6}}; display: flex; align-items: center; justify-content: center; transition: background 0.2s"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="{{fg6}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: {{r6}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></span>
+</button>
+</h3>
+<sc-if value="{{o6}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 0 clamp(16px, 3vw, 32px) 32px calc(clamp(16px, 3vw, 32px) + clamp(0px, 7.5vw, 96px)); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 24px 48px">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; font-size: 16px; line-height: 1.65; color: #2B2733; text-wrap: pretty">Поисковые системы оценивают сайт в первую очередь по мобильной версии. Проверяем, удобно ли пользоваться сайтом со смартфона и видит ли робот весь контент.</p>
+<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap">
+<span style="font-size: 17px; font-weight: 600">от X XXX ₽</span>
+<a href="#mobile" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-weight: 600; font-size: 15px">Подробнее об услуге<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+<div style="background: #F8F5FF; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Что проверяем</span>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Адаптивность вёрстки на разных экранах</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Размер шрифтов и кнопок</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Контент, скрытый на мобильных устройствах</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Всплывающие окна, которые мешают чтению</span></li>
+</ul>
+</div>
+</div>
+</sc-if>
+</li>
+
+<li style="border-top: 1px solid #E0D7F5">
+<h3 style="margin: 0">
+<button type="button" onClick="{{t7}}" aria-expanded="{{o7}}" style="width: 100%; display: flex; align-items: center; gap: 20px; padding: 22px clamp(16px, 3vw, 32px); background: transparent; border: 0; font-family: inherit; text-align: left; color: #0E0B14; cursor: pointer">
+<span style="flex: none; display: flex; align-items: center; gap: 12px"><span style="width: 24px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">07</span><span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 10px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5.5" rx="8" ry="3"></ellipse><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13"></path><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"></path></svg></span></span>
+<span style="flex: 1 1 auto; min-width: 0; font-size: 20px; font-weight: 600; line-height: 1.3">Анализ индексации</span>
+<span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 999px; background: {{bg7}}; display: flex; align-items: center; justify-content: center; transition: background 0.2s"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="{{fg7}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: {{r7}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></span>
+</button>
+</h3>
+<sc-if value="{{o7}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 0 clamp(16px, 3vw, 32px) 32px calc(clamp(16px, 3vw, 32px) + clamp(0px, 7.5vw, 96px)); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 24px 48px">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; font-size: 16px; line-height: 1.65; color: #2B2733; text-wrap: pretty">Сравниваем, сколько страниц есть на сайте и сколько из них знают Яндекс и Google. Расхождение в любую сторону указывает на проблему, которую нужно найти.</p>
+<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap">
+<span style="font-size: 17px; font-weight: 600">от X XXX ₽</span>
+<a href="#indexing" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-weight: 600; font-size: 15px">Подробнее об услуге<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+<div style="background: #F8F5FF; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Что проверяем</span>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Данные Яндекс Вебмастера и Google Search Console</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Важные страницы, которых нет в индексе</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Мусорные страницы, попавшие в индекс</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Причины исключения страниц из поиска</span></li>
+</ul>
+</div>
+</div>
+</sc-if>
+</li>
+
+<li style="border-top: 1px solid #E0D7F5">
+<h3 style="margin: 0">
+<button type="button" onClick="{{t8}}" aria-expanded="{{o8}}" style="width: 100%; display: flex; align-items: center; gap: 20px; padding: 22px clamp(16px, 3vw, 32px); background: transparent; border: 0; font-family: inherit; text-align: left; color: #0E0B14; cursor: pointer">
+<span style="flex: none; display: flex; align-items: center; gap: 12px"><span style="width: 24px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">08</span><span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 10px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14"></path></svg></span></span>
+<span style="flex: 1 1 auto; min-width: 0; font-size: 20px; font-weight: 600; line-height: 1.3">Микроразметка</span>
+<span aria-hidden="true" style="flex: none; width: 40px; height: 40px; border-radius: 999px; background: {{bg8}}; display: flex; align-items: center; justify-content: center; transition: background 0.2s"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="{{fg8}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: {{r8}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></span>
+</button>
+</h3>
+<sc-if value="{{o8}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 0 clamp(16px, 3vw, 32px) 32px calc(clamp(16px, 3vw, 32px) + clamp(0px, 7.5vw, 96px)); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 24px 48px">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<p style="margin: 0; font-size: 16px; line-height: 1.65; color: #2B2733; text-wrap: pretty">Микроразметка помогает поисковым системам понять содержимое страницы и показать в выдаче расширенный сниппет: цену, рейтинг, хлебные крошки.</p>
+<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap">
+<span style="font-size: 17px; font-weight: 600">от X XXX ₽</span>
+<a href="#schema" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border-radius: 10px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-weight: 600; font-size: 15px">Подробнее об услуге<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+<div style="background: #F8F5FF; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Что проверяем</span>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Разметку Schema.org для товаров, услуг и организации</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Разметку Open Graph для соцсетей и мессенджеров</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Ошибки в валидаторах Яндекса и Google</span></li>
+<li style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.5"><span aria-hidden="true" style="flex: none; width: 6px; height: 6px; margin-top: 9px; background: #6D28D9"></span><span>Хлебные крошки и контактные данные</span></li>
+</ul>
+</div>
+</div>
+</sc-if>
+</li>
+
+</ol>
+</div>
+</section>
+</template>
+<script>
+/* Мини-движок блоков: подставляет значения {{...}}, показывает/скрывает <sc-if>,
+   навешивает обработчики событий и перерисовывает блок при setState(). */
+(function () {
+  class DCLogic {
+    constructor(props) { this.props = props || {}; this.state = undefined; this._render = function () {}; }
+    setState(patch, cb) {
+      var p = typeof patch === 'function' ? patch(this.state || {}, this.props) : patch;
+      this.state = Object.assign({}, this.state || {}, p);
+      this._render();
+      if (cb) cb();
+    }
+    forceUpdate() { this._render(); }
+  }
+  window.DCLogic = DCLogic;
+
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  var WHOLE = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/;
+  var BOOL_PROPS = { checked: 'checked', disabled: 'disabled', selected: 'selected', required: 'required', readonly: 'readOnly', open: 'open', hidden: 'hidden' };
+
+  function lookup(vals, path) {
+    path = path.trim();
+    if (path === 'true') return true;
+    if (path === 'false') return false;
+    if (path === 'null') return null;
+    if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+    return path.split('.').reduce(function (o, k) { return o == null ? undefined : o[k]; }, vals);
+  }
+  function interp(str, vals) {
+    return str.replace(HOLE, function (_, p) { var v = lookup(vals, p); return v == null ? '' : String(v); });
+  }
+
+  function compile(root, ctx) {
+    var ups = [];
+    walk(root);
+    return ups;
+
+    function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 1 && n.localName === 'sc-if') { handleIf(n); return; }
+        if (n.nodeType === 1) { handleAttrs(n); walk(n); return; }
+        if (n.nodeType === 3 && n.nodeValue.indexOf('{{') !== -1) {
+          var tpl = n.nodeValue;
+          ups.push(function (v) { var t = interp(tpl, v); if (n.nodeValue !== t) n.nodeValue = t; });
+        }
+      });
+    }
+
+    function handleIf(el) {
+      var expr = el.getAttribute('value') || '';
+      var m = expr.match(WHOLE);
+      var anchor = document.createComment('sc-if');
+      el.parentNode.replaceChild(anchor, el);
+      var frag = document.createDocumentFragment();
+      while (el.firstChild) frag.appendChild(el.firstChild);
+      var mounted = null;
+      ups.push(function (v) {
+        var cond = !!(m ? lookup(v, m[1]) : expr);
+        if (cond && !mounted) {
+          var clone = frag.cloneNode(true);
+          var inner = compile(clone, ctx);
+          var nodes = Array.prototype.slice.call(clone.childNodes);
+          anchor.parentNode.insertBefore(clone, anchor.nextSibling);
+          mounted = { nodes: nodes, inner: inner };
+        } else if (!cond && mounted) {
+          mounted.nodes.forEach(function (x) { if (x.parentNode) x.parentNode.removeChild(x); });
+          mounted = null;
+        }
+        if (mounted) mounted.inner.forEach(function (f) { f(v); });
+      });
+    }
+
+    function handleAttrs(el) {
+      Array.prototype.slice.call(el.attributes).forEach(function (a) {
+        var name = a.name, val = a.value;
+        if (name.indexOf('hint-') === 0) { el.removeAttribute(name); return; }
+        if (val.indexOf('{{') === -1) return;
+        var m = val.match(WHOLE);
+        el.removeAttribute(name);
+        if (name.indexOf('on') === 0 && m) {
+          var key = m[1];
+          el.addEventListener(name.slice(2), function (e) {
+            var f = lookup(ctx.vals, key);
+            if (typeof f === 'function') f(e);
+          });
+          return;
+        }
+        if (BOOL_PROPS[name] && m) {
+          var prop = BOOL_PROPS[name], k = m[1];
+          ups.push(function (v) { var b = !!lookup(v, k); if (el[prop] !== b) el[prop] = b; });
+          return;
+        }
+        ups.push(function (v) {
+          var out;
+          if (m) { var r = lookup(v, m[1]); out = r == null ? null : String(r); }
+          else out = interp(val, v);
+          if (out === null) el.removeAttribute(name);
+          else if (el.getAttribute(name) !== out) el.setAttribute(name, out);
+        });
+      });
+    }
+  }
+
+  var rootForHeight = null;
+  function postHeight() {
+    if (window.parent === window || !rootForHeight) return;
+    try { window.parent.postMessage({ dcBlockHeight: rootForHeight.getBoundingClientRect().height }, '*'); } catch (e) {}
+  }
+
+  window.DC = {
+    mount: function (Component, tplEl, rootEl, props) {
+      var inst = new Component(props || {});
+      var ctx = { vals: {} };
+      var frag = tplEl.content.cloneNode(true);
+      var ups = compile(frag, ctx);
+      var render = function () {
+        ctx.vals = inst.renderVals() || {};
+        ups.forEach(function (f) { f(ctx.vals); });
+      };
+      inst._render = render;
+      render();
+      rootEl.appendChild(frag);
+      if (inst.componentDidMount) inst.componentDidMount();
+      window.addEventListener('pagehide', function () { if (inst.componentWillUnmount) inst.componentWillUnmount(); });
+      rootForHeight = rootEl;
+      if (window.ResizeObserver) new ResizeObserver(postHeight).observe(rootEl);
+      window.addEventListener('load', postHeight);
+      postHeight();
+    }
+  };
+})();
+
+</script>
+<script>
+class Component extends DCLogic {
+  renderVals() {
+    const all = this.props.expandAll ?? false;
+    const open = (this.state && this.state.open) || {};
+    const vals = {};
+    [1, 2, 3, 4, 5, 6, 7, 8].forEach((i) => {
+      const isOpen = all || !!open[i];
+      vals['o' + i] = isOpen;
+      vals['bg' + i] = isOpen ? '#6D28D9' : '#EEE7FE';
+      vals['fg' + i] = isOpen ? '#FFFFFF' : '#6D28D9';
+      vals['r' + i] = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+      vals['t' + i] = () => {
+        const cur = (this.state && this.state.open) || {};
+        const next = Object.assign({}, cur);
+        next[i] = !cur[i];
+        this.setState({ open: next });
+      };
+    });
+    return vals;
+  }
+}
+</script>
+<script>
+DC.mount(Component, document.getElementById('dc-template'), document.getElementById('dc-root'), {"expandAll":false});
+</script>
+</body>
+</html>

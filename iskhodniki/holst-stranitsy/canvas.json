@@ -1,0 +1,28 @@
+{
+  "v": 3,
+  "createdOnFiles": {"v": 1, "at": "2026-11-07T13:25:00Z"},
+  "title": "Шаблон страницы услуги",
+  "launch": {"view": "canvas"},
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {"x": 0, "y": 0, "w": 1280, "h": 5450, "title": "Страница услуги — шаблон", "expand": "fill", "is_interactive": true},
+    "ServiceIncludes.dc.html": {"x": 1400, "y": 0, "w": 1280, "h": 1100, "title": "Блок: Что включает услуга", "expand": "fill", "is_interactive": true},
+    "Stages.dc.html": {"x": 1400, "y": 1220, "w": 1280, "h": 760, "title": "Блок: Этапы работы", "expand": "fill", "is_interactive": true},
+    "Advantages.dc.html": {"x": 1400, "y": 2100, "w": 1280, "h": 900, "title": "Блок: Наши преимущества", "expand": "fill"},
+    "Faq.dc.html": {"x": 1400, "y": 3120, "w": 1280, "h": 720, "title": "Блок: Вопрос-ответ", "expand": "fill", "is_interactive": true},
+    "ContactSwipe.dc.html": {"x": 1400, "y": 3960, "w": 1280, "h": 560, "title": "Блок: Кнопка связи", "expand": "fill", "is_interactive": true}
+  },
+  "order": [
+    "Main.dc.html",
+    "ServiceIncludes.dc.html",
+    "Stages.dc.html",
+    "Advantages.dc.html",
+    "Faq.dc.html",
+    "ContactSwipe.dc.html"
+  ],
+  "notes": {
+    "title": {"x": 0, "y": -300, "text": "Шаблон страницы услуги: шапка, блоки, подвал", "kind": "title1", "maxW": 2680},
+    "blocksNote": {"x": 2760, "y": 0, "text": "Блоки справа подключены в страницу как компоненты: если поправить блок здесь, он изменится и на странице слева.", "w": 340, "fill": "purple"}
+  },
+  "designSystems": []
+}
