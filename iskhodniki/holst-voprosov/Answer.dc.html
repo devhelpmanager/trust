@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Ответ на вопрос</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&amp;family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+body{margin:0;background:#FFFFFF}
+a{color:#6D28D9}a:hover{color:#4C1D95}
+a:focus-visible,button:focus-visible{outline:3px solid #8B5CF6;outline-offset:2px}
+.dc-dd a:hover{background:#F8F5FF}
+.dc-navlink:hover{background:#312E5F !important;color:#FFFFFF !important}
+.dc-foot a:hover{color:#FFFFFF !important}
+.dc-hero-tag:hover{background:rgba(255,255,255,0.14) !important;color:#FFFFFF !important}
+.dc-qa{transition:border-color .2s,box-shadow .2s;container-type:inline-size}
+@container (max-width: 420px){.dc-qa-more-t{display:none}}
+.dc-qa > div:last-child > span:nth-child(2){flex:1 1 120px;min-width:0}
+.dc-qa:hover{border-color:#B9A2FF !important;box-shadow:0 14px 32px rgba(46,16,101,0.10)}
+.dc-qa:hover .dc-qa-title{color:#5B21B6}
+.dc-qa:hover .dc-qa-more svg{transform:translateX(3px)}
+.dc-rel a:hover{background:#FFFFFF}
+.dc-rel a:hover .dc-rel-title{color:#5B21B6}
+.dc-outline:hover{background:#F3EEFF !important}
+.dc-cta-light{transition:background .2s,box-shadow .2s}
+.dc-cta-light:hover{background:#F3EEFF !important;color:#0E0B14 !important;box-shadow:0 16px 34px rgba(20,8,60,0.40) !important}
+.dc-cta-light .dc-cta-arrow{transition:transform .2s}
+.dc-cta-light:hover .dc-cta-arrow{transform:translateX(3px)}
+@media (min-width: 1280px){.dc-hero-art{display:block !important}}
+@media (max-width: 1279px){.dc-hero-text{max-width:none !important}}
+@media (min-width: 1024px){.dc-aside{position:sticky;top:24px}}
+@media (max-width: 600px){.dc-fig-d{display:none !important}.dc-fig-m{display:block !important}}
+@media (max-width: 640px){.dc-ans-date{margin-left:0 !important}.dc-ans-body h3{font-size:20px !important}.dc-q-in blockquote{font-size:16px !important}.dc-q-sec{padding:0 !important}.dc-q-hero{border-radius:0 !important}.dc-q-in{padding:32px 20px !important}.dc-qa{padding:20px 18px !important;border-radius:16px !important;gap:12px !important}.dc-qa > p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.dc-qa h3{font-size:17px !important}}
+@media (max-width: 520px){.dc-cta-light{flex:1 1 100% !important;justify-content:space-between;gap:10px !important;padding:6px 6px 6px 18px !important;font-size:15px !important}.dc-cta-arrow{width:40px !important;height:40px !important}}
+@media (max-width: 400px){.dc-summary{padding:24px 20px !important}}
+@media (max-width: 420px){.dc-note{flex-direction:column !important;gap:14px !important}}
+@media (max-width: 380px){.dc-qa-more{display:none !important}}
+@media (max-width: 1179px){.dc-nav{display:none !important}.dc-burger{display:flex !important}.dc-email{display:none !important}.dc-tagline{display:none !important}}
+@media (min-width: 1180px){.dc-mobile-menu{display:none !important}}
+@media (max-width: 760px){.dc-contacts{display:none !important}}
+@media (max-width: 520px){.dc-callback{display:none !important}.dc-callback-sm{display:flex !important}}
+@media (max-width: 1179px){.dc-foot-list{gap:0 !important}.dc-foot-contacts{gap:4px !important}.dc-foot-contacts > a:last-child{margin-top:14px !important}.dc-foot-tap{display:flex !important;align-items:center;align-self:flex-start;min-height:44px}}
+</style>
+</helmet>
+<div style="background: #FFFFFF; color: #0E0B14; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+
+<dc-import name="Header" active="seo-ask" hint-size="100%,133px"></dc-import>
+
+<main>
+
+<div style="padding: 28px clamp(20px, 4vw, 48px) 20px">
+<nav aria-label="Хлебные крошки" style="max-width: 1200px; margin: 0 auto"><ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; font-size: 14px; color: #5A5566"><li><a href="#home" style="display: inline-flex; align-items: center; min-height: 44px; color: #5A5566; text-decoration: none">Главная</a></li><li aria-hidden="true" style="color: #B9A8E8">/</li><li><a href="#seo" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 8px; margin: 0 -8px; color: #5A5566; text-decoration: none">SEO</a></li><li aria-hidden="true" style="color: #B9A8E8">/</li><li><a href="Main.dc.html" style="display: inline-flex; align-items: center; min-height: 44px; color: #5A5566; text-decoration: none">Вопросы по SEO</a></li><li aria-hidden="true" style="color: #B9A8E8">/</li><li aria-current="page" style="min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #0E0B14; font-weight: 500">Почему Яндекс не индексирует новые страницы каталога?</li></ol></nav>
+</div>
+
+<section class="dc-q-sec" aria-labelledby="q-title" style="padding: 0 clamp(20px, 4vw, 48px)">
+<div class="dc-q-hero" style="max-width: 1200px; margin: 0 auto; position: relative; isolation: isolate; overflow: hidden; border-radius: 28px; background: #1E1B4B; color: #FFFFFF">
+<span aria-hidden="true" style="position: absolute; z-index: -1; top: -170px; right: -150px; width: 460px; height: 460px; border-radius: 50%; background: #25215C"></span>
+<span aria-hidden="true" style="position: absolute; z-index: -1; bottom: -110px; left: -70px; width: 240px; height: 240px; border-radius: 50%; background: #23205A"></span>
+<svg class="dc-hero-art" aria-hidden="true" width="300" height="188" viewBox="0 0 320 200" fill="none" style="display: none; position: absolute; z-index: -1; right: 48px; top: 50%; transform: translateY(-50%)">
+<circle cx="168" cy="104" r="92" fill="#29256A"></circle>
+<path d="M44 26h150a16 16 0 0 1 16 16v52a16 16 0 0 1-16 16H82l-22 18v-18H44a16 16 0 0 1-16-16V42a16 16 0 0 1 16-16z" fill="#FFFFFF"></path>
+<circle cx="66" cy="68" r="18" fill="#6D28D9"></circle>
+<path d="M60.5 63a5.5 5.5 0 1 1 7.6 5.1c-1.3.6-2.1 1.6-2.1 3v1.4" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"></path>
+<circle cx="66" cy="78.5" r="1.9" fill="#FFFFFF"></circle>
+<rect x="96" y="52" width="92" height="8" rx="4" fill="#6D28D9"></rect>
+<rect x="96" y="66" width="70" height="7" rx="3.5" fill="#DCCFFD"></rect>
+<rect x="96" y="79" width="82" height="7" rx="3.5" fill="#DCCFFD"></rect>
+<path d="M140 118h138a16 16 0 0 1 16 16v32a16 16 0 0 1-16 16h-4v16l-20-16H140a16 16 0 0 1-16-16v-32a16 16 0 0 1 16-16z" fill="#6D28D9"></path>
+<rect x="144" y="136" width="96" height="8" rx="4" fill="#FFFFFF"></rect>
+<rect x="144" y="151" width="130" height="7" rx="3.5" fill="#C4B5FD"></rect>
+<rect x="144" y="164" width="88" height="7" rx="3.5" fill="#C4B5FD"></rect>
+<circle cx="292" cy="118" r="16" fill="#FFFFFF"></circle>
+<path d="M285 118l5 5 9-10" stroke="#6D28D9" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M300 30v14M293 37h14" stroke="#6D5FD0" stroke-width="3" stroke-linecap="round"></path>
+<circle cx="20" cy="162" r="10" stroke="#4B4690" stroke-width="3"></circle>
+</svg>
+
+<div class="dc-q-in dc-hero-text" style="position: relative; box-sizing: border-box; width: 100%; max-width: 860px; padding: clamp(28px, 5vw, 56px); display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+<span style="display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; background: #6D28D9; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #FFFFFF"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.6 9.4a2.5 2.5 0 1 1 3.4 2.3c-.6.3-1 .8-1 1.4v.6M12 16.6v.01"></path></svg>Вопрос</span>
+<a href="#tag-index" class="dc-hero-tag" style="display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 999px; border: 1px solid #4B4690; background: rgba(255, 255, 255, 0.06); color: #E2D8FF; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none">Индексация</a>
+</div>
+<h1 id="q-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.6vw, 46px); line-height: 1.15; letter-spacing: -0.015em; text-wrap: balance">Почему Яндекс не индексирует новые страницы каталога?</h1>
+<blockquote style="margin: 0; display: flex; flex-direction: column; gap: 12px; font-size: 18px; line-height: 1.65; color: #E6E4F7">
+<p style="margin: 0; text-wrap: pretty">Месяц назад добавили в интернет-магазин новый раздел — около 300 карточек товаров. В Google страницы уже в поиске, а в Яндексе из них появилось меньше двадцати.</p>
+<p style="margin: 0; text-wrap: pretty">Sitemap обновляется автоматически, robots.txt не меняли. С чего начать поиск причины?</p>
+</blockquote>
+<div style="display: flex; align-items: center; gap: 14px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.16)">
+<span aria-hidden="true" style="flex: none; width: 44px; height: 44px; border-radius: 999px; background: #312E5F; color: #E2D8FF; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 600">А</span>
+<span style="display: flex; flex-direction: column; gap: 2px; line-height: 1.35"><span style="font-size: 16px; font-weight: 600">Анна</span><span style="font-size: 14px; color: #D4D2F0">вопрос задан <time datetime="2026-11-03">3 ноября 2026</time></span></span>
+</div>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="answer-title" style="padding: 48px clamp(20px, 4vw, 48px) 88px">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 48px clamp(32px, 5vw, 72px)">
+
+<article style="flex: 999 1 560px; min-width: 0; max-width: 800px">
+<h2 id="answer-title" style="margin: 0 0 18px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Ответ специалиста</h2>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px 16px; padding-bottom: 24px; border-bottom: 1px solid #EFE8FF">
+<span aria-hidden="true" style="flex: none; box-sizing: border-box; width: 56px; height: 56px; border-radius: 999px; border: 2px solid #C4B5FD; background: #6D28D9; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 600">ИФ</span>
+<span style="flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 3px; line-height: 1.35"><span style="font-size: 17px; font-weight: 600; color: #0E0B14">[Имя Фамилия]</span><span style="font-size: 14px; color: #5A5566">[Должность] · опыт в SEO — [N] лет</span></span>
+<span class="dc-ans-date" style="margin-left: auto; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; color: #5A5566"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>ответ от <time datetime="2026-11-06">6 ноября 2026</time></span>
+</div>
+
+<div class="dc-ans-body" style="display: flex; flex-direction: column; gap: 20px; padding-top: 28px; font-size: 18px; line-height: 1.7; color: #2B2733">
+<p style="margin: 0; text-wrap: pretty">Анна, здравствуйте! Ситуация частая: Google обычно индексирует новые страницы охотнее, а Яндекс отбирает их в поиск строже. Расскажу, в каком порядке я бы искал причину.</p>
+
+<h3 style="margin: 16px 0 0; font-size: 24px; font-weight: 600; line-height: 1.3; color: #0E0B14; text-wrap: balance">1. Посмотрите, что Яндекс знает о новых страницах</h3>
+<p style="margin: 0; text-wrap: pretty">В Яндекс Вебмастере откройте раздел «Индексирование → Страницы в поиске» и выберите исключённые страницы. Если новые карточки там есть, рядом будет указана причина исключения — с неё и начинайте.</p>
+<figure style="margin: 8px 0; display: flex; flex-direction: column; gap: 12px">
+<img class="dc-fig-d" src="/_blob/44241b5d7245ffd4adbc47c000e30cbd" alt="Список исключённых страниц: у каждой указана причина — малоценная, дубль, запрет в robots.txt, ошибка 404" width="1600" height="900" loading="lazy" style="display: block; width: 100%; height: auto; box-sizing: border-box; border-radius: 18px; border: 1px solid #E0D7F5; background: #F3EEFF">
+<img class="dc-fig-m" src="/_blob/e3779e8747c9d066b6702e0be2b54e25" alt="Список исключённых страниц: у каждой указана причина — малоценная, дубль, запрет в robots.txt, ошибка 404" width="1080" height="1350" loading="lazy" style="display: none; width: 100%; height: auto; box-sizing: border-box; border-radius: 18px; border: 1px solid #E0D7F5; background: #F3EEFF">
+<figcaption style="font-size: 14px; line-height: 1.5; color: #5A5566; text-wrap: pretty">Условная схема: у каждой исключённой страницы Вебмастер показывает причину. В самом сервисе формулировки подробнее.</figcaption>
+</figure>
+
+<h3 style="margin: 16px 0 0; font-size: 24px; font-weight: 600; line-height: 1.3; color: #0E0B14; text-wrap: balance">2. Если страниц нет даже среди исключённых</h3>
+<p style="margin: 0; text-wrap: pretty">Значит, робот до них ещё не добрался. Я бы проверил три вещи:</p>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px">
+<li style="display: flex; gap: 16px; align-items: flex-start"><span aria-hidden="true" style="flex: none; width: 8px; height: 8px; margin-top: 12px; border-radius: 2px; background: #6D28D9"></span><span>новые адреса есть в sitemap.xml, а сам файл добавлен в Вебмастер;</span></li>
+<li style="display: flex; gap: 16px; align-items: flex-start"><span aria-hidden="true" style="flex: none; width: 8px; height: 8px; margin-top: 12px; border-radius: 2px; background: #6D28D9"></span><span>на карточки ведут обычные ссылки из категорий каталога, а не только поиск по сайту;</span></li>
+<li style="display: flex; gap: 16px; align-items: flex-start"><span aria-hidden="true" style="flex: none; width: 8px; height: 8px; margin-top: 12px; border-radius: 2px; background: #6D28D9"></span><span>страницы отдают код ответа 200 — это видно в инструменте «Проверка ответа сервера».</span></li>
+</ul>
+<p style="margin: 0; text-wrap: pretty">Самые важные страницы отправьте в «Индексирование → Переобход страниц»: так робот узнает о них быстрее.</p>
+
+<h3 style="margin: 16px 0 0; font-size: 24px; font-weight: 600; line-height: 1.3; color: #0E0B14; text-wrap: balance">3. Если страницы исключены — действуйте по причине</h3>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px">
+<li style="display: flex; gap: 16px; align-items: flex-start"><span aria-hidden="true" style="flex: none; width: 8px; height: 8px; margin-top: 12px; border-radius: 2px; background: #6D28D9"></span><span><strong style="color: #0E0B14">Запрет в robots.txt или метатег noindex.</strong> Проверьте правила для раздела и шаблон карточки: запрет часто остаётся после разработки. Как это сделать, мы разбирали в статье <a href="#blog-robots" style="text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px">«Robots.txt: как проверить файл и не закрыть сайт от поиска»</a>.</span></li>
+<li style="display: flex; gap: 16px; align-items: flex-start"><span aria-hidden="true" style="flex: none; width: 8px; height: 8px; margin-top: 12px; border-radius: 2px; background: #6D28D9"></span><span><strong style="color: #0E0B14">Дубль или неканоническая страница.</strong> Проверьте атрибут canonical и параметры в адресах: сортировки и фильтры часто создают копии карточек.</span></li>
+<li style="display: flex; gap: 16px; align-items: flex-start"><span aria-hidden="true" style="flex: none; width: 8px; height: 8px; margin-top: 12px; border-radius: 2px; background: #6D28D9"></span><span><strong style="color: #0E0B14">Малоценная или маловостребованная страница.</strong> Яндекс решил, что карточка мало что добавляет к уже известным ему страницам. Дополните её уникальным описанием, характеристиками, фото и отзывами.</span></li>
+</ul>
+<p style="margin: 0; text-wrap: pretty">Подробнее о том, почему страницы пропадают из поиска, — в статье <a href="#blog-index" style="text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px">«Почему страницы выпадают из индекса и как это исправить»</a>.</p>
+
+<div class="dc-summary" style="margin-top: 24px; padding: clamp(24px, 4vw, 40px); border-radius: 24px; background: #5B21B6; color: #FFFFFF">
+<h3 style="margin: 0 0 22px; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.25; letter-spacing: -0.01em; color: #FFFFFF">Как бы поступил я</h3>
+<ol style="list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-direction: column; gap: 12px; font-size: 17px; line-height: 1.55; color: #F1ECFE">
+<li style="display: flex; gap: 12px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex: none; margin-top: 1px"><circle cx="12" cy="12" r="11" fill="#4A1A99"></circle><path d="M7.5 12.2l3 3 6-6.2" stroke="#E2D8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Нашёл бы новые карточки среди исключённых страниц и выписал причины</span></li>
+<li style="display: flex; gap: 12px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex: none; margin-top: 1px"><circle cx="12" cy="12" r="11" fill="#4A1A99"></circle><path d="M7.5 12.2l3 3 6-6.2" stroke="#E2D8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Убедился бы, что страницы есть в sitemap и на них ведут ссылки из каталога</span></li>
+<li style="display: flex; gap: 12px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex: none; margin-top: 1px"><circle cx="12" cy="12" r="11" fill="#4A1A99"></circle><path d="M7.5 12.2l3 3 6-6.2" stroke="#E2D8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Убрал бы технические запреты и дубли</span></li>
+<li style="display: flex; gap: 12px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex: none; margin-top: 1px"><circle cx="12" cy="12" r="11" fill="#4A1A99"></circle><path d="M7.5 12.2l3 3 6-6.2" stroke="#E2D8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Дополнил бы карточки уникальным контентом и отправил важные на переобход</span></li>
+</ol>
+<div style="margin-top: 4px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.18); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 28px">
+<p style="flex: 1 1 260px; margin: 0; font-size: 17px; line-height: 1.6; color: #E6DEFA; text-wrap: pretty">Хотите проверить весь сайт, а не одну проблему? Это задача для технического аудита.</p>
+<a href="#seo-audit" class="dc-cta-light" style="flex: 0 1 auto; max-width: 100%; display: inline-flex; align-items: center; gap: 16px; min-height: 60px; padding: 8px 8px 8px 22px; box-sizing: border-box; border-radius: 16px; background: #FFFFFF; color: #0E0B14; text-decoration: none; font-size: 16px; font-weight: 600; line-height: 1.3; box-shadow: 0 12px 28px rgba(20, 8, 60, 0.32)"><span style="flex: 1 1 auto; min-width: 0">Заказать технический аудит</span><span class="dc-cta-arrow" aria-hidden="true" style="flex: none; width: 44px; height: 44px; border-radius: 12px; background: #6D28D9; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span></a>
+</div>
+</div>
+</div>
+
+<div class="dc-note" role="note" style="margin-top: 40px; box-sizing: border-box; display: flex; align-items: flex-start; gap: 18px; padding: clamp(20px, 3vw, 28px); border-radius: 20px; background: #F8F5FF; border: 1px solid #E0D7F5">
+<span aria-hidden="true" style="flex: none; width: 44px; height: 44px; border-radius: 12px; background: #EEE7FE; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7.5v.01"></path></svg></span>
+<div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+<p style="margin: 0; font-size: 17px; font-weight: 600; line-height: 1.4; color: #0E0B14">Ответ — личное мнение автора, а не аудит сайта</p>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #2B2733; text-wrap: pretty">Его задача не провести аудит вашего сайта, а рассказать, как автор поступил бы сам, решая вашу задачу.</p>
+</div>
+</div>
+</article>
+
+<aside class="dc-aside" aria-labelledby="rel-title" style="flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<div style="padding: 22px 22px 14px; border-radius: 20px; background: #F8F5FF; border: 1px solid #E0D7F5">
+<h2 id="rel-title" style="margin: 0 0 10px; font-size: 17px; font-weight: 600; line-height: 1.35; color: #0E0B14">Статьи по теме из блога</h2>
+<ul class="dc-rel" style="list-style: none; margin: 0 -10px; padding: 0; display: flex; flex-direction: column; gap: 2px">
+<li><a href="#blog-robots" style="display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 12px; color: #0E0B14; text-decoration: none"><span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6D28D9">Технический аудит</span><span class="dc-rel-title" style="font-size: 15px; font-weight: 600; line-height: 1.4; transition: color 0.2s">Robots.txt: как проверить файл и не закрыть сайт от поиска</span></a></li>
+<li><a href="#blog-index" style="display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 12px; color: #0E0B14; text-decoration: none"><span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6D28D9">Индексация</span><span class="dc-rel-title" style="font-size: 15px; font-weight: 600; line-height: 1.4; transition: color 0.2s">Почему страницы выпадают из индекса и как это исправить</span></a></li>
+<li><a href="#blog-sitemap" style="display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 12px; color: #0E0B14; text-decoration: none"><span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6D28D9">Технический аудит</span><span class="dc-rel-title" style="font-size: 15px; font-weight: 600; line-height: 1.4; transition: color 0.2s">Карта сайта sitemap.xml: что в неё включать</span></a></li>
+<li><a href="#blog-dupes" style="display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 12px; color: #0E0B14; text-decoration: none"><span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #6D28D9">Технический аудит</span><span class="dc-rel-title" style="font-size: 15px; font-weight: 600; line-height: 1.4; transition: color 0.2s">Дубли страниц: где они появляются и как их найти</span></a></li>
+</ul>
+<a href="#blog" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 4px; font-size: 15px; font-weight: 600; color: #5B21B6; text-decoration: none">Все статьи блога<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></a>
+</div>
+</aside>
+
+</div>
+</section>
+
+<section aria-labelledby="more-title" style="padding: 0 clamp(20px, 4vw, 48px) 96px">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px">
+<h2 id="more-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(24px, 2.8vw, 36px); line-height: 1.2; letter-spacing: -0.01em">Другие ответы</h2>
+<a href="Main.dc.html" class="dc-outline" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; box-sizing: border-box; border: 1.5px solid #6D28D9; border-radius: 12px; background: #FFFFFF; color: #5B21B6; text-decoration: none; font-size: 15px; font-weight: 600">Все вопросы и ответы<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></a>
+</div>
+<ul aria-label="Другие ответы" style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 24px">
+
+<li style="min-width: 0"><a href="Answer.dc.html" class="dc-qa" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 24px 26px; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 20px; color: #0E0B14; text-decoration: none"><div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 14px; color: #5A5566"><span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; background: #EEE7FE; color: #5B21B6">Технический аудит</span><span>Спрашивает Дмитрий</span></div><h3 class="dc-qa-title" style="margin: 0; font-size: 19px; font-weight: 600; line-height: 1.35; text-wrap: pretty; transition: color 0.2s">Нужно ли закрывать от индексации страницы фильтров?</h3><p style="margin: 0; font-size: 15px; line-height: 1.6; color: #5A5566; text-wrap: pretty">Не все. Фильтры, под которые есть спрос, лучше оставить открытыми и оптимизировать, а сочетания без спроса закрыть, чтобы не плодить дубли.</p><div style="margin-top: auto; padding-top: 14px; border-top: 1px solid #EFE8FF; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; font-size: 14px; color: #5A5566"><span aria-hidden="true" style="flex: none; width: 34px; height: 34px; border-radius: 999px; background: #6D28D9; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600">ИФ</span><span style="display: flex; flex-direction: column; line-height: 1.3"><span style="font-weight: 600; color: #2B2733">[Имя Фамилия]</span><span style="font-size: 13px">ответ от <time datetime="2026-11-04">4 ноября 2026</time></span></span><span class="dc-qa-more" style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: #5B21B6"><span class="dc-qa-more-t">Читать ответ</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transition: transform 0.2s"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span></div></a></li>
+
+<li style="min-width: 0"><a href="Answer.dc.html" class="dc-qa" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 24px 26px; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 20px; color: #0E0B14; text-decoration: none"><div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 14px; color: #5A5566"><span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; background: #EEE7FE; color: #5B21B6">Дубли</span><span>Спрашивает Юлия</span></div><h3 class="dc-qa-title" style="margin: 0; font-size: 19px; font-weight: 600; line-height: 1.35; text-wrap: pretty; transition: color 0.2s">Что делать с дублями страниц из-за UTM-меток?</h3><p style="margin: 0; font-size: 15px; line-height: 1.6; color: #5A5566; text-wrap: pretty">Укажите canonical на основной адрес, а для Яндекса добавьте в robots.txt директиву Clean-param — она убирает такие адреса из обхода.</p><div style="margin-top: auto; padding-top: 14px; border-top: 1px solid #EFE8FF; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; font-size: 14px; color: #5A5566"><span aria-hidden="true" style="flex: none; width: 34px; height: 34px; border-radius: 999px; background: #6D28D9; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600">ИФ</span><span style="display: flex; flex-direction: column; line-height: 1.3"><span style="font-weight: 600; color: #2B2733">[Имя Фамилия]</span><span style="font-size: 13px">ответ от <time datetime="2026-10-13">13 октября 2026</time></span></span><span class="dc-qa-more" style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: #5B21B6"><span class="dc-qa-more-t">Читать ответ</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transition: transform 0.2s"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span></div></a></li>
+
+<li style="min-width: 0"><a href="Answer.dc.html" class="dc-qa" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 24px 26px; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 20px; color: #0E0B14; text-decoration: none"><div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 14px; color: #5A5566"><span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; background: #EEE7FE; color: #5B21B6">Sitemap</span><span>Спрашивает Ирина</span></div><h3 class="dc-qa-title" style="margin: 0; font-size: 19px; font-weight: 600; line-height: 1.35; text-wrap: pretty; transition: color 0.2s">Нужна ли карта сайта небольшому сайту?</h3><p style="margin: 0; font-size: 15px; line-height: 1.6; color: #5A5566; text-wrap: pretty">Сайту из десятка страниц с хорошей перелинковкой она не обязательна, но и не помешает: sitemap.xml помогает роботам быстрее находить новые страницы.</p><div style="margin-top: auto; padding-top: 14px; border-top: 1px solid #EFE8FF; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; font-size: 14px; color: #5A5566"><span aria-hidden="true" style="flex: none; width: 34px; height: 34px; border-radius: 999px; background: #6D28D9; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600">ИФ</span><span style="display: flex; flex-direction: column; line-height: 1.3"><span style="font-weight: 600; color: #2B2733">[Имя Фамилия]</span><span style="font-size: 13px">ответ от <time datetime="2026-10-08">8 октября 2026</time></span></span><span class="dc-qa-more" style="margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: #5B21B6"><span class="dc-qa-more-t">Читать ответ</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transition: transform 0.2s"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span></div></a></li>
+
+</ul>
+</div>
+</section>
+
+<dc-import name="AskBlock" variant="link" background="lavender" hint-size="100%,372px"></dc-import>
+
+</main>
+
+<dc-import name="Footer" hint-size="100%,500px"></dc-import>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":4650}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

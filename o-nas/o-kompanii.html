@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>О компании — [Бренд]</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&amp;family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+/* Company */
+body{margin:0;background:#FFFFFF}
+a{color:#6D28D9}a:hover{color:#4C1D95}
+a:focus-visible,button:focus-visible{outline:3px solid #8B5CF6;outline-offset:2px}
+.dc-dd a:hover{background:#F8F5FF !important}
+.dc-navlink:hover{background:#312E5F !important;color:#FFFFFF !important}
+.dc-foot a:hover{color:#FFFFFF !important}
+.dc-card{transition:border-color .2s,box-shadow .2s}.dc-card:hover{border-color:#B9A2FF !important;box-shadow:0 14px 32px rgba(46,16,101,0.10)}
+.dc-card:hover .dc-more svg{transform:translateX(3px)}
+.dc-out{transition:background .2s}.dc-out:hover{background:#F3EEFF !important}
+.dc-cta-light{transition:background .2s}.dc-cta-light:hover{background:#F3EEFF !important;color:#0E0B14 !important}
+.dc-gal{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:210px;gap:16px}
+.dc-gal > :first-child{grid-column:span 2;grid-row:span 2}
+@media (max-width: 760px){.dc-gal{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:150px;gap:12px}}
+@media (max-width: 420px){.dc-gal{grid-auto-rows:120px}}
+@media (max-width: 560px){
+.dc-cert{display:grid !important;grid-template-columns:76px minmax(0,1fr);column-gap:14px !important;row-gap:4px !important;align-items:center;padding:12px !important}
+.dc-cert-img{grid-row:1 / span 2;aspect-ratio:1 / 1 !important}
+.dc-cert-img svg{width:28px;height:28px}
+.dc-cert > span:nth-child(2){align-self:end;font-size:15px !important}
+.dc-cert > span:nth-child(3){align-self:start}
+.dc-logo{height:72px !important}
+.dc-svc{padding:20px !important;gap:8px !important}
+}
+@media (max-width: 640px){.dc-hero-sec{padding:0 !important}.dc-hero-box{border-radius:0 !important}.dc-hero-in{padding:28px 20px !important}}
+@media (max-width: 1179px){.dc-nav{display:none !important}.dc-burger{display:flex !important}.dc-email{display:none !important}.dc-tagline{display:none !important}}
+@media (min-width: 1180px){.dc-mobile-menu{display:none !important}}
+@media (max-width: 760px){.dc-contacts{display:none !important}}
+@media (max-width: 520px){.dc-callback{display:none !important}.dc-callback-sm{display:flex !important}}
+@media (max-width: 1179px){.dc-foot-list{gap:0 !important}.dc-foot-contacts{gap:4px !important}.dc-foot-contacts > a:last-child{margin-top:14px !important}.dc-foot-tap{display:flex !important;align-items:center;align-self:flex-start;min-height:44px}}
+</style>
+</head>
+<body>
+<div id="dc-root"></div>
+<template id="dc-tpl-Company">
+<div style="background: #FFFFFF; color: #0E0B14; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+
+<dc-import name="Header" active="about-company" hint-size="100%,133px"></dc-import>
+
+<main>
+
+<div style="padding: 28px clamp(20px, 4vw, 48px) 20px">
+<nav aria-label="Хлебные крошки" style="max-width: 1200px; margin: 0 auto"><ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; font-size: 14px; color: #5A5566"><li><a href="#home" style="display: inline-flex; align-items: center; min-height: 44px; color: #5A5566; text-decoration: none">Главная</a></li><li aria-hidden="true" style="color: #B9A8E8">/</li><li aria-current="page" style="color: #0E0B14; font-weight: 500">О компании</li></ol></nav>
+</div>
+
+<section class="dc-hero-sec" aria-labelledby="page-title" style="padding: 0 clamp(20px, 4vw, 48px)">
+<div class="dc-hero-box" style="max-width: 1200px; margin: 0 auto; position: relative; isolation: isolate; overflow: hidden; border-radius: 28px; background: #1E1B4B; color: #FFFFFF">
+<span aria-hidden="true" style="position: absolute; z-index: -1; top: -170px; right: -150px; width: 460px; height: 460px; border-radius: 50%; background: #25215C"></span>
+<span aria-hidden="true" style="position: absolute; z-index: -1; bottom: -110px; left: -70px; width: 240px; height: 240px; border-radius: 50%; background: #23205A"></span>
+<div class="dc-hero-in" style="position: relative; display: flex; flex-direction: column; gap: 40px; padding: clamp(28px, 5vw, 56px)">
+<div style="display: flex; flex-direction: column; gap: 18px; max-width: 820px">
+<span style="align-self: flex-start; padding: 7px 14px; border-radius: 999px; border: 1px solid #4B4690; background: rgba(255, 255, 255, 0.06); font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #E2D8FF">О нас</span>
+<h1 id="page-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(32px, 4.2vw, 52px); line-height: 1.1; letter-spacing: -0.015em">О компании</h1>
+<p style="margin: 0; font-size: clamp(16px, 1.7vw, 19px); line-height: 1.6; color: #D4D2F0; text-wrap: pretty">[Бренд] — агентство интернет-маркетинга. Продвигаем сайты в Яндексе, Google и нейросетях, создаём сайты и настраиваем рекламу. Открыто пишем, что входит в каждую услугу, и отчитываемся после каждого этапа.</p>
+</div>
+<dl style="margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 24px 32px">
+<div style="display: flex; flex-direction: column-reverse; gap: 6px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.18)"><dt style="font-size: 15px; line-height: 1.45; color: #C9C7EA">работаем на рынке</dt><dd style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.1">с [ГГГГ]</dd></div>
+<div style="display: flex; flex-direction: column-reverse; gap: 6px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.18)"><dt style="font-size: 15px; line-height: 1.45; color: #C9C7EA">завершённых проектов</dt><dd style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.1">[N]+</dd></div>
+<div style="display: flex; flex-direction: column-reverse; gap: 6px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.18)"><dt style="font-size: 15px; line-height: 1.45; color: #C9C7EA">специалистов в штате</dt><dd style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.1">[N]</dd></div>
+<div style="display: flex; flex-direction: column-reverse; gap: 6px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.18)"><dt style="font-size: 15px; line-height: 1.45; color: #C9C7EA">средний срок работы с клиентом</dt><dd style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.1">[N] лет</dd></div>
+</dl>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="services-title" style="padding: 88px clamp(20px, 4vw, 48px)">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 36px">
+<header style="display: flex; flex-direction: column; gap: 14px; max-width: 760px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Направления</span>
+<h2 id="services-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(26px, 3vw, 40px); line-height: 1.15; letter-spacing: -0.01em">Чем мы занимаемся</h2>
+</header>
+<ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 20px">
+<li style="min-width: 0"><a href="#seo" class="dc-card dc-svc" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 26px; border-radius: 20px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #0E0B14; text-decoration: none"><span aria-hidden="true" style="width: 48px; height: 48px; border-radius: 14px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M20 20l-4.8-4.8"></path></svg></span><h3 style="margin: 6px 0 0; font-size: 20px; font-weight: 600">SEO-продвижение</h3><p style="margin: 0; font-size: 15px; line-height: 1.55; color: #5A5566">Аудит, семантика, оптимизация и контент, чтобы сайт рос в Яндексе и Google</p><span class="dc-more" style="margin-top: auto; padding-top: 6px; display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #5B21B6">Подробнее<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transition: transform 0.2s"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span></a></li>
+<li style="min-width: 0"><a href="#geo" class="dc-card dc-svc" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 26px; border-radius: 20px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #0E0B14; text-decoration: none"><span aria-hidden="true" style="width: 48px; height: 48px; border-radius: 14px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"></path><path d="M18 15l.8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8z"></path></svg></span><h3 style="margin: 6px 0 0; font-size: 20px; font-weight: 600">GEO-продвижение</h3><p style="margin: 0; font-size: 15px; line-height: 1.55; color: #5A5566">Чтобы нейросети и поисковые ассистенты упоминали и рекомендовали ваш сайт</p><span class="dc-more" style="margin-top: auto; padding-top: 6px; display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #5B21B6">Подробнее<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transition: transform 0.2s"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span></a></li>
+<li style="min-width: 0"><a href="#sites" class="dc-card dc-svc" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 26px; border-radius: 20px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #0E0B14; text-decoration: none"><span aria-hidden="true" style="width: 48px; height: 48px; border-radius: 14px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="15" rx="2"></rect><path d="M3 8h18M9 13l-2 2 2 2M15 13l2 2-2 2"></path></svg></span><h3 style="margin: 6px 0 0; font-size: 20px; font-weight: 600">Создание сайтов</h3><p style="margin: 0; font-size: 15px; line-height: 1.55; color: #5A5566">Корпоративные сайты, интернет-магазины и лендинги, готовые к продвижению</p><span class="dc-more" style="margin-top: auto; padding-top: 6px; display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #5B21B6">Подробнее<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transition: transform 0.2s"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span></a></li>
+<li style="min-width: 0"><a href="#support" class="dc-card dc-svc" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 26px; border-radius: 20px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #0E0B14; text-decoration: none"><span aria-hidden="true" style="width: 48px; height: 48px; border-radius: 14px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8V21h3.2l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4z"></path></svg></span><h3 style="margin: 6px 0 0; font-size: 20px; font-weight: 600">Сопровождение сайтов</h3><p style="margin: 0; font-size: 15px; line-height: 1.55; color: #5A5566">Доработки, обновления, резервные копии и контроль доступности сайта</p><span class="dc-more" style="margin-top: auto; padding-top: 6px; display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #5B21B6">Подробнее<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transition: transform 0.2s"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span></a></li>
+<li style="min-width: 0"><a href="#ppc" class="dc-card dc-svc" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 26px; border-radius: 20px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #0E0B14; text-decoration: none"><span aria-hidden="true" style="width: 48px; height: 48px; border-radius: 14px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11v2a1 1 0 0 0 1 1h2l5 4V6L7 10H5a1 1 0 0 0-1 1z"></path><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"></path></svg></span><h3 style="margin: 6px 0 0; font-size: 20px; font-weight: 600">Контекстная реклама</h3><p style="margin: 0; font-size: 15px; line-height: 1.55; color: #5A5566">Яндекс Директ и Google Реклама: настройка, ведение и сквозная аналитика</p><span class="dc-more" style="margin-top: auto; padding-top: 6px; display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #5B21B6">Подробнее<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transition: transform 0.2s"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span></a></li>
+<li style="min-width: 0"><a href="#ai" class="dc-card dc-svc" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 26px; border-radius: 20px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #0E0B14; text-decoration: none"><span aria-hidden="true" style="width: 48px; height: 48px; border-radius: 14px; background: #F3EEFF; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="7" width="14" height="12" rx="3"></rect><path d="M12 3v4M9 12v1M15 12v1M9.5 16h5M3 12v2M21 12v2"></path></svg></span><h3 style="margin: 6px 0 0; font-size: 20px; font-weight: 600">AI-решения</h3><p style="margin: 0; font-size: 15px; line-height: 1.55; color: #5A5566">Чат-боты и автоматизация контента и аналитики на основе нейросетей</p><span class="dc-more" style="margin-top: auto; padding-top: 6px; display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; color: #5B21B6">Подробнее<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transition: transform 0.2s"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span></a></li>
+</ul>
+</div>
+</section>
+
+<section aria-labelledby="principles-title" style="padding: 88px clamp(20px, 4vw, 48px); background: #5B21B6; color: #FFFFFF">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px">
+<header style="display: flex; flex-direction: column; gap: 14px; max-width: 760px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #E2D8FF">Принципы</span>
+<h2 id="principles-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(26px, 3vw, 40px); line-height: 1.15; letter-spacing: -0.01em">Как мы работаем</h2>
+</header>
+<ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 40px 32px">
+<li style="display: flex; flex-direction: column; gap: 12px; padding-top: 22px; border-top: 2px solid #FFFFFF"><span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 500; font-size: 36px; line-height: 1; color: #E2D8FF">01</span><h3 style="margin: 4px 0 0; font-size: 20px; font-weight: 600; line-height: 1.3">Прозрачный состав работ</h3><p style="margin: 0; font-size: 16px; line-height: 1.55; color: #E6DEFA">Публикуем полный список работ по каждой услуге — вы заранее знаете, за что платите.</p></li>
+<li style="display: flex; flex-direction: column; gap: 12px; padding-top: 22px; border-top: 2px solid #FFFFFF"><span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 500; font-size: 36px; line-height: 1; color: #E2D8FF">02</span><h3 style="margin: 4px 0 0; font-size: 20px; font-weight: 600; line-height: 1.3">Фиксированная стоимость</h3><p style="margin: 0; font-size: 16px; line-height: 1.55; color: #E6DEFA">Цена закрепляется в договоре и не меняется в процессе работы.</p></li>
+<li style="display: flex; flex-direction: column; gap: 12px; padding-top: 22px; border-top: 2px solid #FFFFFF"><span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 500; font-size: 36px; line-height: 1; color: #E2D8FF">03</span><h3 style="margin: 4px 0 0; font-size: 20px; font-weight: 600; line-height: 1.3">Отчёт после каждого этапа</h3><p style="margin: 0; font-size: 16px; line-height: 1.55; color: #E6DEFA">Показываем, что сделано, что нашли и что это даст сайту.</p></li>
+<li style="display: flex; flex-direction: column; gap: 12px; padding-top: 22px; border-top: 2px solid #FFFFFF"><span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 500; font-size: 36px; line-height: 1; color: #E2D8FF">04</span><h3 style="margin: 4px 0 0; font-size: 20px; font-weight: 600; line-height: 1.3">Один ответственный специалист</h3><p style="margin: 0; font-size: 16px; line-height: 1.55; color: #E6DEFA">Ведёт проект от брифа до отчёта и всегда на связи.</p></li>
+<li style="display: flex; flex-direction: column; gap: 12px; padding-top: 22px; border-top: 2px solid #FFFFFF"><span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 500; font-size: 36px; line-height: 1; color: #E2D8FF">05</span><h3 style="margin: 4px 0 0; font-size: 20px; font-weight: 600; line-height: 1.3">Всё в одной команде</h3><p style="margin: 0; font-size: 16px; line-height: 1.55; color: #E6DEFA">SEO, разработка и реклама согласуются внутри команды, а не между подрядчиками.</p></li>
+<li style="display: flex; flex-direction: column; gap: 12px; padding-top: 22px; border-top: 2px solid #FFFFFF"><span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 500; font-size: 36px; line-height: 1; color: #E2D8FF">06</span><h3 style="margin: 4px 0 0; font-size: 20px; font-weight: 600; line-height: 1.3">Работаем по договору</h3><p style="margin: 0; font-size: 16px; line-height: 1.55; color: #E6DEFA">Официальный договор, закрывающие документы и сроки по каждому этапу.</p></li>
+</ol>
+</div>
+</section>
+
+<section aria-labelledby="history-title" style="padding: 88px clamp(20px, 4vw, 48px)">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px">
+<header style="display: flex; flex-direction: column; gap: 14px; max-width: 760px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">История</span>
+<h2 id="history-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(26px, 3vw, 40px); line-height: 1.15; letter-spacing: -0.01em">Как мы росли</h2>
+</header>
+<ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 28px 24px">
+<li style="position: relative; display: flex; flex-direction: column; gap: 10px; padding-top: 26px; border-top: 2px solid #E0D7F5"><span aria-hidden="true" style="position: absolute; top: -8px; left: 0; width: 14px; height: 14px; border-radius: 50%; background: #6D28D9; box-shadow: 0 0 0 4px #FFFFFF"></span><span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: 26px; color: #5B21B6">[ГГГГ]</span><p style="margin: 0; font-size: 16px; line-height: 1.5; color: #2B2733">Основание агентства, первые SEO-проекты</p></li>
+<li style="position: relative; display: flex; flex-direction: column; gap: 10px; padding-top: 26px; border-top: 2px solid #E0D7F5"><span aria-hidden="true" style="position: absolute; top: -8px; left: 0; width: 14px; height: 14px; border-radius: 50%; background: #6D28D9; box-shadow: 0 0 0 4px #FFFFFF"></span><span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: 26px; color: #5B21B6">[ГГГГ]</span><p style="margin: 0; font-size: 16px; line-height: 1.5; color: #2B2733">Открыли направление разработки сайтов</p></li>
+<li style="position: relative; display: flex; flex-direction: column; gap: 10px; padding-top: 26px; border-top: 2px solid #E0D7F5"><span aria-hidden="true" style="position: absolute; top: -8px; left: 0; width: 14px; height: 14px; border-radius: 50%; background: #6D28D9; box-shadow: 0 0 0 4px #FFFFFF"></span><span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: 26px; color: #5B21B6">[ГГГГ]</span><p style="margin: 0; font-size: 16px; line-height: 1.5; color: #2B2733">Запустили контекстную рекламу</p></li>
+<li style="position: relative; display: flex; flex-direction: column; gap: 10px; padding-top: 26px; border-top: 2px solid #E0D7F5"><span aria-hidden="true" style="position: absolute; top: -8px; left: 0; width: 14px; height: 14px; border-radius: 50%; background: #6D28D9; box-shadow: 0 0 0 4px #FFFFFF"></span><span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: 26px; color: #5B21B6">[ГГГГ]</span><p style="margin: 0; font-size: 16px; line-height: 1.5; color: #2B2733">Команда выросла до [N] специалистов</p></li>
+<li style="position: relative; display: flex; flex-direction: column; gap: 10px; padding-top: 26px; border-top: 2px solid #6D28D9"><span aria-hidden="true" style="position: absolute; top: -8px; left: 0; width: 14px; height: 14px; border-radius: 50%; background: #6D28D9; box-shadow: 0 0 0 4px #FFFFFF"></span><span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: 26px; color: #5B21B6">[ГГГГ]</span><p style="margin: 0; font-size: 16px; line-height: 1.5; color: #2B2733">GEO-продвижение и AI-решения для клиентов</p></li>
+</ol>
+</div>
+</section>
+
+<section aria-labelledby="ceo-title" style="padding: 88px clamp(20px, 4vw, 48px); background: #F8F5FF">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 40px 64px">
+<img src="images/photo-placeholder.jpg" alt="[Имя Фамилия], основатель агентства" width="960" height="960" style="flex: 0 1 340px; min-width: 0; width: 100%; max-width: 380px; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 24px; background: #EEE7FE">
+<figure style="flex: 1 1 320px; min-width: 0; margin: 0; display: flex; flex-direction: column; gap: 22px">
+<span id="ceo-title" style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Слово руководителя</span>
+<svg width="44" height="34" viewBox="0 0 44 34" aria-hidden="true"><path d="M0 34V20.4C0 8.9 6.2 2.1 17.4 0l1.9 4.6C13 6.4 10.2 10 9.8 15.3H18V34H0zm25 0V20.4C25 8.9 31.2 2.1 42.4 0l1.6 4.6c-6.3 1.8-9.1 5.4-9.5 10.7H43V34H25z" fill="#6D28D9"></path></svg>
+<blockquote style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 500; font-size: clamp(20px, 2.3vw, 28px); line-height: 1.4; letter-spacing: -0.01em; text-wrap: pretty">[Цитата руководителя: зачем существует агентство и что вы обещаете клиентам — 2–3 предложения.]</blockquote>
+<figcaption style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 18px; font-weight: 600">[Имя Фамилия]</span><span style="font-size: 15px; color: #5A5566">Основатель и генеральный директор</span></figcaption>
+<div style="display: flex; flex-wrap: wrap; gap: 10px">
+<a href="mailto:ceo@example.ru" class="dc-out" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 18px; box-sizing: border-box; border: 1.5px solid #6D28D9; border-radius: 12px; background: #FFFFFF; color: #5B21B6; text-decoration: none; font-size: 15px; font-weight: 600">Написать руководителю</a>
+<a href="komanda.html" class="dc-out" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 18px; box-sizing: border-box; border: 1.5px solid #6D28D9; border-radius: 12px; background: #FFFFFF; color: #5B21B6; text-decoration: none; font-size: 15px; font-weight: 600">Познакомиться с командой<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></a>
+</div>
+</figure>
+</div>
+</section>
+
+<section aria-labelledby="cert-title" style="padding: 88px clamp(20px, 4vw, 48px)">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 36px">
+<header style="display: flex; flex-direction: column; gap: 14px; max-width: 760px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Подтверждения</span>
+<h2 id="cert-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(26px, 3vw, 40px); line-height: 1.15; letter-spacing: -0.01em">Сертификаты и рейтинги</h2>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5A5566">Каждый документ можно открыть и проверить.</p>
+</header>
+<ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 20px">
+<li style="min-width: 0"><a href="#cert-1" class="dc-card dc-cert" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 14px 14px 18px; border-radius: 20px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #0E0B14; text-decoration: none"><span aria-hidden="true" class="dc-cert-img" style="aspect-ratio: 4 / 3; border-radius: 12px; background-color: #F3EEFF; background-image: repeating-linear-gradient(135deg, #F3EEFF 0 16px, #EEE7FE 16px 32px); display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"></circle><path d="M8.5 14L7 22l5-3 5 3-1.5-8"></path></svg></span><span style="padding: 0 4px; font-size: 16px; font-weight: 600; line-height: 1.4">[Сертификат агентства Яндекс Директа]</span><span style="padding: 0 4px; font-size: 14px; color: #5A5566">[ГГГГ] · смотреть документ</span></a></li>
+<li style="min-width: 0"><a href="#cert-2" class="dc-card dc-cert" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 14px 14px 18px; border-radius: 20px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #0E0B14; text-decoration: none"><span aria-hidden="true" class="dc-cert-img" style="aspect-ratio: 4 / 3; border-radius: 12px; background-color: #F3EEFF; background-image: repeating-linear-gradient(135deg, #F3EEFF 0 16px, #EEE7FE 16px 32px); display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"></circle><path d="M8.5 14L7 22l5-3 5 3-1.5-8"></path></svg></span><span style="padding: 0 4px; font-size: 16px; font-weight: 600; line-height: 1.4">[Сертификат Google Ads]</span><span style="padding: 0 4px; font-size: 14px; color: #5A5566">[ГГГГ] · смотреть документ</span></a></li>
+<li style="min-width: 0"><a href="#cert-3" class="dc-card dc-cert" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 14px 14px 18px; border-radius: 20px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #0E0B14; text-decoration: none"><span aria-hidden="true" class="dc-cert-img" style="aspect-ratio: 4 / 3; border-radius: 12px; background-color: #F3EEFF; background-image: repeating-linear-gradient(135deg, #F3EEFF 0 16px, #EEE7FE 16px 32px); display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"></path><path d="M9 12l2 2 4-4"></path></svg></span><span style="padding: 0 4px; font-size: 16px; font-weight: 600; line-height: 1.4">[Статус партнёра CMS или сервиса]</span><span style="padding: 0 4px; font-size: 14px; color: #5A5566">[ГГГГ] · смотреть документ</span></a></li>
+<li style="min-width: 0"><a href="#cert-4" class="dc-card dc-cert" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 14px 14px 18px; border-radius: 20px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #0E0B14; text-decoration: none"><span aria-hidden="true" class="dc-cert-img" style="aspect-ratio: 4 / 3; border-radius: 12px; background-color: #F3EEFF; background-image: repeating-linear-gradient(135deg, #F3EEFF 0 16px, #EEE7FE 16px 32px); display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"></path><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"></path></svg></span><span style="padding: 0 4px; font-size: 16px; font-weight: 600; line-height: 1.4">[Место в рейтинге Рунета]</span><span style="padding: 0 4px; font-size: 14px; color: #5A5566">[ГГГГ] · смотреть диплом</span></a></li>
+<li style="min-width: 0"><a href="#cert-5" class="dc-card dc-cert" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 14px 14px 18px; border-radius: 20px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #0E0B14; text-decoration: none"><span aria-hidden="true" class="dc-cert-img" style="aspect-ratio: 4 / 3; border-radius: 12px; background-color: #F3EEFF; background-image: repeating-linear-gradient(135deg, #F3EEFF 0 16px, #EEE7FE 16px 32px); display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"></path><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"></path></svg></span><span style="padding: 0 4px; font-size: 16px; font-weight: 600; line-height: 1.4">[Место в рейтинге SEO-компаний]</span><span style="padding: 0 4px; font-size: 14px; color: #5A5566">[ГГГГ] · смотреть диплом</span></a></li>
+<li style="min-width: 0"><a href="#cert-6" class="dc-card dc-cert" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 14px 14px 18px; border-radius: 20px; border: 1px solid #E0D7F5; background: #FFFFFF; color: #0E0B14; text-decoration: none"><span aria-hidden="true" class="dc-cert-img" style="aspect-ratio: 4 / 3; border-radius: 12px; background-color: #F3EEFF; background-image: repeating-linear-gradient(135deg, #F3EEFF 0 16px, #EEE7FE 16px 32px); display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5M9 13h6M9 17h4"></path></svg></span><span style="padding: 0 4px; font-size: 16px; font-weight: 600; line-height: 1.4">[Награда или диплом конкурса]</span><span style="padding: 0 4px; font-size: 14px; color: #5A5566">[ГГГГ] · смотреть диплом</span></a></li>
+</ul>
+</div>
+</section>
+
+<section aria-labelledby="clients-title" style="padding: 88px clamp(20px, 4vw, 48px); background: #F8F5FF">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 36px">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px">
+<header style="display: flex; flex-direction: column; gap: 14px; max-width: 760px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Клиенты</span>
+<h2 id="clients-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(26px, 3vw, 40px); line-height: 1.15; letter-spacing: -0.01em">Нам доверяют</h2>
+</header>
+<a href="#portfolio" class="dc-out" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; box-sizing: border-box; border: 1.5px solid #6D28D9; border-radius: 12px; background: #FFFFFF; color: #5B21B6; text-decoration: none; font-size: 15px; font-weight: 600">Смотреть кейсы<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></a>
+</div>
+<ul aria-label="Логотипы клиентов" style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(170px, 42%), 1fr)); gap: 14px">
+<li class="dc-logo" style="height: 96px; border-radius: 16px; border: 1px solid #E0D7F5; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">[Логотип]</li>
+<li class="dc-logo" style="height: 96px; border-radius: 16px; border: 1px solid #E0D7F5; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">[Логотип]</li>
+<li class="dc-logo" style="height: 96px; border-radius: 16px; border: 1px solid #E0D7F5; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">[Логотип]</li>
+<li class="dc-logo" style="height: 96px; border-radius: 16px; border: 1px solid #E0D7F5; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">[Логотип]</li>
+<li class="dc-logo" style="height: 96px; border-radius: 16px; border: 1px solid #E0D7F5; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">[Логотип]</li>
+<li class="dc-logo" style="height: 96px; border-radius: 16px; border: 1px solid #E0D7F5; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">[Логотип]</li>
+<li class="dc-logo" style="height: 96px; border-radius: 16px; border: 1px solid #E0D7F5; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">[Логотип]</li>
+<li class="dc-logo" style="height: 96px; border-radius: 16px; border: 1px solid #E0D7F5; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">[Логотип]</li>
+<li class="dc-logo" style="height: 96px; border-radius: 16px; border: 1px solid #E0D7F5; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">[Логотип]</li>
+<li class="dc-logo" style="height: 96px; border-radius: 16px; border: 1px solid #E0D7F5; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">[Логотип]</li>
+<li class="dc-logo" style="height: 96px; border-radius: 16px; border: 1px solid #E0D7F5; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">[Логотип]</li>
+<li class="dc-logo" style="height: 96px; border-radius: 16px; border: 1px solid #E0D7F5; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; color: #6B6677">[Логотип]</li>
+</ul>
+</div>
+</section>
+
+<section aria-labelledby="office-title" style="padding: 88px clamp(20px, 4vw, 48px)">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 36px">
+<header style="display: flex; flex-direction: column; gap: 14px; max-width: 760px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Офис</span>
+<h2 id="office-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(26px, 3vw, 40px); line-height: 1.15; letter-spacing: -0.01em">Где мы работаем</h2>
+<p style="margin: 0; font-size: 17px; line-height: 1.6; color: #5A5566">Приезжайте познакомиться — адрес и схема проезда <a href="kontakty.html" style="text-decoration: underline; text-underline-offset: 3px">на странице контактов</a>.</p>
+</header>
+<div class="dc-gal">
+<figure style="margin: 0; position: relative; border-radius: 20px; overflow: hidden; background-color: #F3EEFF; background-image: repeating-linear-gradient(135deg, #F3EEFF 0 18px, #EEE7FE 18px 36px); display: flex; align-items: center; justify-content: center"><span aria-hidden="true" style="width: 64px; height: 64px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E0D7F5; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"></rect><circle cx="9" cy="9.5" r="1.8"></circle><path d="M21 15.5l-5-5-9 9.5"></path></svg></span><figcaption style="position: absolute; left: 12px; bottom: 12px; padding: 5px 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.92); font-size: 13px; color: #2B2733">[Фото: команда в офисе]</figcaption></figure>
+<figure style="margin: 0; position: relative; border-radius: 20px; overflow: hidden; background-color: #F3EEFF; background-image: repeating-linear-gradient(135deg, #F3EEFF 0 18px, #EEE7FE 18px 36px)"><figcaption style="position: absolute; left: 12px; bottom: 12px; padding: 5px 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.92); font-size: 13px; color: #2B2733">[Фото: переговорная]</figcaption></figure>
+<figure style="margin: 0; position: relative; border-radius: 20px; overflow: hidden; background-color: #F3EEFF; background-image: repeating-linear-gradient(135deg, #F3EEFF 0 18px, #EEE7FE 18px 36px)"><figcaption style="position: absolute; left: 12px; bottom: 12px; padding: 5px 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.92); font-size: 13px; color: #2B2733">[Фото: рабочие места]</figcaption></figure>
+<figure style="margin: 0; position: relative; border-radius: 20px; overflow: hidden; background-color: #F3EEFF; background-image: repeating-linear-gradient(135deg, #F3EEFF 0 18px, #EEE7FE 18px 36px)"><figcaption style="position: absolute; left: 12px; bottom: 12px; padding: 5px 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.92); font-size: 13px; color: #2B2733">[Фото: выступление]</figcaption></figure>
+<figure style="margin: 0; position: relative; border-radius: 20px; overflow: hidden; background-color: #F3EEFF; background-image: repeating-linear-gradient(135deg, #F3EEFF 0 18px, #EEE7FE 18px 36px)"><figcaption style="position: absolute; left: 12px; bottom: 12px; padding: 5px 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.92); font-size: 13px; color: #2B2733">[Фото: корпоратив]</figcaption></figure>
+</div>
+</div>
+</section>
+
+<dc-import name="CtaBlock" background="lavender" hint-size="100%,340px"></dc-import>
+
+</main>
+
+<dc-import name="Footer" hint-size="100%,500px"></dc-import>
+
+</div>
+</template>
+<template id="dc-tpl-Header">
+<header style="position: relative; z-index: 30; background: #1E1B4B; color: #FFFFFF; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 6px 24px rgba(30, 27, 75, 0.18); padding: 0 clamp(16px, 4vw, 48px)">
+<div style="max-width: 1200px; margin: 0 auto">
+
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 76px">
+<a href="#home" aria-label="[Бренд] — на главную" style="display: flex; align-items: center; gap: 12px; color: #FFFFFF; text-decoration: none">
+<span aria-hidden="true" style="flex: none; width: 42px; height: 42px; border-radius: 12px; background: #6D28D9; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-5 4 4 7-8"></path><path d="M15 8h5v5"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 4px; line-height: 1.1">
+<span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-size: 19px; font-weight: 600">[Бренд]</span>
+<span class="dc-tagline" style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; color: #C4B5FD">SEO · сайты · реклама</span>
+</span>
+</a>
+
+<div class="dc-contacts" style="display: flex; align-items: center; gap: 28px">
+<a href="tel:+70000000000" style="display: flex; flex-direction: column; justify-content: center; gap: 2px; min-height: 44px; color: #FFFFFF; text-decoration: none; white-space: nowrap"><span style="font-size: 17px; font-weight: 700">+7 (000) 000-00-00</span><span style="font-size: 12px; color: #A5A2CC">[Часы работы]</span></a>
+<a href="mailto:hello@example.ru" class="dc-email" style="display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; font-weight: 500; color: #D4D2F0; text-decoration: none; white-space: nowrap">hello@example.ru</a>
+</div>
+
+<div style="display: flex; align-items: center; gap: 10px">
+<a href="#callback" class="dc-callback" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 12px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-size: 15px; font-weight: 600; white-space: nowrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg>Заказать обратный звонок</a>
+<a href="#callback" class="dc-callback-sm" aria-label="Заказать обратный звонок" style="display: none; width: 48px; height: 48px; border-radius: 12px; background: #6D28D9; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg></a>
+<button type="button" class="dc-burger" aria-label="Меню" aria-expanded="{{mobileOpen}}" onClick="{{toggleMobile}}" style="display: none; width: 48px; height: 48px; padding: 0; border-radius: 12px; border: 1px solid #423E73; background: transparent; align-items: center; justify-content: center; cursor: pointer"><sc-if value="{{mobileClosed}}" hint-placeholder-val="{{ true }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></sc-if><sc-if value="{{mobileOpen}}" hint-placeholder-val="{{ false }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></sc-if></button>
+</div>
+</div>
+
+<nav class="dc-nav" aria-label="Основное меню" style="border-top: 1px solid #312E5F">
+<ul style="list-style: none; margin: 0 -10px; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 4px; min-height: 56px">
+<li><a href="#design" class="dc-navlink" aria-current="{{designCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{designBg}}; font-size: 15px; font-weight: 500; color: {{designFg}}; text-decoration: none; white-space: nowrap">Дизайн</a></li>
+<li><a href="#sites" class="dc-navlink" aria-current="{{sitesCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{sitesBg}}; font-size: 15px; font-weight: 500; color: {{sitesFg}}; text-decoration: none; white-space: nowrap">Создание сайтов</a></li>
+<li><a href="#support" class="dc-navlink" aria-current="{{supportCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{supportBg}}; font-size: 15px; font-weight: 500; color: {{supportFg}}; text-decoration: none; white-space: nowrap">Сопровождение сайтов</a></li>
+
+<li style="position: relative" onMouseEnter="{{seoEnter}}" onMouseLeave="{{leave}}">
+<button type="button" aria-expanded="{{seoOpen}}" aria-haspopup="true" onClick="{{seoToggle}}" style="display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: {{seoBg}}; color: {{seoFg}}; font-family: inherit; font-size: 15px; font-weight: 500; white-space: nowrap; cursor: pointer">SEO<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{seoRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{seoOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 100%; left: -8px; padding-top: 8px; z-index: 50">
+<ul class="dc-dd" style="list-style: none; margin: 0; padding: 8px; width: 320px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 16px; box-shadow: 0 16px 40px rgba(46, 16, 101, 0.14); display: flex; flex-direction: column; gap: 2px">
+<li><a href="#seo-audit" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Аудит</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Технический и SEO-аудит сайта</span></a></li>
+<li><a href="#seo-hourly" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">SEO с почасовой оплатой</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Оплата за фактически отработанные часы</span></a></li>
+<li><a href="#seo-scope" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">За объём работы</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Фиксированный набор работ в месяц</span></a></li>
+<li style="margin-top: 4px; padding-top: 6px; border-top: 1px solid #EFE8FF"><a href="#seo-question" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Задать вопрос SEO-шнику</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Бесплатный ответ специалиста</span></a></li>
+</ul>
+</div>
+</sc-if>
+</li>
+
+<li style="position: relative" onMouseEnter="{{geoEnter}}" onMouseLeave="{{leave}}">
+<button type="button" aria-expanded="{{geoOpen}}" aria-haspopup="true" onClick="{{geoToggle}}" style="display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: {{geoBg}}; color: {{geoFg}}; font-family: inherit; font-size: 15px; font-weight: 500; white-space: nowrap; cursor: pointer">GEO<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{geoRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{geoOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 100%; left: -8px; padding-top: 8px; z-index: 50">
+<ul class="dc-dd" style="list-style: none; margin: 0; padding: 8px; width: 320px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 16px; box-shadow: 0 16px 40px rgba(46, 16, 101, 0.14); display: flex; flex-direction: column; gap: 2px">
+<li><a href="#geo-ai" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Продвижение в ИИ</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Чтобы нейросети рекомендовали ваш сайт</span></a></li>
+<li><a href="#geo-audit" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Аудит видимости</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Как ваш бренд видят ChatGPT, Алиса и другие</span></a></li>
+</ul>
+</div>
+</sc-if>
+</li>
+
+<li style="position: relative" onMouseEnter="{{ppcEnter}}" onMouseLeave="{{leave}}">
+<button type="button" aria-expanded="{{ppcOpen}}" aria-haspopup="true" onClick="{{ppcToggle}}" style="display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: {{ppcBg}}; color: {{ppcFg}}; font-family: inherit; font-size: 15px; font-weight: 500; white-space: nowrap; cursor: pointer">Контекстная реклама<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{ppcRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{ppcOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 100%; left: -8px; padding-top: 8px; z-index: 50">
+<ul class="dc-dd" style="list-style: none; margin: 0; padding: 8px; width: 320px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 16px; box-shadow: 0 16px 40px rgba(46, 16, 101, 0.14); display: flex; flex-direction: column; gap: 2px">
+<li><a href="#yandex-direct" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Яндекс Директ</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Настройка и ведение рекламных кампаний</span></a></li>
+<li><a href="#google-ads" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Google Реклама</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Поисковые и медийные кампании</span></a></li>
+</ul>
+</div>
+</sc-if>
+</li>
+
+<li><a href="#ai" class="dc-navlink" aria-current="{{aiCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{aiBg}}; font-size: 15px; font-weight: 500; color: {{aiFg}}; text-decoration: none; white-space: nowrap">AI</a></li>
+<li><a href="#portfolio" class="dc-navlink" aria-current="{{portfolioCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{portfolioBg}}; font-size: 15px; font-weight: 500; color: {{portfolioFg}}; text-decoration: none; white-space: nowrap">Портфолио</a></li>
+<li><a href="#blog" class="dc-navlink" aria-current="{{blogCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{blogBg}}; font-size: 15px; font-weight: 500; color: {{blogFg}}; text-decoration: none; white-space: nowrap">Блог</a></li>
+
+<li style="position: relative" onMouseEnter="{{aboutEnter}}" onMouseLeave="{{leave}}">
+<button type="button" aria-expanded="{{aboutOpen}}" aria-haspopup="true" onClick="{{aboutToggle}}" style="display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: {{aboutBg}}; color: {{aboutFg}}; font-family: inherit; font-size: 15px; font-weight: 500; white-space: nowrap; cursor: pointer">О нас<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{aboutRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{aboutOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 100%; right: -8px; padding-top: 8px; z-index: 50">
+<ul class="dc-dd" style="list-style: none; margin: 0; padding: 8px; width: 240px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 16px; box-shadow: 0 16px 40px rgba(46, 16, 101, 0.14); display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{aboutItems}}" as="it" hint-placeholder-count="6">
+<li><a href="{{it.href}}" aria-current="{{it.cur}}" style="display: flex; padding: 10px 14px; border-radius: 10px; background: {{it.bg}}; color: {{it.fg}}; text-decoration: none; font-size: 15px; font-weight: 600">{{it.label}}</a></li>
+</sc-for>
+</ul>
+</div>
+</sc-if>
+</li>
+</ul>
+</nav>
+
+<sc-if value="{{mobileOpen}}" hint-placeholder-val="{{ false }}">
+<nav class="dc-mobile-menu" aria-label="Меню" style="border-top: 1px solid #312E5F; padding: 8px 0 24px">
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+<li style="border-bottom: 1px solid #312E5F"><a href="#design" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Дизайн</a></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="#sites" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Создание сайтов</a></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="#support" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Сопровождение сайтов</a></li>
+<li style="border-bottom: 1px solid #312E5F"><button type="button" aria-expanded="{{mseo}}" onClick="{{mseoToggle}}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 17px; font-weight: 500; color: #FFFFFF; text-align: left; cursor: pointer">SEO<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{mseoRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{mseo}}" hint-placeholder-val="{{ false }}"><ul style="list-style: none; margin: 0 0 12px; padding: 0 0 0 16px; display: flex; flex-direction: column"><li><a href="#seo-audit" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Аудит</a></li><li><a href="#seo-hourly" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">SEO с почасовой оплатой</a></li><li><a href="#seo-scope" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">За объём работы</a></li><li><a href="#seo-question" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Задать вопрос SEO-шнику</a></li></ul></sc-if></li>
+<li style="border-bottom: 1px solid #312E5F"><button type="button" aria-expanded="{{mgeo}}" onClick="{{mgeoToggle}}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 17px; font-weight: 500; color: #FFFFFF; text-align: left; cursor: pointer">GEO<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{mgeoRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{mgeo}}" hint-placeholder-val="{{ false }}"><ul style="list-style: none; margin: 0 0 12px; padding: 0 0 0 16px; display: flex; flex-direction: column"><li><a href="#geo-ai" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Продвижение в ИИ</a></li><li><a href="#geo-audit" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Аудит видимости</a></li></ul></sc-if></li>
+<li style="border-bottom: 1px solid #312E5F"><button type="button" aria-expanded="{{mppc}}" onClick="{{mppcToggle}}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 17px; font-weight: 500; color: #FFFFFF; text-align: left; cursor: pointer">Контекстная реклама<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{mppcRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{mppc}}" hint-placeholder-val="{{ false }}"><ul style="list-style: none; margin: 0 0 12px; padding: 0 0 0 16px; display: flex; flex-direction: column"><li><a href="#yandex-direct" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Яндекс Директ</a></li><li><a href="#google-ads" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Google Реклама</a></li></ul></sc-if></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="#ai" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">AI</a></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="#portfolio" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Портфолио</a></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="#blog" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Блог</a></li>
+<li style="border-bottom: 1px solid #312E5F"><button type="button" aria-expanded="{{mabout}}" onClick="{{maboutToggle}}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 17px; font-weight: 500; color: #FFFFFF; text-align: left; cursor: pointer">О нас<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{maboutRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{mabout}}" hint-placeholder-val="{{ false }}"><ul style="list-style: none; margin: 0 0 12px; padding: 0 0 0 16px; display: flex; flex-direction: column"><sc-for list="{{aboutItems}}" as="it" hint-placeholder-count="6"><li><a href="{{it.href}}" aria-current="{{it.cur}}" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; font-weight: {{it.mWeight}}; color: {{it.mFg}}; text-decoration: none">{{it.label}}</a></li></sc-for></ul></sc-if></li>
+</ul>
+<div style="display: flex; flex-direction: column; gap: 4px; padding-top: 16px">
+<a href="tel:+70000000000" style="align-self: flex-start; display: flex; align-items: center; min-height: 44px; font-size: 18px; font-weight: 700; color: #FFFFFF; text-decoration: none">+7 (000) 000-00-00</a>
+<a href="mailto:hello@example.ru" style="align-self: flex-start; display: flex; align-items: center; min-height: 44px; margin-bottom: 8px; font-size: 15px; color: #D4D2F0; text-decoration: none">hello@example.ru</a>
+<a href="#callback" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 12px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-size: 16px; font-weight: 600">Заказать обратный звонок</a>
+</div>
+</nav>
+</sc-if>
+
+</div>
+</header>
+</template>
+<template id="dc-tpl-Footer">
+<footer class="dc-foot" style="background: #1E1B4B; color: #FFFFFF; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 72px clamp(20px, 4vw, 48px) 32px">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 40px 48px">
+<div style="flex: 2 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<a href="#home" style="align-self: flex-start; display: flex; align-items: center; gap: 12px; color: #FFFFFF; text-decoration: none">
+<span aria-hidden="true" style="flex: none; width: 42px; height: 42px; border-radius: 12px; background: #6D28D9; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-5 4 4 7-8"></path><path d="M15 8h5v5"></path></svg></span>
+<span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-size: 19px; font-weight: 600">[Бренд]</span>
+</a>
+<p style="margin: 0; max-width: 420px; font-size: 15px; line-height: 1.65; color: #C9C7EA; text-wrap: pretty">Продвигаем сайты в Яндексе, Google и нейросетях, создаём и сопровождаем сайты, настраиваем контекстную рекламу. Открыто пишем, что входит в каждую услугу.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">SEO</span>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">GEO</span>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">Сайты</span>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">Контекстная реклама</span>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">AI</span>
+</div>
+</div>
+
+<nav aria-label="Услуги" style="flex: 1 1 180px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #C4B5FD">Услуги</span>
+<ul class="dc-foot-list" style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; font-size: 15px">
+<li><a href="#design" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Дизайн</a></li>
+<li><a href="#sites" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Создание сайтов</a></li>
+<li><a href="#support" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Сопровождение сайтов</a></li>
+<li><a href="#seo" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">SEO-продвижение</a></li>
+<li><a href="#seo-question" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Задать вопрос SEO-шнику</a></li>
+<li><a href="#geo" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">GEO-продвижение</a></li>
+<li><a href="#ppc" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Контекстная реклама</a></li>
+<li><a href="#ai" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">AI-решения</a></li>
+</ul>
+</nav>
+
+<nav aria-label="Компания" style="flex: 1 1 180px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #C4B5FD">Компания</span>
+<ul class="dc-foot-list" style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; font-size: 15px">
+<li><a href="o-kompanii.html" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">О компании</a></li>
+<li><a href="komanda.html" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Наша команда</a></li>
+<li><a href="#portfolio" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Портфолио</a></li>
+<li><a href="otzyvy.html" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Отзывы о нас</a></li>
+<li><a href="#blog" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Блог</a></li>
+<li><a href="karera.html" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Карьера</a></li>
+</ul>
+</nav>
+
+<div class="dc-foot-contacts" style="flex: 1 1 240px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<a href="kontakty.html" class="dc-foot-tap" style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #C4B5FD; text-decoration: none">Контакты</a>
+<a href="tel:+70000000000" class="dc-foot-tap" style="font-size: 20px; font-weight: 700; color: #FFFFFF; text-decoration: none">+7 (000) 000-00-00</a>
+<a href="mailto:hello@example.ru" class="dc-foot-tap" style="font-size: 15px; color: #D4D2F0; text-decoration: none">hello@example.ru</a>
+<span style="font-size: 15px; line-height: 1.5; color: #C9C7EA">[Адрес офиса]<br>[Часы работы]</span>
+<a href="#callback" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; margin-top: 4px; padding: 0 20px; border-radius: 12px; background: #FFFFFF; color: #5B21B6; text-decoration: none; font-size: 15px; font-weight: 600">Заказать обратный звонок</a>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; padding-top: 24px; border-top: 1px solid #312E5F; font-size: 13px; line-height: 1.6; color: #A5A2CC">
+<span>© [год] [Юридическое название] · ИНН [0000000000] · ОГРН [0000000000000] · [Юридический адрес]</span>
+<nav aria-label="Юридическая информация" style="display: flex; flex-wrap: wrap; gap: 0 24px">
+<a href="oferta.html" style="display: inline-flex; align-items: center; min-height: 44px; color: #D4D2F0; text-decoration: none">Публичная оферта</a>
+<a href="#privacy" style="display: inline-flex; align-items: center; min-height: 44px; color: #D4D2F0; text-decoration: none">Политика конфиденциальности</a>
+<a href="soglasie-pd.html" style="display: inline-flex; align-items: center; min-height: 44px; color: #D4D2F0; text-decoration: none">Согласие на обработку данных</a>
+<a href="politika-cookie.html" style="display: inline-flex; align-items: center; min-height: 44px; color: #D4D2F0; text-decoration: none">Политика cookie</a>
+</nav>
+</div>
+
+</div>
+</footer>
+</template>
+<template id="dc-tpl-CtaBlock">
+<section aria-labelledby="cta-title" style="background: {{bg}}; color: #0E0B14; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: clamp(40px, 6vw, 56px) clamp(20px, 4vw, 48px); box-sizing: border-box">
+<div style="max-width: 1200px; margin: 0 auto; position: relative; isolation: isolate; overflow: hidden; border-radius: 24px; background: #1E1B4B; color: #FFFFFF">
+<span aria-hidden="true" style="position: absolute; z-index: -1; top: -150px; right: -120px; width: 340px; height: 340px; border-radius: 50%; background: #25215C"></span>
+<span aria-hidden="true" style="position: absolute; z-index: -1; bottom: -100px; left: -60px; width: 180px; height: 180px; border-radius: 50%; background: #23205A"></span>
+<div style="position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 24px 48px; padding: clamp(24px, 4vw, 40px) clamp(20px, 4vw, 44px)">
+
+<div style="flex: 1 1 480px; min-width: 0; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px 20px">
+<span aria-hidden="true" style="flex: none; width: 56px; height: 56px; border-radius: 16px; background: #6D28D9; display: flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-5 4 4 7-8"></path><path d="M15 8h5v5"></path></svg></span>
+<div style="flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+<h2 id="cta-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.2; letter-spacing: -0.01em; text-wrap: balance">Обсудим ваш проект</h2>
+<p style="margin: 0; max-width: 600px; font-size: 16px; line-height: 1.55; color: #D4D2F0; text-wrap: pretty">Расскажите о задаче — подберём решение, назовём сроки и стоимость. Состав работ фиксируем в договоре.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 0 22px; margin-top: 2px">
+<a href="tel:+70000000000" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 16px; font-weight: 600; color: #FFFFFF; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg>+7 (000) 000-00-00</a>
+<a href="#telegram" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 16px; font-weight: 600; color: #FFFFFF; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 4L3 11l6 2.5M21 4l-4 16-8-6.5M21 4L9 13.5V19l3-3"></path></svg>Написать в Telegram</a>
+</div>
+</div>
+</div>
+
+<div style="flex: 1 1 280px; max-width: 340px; min-width: 0">
+<a href="kontakty.html" class="dc-cta-light" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; padding: 8px 8px 8px 22px; box-sizing: border-box; border-radius: 16px; background: #FFFFFF; color: #0E0B14; text-decoration: none; font-size: 16px; font-weight: 600; line-height: 1.3; box-shadow: 0 12px 28px rgba(20, 8, 60, 0.32)"><span style="min-width: 0">Оставить заявку</span><span class="dc-cta-arrow" aria-hidden="true" style="flex: none; width: 44px; height: 44px; border-radius: 12px; background: #6D28D9; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span></a>
+</div>
+
+</div>
+</div>
+</section>
+</template>
+<script>
+/* Мини-движок страницы: подставляет значения {{...}}, показывает/скрывает <sc-if>,
+   повторяет <sc-for>, навешивает обработчики событий, подключает блоки <dc-import>
+   и перерисовывает каждый блок отдельно при его setState(). */
+(function () {
+  class DCLogic {
+    constructor(props) { this.props = props || {}; this.state = undefined; this._render = function () {}; }
+    setState(patch, cb) {
+      var p = typeof patch === 'function' ? patch(this.state || {}, this.props) : patch;
+      this.state = Object.assign({}, this.state || {}, p);
+      this._render();
+      if (cb) cb();
+    }
+    forceUpdate() { this._render(); }
+  }
+  window.DCLogic = DCLogic;
+
+  var registry = {};
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  var WHOLE = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/;
+  var BOOL_PROPS = { checked: 'checked', disabled: 'disabled', selected: 'selected', required: 'required', readonly: 'readOnly', open: 'open', hidden: 'hidden' };
+
+  function lookup(vals, path) {
+    path = path.trim();
+    if (path === 'true') return true;
+    if (path === 'false') return false;
+    if (path === 'null') return null;
+    if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+    return path.split('.').reduce(function (o, k) { return o == null ? undefined : o[k]; }, vals);
+  }
+  function interp(str, vals) {
+    return str.replace(HOLE, function (_, p) { var v = lookup(vals, p); return v == null ? '' : String(v); });
+  }
+
+  function compile(root, ctx) {
+    var ups = [];
+    walk(root);
+    return ups;
+
+    function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 1 && n.localName === 'sc-if') { handleIf(n); return; }
+        if (n.nodeType === 1 && n.localName === 'sc-for') { handleFor(n); return; }
+        if (n.nodeType === 1 && n.localName === 'dc-import') { handleImport(n); return; }
+        if (n.nodeType === 1) { handleAttrs(n); walk(n); return; }
+        if (n.nodeType === 3 && n.nodeValue.indexOf('{{') !== -1) {
+          var tpl = n.nodeValue;
+          ups.push(function (v) { var t = interp(tpl, v); if (n.nodeValue !== t) n.nodeValue = t; });
+        }
+      });
+    }
+
+    function handleImport(el) {
+      var name = el.getAttribute('name');
+      var extra = {};
+      Array.prototype.slice.call(el.attributes).forEach(function (a) {
+        if (a.name === 'name' || a.name.indexOf('hint-') === 0) return;
+        extra[a.name.replace(/-([a-z])/g, function (_, c) { return c.toUpperCase(); })] = a.value;
+      });
+      var host = document.createElement('div');
+      host.setAttribute('data-block', name);
+      el.parentNode.replaceChild(host, el);
+      mountInto(name, host, extra);
+    }
+
+    function handleIf(el) {
+      var expr = el.getAttribute('value') || '';
+      var m = expr.match(WHOLE);
+      var anchor = document.createComment('sc-if');
+      el.parentNode.replaceChild(anchor, el);
+      var frag = document.createDocumentFragment();
+      while (el.firstChild) frag.appendChild(el.firstChild);
+      var mounted = null;
+      ups.push(function (v) {
+        var cond = !!(m ? lookup(v, m[1]) : expr);
+        if (cond && !mounted) {
+          var clone = frag.cloneNode(true);
+          var inner = compile(clone, ctx);
+          var nodes = Array.prototype.slice.call(clone.childNodes);
+          anchor.parentNode.insertBefore(clone, anchor.nextSibling);
+          mounted = { nodes: nodes, inner: inner };
+        } else if (!cond && mounted) {
+          mounted.nodes.forEach(function (x) { if (x.parentNode) x.parentNode.removeChild(x); });
+          mounted = null;
+        }
+        if (mounted) mounted.inner.forEach(function (f) { f(v); });
+      });
+    }
+
+    function handleFor(el) {
+      var expr = el.getAttribute('list') || '';
+      var m = expr.match(WHOLE);
+      var as = el.getAttribute('as') || 'item';
+      var end = document.createComment('/sc-for');
+      el.parentNode.replaceChild(end, el);
+      var frag = document.createDocumentFragment();
+      while (el.firstChild) frag.appendChild(el.firstChild);
+      var items = [];
+      ups.push(function (v) {
+        var list = (m ? lookup(v, m[1]) : null) || [];
+        while (items.length < list.length) {
+          var clone = frag.cloneNode(true);
+          var inner = compile(clone, ctx);
+          var a = document.createComment('item'), b = document.createComment('/item');
+          end.parentNode.insertBefore(a, end);
+          end.parentNode.insertBefore(clone, end);
+          end.parentNode.insertBefore(b, end);
+          items.push({ a: a, b: b, inner: inner });
+        }
+        while (items.length > list.length) {
+          var it = items.pop(), x = it.a;
+          while (x) { var nx = x.nextSibling; x.parentNode.removeChild(x); if (x === it.b) break; x = nx; }
+        }
+        items.forEach(function (it, i) {
+          var sv = Object.create(v);
+          sv[as] = list[i];
+          sv.$index = i;
+          it.inner.forEach(function (f) { f(sv); });
+        });
+      });
+    }
+
+    function handleAttrs(el) {
+      Array.prototype.slice.call(el.attributes).forEach(function (a) {
+        var name = a.name, val = a.value;
+        if (name.indexOf('hint-') === 0) { el.removeAttribute(name); return; }
+        if (val.indexOf('{{') === -1) return;
+        var m = val.match(WHOLE);
+        el.removeAttribute(name);
+        if (name.indexOf('on') === 0 && m) {
+          var key = m[1], scope = null;
+          ups.push(function (v) { scope = v; });
+          el.addEventListener(name.slice(2), function (e) {
+            var f = lookup(scope || ctx.vals, key);
+            if (typeof f === 'function') f(e);
+          });
+          return;
+        }
+        if (name === 'value' && m && el.localName === 'select') {
+          var vk = m[1];
+          ups.push(function (v) { var s = lookup(v, vk); s = s == null ? '' : String(s); if (el.value !== s) el.value = s; });
+          return;
+        }
+        if (BOOL_PROPS[name] && m) {
+          var prop = BOOL_PROPS[name], k = m[1];
+          ups.push(function (v) { var b = !!lookup(v, k); if (el[prop] !== b) el[prop] = b; });
+          return;
+        }
+        ups.push(function (v) {
+          var out;
+          if (m) { var r = lookup(v, m[1]); out = r == null ? null : String(r); }
+          else out = interp(val, v);
+          if (out === null) el.removeAttribute(name);
+          else if (el.getAttribute(name) !== out) el.setAttribute(name, out);
+        });
+      });
+    }
+  }
+
+  function mountInto(name, host, extra) {
+    var entry = registry[name];
+    if (!entry) throw new Error('Блок не найден: ' + name);
+    var inst = new entry.Component(Object.assign({}, entry.props, extra || {}));
+    var ctx = { vals: {} };
+    var frag = document.getElementById('dc-tpl-' + name).content.cloneNode(true);
+    var ups = compile(frag, ctx);
+    inst._render = function () {
+      ctx.vals = inst.renderVals() || {};
+      ups.forEach(function (f) { f(ctx.vals); });
+    };
+    inst._render();
+    host.appendChild(frag);
+    if (inst.componentDidMount) inst.componentDidMount();
+    window.addEventListener('pagehide', function () { if (inst.componentWillUnmount) inst.componentWillUnmount(); });
+    return inst;
+  }
+
+  window.DC = {
+    register: function (name, Component, props) { registry[name] = { Component: Component, props: props || {} }; },
+    mount: function (name, host) { return mountInto(name, host); }
+  };
+})();
+
+</script>
+<script>
+DC.register("Company", (function () {
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+return Component;
+})(), {});
+
+DC.register("Header", (function () {
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const open = st.open || null;
+    const sub = st.sub || null;
+    const mobile = !!st.mobile;
+    const active = this.props.active ?? 'none';
+    const inAbout = active.indexOf('about-') === 0;
+    const pages = [
+      ['contacts', 'Контакты', 'kontakty.html'],
+      ['company', 'О компании', 'o-kompanii.html'],
+      ['team', 'Наша команда', 'komanda.html'],
+      ['reviews', 'Отзывы о нас', 'otzyvy.html'],
+      ['career', 'Карьера', 'karera.html'],
+      ['offer', 'Публичная оферта', 'oferta.html']
+    ];
+    const v = {
+      mobileOpen: mobile,
+      mobileClosed: !mobile,
+      toggleMobile: () => this.setState({ mobile: !mobile }),
+      leave: () => this.setState({ open: null }),
+      aboutItems: pages.map((p) => {
+        const on = active === 'about-' + p[0];
+        return { label: p[1], href: p[2], cur: on ? 'page' : undefined, bg: on ? '#F3EEFF' : 'transparent', fg: on ? '#5B21B6' : '#0E0B14', mFg: on ? '#FFFFFF' : '#CFC9F2', mWeight: on ? '600' : '400' };
+      })
+    };
+    ['design', 'sites', 'support', 'ai', 'portfolio', 'blog'].forEach((k) => {
+      const on = active === k;
+      v[k + 'Bg'] = on ? '#312E5F' : 'transparent';
+      v[k + 'Fg'] = on ? '#FFFFFF' : '#E6E4F7';
+      v[k + 'Cur'] = on ? 'page' : undefined;
+    });
+    ['seo', 'geo', 'ppc', 'about'].forEach((k) => {
+      const on = open === k;
+      const section = k === 'about' && inAbout;
+      v[k + 'Open'] = on;
+      v[k + 'Bg'] = on || section ? '#312E5F' : 'transparent';
+      v[k + 'Fg'] = on || section ? '#FFFFFF' : '#E6E4F7';
+      v[k + 'Rot'] = on ? 'rotate(180deg)' : 'rotate(0deg)';
+      v[k + 'Enter'] = () => {
+        if (window.matchMedia && !window.matchMedia('(hover: hover)').matches) return;
+        this._hoverAt = Date.now();
+        this.setState({ open: k });
+      };
+      v[k + 'Toggle'] = () => {
+        const cur = (this.state && this.state.open) || null;
+        if (cur === k && Date.now() - (this._hoverAt || 0) < 600) return;
+        this.setState({ open: cur === k ? null : k });
+      };
+      const ms = sub === k;
+      v['m' + k] = ms;
+      v['m' + k + 'Rot'] = ms ? 'rotate(180deg)' : 'rotate(0deg)';
+      v['m' + k + 'Toggle'] = () => {
+        const cur = (this.state && this.state.sub) || null;
+        this.setState({ sub: cur === k ? null : k });
+      };
+    });
+    return v;
+  }
+}
+return Component;
+})(), {"active":"none"});
+
+DC.register("Footer", (function () {
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+return Component;
+})(), {});
+
+DC.register("CtaBlock", (function () {
+class Component extends DCLogic {
+  renderVals() {
+    const background = this.props.background ?? 'lavender';
+    return { bg: background === 'white' ? '#FFFFFF' : '#F8F5FF' };
+  }
+}
+return Component;
+})(), {"background":"lavender"});
+</script>
+<script>
+DC.mount("Company", document.getElementById('dc-root'));
+</script>
+</body>
+</html>
