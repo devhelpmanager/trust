@@ -1,12 +1,12 @@
 # Дизайн сайта: SEO, создание сайтов, контекстная реклама
 
-Блоки, шаблон страницы услуги, страницы блога, раздел «Вопросы по SEO» и раздел «О нас» для сайта
-агентства, которое продаёт SEO-продвижение, создание сайтов и контекстную рекламу. Каждая страница
-сайта собирается из блоков.
+Блоки, шаблон страницы услуги, страницы блога, раздел «Вопросы по SEO», раздел «О нас», портфолио
+со страницей кейса, рубрика и тег блога и страница 404 для сайта агентства, которое продаёт
+SEO-продвижение, создание сайтов и контекстную рекламу. Каждая страница сайта собирается из блоков.
 
 Всё работает без сборки и установки: HTML-файл открывается в любом браузере, а анимации,
-аккордеоны, свайп, калькулятор, меню, фильтры, формы, содержание статьи и комментарии работают так же,
-как на холсте.
+аккордеоны, свайп, калькулятор, меню, фильтры, формы, вкладки, содержание статьи и комментарии
+работают так же, как на холсте.
 
 ## Что внутри
 
@@ -17,16 +17,19 @@
 | [`seo-blog/`](seo-blog/) | Страницы блога: список статей `blog.html`, статья `statya.html`, страница автора `avtor.html` и блок «Свежие статьи» `svezhie-stati.html` для вставки на другие страницы. Картинки — в папке `images`. |
 | [`seo-vopros/`](seo-vopros/) | Раздел «Вопросы по SEO»: страница с формой вопроса и списком ответов `vopros-seo.html`, страница ответа `otvet.html` и блок «Хотите бесплатно задать вопрос SEO-специалисту?» для вставки на другие страницы — с кнопкой (`blok-vopros.html`) и с формой (`blok-vopros-forma.html`). |
 | [`o-nas/`](o-nas/) | Раздел «О нас»: контакты `kontakty.html`, о компании `o-kompanii.html`, команда `komanda.html`, отзывы `otzyvy.html`, карьера `karera.html`, публичная оферта `oferta.html`, политика cookie `politika-cookie.html`, согласие на обработку персональных данных `soglasie-pd.html` и блок «Обсудим ваш проект» `blok-cta.html`. |
+| [`portfolio-blog-404/`](portfolio-blog-404/) | Портфолио с фильтрами `portfolio.html`, страница кейса `keys.html`, рубрика блога `rubrika.html`, тег блога `teg.html`, страница 404 `404.html` и блок «Обсудим ваш проект» `blok-cta.html`. Обложки кейсов, графики и обложки статей — в папке `images`. |
 | [`iskhodniki/holst-blokov/`](iskhodniki/holst-blokov/) | Исходные файлы холста с блоками (`.dc.html` и `canvas.json`). Открываются только в Claude Design, в обычном браузере не работают. |
 | [`iskhodniki/holst-stranitsy/`](iskhodniki/holst-stranitsy/) | Исходные файлы холста с шаблоном страницы. Тоже только для Claude Design. |
 | [`iskhodniki/holst-bloga/`](iskhodniki/holst-bloga/) | Исходные файлы холста с блогом: список статей, статья, страница автора, шапка, подвал и блок свежих статей. Только для Claude Design. |
 | [`iskhodniki/holst-voprosov/`](iskhodniki/holst-voprosov/) | Исходные файлы холста «Вопросы по SEO»: страница вопросов, страница ответа, встраиваемый блок, шапка и подвал. Только для Claude Design. |
 | [`iskhodniki/holst-o-nas/`](iskhodniki/holst-o-nas/) | Исходные файлы холста «О нас»: восемь страниц раздела, блок «Обсудим ваш проект», шапка и подвал. Только для Claude Design. |
+| [`iskhodniki/holst-portfolio/`](iskhodniki/holst-portfolio/) | Исходные файлы холста «Портфолио, блог и 404»: портфолио, кейс, рубрика и тег блога, страница 404, блок «Обсудим ваш проект», шапка и подвал. Только для Claude Design. |
 
 ## Как посмотреть
 
 **На компьютере.** Нажмите **Code → Download ZIP**, распакуйте и откройте `seo-bloki/index.html`,
-`seo-stranitsa/index.html`, `seo-blog/blog.html`, `seo-vopros/vopros-seo.html` или `o-nas/kontakty.html`.
+`seo-stranitsa/index.html`, `seo-blog/blog.html`, `seo-vopros/vopros-seo.html`, `o-nas/kontakty.html`
+или `portfolio-blog-404/portfolio.html`.
 
 **Онлайн по ссылке (GitHub Pages).** В репозитории откройте **Settings → Pages**, в поле
 **Source** выберите **Deploy from a branch**, ветку **main** и папку **/ (root)**, нажмите **Save**.
@@ -48,6 +51,11 @@
 - https://devhelpmanager.github.io/trust/o-nas/oferta.html — публичная оферта
 - https://devhelpmanager.github.io/trust/o-nas/politika-cookie.html — политика cookie
 - https://devhelpmanager.github.io/trust/o-nas/soglasie-pd.html — согласие на обработку персональных данных
+- https://devhelpmanager.github.io/trust/portfolio-blog-404/portfolio.html — портфолио
+- https://devhelpmanager.github.io/trust/portfolio-blog-404/keys.html — страница кейса
+- https://devhelpmanager.github.io/trust/portfolio-blog-404/rubrika.html — рубрика блога
+- https://devhelpmanager.github.io/trust/portfolio-blog-404/teg.html — тег блога
+- https://devhelpmanager.github.io/trust/portfolio-blog-404/404.html — страница 404
 
 ## Стиль кратко
 
@@ -76,5 +84,9 @@
   так же стоит сделать и в остальных формах.
 - В блоге даты, просмотры, лайки и комментарии — примерные значения, на сайте их подставляет CMS.
   Обложки статей и фото автора — заглушки, значки соцсетей автора нужно заменить на официальные иконки.
+- В портфолио и на странице кейса скриншоты сайтов клиентов и графики — демонстрационные, названия
+  клиентов, цифры и отзывы — заготовки. Кейсы с цифрами публикуйте только с согласия клиентов.
+- Страница 404 на сайте должна отдавать код ответа 404, а не перенаправлять на главную. Теги блога
+  с одним-двумя материалами лучше закрыть от индексации (noindex).
 
 Подробнее — в `README.md` внутри каждой папки.

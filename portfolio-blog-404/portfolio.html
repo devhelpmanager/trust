@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Портфолио — [Бренд]</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600&amp;family=Onest:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<style>
+/* Main */
+body{margin:0;background:#FFFFFF}
+a{color:#6D28D9}a:hover{color:#4C1D95}
+a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid #8B5CF6;outline-offset:2px}
+.dc-dd a:hover{background:#F8F5FF !important}
+.dc-navlink:hover{background:#312E5F !important;color:#FFFFFF !important}
+.dc-foot a:hover{color:#FFFFFF !important}
+.dc-card{transition:border-color .2s,box-shadow .2s}.dc-card:hover{border-color:#B9A2FF !important;box-shadow:0 14px 32px rgba(46,16,101,0.10)}
+.dc-card:hover .dc-card-title{color:#5B21B6}
+.dc-card:hover .dc-more svg{transform:translateX(3px)}
+.dc-out{transition:background .2s}.dc-out:hover{background:#F3EEFF !important}
+.dc-btn{transition:background .2s}.dc-btn:hover{background:#5B21B6 !important;color:#FFFFFF !important}
+.dc-cta-light{transition:background .2s}.dc-cta-light:hover{background:#F3EEFF !important;color:#0E0B14 !important}
+.dc-chip{transition:border-color .2s}.dc-chip:hover{border-color:#6D28D9 !important}
+.dc-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235B21B6' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:44px !important}
+.dc-select:hover{border-color:#B9A2FF !important}
+@media (max-width: 1023px){.dc-cases{grid-template-columns:repeat(2, minmax(0, 1fr)) !important}.dc-feat-stats{grid-template-columns:repeat(2, minmax(0, 1fr)) !important}}
+@media (max-width: 640px){.dc-cases{grid-template-columns:minmax(0, 1fr) !important;gap:16px !important}.dc-case-body{padding:18px 18px 20px !important}.dc-feat-body{padding:22px 18px 24px !important}.dc-filters{padding:16px !important}.dc-chiprow{flex-wrap:nowrap !important;overflow-x:auto;margin:0 -16px;padding:2px 16px 4px;scrollbar-width:none}.dc-chiprow::-webkit-scrollbar{display:none}.dc-chiprow .dc-chip{flex:none;white-space:nowrap}.dc-niche{flex:1 1 100% !important}}
+@media (max-width: 1100px){.dc-hstats{grid-template-columns:repeat(2, minmax(0, 1fr)) !important}}
+@media (max-width: 480px){.dc-hstats{grid-template-columns:minmax(0, 1fr) !important}}
+@media (max-width: 340px){.dc-case-stats{grid-template-columns:minmax(0, 1fr) !important}}
+@media (max-width: 640px){.dc-hero-sec{padding:0 !important}.dc-hero-box{border-radius:0 !important}.dc-hero-in{padding:28px 20px !important}}
+@media (max-width: 1179px){.dc-nav{display:none !important}.dc-burger{display:flex !important}.dc-email{display:none !important}.dc-tagline{display:none !important}}
+@media (min-width: 1180px){.dc-mobile-menu{display:none !important}}
+@media (max-width: 760px){.dc-contacts{display:none !important}}
+@media (max-width: 520px){.dc-callback{display:none !important}.dc-callback-sm{display:flex !important}}
+@media (max-width: 1179px){.dc-foot-list{gap:0 !important}.dc-foot-contacts{gap:4px !important}.dc-foot-contacts > a:last-child{margin-top:14px !important}.dc-foot-tap{display:flex !important;align-items:center;align-self:flex-start;min-height:44px}}
+</style>
+</head>
+<body>
+<div id="dc-root"></div>
+<template id="dc-tpl-Main">
+<div style="background: #FFFFFF; color: #0E0B14; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+
+<dc-import name="Header" active="portfolio" hint-size="100%,133px"></dc-import>
+
+<main>
+
+<div style="padding: 28px clamp(20px, 4vw, 48px) 20px">
+<nav aria-label="Хлебные крошки" style="max-width: 1200px; margin: 0 auto"><ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; font-size: 14px; color: #5A5566"><li><a href="#home" style="display: inline-flex; align-items: center; min-height: 44px; color: #5A5566; text-decoration: none">Главная</a></li><li aria-hidden="true" style="color: #B9A8E8">/</li><li aria-current="page" style="color: #0E0B14; font-weight: 500">Портфолио</li></ol></nav>
+</div>
+
+<section class="dc-hero-sec" aria-labelledby="page-title" style="padding: 0 clamp(20px, 4vw, 48px)">
+<div class="dc-hero-box" style="max-width: 1200px; margin: 0 auto; position: relative; isolation: isolate; overflow: hidden; border-radius: 28px; background: #1E1B4B; color: #FFFFFF">
+<span aria-hidden="true" style="position: absolute; z-index: -1; top: -170px; right: -150px; width: 460px; height: 460px; border-radius: 50%; background: #25215C"></span>
+<span aria-hidden="true" style="position: absolute; z-index: -1; bottom: -110px; left: -70px; width: 240px; height: 240px; border-radius: 50%; background: #23205A"></span>
+<div class="dc-hero-in" style="position: relative; display: flex; flex-direction: column; gap: 40px; padding: clamp(28px, 5vw, 56px)">
+<div style="display: flex; flex-direction: column; gap: 18px; max-width: 820px">
+<span style="align-self: flex-start; padding: 7px 14px; border-radius: 999px; border: 1px solid #4B4690; background: rgba(255, 255, 255, 0.06); font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #E2D8FF">Портфолио</span>
+<h1 id="page-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(32px, 4.2vw, 52px); line-height: 1.1; letter-spacing: -0.015em">Кейсы и проекты</h1>
+<p style="margin: 0; font-size: clamp(16px, 1.7vw, 19px); line-height: 1.6; color: #D4D2F0; text-wrap: pretty">Показываем, с какой задачей пришёл клиент, что мы сделали и какой получился результат. Цифры берём из систем аналитики клиентов и публикуем с их согласия.</p>
+</div>
+<dl class="dc-hstats" style="margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px 32px">
+<div style="display: flex; flex-direction: column-reverse; gap: 6px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.18)"><dt style="font-size: 15px; line-height: 1.45; color: #C9C7EA">завершённых проектов</dt><dd style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.1">[N]+</dd></div>
+<div style="display: flex; flex-direction: column-reverse; gap: 6px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.18)"><dt style="font-size: 15px; line-height: 1.45; color: #C9C7EA">отраслей</dt><dd style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.1">[N]</dd></div>
+<div style="display: flex; flex-direction: column-reverse; gap: 6px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.18)"><dt style="font-size: 15px; line-height: 1.45; color: #C9C7EA">кейсов с цифрами</dt><dd style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.1">[N]</dd></div>
+<div style="display: flex; flex-direction: column-reverse; gap: 6px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.18)"><dt style="font-size: 15px; line-height: 1.45; color: #C9C7EA">средний срок работы с клиентом</dt><dd style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(28px, 3.2vw, 40px); line-height: 1.1">[N] года</dd></div>
+</dl>
+</div>
+</div>
+</section>
+
+<section id="cases" aria-labelledby="cases-title" style="padding: 72px clamp(20px, 4vw, 48px) 88px">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px">
+<h2 id="cases-title" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Кейсы</h2>
+
+<div class="dc-filters" style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px 24px; padding: 20px 22px; border-radius: 20px; border: 1px solid #E0D7F5; background: #F8F5FF">
+<div style="flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 10px">
+<span id="svc-label" style="font-size: 14px; font-weight: 600; color: #2B2733">Услуга</span>
+<div role="group" aria-labelledby="svc-label" class="dc-chiprow" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{services}}" as="s" hint-placeholder-count="6">
+<button type="button" class="dc-chip" aria-pressed="{{s.pressed}}" onClick="{{s.pick}}" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1.5px solid {{s.bd}}; background: {{s.bg}}; color: {{s.fg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{s.label}}<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; opacity: 0.75">{{s.count}}</span></button>
+</sc-for>
+</div>
+</div>
+<div class="dc-niche" style="flex: 0 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 10px">
+<label for="niche" style="font-size: 14px; font-weight: 600; color: #2B2733">Отрасль</label>
+<select id="niche" class="dc-select" value="{{niche}}" onChange="{{onNiche}}" style="width: 100%; min-height: 48px; padding: 0 16px; box-sizing: border-box; border-radius: 12px; border: 1px solid #D9CFF2; background-color: #FFFFFF; font-family: inherit; font-size: 16px; color: #0E0B14; cursor: pointer">
+<option value="all">Все отрасли</option>
+<option value="repair">Ремонт и строительство</option>
+<option value="med">Медицина</option>
+<option value="shop">Интернет-магазины</option>
+<option value="auto">Автоуслуги</option>
+<option value="law">Юридические услуги</option>
+<option value="edu">Образование</option>
+<option value="prod">Производство</option>
+<option value="beauty">Красота</option>
+</select>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px">
+<p aria-live="polite" style="margin: 0; font-size: 15px; color: #5A5566">{{foundLabel}}</p>
+<sc-if value="{{filtered}}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{reset}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: #5B21B6; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>Сбросить фильтры</button></sc-if>
+</div>
+
+<sc-if value="{{showFeat}}" hint-placeholder-val="{{ true }}">
+<a href="keys.html" class="dc-card" style="display: flex; flex-wrap: wrap; border-radius: 28px; border: 1px solid #E0D7F5; background: #FFFFFF; overflow: hidden; color: #0E0B14; text-decoration: none">
+<div style="flex: 1 1 560px; min-width: 0; position: relative; background: #F3EEFF"><img src="images/project-repair.jpg" alt="Главный экран сайта компании по ремонту квартир" width="1280" height="800" style="display: block; width: 100%; height: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left"><span style="position: absolute; top: 16px; left: 16px; padding: 6px 12px; border-radius: 999px; background: #6D28D9; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: #FFFFFF">Главный кейс</span></div>
+<div class="dc-feat-body" style="flex: 1 1 400px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; padding: clamp(24px, 3.5vw, 40px)">
+<div style="display: flex; flex-wrap: wrap; gap: 6px"><span style="padding: 4px 10px; border-radius: 999px; background: #EEE7FE; font-size: 13px; font-weight: 600; color: #4C1D95">Ремонт и строительство</span><span style="padding: 4px 10px; border-radius: 999px; border: 1px solid #E0D7F5; font-size: 13px; color: #2B2733">SEO</span><span style="padding: 4px 10px; border-radius: 999px; border: 1px solid #E0D7F5; font-size: 13px; color: #2B2733">Сайты</span></div>
+<h3 class="dc-card-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.25; letter-spacing: -0.01em; text-wrap: balance; transition: color 0.2s">Новый сайт и SEO для компании по ремонту квартир</h3>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #5A5566; text-wrap: pretty">Перенесли сайт с конструктора, собрали структуру под все виды ремонта и вывели ключевые запросы в топ-10 Яндекса и Google.</p>
+<dl class="dc-feat-stats" style="margin: 4px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column-reverse; gap: 4px; padding: 14px 16px; border-radius: 14px; background: #F8F5FF"><dt style="font-size: 13px; line-height: 1.4; color: #5A5566">визитов из поиска</dt><dd style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-size: 22px; font-weight: 600; color: #4C1D95">+[N]%</dd></div>
+<div style="display: flex; flex-direction: column-reverse; gap: 4px; padding: 14px 16px; border-radius: 14px; background: #F8F5FF"><dt style="font-size: 13px; line-height: 1.4; color: #5A5566">запросов в топ-10</dt><dd style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-size: 22px; font-weight: 600; color: #4C1D95">[N] из [N]</dd></div>
+<div style="display: flex; flex-direction: column-reverse; gap: 4px; padding: 14px 16px; border-radius: 14px; background: #F8F5FF"><dt style="font-size: 13px; line-height: 1.4; color: #5A5566">заявок с сайта</dt><dd style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-size: 22px; font-weight: 600; color: #4C1D95">×[N]</dd></div>
+<div style="display: flex; flex-direction: column-reverse; gap: 4px; padding: 14px 16px; border-radius: 14px; background: #F8F5FF"><dt style="font-size: 13px; line-height: 1.4; color: #5A5566">срок работ</dt><dd style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-size: 22px; font-weight: 600; color: #4C1D95">[N] мес.</dd></div>
+</dl>
+<span style="margin-top: auto; align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 12px; background: #6D28D9; color: #FFFFFF; font-size: 15px; font-weight: 600">Смотреть кейс<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span>
+</div>
+</a>
+</sc-if>
+
+<ul class="dc-cases" style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
+<sc-for list="{{cases}}" as="c" hint-placeholder-count="8">
+<li style="min-width: 0"><a href="keys.html" class="dc-card" style="height: 100%; box-sizing: border-box; display: flex; flex-direction: column; border-radius: 22px; border: 1px solid #E0D7F5; background: #FFFFFF; overflow: hidden; color: #0E0B14; text-decoration: none">
+<span style="position: relative; display: block; background: #F3EEFF"><img src="{{c.cover}}" alt="{{c.alt}}" width="1280" height="800" loading="lazy" style="display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left"><span style="position: absolute; top: 12px; left: 12px; padding: 5px 10px; border-radius: 999px; background: rgba(255, 255, 255, 0.94); font-size: 13px; font-weight: 600; color: #2B2733">{{c.niche}}</span></span>
+<span class="dc-case-body" style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 12px; padding: 20px 22px 22px">
+<span style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{c.tags}}" as="t" hint-placeholder-count="2"><span style="padding: 3px 9px; border-radius: 999px; background: #EEE7FE; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: #5B21B6">{{t}}</span></sc-for></span>
+<h3 class="dc-card-title" style="margin: 0; font-size: 19px; font-weight: 600; line-height: 1.35; text-wrap: pretty; transition: color 0.2s">{{c.title}}</h3>
+<span style="font-size: 15px; line-height: 1.55; color: #5A5566">{{c.desc}}</span>
+<span class="dc-case-stats" style="margin-top: auto; padding-top: 6px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<span style="display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: #F8F5FF"><span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-size: 18px; font-weight: 600; color: #4C1D95">{{c.v1}}</span><span style="font-size: 13px; line-height: 1.35; color: #5A5566">{{c.l1}}</span></span>
+<span style="display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: #F8F5FF"><span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-size: 18px; font-weight: 600; color: #4C1D95">{{c.v2}}</span><span style="font-size: 13px; line-height: 1.35; color: #5A5566">{{c.l2}}</span></span>
+</span>
+<span class="dc-more" style="display: inline-flex; align-items: center; gap: 6px; min-height: 32px; font-size: 15px; font-weight: 600; color: #5B21B6">Смотреть кейс<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transition: transform 0.2s"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span>
+</span>
+</a></li>
+</sc-for>
+</ul>
+
+<sc-if value="{{empty}}" hint-placeholder-val="{{ false }}">
+<div role="status" style="display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 48px 24px; border-radius: 22px; border: 1px dashed #D9CFF2; background: #FBFAFF; text-align: center">
+<span aria-hidden="true" style="width: 56px; height: 56px; border-radius: 16px; background: #EEE7FE; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M20 20l-4.8-4.8"></path></svg></span>
+<h3 style="margin: 0; font-size: 20px; font-weight: 600">Таких кейсов пока нет</h3>
+<p style="margin: 0; max-width: 460px; font-size: 16px; line-height: 1.55; color: #5A5566">Попробуйте другую услугу или отрасль. А если у вас похожая задача — расскажите о ней, подберём решение.</p>
+<button type="button" onClick="{{reset}}" class="dc-out" style="min-height: 48px; padding: 0 20px; border-radius: 12px; border: 1.5px solid #6D28D9; background: #FFFFFF; color: #5B21B6; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Показать все кейсы</button>
+</div>
+</sc-if>
+
+<sc-if value="{{showMore}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding-top: 8px">
+<a href="#page-2" class="dc-out" style="display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 26px; box-sizing: border-box; border: 1.5px solid #6D28D9; border-radius: 14px; background: #FFFFFF; color: #5B21B6; text-decoration: none; font-size: 16px; font-weight: 600">Показать ещё кейсы<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></a>
+<span style="font-size: 14px; color: #5A5566">Показано 9 из [N]</span>
+</div>
+</sc-if>
+</div>
+</section>
+
+<section aria-labelledby="rev-title" style="padding: 88px clamp(20px, 4vw, 48px); background: #F8F5FF">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px">
+<header style="display: flex; flex-direction: column; gap: 14px; max-width: 760px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 13px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #6D28D9">Отзывы</span>
+<h2 id="rev-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(26px, 3vw, 40px); line-height: 1.15; letter-spacing: -0.01em">Что говорят клиенты</h2>
+</header>
+<a href="#reviews" class="dc-out" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; box-sizing: border-box; border: 1.5px solid #6D28D9; border-radius: 12px; background: #FFFFFF; color: #5B21B6; text-decoration: none; font-size: 15px; font-weight: 600">Все отзывы<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></a>
+</div>
+<ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr)); gap: 20px">
+<li style="min-width: 0"><figure style="margin: 0; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; padding: 28px; border-radius: 22px; border: 1px solid #E0D7F5; background: #FFFFFF"><svg width="32" height="25" viewBox="0 0 44 34" aria-hidden="true"><path d="M0 34V20.4C0 8.9 6.2 2.1 17.4 0l1.9 4.6C13 6.4 10.2 10 9.8 15.3H18V34H0zm25 0V20.4C25 8.9 31.2 2.1 42.4 0l1.6 4.6c-6.3 1.8-9.1 5.4-9.5 10.7H43V34H25z" fill="#C9BCEB"></path></svg><blockquote style="margin: 0; font-size: 16px; line-height: 1.65; color: #2B2733">[Отзыв клиента о результате: какая была задача, что изменилось после работы — 2–3 предложения.]</blockquote><figcaption style="margin-top: auto; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">[Имя Фамилия]</span><span style="font-size: 14px; color: #5A5566">[Должность], [Компания] · Ремонт и строительство</span></figcaption></figure></li>
+<li style="min-width: 0"><figure style="margin: 0; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; padding: 28px; border-radius: 22px; border: 1px solid #E0D7F5; background: #FFFFFF"><svg width="32" height="25" viewBox="0 0 44 34" aria-hidden="true"><path d="M0 34V20.4C0 8.9 6.2 2.1 17.4 0l1.9 4.6C13 6.4 10.2 10 9.8 15.3H18V34H0zm25 0V20.4C25 8.9 31.2 2.1 42.4 0l1.6 4.6c-6.3 1.8-9.1 5.4-9.5 10.7H43V34H25z" fill="#C9BCEB"></path></svg><blockquote style="margin: 0; font-size: 16px; line-height: 1.65; color: #2B2733">[Отзыв клиента о работе команды: сроки, отчёты, общение — 2–3 предложения.]</blockquote><figcaption style="margin-top: auto; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 600">[Имя Фамилия]</span><span style="font-size: 14px; color: #5A5566">[Должность], [Компания] · Медицина</span></figcaption></figure></li>
+</ul>
+</div>
+</section>
+
+<dc-import name="CtaBlock" background="white" hint-size="100%,340px"></dc-import>
+
+</main>
+
+<dc-import name="Footer" hint-size="100%,520px"></dc-import>
+
+</div>
+</template>
+<template id="dc-tpl-Header">
+<header style="position: relative; z-index: 30; background: #1E1B4B; color: #FFFFFF; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; box-shadow: 0 6px 24px rgba(30, 27, 75, 0.18); padding: 0 clamp(16px, 4vw, 48px)">
+<div style="max-width: 1200px; margin: 0 auto">
+
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 76px">
+<a href="#home" aria-label="[Бренд] — на главную" style="display: flex; align-items: center; gap: 12px; min-height: 44px; color: #FFFFFF; text-decoration: none">
+<span aria-hidden="true" style="flex: none; width: 42px; height: 42px; border-radius: 12px; background: #6D28D9; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-5 4 4 7-8"></path><path d="M15 8h5v5"></path></svg></span>
+<span style="display: flex; flex-direction: column; gap: 4px; line-height: 1.1">
+<span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-size: 19px; font-weight: 600">[Бренд]</span>
+<span class="dc-tagline" style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; color: #C4B5FD">SEO · сайты · реклама</span>
+</span>
+</a>
+
+<div class="dc-contacts" style="display: flex; align-items: center; gap: 28px">
+<a href="tel:+70000000000" style="display: flex; flex-direction: column; justify-content: center; gap: 2px; min-height: 44px; color: #FFFFFF; text-decoration: none; white-space: nowrap"><span style="font-size: 17px; font-weight: 700">+7 (000) 000-00-00</span><span style="font-size: 12px; color: #A5A2CC">[Часы работы]</span></a>
+<a href="mailto:hello@example.ru" class="dc-email" style="display: inline-flex; align-items: center; min-height: 44px; font-size: 15px; font-weight: 500; color: #D4D2F0; text-decoration: none; white-space: nowrap">hello@example.ru</a>
+</div>
+
+<div style="display: flex; align-items: center; gap: 10px">
+<a href="#callback" class="dc-callback" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 12px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-size: 15px; font-weight: 600; white-space: nowrap"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg>Заказать обратный звонок</a>
+<a href="#callback" class="dc-callback-sm" aria-label="Заказать обратный звонок" style="display: none; width: 48px; height: 48px; border-radius: 12px; background: #6D28D9; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg></a>
+<button type="button" class="dc-burger" aria-label="Меню" aria-expanded="{{mobileOpen}}" onClick="{{toggleMobile}}" style="display: none; width: 48px; height: 48px; padding: 0; border-radius: 12px; border: 1px solid #423E73; background: transparent; align-items: center; justify-content: center; cursor: pointer"><sc-if value="{{mobileClosed}}" hint-placeholder-val="{{ true }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></sc-if><sc-if value="{{mobileOpen}}" hint-placeholder-val="{{ false }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></sc-if></button>
+</div>
+</div>
+
+<nav class="dc-nav" aria-label="Основное меню" style="border-top: 1px solid #312E5F">
+<ul style="list-style: none; margin: 0 -10px; padding: 0; display: flex; align-items: center; justify-content: space-between; gap: 4px; min-height: 56px">
+<li><a href="#design" class="dc-navlink" aria-current="{{designCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{designBg}}; font-size: 15px; font-weight: 500; color: {{designFg}}; text-decoration: none; white-space: nowrap">Дизайн</a></li>
+<li><a href="#sites" class="dc-navlink" aria-current="{{sitesCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{sitesBg}}; font-size: 15px; font-weight: 500; color: {{sitesFg}}; text-decoration: none; white-space: nowrap">Создание сайтов</a></li>
+<li><a href="#support" class="dc-navlink" aria-current="{{supportCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{supportBg}}; font-size: 15px; font-weight: 500; color: {{supportFg}}; text-decoration: none; white-space: nowrap">Сопровождение сайтов</a></li>
+
+<li style="position: relative" onMouseEnter="{{seoEnter}}" onMouseLeave="{{leave}}">
+<button type="button" aria-expanded="{{seoOpen}}" aria-haspopup="true" onClick="{{seoToggle}}" style="display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: {{seoBg}}; color: {{seoFg}}; font-family: inherit; font-size: 15px; font-weight: 500; white-space: nowrap; cursor: pointer">SEO<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{seoRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{seoOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 100%; left: -8px; padding-top: 8px; z-index: 50">
+<ul class="dc-dd" style="list-style: none; margin: 0; padding: 8px; width: 320px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 16px; box-shadow: 0 16px 40px rgba(46, 16, 101, 0.14); display: flex; flex-direction: column; gap: 2px">
+<li><a href="#seo-audit" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Аудит</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Технический и SEO-аудит сайта</span></a></li>
+<li><a href="#seo-hourly" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">SEO с почасовой оплатой</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Оплата за фактически отработанные часы</span></a></li>
+<li><a href="#seo-scope" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">За объём работы</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Фиксированный набор работ в месяц</span></a></li>
+<li style="margin-top: 4px; padding-top: 6px; border-top: 1px solid #EFE8FF"><a href="#seo-question" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Задать вопрос SEO-шнику</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Бесплатный ответ специалиста</span></a></li>
+</ul>
+</div>
+</sc-if>
+</li>
+
+<li style="position: relative" onMouseEnter="{{geoEnter}}" onMouseLeave="{{leave}}">
+<button type="button" aria-expanded="{{geoOpen}}" aria-haspopup="true" onClick="{{geoToggle}}" style="display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: {{geoBg}}; color: {{geoFg}}; font-family: inherit; font-size: 15px; font-weight: 500; white-space: nowrap; cursor: pointer">GEO<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{geoRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{geoOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 100%; left: -8px; padding-top: 8px; z-index: 50">
+<ul class="dc-dd" style="list-style: none; margin: 0; padding: 8px; width: 320px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 16px; box-shadow: 0 16px 40px rgba(46, 16, 101, 0.14); display: flex; flex-direction: column; gap: 2px">
+<li><a href="#geo-ai" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Продвижение в ИИ</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Чтобы нейросети рекомендовали ваш сайт</span></a></li>
+<li><a href="#geo-audit" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Аудит видимости</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Как ваш бренд видят ChatGPT, Алиса и другие</span></a></li>
+</ul>
+</div>
+</sc-if>
+</li>
+
+<li style="position: relative" onMouseEnter="{{ppcEnter}}" onMouseLeave="{{leave}}">
+<button type="button" aria-expanded="{{ppcOpen}}" aria-haspopup="true" onClick="{{ppcToggle}}" style="display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: {{ppcBg}}; color: {{ppcFg}}; font-family: inherit; font-size: 15px; font-weight: 500; white-space: nowrap; cursor: pointer">Контекстная реклама<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{ppcRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{ppcOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 100%; left: -8px; padding-top: 8px; z-index: 50">
+<ul class="dc-dd" style="list-style: none; margin: 0; padding: 8px; width: 320px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 16px; box-shadow: 0 16px 40px rgba(46, 16, 101, 0.14); display: flex; flex-direction: column; gap: 2px">
+<li><a href="#yandex-direct" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Яндекс Директ</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Настройка и ведение рекламных кампаний</span></a></li>
+<li><a href="#google-ads" style="display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; color: #0E0B14; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Google Реклама</span><span style="font-size: 13px; line-height: 1.4; color: #5A5566">Поисковые и медийные кампании</span></a></li>
+</ul>
+</div>
+</sc-if>
+</li>
+
+<li><a href="#ai" class="dc-navlink" aria-current="{{aiCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{aiBg}}; font-size: 15px; font-weight: 500; color: {{aiFg}}; text-decoration: none; white-space: nowrap">AI</a></li>
+<li><a href="portfolio.html" class="dc-navlink" aria-current="{{portfolioCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{portfolioBg}}; font-size: 15px; font-weight: 500; color: {{portfolioFg}}; text-decoration: none; white-space: nowrap">Портфолио</a></li>
+<li><a href="#blog" class="dc-navlink" aria-current="{{blogCur}}" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; border-radius: 10px; background: {{blogBg}}; font-size: 15px; font-weight: 500; color: {{blogFg}}; text-decoration: none; white-space: nowrap">Блог</a></li>
+
+<li style="position: relative" onMouseEnter="{{aboutEnter}}" onMouseLeave="{{leave}}">
+<button type="button" aria-expanded="{{aboutOpen}}" aria-haspopup="true" onClick="{{aboutToggle}}" style="display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0 10px; border: 0; border-radius: 10px; background: {{aboutBg}}; color: {{aboutFg}}; font-family: inherit; font-size: 15px; font-weight: 500; white-space: nowrap; cursor: pointer">О нас<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{aboutRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{aboutOpen}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; top: 100%; right: -8px; padding-top: 8px; z-index: 50">
+<ul class="dc-dd" style="list-style: none; margin: 0; padding: 8px; width: 240px; box-sizing: border-box; background: #FFFFFF; border: 1px solid #E0D7F5; border-radius: 16px; box-shadow: 0 16px 40px rgba(46, 16, 101, 0.14); display: flex; flex-direction: column; gap: 2px">
+<sc-for list="{{aboutItems}}" as="it" hint-placeholder-count="6">
+<li><a href="{{it.href}}" aria-current="{{it.cur}}" style="display: flex; padding: 10px 14px; border-radius: 10px; background: {{it.bg}}; color: {{it.fg}}; text-decoration: none; font-size: 15px; font-weight: 600">{{it.label}}</a></li>
+</sc-for>
+</ul>
+</div>
+</sc-if>
+</li>
+</ul>
+</nav>
+
+<sc-if value="{{mobileOpen}}" hint-placeholder-val="{{ false }}">
+<nav class="dc-mobile-menu" aria-label="Меню" style="border-top: 1px solid #312E5F; padding: 8px 0 24px">
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+<li style="border-bottom: 1px solid #312E5F"><a href="#design" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Дизайн</a></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="#sites" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Создание сайтов</a></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="#support" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Сопровождение сайтов</a></li>
+<li style="border-bottom: 1px solid #312E5F"><button type="button" aria-expanded="{{mseo}}" onClick="{{mseoToggle}}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 17px; font-weight: 500; color: #FFFFFF; text-align: left; cursor: pointer">SEO<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{mseoRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{mseo}}" hint-placeholder-val="{{ false }}"><ul style="list-style: none; margin: 0 0 12px; padding: 0 0 0 16px; display: flex; flex-direction: column"><li><a href="#seo-audit" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Аудит</a></li><li><a href="#seo-hourly" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">SEO с почасовой оплатой</a></li><li><a href="#seo-scope" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">За объём работы</a></li><li><a href="#seo-question" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Задать вопрос SEO-шнику</a></li></ul></sc-if></li>
+<li style="border-bottom: 1px solid #312E5F"><button type="button" aria-expanded="{{mgeo}}" onClick="{{mgeoToggle}}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 17px; font-weight: 500; color: #FFFFFF; text-align: left; cursor: pointer">GEO<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{mgeoRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{mgeo}}" hint-placeholder-val="{{ false }}"><ul style="list-style: none; margin: 0 0 12px; padding: 0 0 0 16px; display: flex; flex-direction: column"><li><a href="#geo-ai" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Продвижение в ИИ</a></li><li><a href="#geo-audit" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Аудит видимости</a></li></ul></sc-if></li>
+<li style="border-bottom: 1px solid #312E5F"><button type="button" aria-expanded="{{mppc}}" onClick="{{mppcToggle}}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 17px; font-weight: 500; color: #FFFFFF; text-align: left; cursor: pointer">Контекстная реклама<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{mppcRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{mppc}}" hint-placeholder-val="{{ false }}"><ul style="list-style: none; margin: 0 0 12px; padding: 0 0 0 16px; display: flex; flex-direction: column"><li><a href="#yandex-direct" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Яндекс Директ</a></li><li><a href="#google-ads" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; color: #CFC9F2; text-decoration: none">Google Реклама</a></li></ul></sc-if></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="#ai" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">AI</a></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="portfolio.html" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Портфолио</a></li>
+<li style="border-bottom: 1px solid #312E5F"><a href="#blog" style="display: flex; align-items: center; min-height: 52px; font-size: 17px; font-weight: 500; color: #FFFFFF; text-decoration: none">Блог</a></li>
+<li style="border-bottom: 1px solid #312E5F"><button type="button" aria-expanded="{{mabout}}" onClick="{{maboutToggle}}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; min-height: 52px; padding: 0; border: 0; background: transparent; font-family: inherit; font-size: 17px; font-weight: 500; color: #FFFFFF; text-align: left; cursor: pointer">О нас<svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: {{maboutRot}}; transition: transform 0.2s"><path d="M4 6l4 4 4-4"></path></svg></button>
+<sc-if value="{{mabout}}" hint-placeholder-val="{{ false }}"><ul style="list-style: none; margin: 0 0 12px; padding: 0 0 0 16px; display: flex; flex-direction: column"><sc-for list="{{aboutItems}}" as="it" hint-placeholder-count="6"><li><a href="{{it.href}}" aria-current="{{it.cur}}" style="display: flex; align-items: center; min-height: 44px; font-size: 16px; font-weight: {{it.mWeight}}; color: {{it.mFg}}; text-decoration: none">{{it.label}}</a></li></sc-for></ul></sc-if></li>
+</ul>
+<div style="display: flex; flex-direction: column; gap: 4px; padding-top: 16px">
+<a href="tel:+70000000000" style="align-self: flex-start; display: flex; align-items: center; min-height: 44px; font-size: 18px; font-weight: 700; color: #FFFFFF; text-decoration: none">+7 (000) 000-00-00</a>
+<a href="mailto:hello@example.ru" style="align-self: flex-start; display: flex; align-items: center; min-height: 44px; margin-bottom: 8px; font-size: 15px; color: #D4D2F0; text-decoration: none">hello@example.ru</a>
+<a href="#callback" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 12px; background: #6D28D9; color: #FFFFFF; text-decoration: none; font-size: 16px; font-weight: 600">Заказать обратный звонок</a>
+</div>
+</nav>
+</sc-if>
+
+</div>
+</header>
+</template>
+<template id="dc-tpl-Footer">
+<footer class="dc-foot" style="background: #1E1B4B; color: #FFFFFF; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 72px clamp(20px, 4vw, 48px) 32px">
+<div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px">
+
+<div style="display: flex; flex-wrap: wrap; gap: 40px 48px">
+<div style="flex: 2 1 320px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<a href="#home" style="align-self: flex-start; display: flex; align-items: center; gap: 12px; min-height: 44px; color: #FFFFFF; text-decoration: none">
+<span aria-hidden="true" style="flex: none; width: 42px; height: 42px; border-radius: 12px; background: #6D28D9; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-5 4 4 7-8"></path><path d="M15 8h5v5"></path></svg></span>
+<span style="font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-size: 19px; font-weight: 600">[Бренд]</span>
+</a>
+<p style="margin: 0; max-width: 420px; font-size: 15px; line-height: 1.65; color: #C9C7EA; text-wrap: pretty">Продвигаем сайты в Яндексе, Google и нейросетях, создаём и сопровождаем сайты, настраиваем контекстную рекламу. Открыто пишем, что входит в каждую услугу.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">SEO</span>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">GEO</span>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">Сайты</span>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">Контекстная реклама</span>
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; border: 1px solid #423E73; color: #DDD9F5">AI</span>
+</div>
+</div>
+
+<nav aria-label="Услуги" style="flex: 1 1 180px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #C4B5FD">Услуги</span>
+<ul class="dc-foot-list" style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; font-size: 15px">
+<li><a href="#design" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Дизайн</a></li>
+<li><a href="#sites" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Создание сайтов</a></li>
+<li><a href="#support" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Сопровождение сайтов</a></li>
+<li><a href="#seo" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">SEO-продвижение</a></li>
+<li><a href="#seo-question" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Задать вопрос SEO-шнику</a></li>
+<li><a href="#geo" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">GEO-продвижение</a></li>
+<li><a href="#ppc" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Контекстная реклама</a></li>
+<li><a href="#ai" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">AI-решения</a></li>
+</ul>
+</nav>
+
+<nav aria-label="Компания" style="flex: 1 1 180px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<span style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #C4B5FD">Компания</span>
+<ul class="dc-foot-list" style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; font-size: 15px">
+<li><a href="#company" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">О компании</a></li>
+<li><a href="#team" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Наша команда</a></li>
+<li><a href="portfolio.html" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Портфолио</a></li>
+<li><a href="#reviews" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Отзывы о нас</a></li>
+<li><a href="#blog" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Блог</a></li>
+<li><a href="#career" class="dc-foot-tap" style="color: #D4D2F0; text-decoration: none">Карьера</a></li>
+</ul>
+</nav>
+
+<div class="dc-foot-contacts" style="flex: 1 1 240px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<a href="#contacts" class="dc-foot-tap" style="font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #C4B5FD; text-decoration: none">Контакты</a>
+<a href="tel:+70000000000" class="dc-foot-tap" style="font-size: 20px; font-weight: 700; color: #FFFFFF; text-decoration: none">+7 (000) 000-00-00</a>
+<a href="mailto:hello@example.ru" class="dc-foot-tap" style="font-size: 15px; color: #D4D2F0; text-decoration: none">hello@example.ru</a>
+<span style="font-size: 15px; line-height: 1.5; color: #C9C7EA">[Адрес офиса]<br>[Часы работы]</span>
+<a href="#callback" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; margin-top: 4px; padding: 0 20px; border-radius: 12px; background: #FFFFFF; color: #5B21B6; text-decoration: none; font-size: 15px; font-weight: 600">Заказать обратный звонок</a>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; padding-top: 24px; border-top: 1px solid #312E5F; font-size: 13px; line-height: 1.6; color: #A5A2CC">
+<span>© [год] [Юридическое название] · ИНН [0000000000] · ОГРН [0000000000000] · [Юридический адрес]</span>
+<nav aria-label="Юридическая информация" style="display: flex; flex-wrap: wrap; gap: 0 24px">
+<a href="#offer" style="display: inline-flex; align-items: center; min-height: 44px; color: #D4D2F0; text-decoration: none">Публичная оферта</a>
+<a href="#privacy" style="display: inline-flex; align-items: center; min-height: 44px; color: #D4D2F0; text-decoration: none">Политика конфиденциальности</a>
+<a href="#consent" style="display: inline-flex; align-items: center; min-height: 44px; color: #D4D2F0; text-decoration: none">Согласие на обработку данных</a>
+<a href="#cookie-policy" style="display: inline-flex; align-items: center; min-height: 44px; color: #D4D2F0; text-decoration: none">Политика cookie</a>
+</nav>
+</div>
+
+</div>
+</footer>
+</template>
+<template id="dc-tpl-CtaBlock">
+<section aria-labelledby="cta-title" style="background: {{bg}}; color: #0E0B14; font-family: Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; padding: clamp(40px, 6vw, 56px) clamp(20px, 4vw, 48px); box-sizing: border-box">
+<div style="max-width: 1200px; margin: 0 auto; position: relative; isolation: isolate; overflow: hidden; border-radius: 24px; background: #1E1B4B; color: #FFFFFF">
+<span aria-hidden="true" style="position: absolute; z-index: -1; top: -150px; right: -120px; width: 340px; height: 340px; border-radius: 50%; background: #25215C"></span>
+<span aria-hidden="true" style="position: absolute; z-index: -1; bottom: -100px; left: -60px; width: 180px; height: 180px; border-radius: 50%; background: #23205A"></span>
+<div style="position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 24px 48px; padding: clamp(24px, 4vw, 40px) clamp(20px, 4vw, 44px)">
+
+<div style="flex: 1 1 480px; min-width: 0; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px 20px">
+<span aria-hidden="true" style="flex: none; width: 56px; height: 56px; border-radius: 16px; background: #6D28D9; display: flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-5 4 4 7-8"></path><path d="M15 8h5v5"></path></svg></span>
+<div style="flex: 1 1 260px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+<h2 id="cta-title" style="margin: 0; font-family: Unbounded, 'Arial Black', system-ui, sans-serif; font-weight: 600; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.2; letter-spacing: -0.01em; text-wrap: balance">Обсудим ваш проект</h2>
+<p style="margin: 0; max-width: 600px; font-size: 16px; line-height: 1.55; color: #D4D2F0; text-wrap: pretty">Расскажите о задаче — подберём решение, назовём сроки и стоимость. Состав работ фиксируем в договоре.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 0 22px; margin-top: 2px">
+<a href="tel:+70000000000" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 16px; font-weight: 600; color: #FFFFFF; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg>+7 (000) 000-00-00</a>
+<a href="#telegram" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: 16px; font-weight: 600; color: #FFFFFF; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C4B5FD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 4L3 11l6 2.5M21 4l-4 16-8-6.5M21 4L9 13.5V19l3-3"></path></svg>Написать в Telegram</a>
+</div>
+</div>
+</div>
+
+<div style="flex: 1 1 280px; max-width: 340px; min-width: 0">
+<a href="#contacts" class="dc-cta-light" style="display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; padding: 8px 8px 8px 22px; box-sizing: border-box; border-radius: 16px; background: #FFFFFF; color: #0E0B14; text-decoration: none; font-size: 16px; font-weight: 600; line-height: 1.3; box-shadow: 0 12px 28px rgba(20, 8, 60, 0.32)"><span style="min-width: 0">Оставить заявку</span><span class="dc-cta-arrow" aria-hidden="true" style="flex: none; width: 44px; height: 44px; border-radius: 12px; background: #6D28D9; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"></path></svg></span></a>
+</div>
+
+</div>
+</div>
+</section>
+</template>
+<script>
+/* Мини-движок страницы: подставляет значения {{...}}, показывает/скрывает <sc-if>,
+   повторяет <sc-for>, навешивает обработчики событий, подключает блоки <dc-import>
+   и перерисовывает каждый блок отдельно при его setState(). */
+(function () {
+  class DCLogic {
+    constructor(props) { this.props = props || {}; this.state = undefined; this._render = function () {}; }
+    setState(patch, cb) {
+      var p = typeof patch === 'function' ? patch(this.state || {}, this.props) : patch;
+      this.state = Object.assign({}, this.state || {}, p);
+      this._render();
+      if (cb) cb();
+    }
+    forceUpdate() { this._render(); }
+  }
+  window.DCLogic = DCLogic;
+
+  var registry = {};
+  var HOLE = /\{\{\s*([^}]+?)\s*\}\}/g;
+  var WHOLE = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/;
+  var BOOL_PROPS = { checked: 'checked', disabled: 'disabled', selected: 'selected', required: 'required', readonly: 'readOnly', open: 'open', hidden: 'hidden' };
+
+  function lookup(vals, path) {
+    path = path.trim();
+    if (path === 'true') return true;
+    if (path === 'false') return false;
+    if (path === 'null') return null;
+    if (/^-?\d+(\.\d+)?$/.test(path)) return Number(path);
+    return path.split('.').reduce(function (o, k) { return o == null ? undefined : o[k]; }, vals);
+  }
+  function interp(str, vals) {
+    return str.replace(HOLE, function (_, p) { var v = lookup(vals, p); return v == null ? '' : String(v); });
+  }
+
+  function compile(root, ctx) {
+    var ups = [];
+    walk(root);
+    return ups;
+
+    function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 1 && n.localName === 'sc-if') { handleIf(n); return; }
+        if (n.nodeType === 1 && n.localName === 'sc-for') { handleFor(n); return; }
+        if (n.nodeType === 1 && n.localName === 'dc-import') { handleImport(n); return; }
+        if (n.nodeType === 1) { handleAttrs(n); walk(n); return; }
+        if (n.nodeType === 3 && n.nodeValue.indexOf('{{') !== -1) {
+          var tpl = n.nodeValue;
+          ups.push(function (v) { var t = interp(tpl, v); if (n.nodeValue !== t) n.nodeValue = t; });
+        }
+      });
+    }
+
+    function handleImport(el) {
+      var name = el.getAttribute('name');
+      var extra = {};
+      Array.prototype.slice.call(el.attributes).forEach(function (a) {
+        if (a.name === 'name' || a.name.indexOf('hint-') === 0) return;
+        extra[a.name.replace(/-([a-z])/g, function (_, c) { return c.toUpperCase(); })] = a.value;
+      });
+      var host = document.createElement('div');
+      host.setAttribute('data-block', name);
+      el.parentNode.replaceChild(host, el);
+      mountInto(name, host, extra);
+    }
+
+    function handleIf(el) {
+      var expr = el.getAttribute('value') || '';
+      var m = expr.match(WHOLE);
+      var anchor = document.createComment('sc-if');
+      el.parentNode.replaceChild(anchor, el);
+      var frag = document.createDocumentFragment();
+      while (el.firstChild) frag.appendChild(el.firstChild);
+      var mounted = null;
+      ups.push(function (v) {
+        var cond = !!(m ? lookup(v, m[1]) : expr);
+        if (cond && !mounted) {
+          var clone = frag.cloneNode(true);
+          var inner = compile(clone, ctx);
+          var nodes = Array.prototype.slice.call(clone.childNodes);
+          anchor.parentNode.insertBefore(clone, anchor.nextSibling);
+          mounted = { nodes: nodes, inner: inner };
+        } else if (!cond && mounted) {
+          mounted.nodes.forEach(function (x) { if (x.parentNode) x.parentNode.removeChild(x); });
+          mounted = null;
+        }
+        if (mounted) mounted.inner.forEach(function (f) { f(v); });
+      });
+    }
+
+    function handleFor(el) {
+      var expr = el.getAttribute('list') || '';
+      var m = expr.match(WHOLE);
+      var as = el.getAttribute('as') || 'item';
+      var end = document.createComment('/sc-for');
+      el.parentNode.replaceChild(end, el);
+      var frag = document.createDocumentFragment();
+      while (el.firstChild) frag.appendChild(el.firstChild);
+      var items = [];
+      ups.push(function (v) {
+        var list = (m ? lookup(v, m[1]) : null) || [];
+        while (items.length < list.length) {
+          var clone = frag.cloneNode(true);
+          var inner = compile(clone, ctx);
+          var a = document.createComment('item'), b = document.createComment('/item');
+          end.parentNode.insertBefore(a, end);
+          end.parentNode.insertBefore(clone, end);
+          end.parentNode.insertBefore(b, end);
+          items.push({ a: a, b: b, inner: inner });
+        }
+        while (items.length > list.length) {
+          var it = items.pop(), x = it.a;
+          while (x) { var nx = x.nextSibling; x.parentNode.removeChild(x); if (x === it.b) break; x = nx; }
+        }
+        items.forEach(function (it, i) {
+          var sv = Object.create(v);
+          sv[as] = list[i];
+          sv.$index = i;
+          it.inner.forEach(function (f) { f(sv); });
+        });
+      });
+    }
+
+    function handleAttrs(el) {
+      Array.prototype.slice.call(el.attributes).forEach(function (a) {
+        var name = a.name, val = a.value;
+        if (name.indexOf('hint-') === 0) { el.removeAttribute(name); return; }
+        if (val.indexOf('{{') === -1) return;
+        var m = val.match(WHOLE);
+        el.removeAttribute(name);
+        if (name.indexOf('on') === 0 && m) {
+          var key = m[1], scope = null;
+          ups.push(function (v) { scope = v; });
+          el.addEventListener(name.slice(2), function (e) {
+            var f = lookup(scope || ctx.vals, key);
+            if (typeof f === 'function') f(e);
+          });
+          return;
+        }
+        if (name === 'value' && m && el.localName === 'select') {
+          var vk = m[1];
+          ups.push(function (v) { var s = lookup(v, vk); s = s == null ? '' : String(s); if (el.value !== s) el.value = s; });
+          return;
+        }
+        if (BOOL_PROPS[name] && m) {
+          var prop = BOOL_PROPS[name], k = m[1];
+          ups.push(function (v) { var b = !!lookup(v, k); if (el[prop] !== b) el[prop] = b; });
+          return;
+        }
+        ups.push(function (v) {
+          var out;
+          if (m) { var r = lookup(v, m[1]); out = r == null ? null : String(r); }
+          else out = interp(val, v);
+          if (out === null) el.removeAttribute(name);
+          else if (el.getAttribute(name) !== out) el.setAttribute(name, out);
+        });
+      });
+    }
+  }
+
+  function mountInto(name, host, extra) {
+    var entry = registry[name];
+    if (!entry) throw new Error('Блок не найден: ' + name);
+    var inst = new entry.Component(Object.assign({}, entry.props, extra || {}));
+    var ctx = { vals: {} };
+    var frag = document.getElementById('dc-tpl-' + name).content.cloneNode(true);
+    var ups = compile(frag, ctx);
+    inst._render = function () {
+      ctx.vals = inst.renderVals() || {};
+      ups.forEach(function (f) { f(ctx.vals); });
+    };
+    inst._render();
+    host.appendChild(frag);
+    if (inst.componentDidMount) inst.componentDidMount();
+    window.addEventListener('pagehide', function () { if (inst.componentWillUnmount) inst.componentWillUnmount(); });
+    return inst;
+  }
+
+  window.DC = {
+    register: function (name, Component, props) { registry[name] = { Component: Component, props: props || {} }; },
+    mount: function (name, host) { return mountInto(name, host); }
+  };
+})();
+
+</script>
+<script>
+DC.register("Main", (function () {
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const svc = st.svc || 'all';
+    const niche = st.niche || 'all';
+    const S = [
+      { id: 'all', label: 'Все' },
+      { id: 'seo', label: 'SEO' },
+      { id: 'geo', label: 'GEO' },
+      { id: 'sites', label: 'Сайты' },
+      { id: 'ppc', label: 'Контекстная реклама' },
+      { id: 'support', label: 'Сопровождение' }
+    ];
+    const N = { repair: 'Ремонт и строительство', med: 'Медицина', shop: 'Интернет-магазины', auto: 'Автоуслуги', law: 'Юридические услуги', edu: 'Образование', prod: 'Производство', beauty: 'Красота' };
+    const C = [
+      { n: 'repair', s: ['seo', 'sites'], cover: 'images/project-repair.jpg', title: 'Новый сайт и SEO для компании по ремонту квартир', desc: 'Перенесли сайт с конструктора и собрали структуру под все виды ремонта.', v1: '+[N]%', l1: 'визитов из поиска', v2: '×[N]', l2: 'заявок с сайта' },
+      { n: 'med', s: ['seo', 'geo'], cover: 'images/project-dental.jpg', title: 'Локальное SEO и карты для стоматологии', desc: 'Оптимизировали страницы услуг и врачей, настроили карточки в Яндекс Картах и 2ГИС.', v1: '+[N]%', l1: 'записей с сайта', v2: 'Топ-[N]', l2: 'в картах по району' },
+      { n: 'shop', s: ['sites', 'ppc'], cover: 'images/project-shop.jpg', title: 'Интернет-магазин мебели с нуля и запуск рекламы', desc: 'Сделали каталог с фильтрами и быстрым заказом, запустили товарную рекламу в Директе.', v1: '[N]', l1: 'заказов в первый месяц', v2: '[N] ₽', l2: 'стоимость заказа' },
+      { n: 'auto', s: ['ppc'], cover: 'images/project-auto.jpg', title: 'Контекстная реклама для автосервиса', desc: 'Пересобрали кампании по видам работ и районам, отключили нецелевые запросы.', v1: '−[N]%', l1: 'цена заявки', v2: '[N]', l2: 'заявок в месяц' },
+      { n: 'law', s: ['seo', 'geo'], cover: 'images/project-law.jpg', title: 'SEO и GEO для юридической компании', desc: 'Подготовили страницы практик и экспертные статьи, на которые ссылаются нейросети.', v1: '+[N]%', l1: 'трафика из поиска', v2: '[N]', l2: 'упоминаний в ответах ИИ' },
+      { n: 'edu', s: ['sites', 'ppc'], cover: 'images/project-school.jpg', title: 'Лендинг и реклама для онлайн-школы английского', desc: 'Сделали страницу курса и настроили рекламу на запись на пробный урок.', v1: '[N]%', l1: 'конверсия в заявку', v2: '[N] ₽', l2: 'цена заявки' },
+      { n: 'prod', s: ['sites', 'seo'], cover: 'images/project-factory.jpg', title: 'Каталог продукции для завода металлоконструкций', desc: 'Перевели прайс в каталог с карточками продукции и формой отправки чертежа.', v1: '+[N]%', l1: 'запросов на расчёт', v2: '[N]', l2: 'страниц в индексе' },
+      { n: 'beauty', s: ['support', 'seo'], cover: 'images/project-beauty.jpg', title: 'Сопровождение сайта студии красоты', desc: 'Обновляем прайс и мастеров, подключили онлайн-запись и следим за скоростью сайта.', v1: '[N]', l1: 'задач в месяц', v2: '[N] с', l2: 'загрузка страницы' },
+      { n: 'shop', s: ['seo', 'support'], cover: 'images/project-flowers.jpg', title: 'SEO для цветочного интернет-магазина', desc: 'Создали страницы под поводы и районы доставки, ускорили сайт перед праздниками.', v1: '+[N]%', l1: 'заказов из поиска', v2: '[N]', l2: 'запросов в топ-10' }
+    ];
+    const label = (id) => (S.find((x) => x.id === id) || {}).label;
+    const inNiche = (c) => niche === 'all' || c.n === niche;
+    const list = C.filter((c) => inNiche(c) && (svc === 'all' || c.s.indexOf(svc) >= 0));
+    const all = svc === 'all' && niche === 'all';
+    const grid = all ? list.slice(1) : list;
+    const word = (n) => (n % 10 === 1 && n % 100 !== 11 ? 'кейс' : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 'кейса' : 'кейсов'));
+    return {
+      services: S.map((s) => {
+        const on = s.id === svc;
+        return {
+          label: s.label,
+          count: C.filter((c) => inNiche(c) && (s.id === 'all' || c.s.indexOf(s.id) >= 0)).length,
+          pressed: on ? 'true' : 'false',
+          bd: on ? '#6D28D9' : '#D9CFF2',
+          bg: on ? '#6D28D9' : '#FFFFFF',
+          fg: on ? '#FFFFFF' : '#2B2733',
+          pick: () => this.setState({ svc: s.id })
+        };
+      }),
+      niche: niche,
+      onNiche: (e) => this.setState({ niche: e.target.value }),
+      reset: () => this.setState({ svc: 'all', niche: 'all' }),
+      filtered: !all,
+      foundLabel: all ? 'Все проекты · ' + C.length + ' ' + word(C.length) : 'Найдено: ' + list.length + ' ' + word(list.length),
+      showFeat: all,
+      showMore: all,
+      empty: list.length === 0,
+      cases: grid.map((c) => ({
+        cover: c.cover,
+        alt: 'Главный экран сайта: ' + N[c.n].toLowerCase(),
+        niche: N[c.n],
+        tags: c.s.map(label),
+        title: c.title,
+        desc: c.desc,
+        v1: c.v1, l1: c.l1, v2: c.v2, l2: c.l2
+      }))
+    };
+  }
+}
+return Component;
+})(), {});
+
+DC.register("Header", (function () {
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const open = st.open || null;
+    const sub = st.sub || null;
+    const mobile = !!st.mobile;
+    const active = this.props.active ?? 'none';
+    const inAbout = active.indexOf('about-') === 0;
+    const pages = [
+      ['contacts', 'Контакты', '#contacts'],
+      ['company', 'О компании', '#company'],
+      ['team', 'Наша команда', '#team'],
+      ['reviews', 'Отзывы о нас', '#reviews'],
+      ['career', 'Карьера', '#career'],
+      ['offer', 'Публичная оферта', '#offer']
+    ];
+    const v = {
+      mobileOpen: mobile,
+      mobileClosed: !mobile,
+      toggleMobile: () => this.setState({ mobile: !mobile }),
+      leave: () => this.setState({ open: null }),
+      aboutItems: pages.map((p) => {
+        const on = active === 'about-' + p[0];
+        return { label: p[1], href: p[2], cur: on ? 'page' : undefined, bg: on ? '#F3EEFF' : 'transparent', fg: on ? '#5B21B6' : '#0E0B14', mFg: on ? '#FFFFFF' : '#CFC9F2', mWeight: on ? '600' : '400' };
+      })
+    };
+    ['design', 'sites', 'support', 'ai', 'portfolio', 'blog'].forEach((k) => {
+      const on = active === k;
+      v[k + 'Bg'] = on ? '#312E5F' : 'transparent';
+      v[k + 'Fg'] = on ? '#FFFFFF' : '#E6E4F7';
+      v[k + 'Cur'] = on ? 'page' : undefined;
+    });
+    ['seo', 'geo', 'ppc', 'about'].forEach((k) => {
+      const on = open === k;
+      const section = k === 'about' && inAbout;
+      v[k + 'Open'] = on;
+      v[k + 'Bg'] = on || section ? '#312E5F' : 'transparent';
+      v[k + 'Fg'] = on || section ? '#FFFFFF' : '#E6E4F7';
+      v[k + 'Rot'] = on ? 'rotate(180deg)' : 'rotate(0deg)';
+      v[k + 'Enter'] = () => {
+        if (window.matchMedia && !window.matchMedia('(hover: hover)').matches) return;
+        this._hoverAt = Date.now();
+        this.setState({ open: k });
+      };
+      v[k + 'Toggle'] = () => {
+        const cur = (this.state && this.state.open) || null;
+        if (cur === k && Date.now() - (this._hoverAt || 0) < 600) return;
+        this.setState({ open: cur === k ? null : k });
+      };
+      const ms = sub === k;
+      v['m' + k] = ms;
+      v['m' + k + 'Rot'] = ms ? 'rotate(180deg)' : 'rotate(0deg)';
+      v['m' + k + 'Toggle'] = () => {
+        const cur = (this.state && this.state.sub) || null;
+        this.setState({ sub: cur === k ? null : k });
+      };
+    });
+    return v;
+  }
+}
+return Component;
+})(), {"active":"none"});
+
+DC.register("Footer", (function () {
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+return Component;
+})(), {});
+
+DC.register("CtaBlock", (function () {
+class Component extends DCLogic {
+  renderVals() {
+    const background = this.props.background ?? 'lavender';
+    return { bg: background === 'white' ? '#FFFFFF' : '#F8F5FF' };
+  }
+}
+return Component;
+})(), {"background":"lavender"});
+</script>
+<script>
+DC.mount("Main", document.getElementById('dc-root'));
+</script>
+</body>
+</html>
