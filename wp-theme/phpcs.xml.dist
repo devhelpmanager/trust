@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<ruleset name="Trust">
+	<description>Правила проверки кода темы Trust (WordPress Coding Standards).</description>
+
+	<file>./trust</file>
+	<exclude-pattern>*/assets/*</exclude-pattern>
+	<exclude-pattern>*/demo/media/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<config name="minimum_wp_version" value="6.6"/>
+	<config name="testVersion" value="8.1-"/>
+
+	<rule ref="WordPress"/>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="trust"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="trust"/>
+				<element value="Trust"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>

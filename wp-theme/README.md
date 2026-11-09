@@ -1,0 +1,105 @@
+# WordPress-тема Trust
+
+Тема сайта агентства «SEO, сайты, контекстная реклама» по макетам из этого репозитория.
+Техническое задание — [`docs/TZ-WordPress-tema.md`](../docs/TZ-WordPress-tema.md),
+инвентарь «макет → блок/шаблон» и план работ — [`docs/inventory.md`](docs/inventory.md).
+
+## Что в папке
+
+| Путь | Что это |
+|---|---|
+| `trust/` | Сама тема — эта папка копируется в `wp-content/themes/trust/` |
+| `docs/inventory.md` | Какая секция какого макета каким блоком или шаблоном стала, план работ |
+| `phpcs.xml.dist` | Правила проверки кода (WordPress Coding Standards) |
+| `tests/` | Автотесты (появятся по ходу работ) |
+
+## Требования
+
+- WordPress 6.6 или новее (проверяется на 7.1), PHP 8.1 или новее (проверяется на 8.3).
+- Плагин **Secure Custom Fields** из каталога WordPress.org. Без него сайт открывается, но блоки,
+  поля и «Настройки сайта» не работают, а в админке висит уведомление со ссылкой на установку.
+- Сборка не нужна: CSS, JS и шрифты лежат в теме готовыми.
+
+## Установка на сервер
+
+Нужны `git` и [WP-CLI](https://wp-cli.org/). В командах `SITE` — папка WordPress (там, где
+лежит `wp-config.php`).
+
+```bash
+SITE=/path/to/wordpress
+```
+
+Скачать репозиторий (один раз):
+
+```bash
+git clone --branch claude/happy-pascal-t7rcow --single-branch https://github.com/devhelpmanager/trust.git ~/trust
+```
+
+Скопировать тему в WordPress и отдать файлы владельцу сайта:
+
+```bash
+rsync -a --delete ~/trust/wp-theme/trust/ "$SITE/wp-content/themes/trust/" && chown -R "$(stat -c '%U:%G' "$SITE/wp-config.php")" "$SITE/wp-content/themes/trust"
+```
+
+Установить плагин и включить тему (если команды выполняются от root, добавьте `--allow-root`):
+
+```bash
+wp --path="$SITE" plugin install secure-custom-fields --activate
+```
+
+```bash
+wp --path="$SITE" theme activate trust
+```
+
+### Обновление темы
+
+```bash
+git -C ~/trust pull && rsync -a --delete ~/trust/wp-theme/trust/ "$SITE/wp-content/themes/trust/" && chown -R "$(stat -c '%U:%G' "$SITE/wp-config.php")" "$SITE/wp-content/themes/trust"
+```
+
+Тема копируется, а не подключается символической ссылкой: некоторые панели управления
+хостингом запрещают веб-серверу ходить по ссылкам, и тогда стили и шрифты не загрузятся.
+
+## Как устроена тема
+
+```
+trust/
+  style.css            — заголовок темы (имя, версия, требования)
+  functions.php        — константы, автозагрузка классов Trust\ и запуск модулей
+  theme.json           — палитра и шрифты для редактора, отключённые произвольные стили
+  header.php, footer.php, index.php
+  inc/                 — модули: class-<имя>.php = класс Trust\<Имя>
+    class-theme.php        — запуск модулей
+    class-setup.php        — возможности темы, области меню
+    class-cleanup.php      — отключение emoji, служебных ссылок, каталога блоков, библиотеки шрифтов
+    class-assets.php       — общий CSS, предзагрузка шрифтов
+    class-dependencies.php — проверка плагина Secure Custom Fields
+  assets/css/main.css  — токены (CSS-переменные), шрифты, база, сетка, шапка секции, кнопки
+  assets/fonts/        — Unbounded, Onest, JetBrains Mono (woff2, кириллица и латиница) + лицензии OFL
+  screenshot.png       — превью темы в «Внешний вид → Темы»
+```
+
+### Правила кода
+
+- PHP — WordPress Coding Standards, префикс функций и хуков `trust_`, классы в пространстве
+  имён `Trust\`, текстовый домен `trust`, исходный язык строк — русский.
+- Видимые посетителю тексты, картинки и ссылки — только из админки (поля, настройки, меню).
+  В коде — вёрстка, стили, логика и служебные строки интерфейса в `__()` / `esc_html__()`.
+- Каждый блок — своя папка `blocks/<имя>/` со стилями и скриптом, которые подключаются только
+  на страницах с этим блоком. Общий `main.css` — не больше ~40 КБ.
+
+### Шрифты
+
+Файлы взяты из npm-пакетов `@fontsource/unbounded@5.3.0`, `@fontsource/onest@5.3.1`,
+`@fontsource/jetbrains-mono@5.3.0`: начертания из макетов, поднаборы кириллица, латиница и
+расширенная латиница (в ней знак ₽). Браузер загружает только нужные поднаборы
+(`unicode-range`). Лицензии — `assets/fonts/OFL-*.txt`.
+
+## Проверки
+
+```bash
+find wp-theme/trust -name '*.php' -print0 | xargs -0 -n1 php -l
+```
+
+Проверка `phpcs` по `phpcs.xml.dist`, визуальная сверка с макетами и остальные тесты из
+раздела 18 ТЗ добавляются по ходу работ.

@@ -1,0 +1,102 @@
+{
+	"$schema": "https://schemas.wp.org/wp/6.6/theme.json",
+	"version": 3,
+	"settings": {
+		"appearanceTools": false,
+		"useRootPaddingAwareAlignments": false,
+		"layout": {
+			"contentSize": "760px",
+			"wideSize": "1200px",
+			"allowEditing": false,
+			"allowCustomContentAndWideSize": false
+		},
+		"color": {
+			"custom": false,
+			"customGradient": false,
+			"customDuotone": false,
+			"defaultPalette": false,
+			"defaultGradients": false,
+			"defaultDuotone": false,
+			"gradients": [],
+			"duotone": [],
+			"background": false,
+			"text": false,
+			"link": false,
+			"palette": [
+				{ "slug": "indigo", "name": "Индиго", "color": "#1E1B4B" },
+				{ "slug": "violet", "name": "Фиолетовый", "color": "#6D28D9" },
+				{ "slug": "violet-dark", "name": "Тёмно-фиолетовый", "color": "#5B21B6" },
+				{ "slug": "violet-deep", "name": "Глубокий фиолетовый", "color": "#4C1D95" },
+				{ "slug": "lavender", "name": "Лавандовый фон", "color": "#F8F5FF" },
+				{ "slug": "lavender-2", "name": "Лавандовая плашка", "color": "#F3EEFF" },
+				{ "slug": "lavender-3", "name": "Лавандовый бейдж", "color": "#EEE7FE" },
+				{ "slug": "border", "name": "Рамка", "color": "#E0D7F5" },
+				{ "slug": "border-strong", "name": "Рамка поля", "color": "#D9CFF2" },
+				{ "slug": "text", "name": "Текст", "color": "#0E0B14" },
+				{ "slug": "text-2", "name": "Текст абзацев", "color": "#2B2733" },
+				{ "slug": "muted", "name": "Второстепенный текст", "color": "#5A5566" },
+				{ "slug": "white", "name": "Белый", "color": "#FFFFFF" }
+			]
+		},
+		"typography": {
+			"customFontSize": false,
+			"defaultFontSizes": false,
+			"fontSizes": [],
+			"fluid": false,
+			"dropCap": false,
+			"fontStyle": false,
+			"fontWeight": false,
+			"letterSpacing": false,
+			"lineHeight": false,
+			"textAlign": false,
+			"textColumns": false,
+			"textDecoration": false,
+			"textTransform": false,
+			"writingMode": false,
+			"fontFamilies": [
+				{ "slug": "display", "name": "Unbounded (заголовки)", "fontFamily": "Unbounded, 'Arial Black', system-ui, sans-serif" },
+				{ "slug": "text", "name": "Onest (текст)", "fontFamily": "Onest, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" },
+				{ "slug": "mono", "name": "JetBrains Mono (подписи)", "fontFamily": "'JetBrains Mono', ui-monospace, Menlo, monospace" }
+			]
+		},
+		"spacing": {
+			"customSpacingSize": false,
+			"defaultSpacingSizes": false,
+			"spacingSizes": [],
+			"padding": false,
+			"margin": false,
+			"blockGap": false,
+			"units": [ "px", "%" ]
+		},
+		"border": {
+			"color": false,
+			"radius": false,
+			"style": false,
+			"width": false
+		},
+		"shadow": {
+			"defaultPresets": false,
+			"presets": []
+		},
+		"dimensions": {
+			"aspectRatio": false,
+			"minHeight": false
+		},
+		"background": {
+			"backgroundImage": false,
+			"backgroundSize": false
+		},
+		"position": {
+			"sticky": false
+		}
+	},
+	"styles": {
+		"color": {
+			"background": "var(--wp--preset--color--white)",
+			"text": "var(--wp--preset--color--text)"
+		},
+		"typography": {
+			"fontFamily": "var(--wp--preset--font-family--text)"
+		}
+	}
+}
