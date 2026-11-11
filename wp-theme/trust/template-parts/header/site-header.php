@@ -3,7 +3,7 @@
  * Шапка сайта (макет iskhodniki/holst-portfolio/Header.dc.html).
  *
  * Логотип и контакты — из «Настроек сайта», меню — из области «Шапка».
- * Мобильное меню (бургер) появится на шаге 1.4.
+ * Уже 1180 px главное меню заменяется кнопкой-бургером и мобильным меню.
  *
  * @package Trust
  */
@@ -48,9 +48,28 @@ $trust_callback = (string) Settings::get( 'callback_header_label', __( 'Зака
 				<a class="header-callback-icon" href="#callback" data-trust-callback aria-label="<?php echo esc_attr( $trust_callback ); ?>">
 					<?php Icons::render( 'phone', array( 'size' => 20 ) ); ?>
 				</a>
+				<button type="button" class="header-burger" aria-label="<?php esc_attr_e( 'Меню', 'trust' ); ?>" aria-expanded="false" aria-controls="mobile-menu">
+					<?php
+					Icons::render(
+						'menu',
+						array(
+							'size'  => 22,
+							'class' => 'header-burger__open',
+						)
+					);
+					Icons::render(
+						'close',
+						array(
+							'size'  => 22,
+							'class' => 'header-burger__close',
+						)
+					);
+					?>
+				</button>
 			</div>
 		</div>
 
 		<?php get_template_part( 'template-parts/header/main-nav' ); ?>
+		<?php get_template_part( 'template-parts/header/mobile-nav' ); ?>
 	</div>
 </header>

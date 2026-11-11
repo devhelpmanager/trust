@@ -404,6 +404,7 @@ textarea {
 	display: flex;
 	align-items: center;
 	gap: 12px;
+	min-width: 0;
 	min-height: 44px;
 	color: var(--c-white);
 	text-decoration: none;
@@ -429,13 +430,18 @@ textarea {
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
+	min-width: 0;
 	line-height: 1.1;
 }
 
+/* Слишком длинное название не выталкивает кнопки за край экрана, а обрезается многоточием. */
 .brand__name {
+	overflow-x: clip;
 	font-family: var(--f-display);
 	font-size: 19px;
 	font-weight: 600;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .brand__tagline {
@@ -451,7 +457,10 @@ textarea {
 .brand__logo {
 	display: block;
 	width: auto;
+	max-width: 100%;
 	height: 42px;
+	object-fit: contain;
+	object-position: left center;
 }
 
 /* Телефон, часы, email */
@@ -670,11 +679,191 @@ html:not(.js) .main-nav__item:focus-within > .main-nav__dropdown {
 	color: var(--c-muted);
 }
 
+/* Кнопка-бургер (видна уже 1180 px и только с JavaScript) */
+.header-burger {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	padding: 0;
+	border: 1px solid #423E73;
+	border-radius: 12px;
+	background: transparent;
+	color: var(--c-white);
+	cursor: pointer;
+}
+
+.header-burger__close,
+.header-burger[aria-expanded="true"] .header-burger__open {
+	display: none;
+}
+
+.header-burger[aria-expanded="true"] .header-burger__close {
+	display: block;
+}
+
+/* Мобильное меню */
+.mobile-nav {
+	display: none;
+	padding: 8px 0 24px;
+	border-top: 1px solid var(--c-indigo-hover);
+}
+
+.mobile-nav.is-open {
+	display: block;
+}
+
+.mobile-nav__list {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.mobile-nav__item {
+	border-bottom: 1px solid var(--c-indigo-hover);
+}
+
+.mobile-nav__link,
+.mobile-nav__link:hover {
+	display: flex;
+	align-items: center;
+	min-height: 52px;
+	font-size: 17px;
+	font-weight: 500;
+	color: var(--c-white);
+	text-decoration: none;
+}
+
+.mobile-nav__toggle {
+	justify-content: space-between;
+	width: 100%;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	font-family: inherit;
+	text-align: left;
+	cursor: pointer;
+}
+
+.mobile-nav__chevron {
+	flex: none;
+	color: #C4B5FD;
+	transition: transform 0.2s;
+}
+
+.mobile-nav__item.is-open .mobile-nav__chevron {
+	transform: rotate(180deg);
+}
+
+.mobile-nav__sub {
+	display: none;
+	flex-direction: column;
+	margin: 0 0 12px;
+	padding: 0 0 0 16px;
+	list-style: none;
+}
+
+.mobile-nav__item.is-open .mobile-nav__sub {
+	display: flex;
+}
+
+.mobile-nav__sub-link,
+.mobile-nav__sub-link:hover {
+	display: flex;
+	align-items: center;
+	min-height: 44px;
+	font-size: 16px;
+	font-weight: 400;
+	color: #CFC9F2;
+	text-decoration: none;
+}
+
+.mobile-nav__sub-link[aria-current="page"] {
+	font-weight: 600;
+	color: var(--c-white);
+}
+
+.mobile-nav__contacts {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding-top: 16px;
+}
+
+.mobile-nav__phone,
+.mobile-nav__phone:hover {
+	display: flex;
+	align-self: flex-start;
+	align-items: center;
+	min-height: 44px;
+	font-size: 18px;
+	font-weight: 700;
+	color: var(--c-white);
+	text-decoration: none;
+}
+
+.mobile-nav__email,
+.mobile-nav__email:hover {
+	display: flex;
+	align-self: flex-start;
+	align-items: center;
+	min-height: 44px;
+	margin-bottom: 8px;
+	font-size: 15px;
+	color: #D4D2F0;
+	text-decoration: none;
+}
+
+.mobile-nav__callback {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 52px;
+	border-radius: 12px;
+	background: var(--c-violet);
+	color: var(--c-white);
+	font-size: 16px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: background 0.2s;
+}
+
+.mobile-nav__callback:hover {
+	background: var(--c-violet-dark);
+	color: var(--c-white);
+}
+
 @media (max-width: 1179px) {
 	.main-nav,
 	.header-email,
 	.brand__tagline {
 		display: none;
+	}
+
+	.js .header-burger {
+		display: flex;
+	}
+
+	/* Без JavaScript мобильное меню показано раскрытым целиком. */
+	html:not(.js) .mobile-nav {
+		display: block;
+	}
+
+	html:not(.js) .mobile-nav__sub {
+		display: flex;
+	}
+
+	html:not(.js) .mobile-nav__chevron {
+		display: none;
+	}
+}
+
+@media (min-width: 1180px) {
+	.mobile-nav {
+		display: none !important;
 	}
 }
 
@@ -691,6 +880,28 @@ html:not(.js) .main-nav__item:focus-within > .main-nav__dropdown {
 
 	.header-callback-icon {
 		display: flex;
+	}
+}
+
+/*
+ * Самые узкие экраны (Galaxy Fold, 280 px): в макете логотип, кнопка звонка и бургер
+ * шире экрана на 8 px. Промежутки чуть меньше, чтобы не было прокрутки вбок (ТЗ, п. 15).
+ */
+@media (max-width: 340px) {
+	.site-header__top {
+		gap: 10px;
+	}
+
+	.site-header__actions {
+		gap: 6px;
+	}
+
+	.brand {
+		gap: 10px;
+	}
+
+	.brand__name {
+		font-size: 17px;
 	}
 }
 

@@ -28,7 +28,17 @@ final class Assets {
 	 */
 	public static function register(): void {
 		add_action( 'wp_enqueue_scripts', array( self::class, 'enqueue' ) );
+		add_action( 'wp_head', array( self::class, 'js_class' ), 0 );
 		add_action( 'wp_head', array( self::class, 'preload_fonts' ), 1 );
+	}
+
+	/**
+	 * Класс js у <html> до отрисовки страницы: стили знают, что JavaScript работает,
+	 * и мобильное меню не мелькает раскрытым (запасной вид без JavaScript).
+	 * Одна строка встроенного кода, без загрузки файлов.
+	 */
+	public static function js_class(): void {
+		wp_print_inline_script_tag( "document.documentElement.classList.add('js');" );
 	}
 
 	/**
