@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/faq",
+	"title": "Вопрос-ответ",
+	"description": "Частые вопросы с раскрывающимися ответами. Номера 01, 02… ставятся автоматически. Вопросы попадают в микроразметку FAQPage.",
+	"category": "trust-services",
+	"icon": "editor-help",
+	"keywords": [ "faq", "вопросы", "ответы", "аккордеон", "частые вопросы" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

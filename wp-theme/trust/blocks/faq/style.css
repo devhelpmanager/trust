@@ -1,0 +1,155 @@
+/*
+ * Блок «Вопрос-ответ» (holst-blokov/Faq, seo-bloki/10-vopros-otvet.html). Фон белый.
+ * Надзаголовок, заголовок и вводный текст — общие классы из main.css.
+ */
+
+.b-faq {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-faq__inner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 40px 72px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-faq__head {
+	display: flex;
+	flex: 1 1 300px;
+	flex-direction: column;
+	gap: 16px;
+	max-width: 400px;
+	min-width: 0;
+}
+
+.b-faq__more {
+	display: inline-flex;
+	align-self: flex-start;
+	align-items: center;
+	gap: 8px;
+	min-height: 44px;
+	margin-top: 8px;
+	font-size: 16px;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.b-faq__list {
+	display: flex;
+	flex: 999 1 520px;
+	flex-direction: column;
+	gap: 12px;
+	min-width: 0;
+}
+
+.b-faq__item {
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-card);
+	background: var(--c-white);
+	transition: background 0.2s, border-color 0.2s;
+}
+
+.b-faq__item.is-open {
+	border-color: #CDBDFF;
+	background: var(--c-lavender);
+}
+
+.b-faq__q {
+	margin: 0;
+}
+
+.b-faq__toggle {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	width: 100%;
+	padding: 20px clamp(16px, 2.5vw, 24px);
+	border: 0;
+	background: transparent;
+	color: var(--c-text);
+	font-family: inherit;
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 1.35;
+	text-align: left;
+	cursor: pointer;
+}
+
+.b-faq__label {
+	display: flex;
+	align-items: baseline;
+	gap: 16px;
+}
+
+.b-faq__num {
+	flex: none;
+	min-width: 24px;
+	font-family: var(--f-mono);
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--c-violet);
+}
+
+/* Круглая кнопка со стрелкой: закрыто — лавандовая, открыто — фиолетовая, стрелка повёрнута */
+.b-faq__icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: var(--r-pill);
+	background: var(--c-lavender-2);
+	color: var(--c-violet);
+	transition: background 0.2s, color 0.2s;
+}
+
+.b-faq__icon svg {
+	transition: transform 0.2s;
+}
+
+.b-faq__item.is-open .b-faq__icon {
+	background: var(--c-violet);
+	color: var(--c-white);
+}
+
+.b-faq__item.is-open .b-faq__icon svg {
+	transform: rotate(180deg);
+}
+
+.b-faq__answer {
+	padding: 0 clamp(16px, 2.5vw, 24px) 22px calc(clamp(16px, 2.5vw, 24px) + 40px);
+	font-size: 16px;
+	line-height: 1.65;
+	color: var(--c-text-2);
+	text-wrap: pretty;
+}
+
+.b-faq__answer > * {
+	margin: 0;
+}
+
+.b-faq__answer > * + * {
+	margin-top: 12px;
+}
+
+.b-faq__answer ul,
+.b-faq__answer ol {
+	padding-left: 20px;
+}
+
+/* Без JavaScript ответы показаны раскрытыми */
+html:not(.js) .b-faq__answer[hidden] {
+	display: block !important;
+}
+
+.b-faq__empty {
+	margin: 0;
+	color: var(--c-muted);
+}

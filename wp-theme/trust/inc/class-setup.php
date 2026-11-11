@@ -56,6 +56,6 @@ final class Setup {
 			)
 		);
 
-		add_editor_style( 'assets/css/main.css' );
+		add_editor_style( array( 'assets/css/main.css', 'assets/css/editor.css' ) );
 	}
 }

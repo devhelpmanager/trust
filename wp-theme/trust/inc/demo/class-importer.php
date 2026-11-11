@@ -68,7 +68,7 @@ final class Importer {
 
 		foreach ( $pages as $page ) {
 			$path    = $page['path'];
-			$content = $page['content'] ?? '';
+			$content = isset( $page['blocks'] ) ? self::blocks_content( $page['blocks'] ) : ( $page['content'] ?? '' );
 			$demo    = self::find_demo_post( 'page', $path );
 
 			if ( $demo ) {
@@ -76,11 +76,14 @@ final class Importer {
 					$result['skipped'][] = $path;
 					continue;
 				}
+				// wp_slash: WordPress снимает слэши при сохранении, а в данных блоков есть \u003c и т. п.
 				wp_update_post(
-					array(
-						'ID'           => $demo->ID,
-						'post_title'   => $page['title'],
-						'post_content' => $content,
+					wp_slash(
+						array(
+							'ID'           => $demo->ID,
+							'post_title'   => $page['title'],
+							'post_content' => $content,
+						)
 					)
 				);
 				update_post_meta( $demo->ID, self::META_HASH, self::post_hash( get_post( $demo->ID ) ) );
@@ -95,13 +98,15 @@ final class Importer {
 
 			$parent = str_contains( $path, '/' ) ? get_page_by_path( dirname( $path ) ) : null;
 			$id     = wp_insert_post(
-				array(
-					'post_type'    => 'page',
-					'post_status'  => 'publish',
-					'post_title'   => $page['title'],
-					'post_name'    => basename( $path ),
-					'post_parent'  => $parent ? $parent->ID : 0,
-					'post_content' => $content,
+				wp_slash(
+					array(
+						'post_type'    => 'page',
+						'post_status'  => 'publish',
+						'post_title'   => $page['title'],
+						'post_name'    => basename( $path ),
+						'post_parent'  => $parent ? $parent->ID : 0,
+						'post_content' => $content,
+					)
 				),
 				true
 			);
@@ -292,6 +297,19 @@ final class Importer {
 	 */
 	private static function post_hash( \WP_Post $post ): string {
 		return md5( $post->post_title . "\n" . $post->post_content );
+	}
+
+	/**
+	 * Содержимое страницы из блоков темы.
+	 *
+	 * @param array $blocks Список array( 'имя блока', array( значения полей ) ).
+	 */
+	private static function blocks_content( array $blocks ): string {
+		$parts = array();
+		foreach ( $blocks as $block ) {
+			$parts[] = \Trust\Blocks::serialize( $block[0], self::resolve_links( $block[1] ) );
+		}
+		return implode( "\n\n", $parts );
 	}
 
 	/**
