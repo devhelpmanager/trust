@@ -181,6 +181,10 @@ textarea {
 	}
 }
 
+[hidden] {
+	display: none !important;
+}
+
 /* Скрыто визуально, доступно скринридерам */
 .screen-reader-text {
 	position: absolute !important;
@@ -1132,7 +1136,282 @@ html:not(.js) .main-nav__item:focus-within > .main-nav__dropdown {
 	}
 }
 
-/* ===== 8. Шаблон по умолчанию (index.php) ===== */
+/* ===== 8. Формы (по форме заявки holst-o-nas/Main) ===== */
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+}
+
+.field__label {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--c-text-2);
+}
+
+.field__input {
+	width: 100%;
+	min-height: 52px;
+	padding: 0 16px;
+	border: 1px solid var(--c-border-strong);
+	border-radius: var(--r-field);
+	background: var(--c-white);
+	font-family: inherit;
+	font-size: 16px;
+	color: var(--c-text);
+	transition: border-color 0.2s;
+}
+
+textarea.field__input {
+	min-height: 120px;
+	padding: 14px 16px;
+	line-height: 1.55;
+	resize: vertical;
+}
+
+.field__input:hover {
+	border-color: var(--c-decor);
+}
+
+.field__input[aria-invalid="true"] {
+	border-color: var(--c-error);
+}
+
+.field__error {
+	font-size: 13px;
+	font-weight: 500;
+	color: #B42318;
+}
+
+.field__error--check {
+	padding-left: 34px;
+}
+
+/* Галочка согласия: не отмечена заранее, обязательна */
+.check {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	min-height: 44px;
+	padding-top: 2px;
+	font-size: 15px;
+	line-height: 1.5;
+	color: var(--c-text-2);
+	cursor: pointer;
+}
+
+.check__input {
+	flex: none;
+	width: 22px;
+	height: 22px;
+	margin: 0;
+	accent-color: var(--c-violet);
+	cursor: pointer;
+}
+
+.check__input[aria-invalid="true"] {
+	outline: 2px solid var(--c-error);
+	outline-offset: 2px;
+}
+
+.check a,
+.form__note a {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.form__submit {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	width: 100%;
+	min-height: 56px;
+	padding: 12px 20px;
+	border: 0;
+	border-radius: 14px;
+	background: var(--c-violet);
+	color: var(--c-white);
+	font-family: inherit;
+	font-size: 17px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.form__submit:hover {
+	background: var(--c-violet-dark);
+}
+
+.form__submit:disabled {
+	opacity: 0.6;
+	cursor: progress;
+}
+
+.form__status {
+	margin: 0;
+	padding: 12px 14px;
+	border-radius: var(--r-field);
+	background: var(--c-bad-bg);
+	font-size: 14px;
+	line-height: 1.5;
+	color: #B42318;
+}
+
+.form__note {
+	margin: 0;
+	font-size: 13px;
+	line-height: 1.5;
+	color: var(--c-muted);
+}
+
+/* Экран «Заявка отправлена» */
+.form-success__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 56px;
+	height: 56px;
+	border-radius: var(--r-card);
+	background: var(--c-lavender-3);
+	color: var(--c-violet);
+}
+
+.form-success__title {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.form-success__text {
+	margin: 0;
+	font-size: 17px;
+	line-height: 1.6;
+	color: var(--c-text-2);
+}
+
+/* ===== 9. Окно «Заказать обратный звонок» (макета нет — в стиле форм сайта) ===== */
+
+html.has-modal {
+	overflow: hidden;
+}
+
+.callback-modal {
+	width: min(480px, calc(100% - 32px));
+	max-width: none;
+	max-height: calc(100% - 32px);
+	margin: auto;
+	padding: 0;
+	overflow: auto;
+	overscroll-behavior: contain;
+	border: 0;
+	border-radius: var(--r-form);
+	background: var(--c-white);
+	color: var(--c-text);
+	box-shadow: 0 24px 64px rgba(30, 27, 75, 0.32);
+}
+
+.callback-modal::backdrop {
+	background: rgba(30, 27, 75, 0.6);
+}
+
+.callback-modal[open] {
+	animation: trust-modal-in 0.2s ease-out;
+}
+
+@keyframes trust-modal-in {
+
+	from {
+		opacity: 0;
+		transform: translateY(12px) scale(0.98);
+	}
+
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+.callback-modal__inner {
+	position: relative;
+	padding: 32px;
+}
+
+.callback-modal__close {
+	display: flex;
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border: 0;
+	border-radius: var(--r-btn);
+	background: transparent;
+	color: var(--c-muted);
+	cursor: pointer;
+}
+
+.callback-modal__close:hover {
+	background: var(--c-lavender-2);
+	color: var(--c-text);
+}
+
+.callback-modal__form-view {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.callback-modal__title {
+	margin: 0;
+	padding-right: 40px;
+	font-family: var(--f-display);
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+	text-wrap: balance;
+}
+
+.callback-modal__text {
+	margin: 0 0 12px;
+	font-size: 16px;
+	line-height: 1.6;
+	color: var(--c-muted);
+}
+
+.callback-modal__success {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 16px;
+	padding: 8px 0;
+}
+
+@media (max-width: 520px) {
+	.callback-modal__inner {
+		padding: 28px 20px 24px;
+	}
+
+	.callback-modal__title {
+		font-size: 21px;
+	}
+}
+
+/* ===== 10. Шаблон по умолчанию (index.php) ===== */
 
 .page-default {
 	padding: 40px var(--gutter) 72px;

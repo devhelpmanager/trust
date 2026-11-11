@@ -8,16 +8,16 @@
  * @package Trust
  */
 
+use Trust\Callback;
 use Trust\Contacts;
 use Trust\Icons;
-use Trust\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
 $trust_phone    = Contacts::main_phone();
 $trust_email    = Contacts::main_email();
 $trust_hours    = Contacts::hours();
-$trust_callback = (string) Settings::get( 'callback_header_label', __( 'Заказать обратный звонок', 'trust' ) );
+$trust_callback = Callback::text( 'button' );
 ?>
 <header class="site-header">
 	<div class="site-header__inner">

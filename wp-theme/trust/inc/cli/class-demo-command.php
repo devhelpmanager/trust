@@ -53,6 +53,8 @@ final class Demo_Command {
 		WP_CLI::log( sprintf( 'Меню: создано %d.', count( $menus['created'] ) ) );
 		self::log_list( 'Пропущены (уже импортированы или в области стоит своё меню)', $menus['skipped'] );
 
+		WP_CLI::log( 'Политика конфиденциальности: ' . Importer::import_privacy_page() . '.' );
+
 		WP_CLI::success( 'Демо-контент импортирован.' );
 	}
 
@@ -68,6 +70,8 @@ final class Demo_Command {
 	 */
 	public function remove( array $args, array $assoc_args ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- сигнатура команды WP-CLI.
 		self::require_scf();
+
+		Importer::remove_privacy_page();
 
 		$menus = Importer::remove_menus();
 		WP_CLI::log( sprintf( 'Меню: удалено %d.', count( $menus['removed'] ) ) );

@@ -25,7 +25,7 @@ return array(
 					'label'       => __( 'Номер', 'trust' ),
 					'type'        => 'text',
 					'required'    => 1,
-					'placeholder' => '+7 (000) 000-00-00',
+					'placeholder' => Trust\Forms::phone_example(),
 				),
 				array(
 					'name'        => 'label',
@@ -76,7 +76,7 @@ return array(
 			'name'         => 'whatsapp',
 			'label'        => __( 'WhatsApp', 'trust' ),
 			'type'         => 'text',
-			'placeholder'  => '+7 900 000-00-00',
+			'placeholder'  => Trust\Forms::phone_example(),
 			'wrapper'      => array( 'width' => 50 ),
 			'instructions' => __( 'Номер в международном формате или ссылка https://wa.me/….', 'trust' ),
 		),

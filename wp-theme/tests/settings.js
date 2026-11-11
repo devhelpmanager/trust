@@ -4,7 +4,7 @@
  * Запуск: node wp-theme/tests/settings.js (стенд запущен, демо-контент импортирован).
  *
  * Проверяет:
- * - пункт меню и страница настроек у администратора, 4 вкладки;
+ * - пункт меню и страница настроек у администратора, 5 вкладок;
  * - на вкладках есть нужные поля, демо-значения подставлены;
  * - поле «Код интерактивной карты» видно администратору и скрыто от редактора;
  * - редактор открывает страницу настроек, автор — нет;
@@ -17,7 +17,7 @@ const path = require( 'path' );
 const { URL, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser } = require( './lib' );
 
 const PAGE = `${ URL }/wp-admin/admin.php?page=trust-settings`;
-const TABS = [ 'Компания', 'Контакты', 'Соцсети', 'Подвал' ];
+const TABS = [ 'Компания', 'Контакты', 'Соцсети', 'Подвал', 'Блоки по умолчанию' ];
 
 ( async () => {
 	clearLog();
@@ -67,6 +67,8 @@ const TABS = [ 'Компания', 'Контакты', 'Соцсети', 'Под
 	check( 'Сохранение: сообщение «Настройки сохранены.»', ( saved || '' ).includes( 'Настройки сохранены' ), ( saved || '' ).trim() );
 	const after = wp( 'eval', 'echo Trust\\Settings::brand(), "|", count( Trust\\Contacts::phones() ), "|", count( Trust\\Settings::get( "footer_tags", array() ) );' );
 	check( 'После сохранения значения на месте', after === '[Бренд]|1|5', after );
+	const frozen = wp( 'eval', 'echo count( array_filter( array_map( static fn( $k ) => (string) get_field( "field_trust_settings_callback_" . $k, "option" ), array_keys( Trust\\Callback::defaults() ) ) ) );' );
+	check( 'Сохранение не записывает тексты окна звонка по умолчанию в базу', frozen === '0', `записано: ${ frozen }` );
 
 	// --- Редактор ---
 	await login( page, 'editor', 'editor' );

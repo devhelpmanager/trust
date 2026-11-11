@@ -10,6 +10,7 @@
  * @package Trust
  */
 
+use Trust\Callback;
 use Trust\Contacts;
 use Trust\Icons;
 use Trust\Menu;
@@ -26,7 +27,7 @@ $trust_email       = Contacts::main_email();
 $trust_address     = Contacts::address_line();
 $trust_hours       = Contacts::hours();
 $trust_socials     = Social::company_links();
-$trust_callback    = (string) Settings::get( 'callback_header_label', __( 'Заказать обратный звонок', 'trust' ) );
+$trust_callback    = Callback::text( 'button' );
 $trust_legal       = str_replace( '{год}', wp_date( 'Y' ), (string) Settings::get( 'footer_legal', '' ) );
 $trust_docs        = Menu::tree( 'footer-docs', 1 );
 ?>

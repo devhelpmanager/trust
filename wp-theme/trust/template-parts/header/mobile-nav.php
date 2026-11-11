@@ -9,17 +9,17 @@
  * @package Trust
  */
 
+use Trust\Callback;
 use Trust\Contacts;
 use Trust\Icons;
 use Trust\Menu;
-use Trust\Settings;
 
 defined( 'ABSPATH' ) || exit;
 
 $trust_menu     = Menu::tree( 'header' );
 $trust_phone    = Contacts::main_phone();
 $trust_email    = Contacts::main_email();
-$trust_callback = (string) Settings::get( 'callback_header_label', __( 'Заказать обратный звонок', 'trust' ) );
+$trust_callback = Callback::text( 'button' );
 ?>
 <nav class="mobile-nav" id="mobile-menu" aria-label="<?php esc_attr_e( 'Меню', 'trust' ); ?>">
 	<?php if ( $trust_menu ) : ?>

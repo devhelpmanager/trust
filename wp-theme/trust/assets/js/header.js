@@ -17,6 +17,12 @@
 	const HOVER_GUARD_MS = 600;
 
 	/**
+	 * Открыто ли модальное окно (например, «Заказать обратный звонок»).
+	 * Тогда Esc закрывает только окно, а меню под ним остаётся как было.
+	 */
+	const modalOpen = () => null !== document.querySelector( 'dialog[open]' );
+
+	/**
 	 * Выпадающие списки главного меню.
 	 */
 	function initMainNav() {
@@ -83,7 +89,7 @@
 		} );
 
 		document.addEventListener( 'keydown', ( event ) => {
-			if ( 'Escape' === event.key && openItem ) {
+			if ( 'Escape' === event.key && openItem && ! modalOpen() ) {
 				close( openItem, openItem.contains( document.activeElement ) );
 			}
 		} );
@@ -133,7 +139,7 @@
 		} );
 
 		document.addEventListener( 'keydown', ( event ) => {
-			if ( 'Escape' === event.key && isOpen() ) {
+			if ( 'Escape' === event.key && isOpen() && ! modalOpen() ) {
 				setOpen( false, true );
 			}
 		} );

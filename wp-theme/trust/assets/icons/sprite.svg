@@ -18,7 +18,10 @@
 	<symbol id="menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
 	<symbol id="close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
 
-	<!-- Стрелка вправо (ссылки «Все статьи», «Не нашли ответ?») -->
+	<!-- Галочка (экран «Заявка отправлена», holst-o-nas/Main) -->
+	<symbol id="check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+
+	<!-- Стрелка вправо (ссылки «Все статьи», «Не нашли ответ?», кнопки отправки) -->
 	<symbol id="arrow-right" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
 
 	<!--

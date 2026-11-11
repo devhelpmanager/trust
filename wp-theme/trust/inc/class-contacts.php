@@ -133,13 +133,14 @@ final class Contacts {
 
 	/**
 	 * Ссылка tel: из номера в любом написании: «+7 (000) 000-00-00» → tel:+70000000000,
-	 * «8 900 …» → tel:+7900….
+	 * «+1 000 000 00 00» → tel:+10000000000. Российский «8 900 …» без «+» → tel:+7900….
+	 * Номер с «+» не меняется (например, японский +81 …).
 	 *
 	 * @param string $number Номер телефона.
 	 */
 	public static function tel_href( string $number ): string {
 		$digits = preg_replace( '/\D+/', '', $number );
-		if ( 11 === strlen( $digits ) && '8' === $digits[0] ) {
+		if ( ! str_starts_with( ltrim( $number ), '+' ) && 11 === strlen( $digits ) && '8' === $digits[0] ) {
 			$digits = '7' . substr( $digits, 1 );
 		}
 		return 'tel:+' . $digits;

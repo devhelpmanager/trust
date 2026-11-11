@@ -41,6 +41,16 @@ final class Importer {
 	public const MENUS_RECORD = 'trust_demo_menus';
 
 	/**
+	 * Адрес демо-страницы политики конфиденциальности.
+	 */
+	private const PRIVACY_PAGE_PATH = 'politika-konfidencialnosti';
+
+	/**
+	 * Опция с прежней страницей политики конфиденциальности (до демо-импорта).
+	 */
+	public const PRIVACY_RECORD = 'trust_demo_privacy_page';
+
+	/**
 	 * Создаёт демо-страницы из demo/pages.php.
 	 *
 	 * Существующая демо-страница обновляется, если её не меняли вручную.
@@ -295,11 +305,51 @@ final class Importer {
 		if ( is_array( $value ) ) {
 			return array_map( array( self::class, 'resolve_links' ), $value );
 		}
-		if ( is_string( $value ) && preg_match( '~^\{page:([a-z0-9/-]+)\}$~', $value, $m ) ) {
-			$page = get_page_by_path( $m[1] );
+		if ( is_string( $value ) && preg_match( '~^\{page(_id)?:([a-z0-9/-]+)\}$~', $value, $m ) ) {
+			$page = get_page_by_path( $m[2] );
+			if ( '_id' === $m[1] ) {
+				return $page ? $page->ID : 0;
+			}
 			return $page ? (string) get_permalink( $page ) : '';
 		}
 		return $value;
+	}
+
+	/**
+	 * Назначает демо-страницу «Политика конфиденциальности» в «Настройки → Конфиденциальность»,
+	 * если там не выбрана своя опубликованная страница. Прежнее значение запоминается.
+	 *
+	 * @return string Что сделано.
+	 */
+	public static function import_privacy_page(): string {
+		$page    = get_page_by_path( self::PRIVACY_PAGE_PATH );
+		$current = (int) get_option( 'wp_page_for_privacy_policy' );
+
+		if ( ! $page ) {
+			return 'нет демо-страницы';
+		}
+		if ( $current === $page->ID ) {
+			return 'уже назначена';
+		}
+		if ( $current && 'publish' === get_post_status( $current ) ) {
+			return 'оставлена ваша страница';
+		}
+
+		update_option( self::PRIVACY_RECORD, $current, false );
+		update_option( 'wp_page_for_privacy_policy', $page->ID );
+		return 'назначена демо-страница';
+	}
+
+	/**
+	 * Возвращает прежнюю страницу политики конфиденциальности.
+	 */
+	public static function remove_privacy_page(): void {
+		$previous = get_option( self::PRIVACY_RECORD, null );
+		if ( null === $previous ) {
+			return;
+		}
+		update_option( 'wp_page_for_privacy_policy', (int) $previous );
+		delete_option( self::PRIVACY_RECORD );
 	}
 
 	/**
