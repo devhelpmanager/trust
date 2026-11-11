@@ -26,8 +26,9 @@ final class Demo_Command {
 	/**
 	 * Импортирует демо-контент.
 	 *
-	 * Сейчас импортируются «Настройки сайта» (заглушки из макетов). Повторный импорт
-	 * не создаёт дублей и не трогает то, что изменено вручную.
+	 * Сейчас импортируются «Настройки сайта» (заглушки из макетов), страницы из меню
+	 * и меню «Шапка». Повторный импорт не создаёт дублей и не трогает то, что изменено
+	 * вручную; демо-меню не ставится в область, где уже есть своё меню.
 	 *
 	 * ## EXAMPLES
 	 *
@@ -41,9 +42,15 @@ final class Demo_Command {
 
 		$settings = Importer::import_settings();
 		WP_CLI::log( sprintf( 'Настройки сайта: записано %d.', count( $settings['written'] ) ) );
-		if ( $settings['skipped'] ) {
-			WP_CLI::log( 'Пропущены (изменены вручную): ' . implode( ', ', $settings['skipped'] ) );
-		}
+		self::log_list( 'Пропущены (изменены вручную)', $settings['skipped'] );
+
+		$pages = Importer::import_pages();
+		WP_CLI::log( sprintf( 'Страницы: создано %d, обновлено %d.', count( $pages['created'] ), count( $pages['updated'] ) ) );
+		self::log_list( 'Пропущены (изменены вручную или уже есть свои)', $pages['skipped'] );
+
+		$menus = Importer::import_menus();
+		WP_CLI::log( sprintf( 'Меню: создано %d.', count( $menus['created'] ) ) );
+		self::log_list( 'Пропущены (уже импортированы или в области стоит своё меню)', $menus['skipped'] );
 
 		WP_CLI::success( 'Демо-контент импортирован.' );
 	}
@@ -61,13 +68,30 @@ final class Demo_Command {
 	public function remove( array $args, array $assoc_args ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- сигнатура команды WP-CLI.
 		self::require_scf();
 
+		$menus = Importer::remove_menus();
+		WP_CLI::log( sprintf( 'Меню: удалено %d.', count( $menus['removed'] ) ) );
+
+		$pages = Importer::remove_pages();
+		WP_CLI::log( sprintf( 'Страницы: удалено %d.', count( $pages['removed'] ) ) );
+		self::log_list( 'Оставлены (изменены вручную)', $pages['kept'] );
+
 		$settings = Importer::remove_settings();
 		WP_CLI::log( sprintf( 'Настройки сайта: удалено %d.', count( $settings['removed'] ) ) );
-		if ( $settings['kept'] ) {
-			WP_CLI::log( 'Оставлены (изменены вручную): ' . implode( ', ', $settings['kept'] ) );
-		}
+		self::log_list( 'Оставлены (изменены вручную)', $settings['kept'] );
 
 		WP_CLI::success( 'Демо-контент удалён.' );
+	}
+
+	/**
+	 * Печатает список, если он не пустой.
+	 *
+	 * @param string   $label Подпись.
+	 * @param string[] $items Элементы.
+	 */
+	private static function log_list( string $label, array $items ): void {
+		if ( $items ) {
+			WP_CLI::log( '  ' . $label . ': ' . implode( ', ', $items ) );
+		}
 	}
 
 	/**

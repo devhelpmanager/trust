@@ -4,6 +4,8 @@
 	"description": "Автотесты темы Trust. Playwright берётся предустановленный (require('playwright')).",
 	"type": "commonjs",
 	"devDependencies": {
-		"axe-core": "4.10.3"
+		"axe-core": "4.10.3",
+		"pixelmatch": "5.3.0",
+		"pngjs": "7.0.0"
 	}
 }

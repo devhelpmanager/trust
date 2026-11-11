@@ -36,6 +36,17 @@ final class Assets {
 	 */
 	public static function enqueue(): void {
 		wp_enqueue_style( 'trust-main', self::url( 'assets/css/main.css' ), array(), self::version( 'assets/css/main.css' ) );
+
+		wp_enqueue_script(
+			'trust-header',
+			self::url( 'assets/js/header.js' ),
+			array(),
+			self::version( 'assets/js/header.js' ),
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => true,
+			)
+		);
 	}
 
 	/**

@@ -110,4 +110,72 @@ function ensureUser( login, role ) {
 	}
 }
 
-module.exports = { URL, DEV_DIR, LOG, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser };
+const REPO = path.join( __dirname, '..', '..' );
+const THEME = path.join( REPO, 'wp-theme', 'trust' );
+
+/**
+ * Подменяет Google Fonts в HTML-экспортах макетов локальными шрифтами темы —
+ * эталон и тема рисуются одними и теми же файлами шрифтов.
+ *
+ * @param {import('playwright').BrowserContext} context Контекст браузера.
+ */
+async function routeMockupFonts( context ) {
+	const css = fs.readFileSync( path.join( THEME, 'assets/css/main.css' ), 'utf8' )
+		.split( '\n' )
+		.filter( ( line ) => line.startsWith( '@font-face' ) )
+		.map( ( line ) => line.replace( /url\(\.\.\/fonts\//g, 'url(https://fonts.gstatic.com/local/' ) )
+		.join( '\n' );
+	const cors = { 'access-control-allow-origin': '*' };
+	await context.route( 'https://fonts.googleapis.com/**', ( route ) => route.fulfill( { status: 200, contentType: 'text/css', headers: cors, body: css } ) );
+	await context.route( 'https://fonts.gstatic.com/local/**', ( route ) => {
+		const file = path.join( THEME, 'assets/fonts', path.basename( new globalThis.URL( route.request().url() ).pathname ) );
+		return route.fulfill( { status: 200, contentType: 'font/woff2', headers: cors, body: fs.readFileSync( file ) } );
+	} );
+}
+
+/**
+ * Адрес HTML-экспорта макета (file://).
+ *
+ * @param {string} relative Путь от корня репозитория, например portfolio-blog-404/portfolio.html.
+ */
+function mockupUrl( relative ) {
+	return 'file://' + path.join( REPO, relative );
+}
+
+/**
+ * Сравнивает два PNG попиксельно, сохраняет картинку разницы.
+ *
+ * @param {string} a        Эталон.
+ * @param {string} b        Тема.
+ * @param {string} diffPath Куда сохранить разницу.
+ * @return {number} Доля отличающихся пикселей, %.
+ */
+function comparePng( a, b, diffPath ) {
+	const { PNG } = require( 'pngjs' );
+	const pixelmatch = require( 'pixelmatch' );
+	const imgA = PNG.sync.read( fs.readFileSync( a ) );
+	const imgB = PNG.sync.read( fs.readFileSync( b ) );
+	if ( imgA.width !== imgB.width || imgA.height !== imgB.height ) {
+		return 100;
+	}
+	const diff = new PNG( { width: imgA.width, height: imgA.height } );
+	const count = pixelmatch( imgA.data, imgB.data, diff.data, imgA.width, imgA.height, { threshold: 0.1 } );
+	fs.writeFileSync( diffPath, PNG.sync.write( diff ) );
+	return ( 100 * count ) / ( imgA.width * imgA.height );
+}
+
+/**
+ * Ждёт загрузки шрифтов и небольшой паузы для анимаций.
+ *
+ * @param {import('playwright').Page} page Страница.
+ */
+async function settle( page ) {
+	await page.evaluate( () => document.fonts.ready );
+	await page.waitForTimeout( 300 );
+}
+
+module.exports = {
+	URL, DEV_DIR, LOG, OUT, REPO, THEME,
+	check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser,
+	routeMockupFonts, mockupUrl, comparePng, settle,
+};
