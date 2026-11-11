@@ -185,41 +185,76 @@ final class Importer {
 		);
 
 		foreach ( $taxonomies as $taxonomy => $terms ) {
-			foreach ( $terms as $key => $name ) {
+			foreach ( $terms as $key => $data ) {
+				$data = ( is_array( $data ) ? $data : array( 'name' => $data ) ) + array(
+					'description' => '',
+					'fields'      => array(),
+				);
 				$id   = $taxonomy . ':' . $key;
 				$demo = self::find_demo_term( $taxonomy, $id );
 
 				if ( $demo ) {
 					if ( self::term_hash( $demo ) !== get_term_meta( $demo->term_id, self::META_HASH, true ) ) {
 						$result['skipped'][] = $id;
-						continue;
-					}
-					if ( $demo->name !== $name ) {
-						wp_update_term( $demo->term_id, $taxonomy, array( 'name' => $name ) );
-						update_term_meta( $demo->term_id, self::META_HASH, self::term_hash( get_term( $demo->term_id, $taxonomy ) ) );
+					} elseif ( self::write_term( $demo->term_id, $taxonomy, $data ) ) {
 						$result['updated'][] = $id;
 					}
 					continue;
 				}
 
-				if ( term_exists( $name, $taxonomy ) ) {
+				if ( term_exists( $data['name'], $taxonomy ) ) {
 					$result['skipped'][] = $id;
 					continue;
 				}
 
-				$term = wp_insert_term( $name, $taxonomy );
+				$term = wp_insert_term( $data['name'], $taxonomy, array( 'description' => $data['description'] ) );
 				if ( is_wp_error( $term ) ) {
 					$result['skipped'][] = $id;
 					continue;
 				}
 
 				update_term_meta( $term['term_id'], self::META_ID, $id );
-				update_term_meta( $term['term_id'], self::META_HASH, self::term_hash( get_term( $term['term_id'], $taxonomy ) ) );
+				self::write_term( $term['term_id'], $taxonomy, $data );
 				$result['created'][] = $id;
 			}
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Записывает название, описание и поля демо-термина и его отпечаток.
+	 *
+	 * @param int    $term_id  Термин.
+	 * @param string $taxonomy Таксономия.
+	 * @param array  $data     Название, описание, поля из demo/terms.php.
+	 * @return bool Изменилось ли что-нибудь.
+	 */
+	private static function write_term( int $term_id, string $taxonomy, array $data ): bool {
+		$term    = get_term( $term_id, $taxonomy );
+		$changed = false;
+
+		if ( $term->name !== $data['name'] || $term->description !== $data['description'] ) {
+			wp_update_term(
+				$term_id,
+				$taxonomy,
+				array(
+					'name'        => $data['name'],
+					'description' => $data['description'],
+				)
+			);
+			$changed = true;
+		}
+
+		foreach ( self::resolve_links( $data['fields'] ) as $name => $value ) {
+			if ( get_term_meta( $term_id, $name, true ) !== $value ) {
+				update_field( Fields::key( $taxonomy, $name ), $value, 'term_' . $term_id );
+				$changed = true;
+			}
+		}
+
+		update_term_meta( $term_id, self::META_HASH, self::term_hash( get_term( $term_id, $taxonomy ) ) );
+		return $changed;
 	}
 
 	/**
@@ -273,12 +308,23 @@ final class Importer {
 	}
 
 	/**
-	 * Отпечаток термина: название, ярлык, описание.
+	 * Отпечаток термина: название, ярлык, описание и поля темы (метаполя trust_…).
 	 *
 	 * @param \WP_Term $term Термин.
 	 */
 	private static function term_hash( \WP_Term $term ): string {
-		return md5( $term->name . "\n" . $term->slug . "\n" . $term->description );
+		$source = $term->name . "\n" . $term->slug . "\n" . $term->description;
+		$fields = array_filter(
+			(array) get_term_meta( $term->term_id ),
+			static fn( $key ): bool => str_starts_with( (string) $key, 'trust_' ),
+			ARRAY_FILTER_USE_KEY
+		);
+
+		if ( $fields ) {
+			ksort( $fields );
+			$source .= "\n" . wp_json_encode( $fields );
+		}
+		return md5( $source );
 	}
 
 	/**
@@ -433,7 +479,8 @@ final class Importer {
 	}
 
 	/**
-	 * Заменяет {page:адрес} ссылкой на страницу (рекурсивно в массивах).
+	 * Заменяет {page:адрес} ссылкой на страницу, {page_id:адрес} — её ID (рекурсивно в массивах;
+	 * {page:…} — и внутри текста).
 	 * Поэтому страницы импортируются раньше настроек.
 	 *
 	 * @param mixed $value Значение из демо-данных.
@@ -443,14 +490,25 @@ final class Importer {
 		if ( is_array( $value ) ) {
 			return array_map( array( self::class, 'resolve_links' ), $value );
 		}
-		if ( is_string( $value ) && preg_match( '~^\{page(_id)?:([a-z0-9/-]+)\}$~', $value, $m ) ) {
+		if ( ! is_string( $value ) ) {
+			return $value;
+		}
+		if ( preg_match( '~^\{page(_id)?:([a-z0-9/-]+)\}$~', $value, $m ) ) {
 			$page = get_page_by_path( $m[2] );
 			if ( '_id' === $m[1] ) {
 				return $page ? $page->ID : 0;
 			}
 			return $page ? (string) get_permalink( $page ) : '';
 		}
-		return $value;
+		// Ссылки внутри текста: <a href="{page:seo/audit}">.
+		return (string) preg_replace_callback(
+			'~\{page:([a-z0-9/-]+)\}~',
+			static function ( array $m ): string {
+				$page = get_page_by_path( $m[1] );
+				return $page ? (string) get_permalink( $page ) : '#';
+			},
+			$value
+		);
 	}
 
 	/**

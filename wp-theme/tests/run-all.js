@@ -8,7 +8,7 @@
 const { spawnSync } = require( 'child_process' );
 const path = require( 'path' );
 
-const TESTS = [ 'smoke', 'settings', 'header', 'header-mobile', 'footer', 'callback', 'faq', 'content-types', 'visual' ];
+const TESTS = [ 'smoke', 'settings', 'header', 'header-mobile', 'footer', 'callback', 'faq', 'content-types', 'blog-fields', 'visual' ];
 
 let failed = 0;
 const summary = [];

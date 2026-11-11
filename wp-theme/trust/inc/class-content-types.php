@@ -35,6 +35,7 @@ final class Content_Types {
 		add_action( 'init', array( self::class, 'register_post_types' ) );
 		add_filter( 'post_type_labels_post', array( self::class, 'post_labels' ) );
 		add_filter( 'taxonomy_labels_post_tag', array( self::class, 'tag_labels' ) );
+		add_filter( 'taxonomy_labels_category', array( self::class, 'category_labels' ) );
 	}
 
 	/**
@@ -350,6 +351,17 @@ final class Content_Types {
 	}
 
 	/**
+	 * Подсказки к стандартным полям рубрики: где выводятся название и описание.
+	 *
+	 * @param object $labels Подписи таксономии category.
+	 */
+	public static function category_labels( $labels ) {
+		$labels->name_field_description = 'Заголовок H1 страницы рубрики и название в полосе рубрик.';
+		$labels->desc_field_description = 'Подзаголовок под H1 на странице рубрики. 1–2 предложения, до 200 символов.';
+		return $labels;
+	}
+
+	/**
 	 * «Метки» → «Теги» (ТЗ, раздел 5.2).
 	 *
 	 * @param object $labels Подписи таксономии post_tag.
@@ -362,6 +374,8 @@ final class Content_Types {
 				'separate_items_with_commas' => 'Теги разделяются запятыми',
 				'add_or_remove_items'        => 'Добавить или удалить теги',
 				'choose_from_most_used'      => 'Выбрать из часто используемых тегов',
+				'name_field_description'     => 'Заголовок H1 страницы тега (выводится с #).',
+				'desc_field_description'     => 'Подзаголовок под H1 на странице тега: о чём материалы с этим тегом. 1–2 предложения, до 200 символов.',
 			)
 		);
 

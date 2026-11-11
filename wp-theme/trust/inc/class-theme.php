@@ -25,6 +25,8 @@ final class Theme {
 		Translit::register();
 		Urls::register();
 		Content_Types::register();
+		Content_Fields::register();
+		Blog::register();
 		Settings::register();
 		Blocks::register();
 
