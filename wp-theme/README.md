@@ -10,8 +10,9 @@
 |---|---|
 | `trust/` | Сама тема — эта папка копируется в `wp-content/themes/trust/` |
 | `docs/inventory.md` | Какая секция какого макета каким блоком или шаблоном стала, план работ |
-| `phpcs.xml.dist` | Правила проверки кода (WordPress Coding Standards) |
-| `tests/` | Автотесты (появятся по ходу работ) |
+| `bin/local.sh` | Локальный стенд: WordPress + SQLite + SCF + WP-CLI |
+| `composer.json`, `phpcs.xml.dist` | Проверка кода (WordPress Coding Standards) |
+| `tests/` | Автотесты: дымовой тест, дальше — визуальная сверка и остальные |
 
 ## Требования
 
@@ -60,6 +61,48 @@ git -C ~/trust pull && rsync -a --delete ~/trust/wp-theme/trust/ "$SITE/wp-conte
 Тема копируется, а не подключается символической ссылкой: некоторые панели управления
 хостингом запрещают веб-серверу ходить по ссылкам, и тогда стили и шрифты не загрузятся.
 
+## Локальная разработка
+
+Стенд: WordPress + SQLite (без MySQL) + Secure Custom Fields + WP-CLI, встроенный сервер PHP.
+Нужны PHP 8.1+ с `pdo_sqlite`, `git`, `curl`, `unzip`. Всё скачивается с GitHub (официальные
+репозитории WordPress, релиз SCF, сборка WP-CLI) в `~/wp-dev`, вне репозитория. Тема
+подключается символической ссылкой, поэтому правки в `wp-theme/trust/` видны сразу.
+
+```bash
+wp-theme/bin/local.sh setup
+```
+
+```bash
+wp-theme/bin/local.sh start
+```
+
+Сайт — http://localhost:8080/, админка — http://localhost:8080/wp-admin/ (`admin` / `admin`).
+Остальные команды: `stop` — остановить сервер, `reset` — установить WordPress заново,
+`wp <команда>` — WP-CLI на стенде (например, `wp-theme/bin/local.sh wp plugin list`).
+Версии и папку можно поменять переменными `WP_VERSION`, `SCF_VERSION`, `TRUST_DEV_DIR`, `TRUST_PORT`.
+
+Особенности стенда:
+- `WP_DEBUG` включён, ошибки пишутся в `~/wp-dev/debug.log`, на экран не выводятся;
+- внешние HTTP-запросы заблокированы (`WP_HTTP_BLOCK_EXTERNAL`), проверки обновлений и Gravatar
+  отключены mu-плагином `wp-content/mu-plugins/trust-local.php` — он есть только на стенде;
+- язык сайта `ru_RU` задан константой `WPLANG`: переводы ядра на стенд не скачиваются, поэтому
+  админка на английском, а строки темы — на русском.
+
+### Инструменты проверок
+
+Один раз:
+
+```bash
+cd wp-theme && composer install
+```
+
+```bash
+cd wp-theme/tests && npm install
+```
+
+Composer берёт пакеты через `git clone` (`preferred-install: source`), npm ставит `axe-core`.
+Playwright не ставится: используется установленный в системе (`require('playwright')`).
+
 ## Как устроена тема
 
 ```
@@ -97,9 +140,27 @@ trust/
 
 ## Проверки
 
+Синтаксис PHP:
+
 ```bash
 find wp-theme/trust -name '*.php' -print0 | xargs -0 -n1 php -l
 ```
 
-Проверка `phpcs` по `phpcs.xml.dist`, визуальная сверка с макетами и остальные тесты из
-раздела 18 ТЗ добавляются по ходу работ.
+Стандарты кода (WordPress Coding Standards + совместимость с PHP 8.1+), из папки `wp-theme`:
+
+```bash
+vendor/bin/phpcs
+```
+
+Дымовой тест на запущенном стенде:
+
+```bash
+node wp-theme/tests/smoke.js
+```
+
+Он проверяет главную (код ответа, язык, CSS и предзагрузка шрифтов, отсутствие emoji, jQuery и
+служебных ссылок, загрузку шрифтов, ссылку «Перейти к содержимому», axe-core без нарушений
+critical/serious), уведомление в админке без SCF, консоль браузера и журнал ошибок WordPress.
+Скриншоты — в `wp-theme/tests/output/`.
+
+Визуальная сверка с макетами и остальные тесты из раздела 18 ТЗ добавляются по ходу работ.

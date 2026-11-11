@@ -1,0 +1,9 @@
+{
+	"name": "trust-theme-tests",
+	"private": true,
+	"description": "Автотесты темы Trust. Playwright берётся предустановленный (require('playwright')).",
+	"type": "commonjs",
+	"devDependencies": {
+		"axe-core": "4.10.3"
+	}
+}

@@ -14,6 +14,7 @@
 	<config name="testVersion" value="8.1-"/>
 
 	<rule ref="WordPress"/>
+	<rule ref="PHPCompatibilityWP"/>
 
 	<rule ref="WordPress.WP.I18n">
 		<properties>
