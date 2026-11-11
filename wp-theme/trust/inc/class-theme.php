@@ -22,6 +22,9 @@ final class Theme {
 		Cleanup::register();
 		Assets::register();
 		Dependencies::register();
+		Translit::register();
+		Urls::register();
+		Content_Types::register();
 		Settings::register();
 		Blocks::register();
 

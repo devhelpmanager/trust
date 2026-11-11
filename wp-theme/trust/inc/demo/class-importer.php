@@ -3,7 +3,7 @@
  * Импорт и удаление демо-контента.
  *
  * Данные лежат в папке demo/. Демо-контент пополняется на каждом шаге разработки:
- * сейчас — «Настройки сайта».
+ * сейчас — «Настройки сайта», страницы, меню, политика конфиденциальности, термины.
  *
  * @package Trust
  */
@@ -56,6 +56,10 @@ final class Importer {
 	 * Существующая демо-страница обновляется, если её не меняли вручную.
 	 * Если по адресу уже есть своя (не демо) страница, она не трогается.
 	 *
+	 * Два прохода: сначала создаются недостающие страницы (пустыми), потом заполняется
+	 * содержимое. В блоках есть ссылки {page:…} на страницы, которые идут в списке ниже
+	 * (из «Аудита» — на «Вопросы SEO»): к моменту заполнения все они уже существуют.
+	 *
 	 * @return array{created: string[], updated: string[], skipped: string[]}
 	 */
 	public static function import_pages(): array {
@@ -65,29 +69,18 @@ final class Importer {
 			'updated' => array(),
 			'skipped' => array(),
 		);
+		$fill   = array();
 
 		foreach ( $pages as $page ) {
-			$path    = $page['path'];
-			$content = isset( $page['blocks'] ) ? self::blocks_content( $page['blocks'] ) : ( $page['content'] ?? '' );
-			$demo    = self::find_demo_post( 'page', $path );
+			$path = $page['path'];
+			$demo = self::find_demo_post( 'page', $path );
 
 			if ( $demo ) {
 				if ( self::post_hash( $demo ) !== get_post_meta( $demo->ID, self::META_HASH, true ) ) {
 					$result['skipped'][] = $path;
 					continue;
 				}
-				// wp_slash: WordPress снимает слэши при сохранении, а в данных блоков есть \u003c и т. п.
-				wp_update_post(
-					wp_slash(
-						array(
-							'ID'           => $demo->ID,
-							'post_title'   => $page['title'],
-							'post_content' => $content,
-						)
-					)
-				);
-				update_post_meta( $demo->ID, self::META_HASH, self::post_hash( get_post( $demo->ID ) ) );
-				$result['updated'][] = $path;
+				$fill[ $path ] = array( $demo->ID, $page, 'updated' );
 				continue;
 			}
 
@@ -100,12 +93,11 @@ final class Importer {
 			$id     = wp_insert_post(
 				wp_slash(
 					array(
-						'post_type'    => 'page',
-						'post_status'  => 'publish',
-						'post_title'   => $page['title'],
-						'post_name'    => basename( $path ),
-						'post_parent'  => $parent ? $parent->ID : 0,
-						'post_content' => $content,
+						'post_type'   => 'page',
+						'post_status' => 'publish',
+						'post_title'  => $page['title'],
+						'post_name'   => basename( $path ),
+						'post_parent' => $parent ? $parent->ID : 0,
 					)
 				),
 				true
@@ -116,8 +108,23 @@ final class Importer {
 			}
 
 			update_post_meta( $id, self::META_ID, 'page:' . $path );
+			$fill[ $path ] = array( $id, $page, 'created' );
+		}
+
+		foreach ( $fill as $path => list( $id, $page, $status ) ) {
+			$content = isset( $page['blocks'] ) ? self::blocks_content( $page['blocks'] ) : ( $page['content'] ?? '' );
+			// wp_slash: WordPress снимает слэши при сохранении, а в данных блоков есть \u003c и т. п.
+			wp_update_post(
+				wp_slash(
+					array(
+						'ID'           => $id,
+						'post_title'   => $page['title'],
+						'post_content' => $content,
+					)
+				)
+			);
 			update_post_meta( $id, self::META_HASH, self::post_hash( get_post( $id ) ) );
-			$result['created'][] = $path;
+			$result[ $status ][] = $path;
 		}
 
 		return $result;
@@ -159,6 +166,119 @@ final class Importer {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Создаёт демо-термины из demo/terms.php.
+	 *
+	 * Демо-термин обновляется, если его не меняли вручную. Если термин с таким названием
+	 * уже есть и он не демо, он не трогается.
+	 *
+	 * @return array{created: string[], updated: string[], skipped: string[]}
+	 */
+	public static function import_terms(): array {
+		$taxonomies = require TRUST_DIR . '/demo/terms.php';
+		$result     = array(
+			'created' => array(),
+			'updated' => array(),
+			'skipped' => array(),
+		);
+
+		foreach ( $taxonomies as $taxonomy => $terms ) {
+			foreach ( $terms as $key => $name ) {
+				$id   = $taxonomy . ':' . $key;
+				$demo = self::find_demo_term( $taxonomy, $id );
+
+				if ( $demo ) {
+					if ( self::term_hash( $demo ) !== get_term_meta( $demo->term_id, self::META_HASH, true ) ) {
+						$result['skipped'][] = $id;
+						continue;
+					}
+					if ( $demo->name !== $name ) {
+						wp_update_term( $demo->term_id, $taxonomy, array( 'name' => $name ) );
+						update_term_meta( $demo->term_id, self::META_HASH, self::term_hash( get_term( $demo->term_id, $taxonomy ) ) );
+						$result['updated'][] = $id;
+					}
+					continue;
+				}
+
+				if ( term_exists( $name, $taxonomy ) ) {
+					$result['skipped'][] = $id;
+					continue;
+				}
+
+				$term = wp_insert_term( $name, $taxonomy );
+				if ( is_wp_error( $term ) ) {
+					$result['skipped'][] = $id;
+					continue;
+				}
+
+				update_term_meta( $term['term_id'], self::META_ID, $id );
+				update_term_meta( $term['term_id'], self::META_HASH, self::term_hash( get_term( $term['term_id'], $taxonomy ) ) );
+				$result['created'][] = $id;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Удаляет демо-термины, которые не меняли вручную.
+	 *
+	 * @return array{removed: string[], kept: string[]}
+	 */
+	public static function remove_terms(): array {
+		$result = array(
+			'removed' => array(),
+			'kept'    => array(),
+		);
+		$terms  = get_terms(
+			array(
+				'taxonomy'   => array_keys( require TRUST_DIR . '/demo/terms.php' ),
+				'hide_empty' => false,
+				'meta_key'   => self::META_ID, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- разовая команда WP-CLI.
+			)
+		);
+
+		foreach ( is_array( $terms ) ? $terms : array() as $term ) {
+			$id = (string) get_term_meta( $term->term_id, self::META_ID, true );
+			if ( self::term_hash( $term ) === get_term_meta( $term->term_id, self::META_HASH, true ) ) {
+				wp_delete_term( $term->term_id, $term->taxonomy );
+				$result['removed'][] = $id;
+			} else {
+				$result['kept'][] = $id;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Демо-термин по его идентификатору в демо-данных.
+	 *
+	 * @param string $taxonomy Таксономия.
+	 * @param string $id       Идентификатор: <таксономия>:<ключ>.
+	 */
+	private static function find_demo_term( string $taxonomy, string $id ): ?\WP_Term {
+		$terms = get_terms(
+			array(
+				'taxonomy'   => $taxonomy,
+				'hide_empty' => false,
+				'number'     => 1,
+				'meta_key'   => self::META_ID, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- разовая команда WP-CLI.
+				'meta_value' => $id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- разовая команда WP-CLI.
+			)
+		);
+		return is_array( $terms ) && $terms ? $terms[0] : null;
+	}
+
+	/**
+	 * Отпечаток термина: название, ярлык, описание.
+	 *
+	 * @param \WP_Term $term Термин.
+	 */
+	private static function term_hash( \WP_Term $term ): string {
+		return md5( $term->name . "\n" . $term->slug . "\n" . $term->description );
 	}
 
 	/**

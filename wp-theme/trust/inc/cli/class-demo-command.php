@@ -26,8 +26,9 @@ final class Demo_Command {
 	/**
 	 * Импортирует демо-контент.
 	 *
-	 * Сейчас импортируются «Настройки сайта» (заглушки из макетов), страницы из меню
-	 * и меню «Шапка». Повторный импорт не создаёт дублей и не трогает то, что изменено
+	 * Сейчас импортируются «Настройки сайта» (заглушки из макетов), страницы из меню,
+	 * меню шапки и подвала, политика конфиденциальности и термины таксономий (услуги,
+	 * отрасли, отделы, темы вопросов). Повторный импорт не создаёт дублей и не трогает то, что изменено
 	 * вручную; демо-меню не ставится в область, где уже есть своё меню.
 	 *
 	 * ## EXAMPLES
@@ -55,6 +56,10 @@ final class Demo_Command {
 
 		WP_CLI::log( 'Политика конфиденциальности: ' . Importer::import_privacy_page() . '.' );
 
+		$terms = Importer::import_terms();
+		WP_CLI::log( sprintf( 'Термины: создано %d, обновлено %d.', count( $terms['created'] ), count( $terms['updated'] ) ) );
+		self::log_list( 'Пропущены (изменены вручную или уже есть свои)', $terms['skipped'] );
+
 		WP_CLI::success( 'Демо-контент импортирован.' );
 	}
 
@@ -70,6 +75,10 @@ final class Demo_Command {
 	 */
 	public function remove( array $args, array $assoc_args ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- сигнатура команды WP-CLI.
 		self::require_scf();
+
+		$terms = Importer::remove_terms();
+		WP_CLI::log( sprintf( 'Термины: удалено %d.', count( $terms['removed'] ) ) );
+		self::log_list( 'Оставлены (изменены вручную)', $terms['kept'] );
 
 		Importer::remove_privacy_page();
 
