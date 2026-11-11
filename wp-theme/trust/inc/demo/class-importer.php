@@ -285,6 +285,24 @@ final class Importer {
 	}
 
 	/**
+	 * Заменяет {page:адрес} ссылкой на страницу (рекурсивно в массивах).
+	 * Поэтому страницы импортируются раньше настроек.
+	 *
+	 * @param mixed $value Значение из демо-данных.
+	 * @return mixed
+	 */
+	private static function resolve_links( $value ) {
+		if ( is_array( $value ) ) {
+			return array_map( array( self::class, 'resolve_links' ), $value );
+		}
+		if ( is_string( $value ) && preg_match( '~^\{page:([a-z0-9/-]+)\}$~', $value, $m ) ) {
+			$page = get_page_by_path( $m[1] );
+			return $page ? (string) get_permalink( $page ) : '';
+		}
+		return $value;
+	}
+
+	/**
 	 * Записывает демо-настройки.
 	 *
 	 * Поле заполняется, если оно пустое или в нём всё ещё значение прошлого демо-импорта.
@@ -310,7 +328,7 @@ final class Importer {
 				continue;
 			}
 
-			update_field( Fields::key( Settings::PREFIX, $name ), $value, 'option' );
+			update_field( Fields::key( Settings::PREFIX, $name ), self::resolve_links( $value ), 'option' );
 			$record[ $name ]     = self::hash( self::current( $name ) );
 			$result['written'][] = $name;
 		}

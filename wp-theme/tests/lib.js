@@ -174,8 +174,52 @@ async function settle( page ) {
 	await page.waitForTimeout( 300 );
 }
 
+/**
+ * Скрывает всё, что стоит на странице перед элементом (на всех уровнях вложенности),
+ * чтобы элемент начинался с верха страницы. Так снимки темы и макета не расходятся
+ * из-за дробных координат и сглаживания.
+ *
+ * @param {import('playwright').Page} page     Страница.
+ * @param {string}                    selector Элемент.
+ */
+async function isolate( page, selector ) {
+	await page.evaluate( ( sel ) => {
+		let el = document.querySelector( sel );
+		while ( el && el !== document.body ) {
+			let prev = el.previousElementSibling;
+			while ( prev ) {
+				prev.style.setProperty( 'display', 'none', 'important' );
+				prev = prev.previousElementSibling;
+			}
+			el = el.parentElement;
+		}
+		window.scrollTo( 0, 0 );
+	}, selector );
+}
+
+/**
+ * Текущие значения настроек сайта (в виде, как их отдаёт SCF).
+ *
+ * @param {string[]} names Имена полей.
+ * @return {Object} Имя поля => значение.
+ */
+function getSettings( names ) {
+	const list = names.map( ( n ) => `'${ n }'` ).join( ',' );
+	return JSON.parse( wp( 'eval', `$o = array(); foreach ( array( ${ list } ) as $n ) { $o[ $n ] = get_field( Trust\\Fields::key( Trust\\Settings::PREFIX, $n ), 'option' ); } echo wp_json_encode( $o );` ) );
+}
+
+/**
+ * Записывает настройки сайта (для тестов: подставить данные и потом вернуть прежние).
+ *
+ * @param {Object} values Имя поля => значение.
+ */
+function setSettings( values ) {
+	const b64 = Buffer.from( JSON.stringify( values ) ).toString( 'base64' );
+	wp( 'eval', `foreach ( json_decode( base64_decode( '${ b64 }' ), true ) as $n => $v ) { update_field( Trust\\Fields::key( Trust\\Settings::PREFIX, $n ), $v, 'option' ); }` );
+}
+
 module.exports = {
 	URL, DEV_DIR, LOG, OUT, REPO, THEME,
 	check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser,
-	routeMockupFonts, mockupUrl, comparePng, settle,
+	routeMockupFonts, mockupUrl, comparePng, settle, isolate, getSettings, setSettings,
 };

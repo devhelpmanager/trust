@@ -40,13 +40,14 @@ final class Demo_Command {
 	public function import( array $args, array $assoc_args ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- сигнатура команды WP-CLI.
 		self::require_scf();
 
-		$settings = Importer::import_settings();
-		WP_CLI::log( sprintf( 'Настройки сайта: записано %d.', count( $settings['written'] ) ) );
-		self::log_list( 'Пропущены (изменены вручную)', $settings['skipped'] );
-
+		// Сначала страницы: на них ссылаются настройки и меню.
 		$pages = Importer::import_pages();
 		WP_CLI::log( sprintf( 'Страницы: создано %d, обновлено %d.', count( $pages['created'] ), count( $pages['updated'] ) ) );
 		self::log_list( 'Пропущены (изменены вручную или уже есть свои)', $pages['skipped'] );
+
+		$settings = Importer::import_settings();
+		WP_CLI::log( sprintf( 'Настройки сайта: записано %d.', count( $settings['written'] ) ) );
+		self::log_list( 'Пропущены (изменены вручную)', $settings['skipped'] );
 
 		$menus = Importer::import_menus();
 		WP_CLI::log( sprintf( 'Меню: создано %d.', count( $menus['created'] ) ) );

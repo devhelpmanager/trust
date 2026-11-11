@@ -4,6 +4,7 @@
  * (holst-portfolio/Header, Footer; holst-o-nas/Main — контакты).
  *
  * Ключ — имя поля настроек, значение — то, что запишет `wp trust demo import`.
+ * {page:адрес} в строке заменяется ссылкой на демо-страницу (например, {page:kontakty}).
  *
  * @package Trust
  */
@@ -52,6 +53,11 @@ return array(
 		array( 'label' => 'Сайты' ),
 		array( 'label' => 'Контекстная реклама' ),
 		array( 'label' => 'AI' ),
+	),
+	'footer_contacts_link' => array(
+		'title'  => 'Контакты',
+		'url'    => '{page:kontakty}',
+		'target' => '',
 	),
 	'footer_legal'         => '© {год} [Юридическое название] · ИНН [0000000000] · ОГРН [0000000000000] · [Юридический адрес]',
 );

@@ -60,6 +60,17 @@ final class Menu {
 	}
 
 	/**
+	 * Название меню, назначенного области (в подвале — заголовок колонки).
+	 *
+	 * @param string $location Область меню.
+	 */
+	public static function name( string $location ): string {
+		$locations = get_nav_menu_locations();
+		$menu      = empty( $locations[ $location ] ) ? null : wp_get_nav_menu_object( $locations[ $location ] );
+		return $menu ? (string) $menu->name : '';
+	}
+
+	/**
 	 * Пункты одного уровня с вложенными.
 	 *
 	 * @param array $by_parent    Пункты, сгруппированные по родителю.

@@ -108,4 +108,18 @@ return array(
 		'path'  => 'oferta',
 		'title' => 'Публичная оферта',
 	),
+
+	// Документы (меню «Подвал: документы»).
+	array(
+		'path'  => 'politika-konfidencialnosti',
+		'title' => 'Политика конфиденциальности',
+	),
+	array(
+		'path'  => 'soglasie-na-obrabotku-dannyh',
+		'title' => 'Согласие на обработку персональных данных',
+	),
+	array(
+		'path'  => 'politika-cookie',
+		'title' => 'Политика использования файлов cookie',
+	),
 );

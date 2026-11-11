@@ -23,42 +23,70 @@
 
 ## Установка на сервер
 
-Нужны `git` и [WP-CLI](https://wp-cli.org/). В командах `SITE` — папка WordPress (там, где
-лежит `wp-config.php`).
+Команды выполняются по SSH на сервере от пользователя с правом `sudo` (или от root). Нужны
+`git`, `rsync` и [WP-CLI](https://wp-cli.org/). WP-CLI запускается от имени владельца файлов
+сайта (`sudo -u "$OWNER"`), чтобы плагин и тема не оказались принадлежащими root.
+
+**1. Путь к сайту** — папка, где лежит `wp-config.php` (замените на свой):
 
 ```bash
-SITE=/path/to/wordpress
+SITE=/var/www/example.ru
 ```
 
-Скачать репозиторий (один раз):
+Владелец файлов сайта (определяется сам):
+
+```bash
+OWNER=$(stat -c '%U' "$SITE/wp-config.php") && echo "Сайт: $SITE, владелец: $OWNER"
+```
+
+**2. Проверить инструменты.** Если какой-то команды нет, её нужно установить (для Ubuntu/Debian:
+`sudo apt install git rsync`, WP-CLI — шаг 3):
+
+```bash
+git --version; rsync --version | head -1; wp --version --allow-root
+```
+
+**3. WP-CLI** — только если его нет:
+
+```bash
+curl -fsSLO https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x wp-cli.phar && sudo mv wp-cli.phar /usr/local/bin/wp && wp --version --allow-root
+```
+
+**4. Скачать репозиторий** (один раз):
 
 ```bash
 git clone --branch claude/happy-pascal-t7rcow --single-branch https://github.com/devhelpmanager/trust.git ~/trust
 ```
 
-Скопировать тему в WordPress и отдать файлы владельцу сайта:
+**5. Скопировать тему в WordPress** и отдать файлы владельцу сайта:
 
 ```bash
-rsync -a --delete ~/trust/wp-theme/trust/ "$SITE/wp-content/themes/trust/" && chown -R "$(stat -c '%U:%G' "$SITE/wp-config.php")" "$SITE/wp-content/themes/trust"
+sudo rsync -a --delete ~/trust/wp-theme/trust/ "$SITE/wp-content/themes/trust/" && sudo chown -R "$OWNER": "$SITE/wp-content/themes/trust"
 ```
 
-Установить плагин и включить тему (если команды выполняются от root, добавьте `--allow-root`):
+**6. Плагин Secure Custom Fields и тема:**
 
 ```bash
-wp --path="$SITE" plugin install secure-custom-fields --activate
+sudo -u "$OWNER" -- wp --path="$SITE" plugin install secure-custom-fields --activate
 ```
 
 ```bash
-wp --path="$SITE" theme activate trust
+sudo -u "$OWNER" -- wp --path="$SITE" theme activate trust
+```
+
+**7. Постоянные ссылки** по ТЗ: статьи блога — `/blog/<ярлык>/`:
+
+```bash
+sudo -u "$OWNER" -- wp --path="$SITE" rewrite structure '/blog/%postname%/' --hard
 ```
 
 ### Демо-контент
 
-Заполняет сайт заглушками из макетов (сейчас — «Настройки сайта», 23 страницы из меню и меню
-«Шапка»; набор растёт с каждым шагом):
+Заполняет сайт заглушками из макетов (сейчас — «Настройки сайта», 26 страниц и меню шапки и
+подвала; набор растёт с каждым шагом):
 
 ```bash
-wp --path="$SITE" trust demo import
+sudo -u "$OWNER" -- wp --path="$SITE" trust demo import
 ```
 
 Повторный импорт не создаёт дублей и не трогает то, что вы изменили вручную. Если по адресу
@@ -66,13 +94,21 @@ wp --path="$SITE" trust demo import
 демо-меню не ставится. Удалить демо-контент (изменённое вручную останется):
 
 ```bash
-wp --path="$SITE" trust demo remove
+sudo -u "$OWNER" -- wp --path="$SITE" trust demo remove
 ```
 
 ### Обновление темы
 
+После каждого шага разработки (переменные `SITE` и `OWNER` — из шага 1):
+
 ```bash
-git -C ~/trust pull && rsync -a --delete ~/trust/wp-theme/trust/ "$SITE/wp-content/themes/trust/" && chown -R "$(stat -c '%U:%G' "$SITE/wp-config.php")" "$SITE/wp-content/themes/trust"
+git -C ~/trust pull && sudo rsync -a --delete ~/trust/wp-theme/trust/ "$SITE/wp-content/themes/trust/" && sudo chown -R "$OWNER": "$SITE/wp-content/themes/trust"
+```
+
+Затем, если в отчёте шага сказано, что демо-контент пополнился:
+
+```bash
+sudo -u "$OWNER" -- wp --path="$SITE" trust demo import
 ```
 
 Тема копируется, а не подключается символической ссылкой: некоторые панели управления
@@ -148,6 +184,7 @@ trust/
     header/site-header.php — шапка: логотип, телефон и часы, email, кнопка звонка, меню
     header/main-nav.php    — главное меню с выпадающими списками (экраны от 1180 px)
     header/mobile-nav.php  — мобильное меню (уже 1180 px): пункты, телефон, email, кнопка звонка
+    footer/site-footer.php — подвал: логотип, описание, плашки, колонки меню, контакты, документы
   demo/                — данные демо-контента: settings.php (настройки), pages.php (страницы), menus.php (меню)
   assets/icons/sprite.svg — иконки темы (SVG-спрайт)
   assets/js/header.js  — выпадающие списки меню и мобильное меню
@@ -228,6 +265,17 @@ node wp-theme/tests/header-mobile.js
 зоны нажатия на 280–1179 px, логотип на 280 px, axe-core и совпадение с макетом на 390 px в трёх
 состояниях: меню закрыто, открыто, раскрыт раздел SEO.
 
+Подвал:
+
+```bash
+node wp-theme/tests/footer.js
+```
+
+Проверяет данные из настроек, колонки меню и их заголовки, контакты, юридическую строку с текущим
+годом, значки соцсетей (появляются, когда ссылки заполнены), наведение, ширины 1280–280 px, зоны
+нажатия, axe-core и совпадение с макетом на 1280 и 390 px. Для сверки тест на время подставляет
+заглушки адреса, часов и года из макета подвала и потом возвращает прежние значения.
+
 ### Меню в шапке
 
 - Область «Шапка» (Внешний вид → Меню). Пункт с вложенными пунктами выводится кнопкой,
@@ -240,6 +288,16 @@ node wp-theme/tests/header-mobile.js
 - Текущая страница и её раздел подсвечиваются автоматически.
 - Уже 1180 px меню открывается кнопкой-бургером: те же пункты, вложенные раскрываются по одному,
   внизу телефон, email и кнопка звонка. Без JavaScript мобильное меню показано раскрытым целиком.
+
+### Подвал
+
+- Колонки «Услуги» и «Компания» — меню «Подвал: услуги» и «Подвал: компания»; заголовок колонки —
+  название меню (Внешний вид → Меню → «Название меню»).
+- Ссылки на документы внизу — меню «Подвал: документы».
+- Описание, плашки, юридическая строка (`{год}` → текущий год) и заголовок колонки контактов —
+  «Настройки сайта → Подвал»; телефон, email, адрес, часы — «Настройки сайта → Контакты».
+- Значки соцсетей (официальные, из Simple Icons, CC0) выводятся в колонке контактов, если в
+  «Настройках сайта → Соцсети» заполнены ссылки. В макете соцсетей в подвале нет.
 
 ### Настройки сайта: права
 

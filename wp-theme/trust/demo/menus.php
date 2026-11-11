@@ -12,7 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 return array(
-	'header' => array(
+	'header'          => array(
 		'name'  => 'Шапка',
 		'items' => array(
 			array(
@@ -127,6 +127,95 @@ return array(
 						'title' => 'Публичная оферта',
 					),
 				),
+			),
+		),
+	),
+
+	// Подвал: название меню — заголовок колонки.
+	'footer-services' => array(
+		'name'  => 'Услуги',
+		'items' => array(
+			array(
+				'page'  => 'dizayn',
+				'title' => 'Дизайн',
+			),
+			array(
+				'page'  => 'sozdanie-saytov',
+				'title' => 'Создание сайтов',
+			),
+			array(
+				'page'  => 'soprovozhdenie-saytov',
+				'title' => 'Сопровождение сайтов',
+			),
+			array(
+				'page'  => 'seo',
+				'title' => 'SEO-продвижение',
+			),
+			array(
+				'page'  => 'seo/voprosy',
+				'title' => 'Задать вопрос SEO-шнику',
+			),
+			array(
+				'page'  => 'geo',
+				'title' => 'GEO-продвижение',
+			),
+			array(
+				'page'  => 'kontekstnaya-reklama',
+				'title' => 'Контекстная реклама',
+			),
+			array(
+				'page'  => 'ai',
+				'title' => 'AI-решения',
+			),
+		),
+	),
+	'footer-company'  => array(
+		'name'  => 'Компания',
+		'items' => array(
+			array(
+				'page'  => 'o-kompanii',
+				'title' => 'О компании',
+			),
+			array(
+				'page'  => 'komanda',
+				'title' => 'Наша команда',
+			),
+			array(
+				'page'  => 'portfolio',
+				'title' => 'Портфолио',
+			),
+			array(
+				'page'  => 'otzyvy',
+				'title' => 'Отзывы о нас',
+			),
+			array(
+				'page'  => 'blog',
+				'title' => 'Блог',
+			),
+			array(
+				'page'  => 'karera',
+				'title' => 'Карьера',
+			),
+		),
+	),
+	'footer-docs'     => array(
+		'name'  => 'Документы',
+		'items' => array(
+			array(
+				'page'  => 'oferta',
+				'title' => 'Публичная оферта',
+			),
+			array(
+				'page'  => 'politika-konfidencialnosti',
+				'title' => 'Политика конфиденциальности',
+			),
+			array(
+				'page'  => 'soglasie-na-obrabotku-dannyh',
+				'title' => 'Согласие на обработку данных',
+			),
+			array(
+				'page'  => 'politika-cookie',
+				'title' => 'Политика cookie',
 			),
 		),
 	),

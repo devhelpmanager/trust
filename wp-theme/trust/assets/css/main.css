@@ -905,7 +905,234 @@ html:not(.js) .main-nav__item:focus-within > .main-nav__dropdown {
 	}
 }
 
-/* ===== 7. Шаблон по умолчанию (index.php) ===== */
+/* ===== 7. Подвал (holst-portfolio/Footer) ===== */
+
+.site-footer {
+	padding: 72px var(--gutter) 32px;
+	background: var(--c-indigo);
+	color: var(--c-white);
+}
+
+.site-footer__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 56px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.site-footer__top {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 40px 48px;
+}
+
+.site-footer__about {
+	display: flex;
+	flex: 2 1 320px;
+	flex-direction: column;
+	gap: 20px;
+	min-width: 0;
+}
+
+.site-footer__about .brand {
+	align-self: flex-start;
+}
+
+.site-footer__desc {
+	max-width: 420px;
+	margin: 0;
+	font-size: 15px;
+	line-height: 1.65;
+	color: #C9C7EA;
+	text-wrap: pretty;
+}
+
+.site-footer__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.site-footer__tag {
+	padding: 6px 10px;
+	border: 1px solid #423E73;
+	border-radius: var(--r-pill);
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: #DDD9F5;
+}
+
+.site-footer__col {
+	display: flex;
+	flex: 1 1 180px;
+	flex-direction: column;
+	gap: 14px;
+	min-width: 0;
+}
+
+.site-footer__heading {
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #C4B5FD;
+	text-decoration: none;
+}
+
+.site-footer__list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-size: 15px;
+}
+
+.site-footer__link {
+	color: #D4D2F0;
+	text-decoration: none;
+}
+
+.site-footer__contacts {
+	display: flex;
+	flex: 1 1 240px;
+	flex-direction: column;
+	gap: 14px;
+	min-width: 0;
+}
+
+.site-footer__phone {
+	font-size: 20px;
+	font-weight: 700;
+	color: var(--c-white);
+	text-decoration: none;
+}
+
+.site-footer__email {
+	font-size: 15px;
+	color: #D4D2F0;
+	text-decoration: none;
+}
+
+.site-footer__address {
+	font-size: 15px;
+	line-height: 1.5;
+	color: #C9C7EA;
+}
+
+/* Значки соцсетей (в макете их нет — выводятся, если ссылки заполнены) */
+.site-footer__social {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.site-footer__social-link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border: 1px solid #423E73;
+	border-radius: 12px;
+	color: #D4D2F0;
+	transition: color 0.2s, border-color 0.2s;
+}
+
+.site-footer__social-link:hover {
+	border-color: #6D5FD0;
+}
+
+/*
+ * Белая кнопка: своё наведение, как у белых кнопок в макетах. В макете подвала все ссылки
+ * при наведении становились белыми, и текст этой кнопки пропадал на белом фоне.
+ */
+.site-footer__callback {
+	display: inline-flex;
+	align-self: flex-start;
+	align-items: center;
+	gap: 8px;
+	min-height: 48px;
+	margin-top: 4px;
+	padding: 0 20px;
+	border-radius: 12px;
+	background: var(--c-white);
+	color: var(--c-violet-dark);
+	font-size: 15px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: background 0.2s, color 0.2s;
+}
+
+.site-footer__callback:hover {
+	background: var(--c-lavender-2);
+	color: var(--c-violet-deep);
+}
+
+.site-footer a:not(.site-footer__callback):hover {
+	color: var(--c-white);
+}
+
+.site-footer__bottom {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px 32px;
+	padding-top: 24px;
+	border-top: 1px solid var(--c-indigo-hover);
+	font-size: 13px;
+	line-height: 1.6;
+	color: #A5A2CC;
+}
+
+.site-footer__docs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0 24px;
+}
+
+.site-footer__docs a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	color: #D4D2F0;
+	text-decoration: none;
+}
+
+/* Уже 1180 px — ссылки высотой 44 px для пальца, как в макете */
+@media (max-width: 1179px) {
+	.site-footer__list {
+		gap: 0;
+	}
+
+	.site-footer__contacts {
+		gap: 4px;
+	}
+
+	.site-footer__callback {
+		margin-top: 14px;
+	}
+
+	.site-footer__tap,
+	.site-footer__link {
+		display: flex;
+		align-self: flex-start;
+		align-items: center;
+		min-height: 44px;
+	}
+}
+
+/* ===== 8. Шаблон по умолчанию (index.php) ===== */
 
 .page-default {
 	padding: 40px var(--gutter) 72px;

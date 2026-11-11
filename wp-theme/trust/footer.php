@@ -2,14 +2,13 @@
 /**
  * Конец страницы: подвал и служебные скрипты.
  *
- * Подвал сайта появится на шаге 1.5.
- *
  * @package Trust
  */
 
 defined( 'ABSPATH' ) || exit;
 ?>
 </main>
+<?php get_template_part( 'template-parts/footer/site-footer' ); ?>
 <?php wp_footer(); ?>
 </body>
 </html>
