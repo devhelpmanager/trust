@@ -22,5 +22,10 @@ final class Theme {
 		Cleanup::register();
 		Assets::register();
 		Dependencies::register();
+		Settings::register();
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			\WP_CLI::add_command( 'trust demo', CLI\Demo_Command::class );
+		}
 	}
 }

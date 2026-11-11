@@ -52,6 +52,21 @@ wp --path="$SITE" plugin install secure-custom-fields --activate
 wp --path="$SITE" theme activate trust
 ```
 
+### Демо-контент
+
+Заполняет сайт заглушками из макетов (сейчас — «Настройки сайта»; набор растёт с каждым шагом):
+
+```bash
+wp --path="$SITE" trust demo import
+```
+
+Повторный импорт не создаёт дублей и не трогает то, что вы изменили вручную. Удалить демо-контент
+(изменённое вручную останется):
+
+```bash
+wp --path="$SITE" trust demo remove
+```
+
 ### Обновление темы
 
 ```bash
@@ -117,6 +132,14 @@ trust/
     class-cleanup.php      — отключение emoji, служебных ссылок, каталога блоков, библиотеки шрифтов
     class-assets.php       — общий CSS, предзагрузка шрифтов
     class-dependencies.php — проверка плагина Secure Custom Fields
+    class-fields.php       — ключи полей SCF по единому шаблону field_trust_<группа>_<имя>
+    class-settings.php     — страница «Настройки сайта», Settings::get( 'имя_поля' )
+    class-contacts.php     — контакты в готовом виде: телефоны (tel:), email, Telegram, WhatsApp, адрес
+    class-social.php       — список соцсетей и ссылки компании
+    fields/settings/       — поля вкладок «Настроек сайта»: company, contacts, social, footer
+    demo/class-importer.php — импорт и удаление демо-контента
+    cli/class-demo-command.php — команда wp trust demo import | remove
+  demo/                — данные демо-контента (settings.php — заглушки настроек из макетов)
   assets/css/main.css  — токены (CSS-переменные), шрифты, база, сетка, шапка секции, кнопки
   assets/fonts/        — Unbounded, Onest, JetBrains Mono (woff2, кириллица и латиница) + лицензии OFL
   screenshot.png       — превью темы в «Внешний вид → Темы»
@@ -162,5 +185,22 @@ node wp-theme/tests/smoke.js
 служебных ссылок, загрузку шрифтов, ссылку «Перейти к содержимому», axe-core без нарушений
 critical/serious), уведомление в админке без SCF, консоль браузера и журнал ошибок WordPress.
 Скриншоты — в `wp-theme/tests/output/`.
+
+Страница «Настройки сайта» (после `wp-theme/bin/local.sh wp trust demo import`):
+
+```bash
+node wp-theme/tests/settings.js
+```
+
+Проверяет вкладки и поля, демо-значения, сохранение без потерь и дублей, права: администратор видит
+всё, редактор — всё, кроме кода карты, автор — страницу не открывает.
+
+### Настройки сайта: права
+
+Страница открывается пользователям с правом `edit_others_posts` (редактор и администратор).
+Вкладка или поле с ключом `trust_cap` в описании (`inc/fields/settings/*.php`) видны только
+пользователям с этим правом: так «Код интерактивной карты» доступен только администратору
+(`manage_options`). Технические вкладки из ТЗ («Формы», «SEO», «Cookie и счётчики», «Адреса»)
+появятся на своих шагах с `'cap' => 'manage_options'`.
 
 Визуальная сверка с макетами и остальные тесты из раздела 18 ТЗ добавляются по ходу работ.
