@@ -33,10 +33,12 @@
 SITE=/var/www/example.ru
 ```
 
-Владелец файлов сайта (определяется сам):
+Владелец файлов сайта (определяется сам) и переход в папку сайта. Команды WP-CLI от имени
+владельца нужно запускать из папки сайта: из `/root` у него нет доступа, и часть команд падает с
+`proc_open(): posix_spawn() failed: Permission denied`.
 
 ```bash
-OWNER=$(stat -c '%U' "$SITE/wp-config.php") && echo "Сайт: $SITE, владелец: $OWNER"
+OWNER=$(stat -c '%U' "$SITE/wp-config.php") && cd "$SITE" && echo "Сайт: $SITE, владелец: $OWNER"
 ```
 
 **2. Проверить инструменты.** Если какой-то команды нет, её нужно установить (для Ubuntu/Debian:
@@ -77,7 +79,37 @@ sudo -u "$OWNER" -- wp --path="$SITE" theme activate trust
 **7. Постоянные ссылки** по ТЗ: статьи блога — `/blog/<ярлык>/`:
 
 ```bash
-sudo -u "$OWNER" -- wp --path="$SITE" rewrite structure '/blog/%postname%/' --hard
+sudo -u "$OWNER" -- wp --path="$SITE" rewrite structure '/blog/%postname%/'
+```
+
+Если сайт обслуживает Apache (в том числе за nginx, как в FastPanel), нужен `.htaccess` с правилами
+WordPress — иначе адреса вида `/kontakty/` отдают 404. WP-CLI записывает его стандартной функцией
+WordPress (только блок `# BEGIN WordPress … # END WordPress`, остальное содержимое файла не трогает),
+если сказать ему, что модуль `mod_rewrite` есть:
+
+```bash
+printf 'apache_modules:\n  - mod_rewrite\n' > /tmp/wp-cli-apache.yml && chmod 644 /tmp/wp-cli-apache.yml && sudo -u "$OWNER" -- env WP_CLI_CONFIG_PATH=/tmp/wp-cli-apache.yml wp --path="$SITE" rewrite flush --hard && cat "$SITE/.htaccess"
+```
+
+**8. Русский язык WordPress** (если установлен другой):
+
+```bash
+sudo -u "$OWNER" -- wp --path="$SITE" language core install ru_RU --activate
+```
+
+**9. HTTPS.** Если сайт открывается по `https://` (например, через Cloudflare), а в WordPress записан
+адрес с `http://` — стили и скрипты будут заблокированы браузером. Перевести адреса в базе:
+
+```bash
+sudo -u "$OWNER" -- wp --path="$SITE" search-replace 'http://example.ru' 'https://example.ru' --all-tables
+```
+
+Если после этого браузер пишет «Слишком много переадресаций» (Cloudflare в режиме Flexible
+обращается к серверу по http), WordPress нужно сообщить, что посетитель пришёл по https — строка
+в `wp-config.php` перед «That's all, stop editing»:
+
+```bash
+grep -q HTTP_X_FORWARDED_PROTO "$SITE/wp-config.php" || sed -i "/That's all, stop editing/i if ( isset( \$_SERVER['HTTP_X_FORWARDED_PROTO'] ) && 'https' === \$_SERVER['HTTP_X_FORWARDED_PROTO'] ) { \$_SERVER['HTTPS'] = 'on'; }" "$SITE/wp-config.php"
 ```
 
 ### Демо-контент
@@ -99,16 +131,36 @@ sudo -u "$OWNER" -- wp --path="$SITE" trust demo remove
 
 ### Обновление темы
 
-После каждого шага разработки (переменные `SITE` и `OWNER` — из шага 1):
+Удобнее один раз сохранить на сервере скрипт обновления (путь к сайту — свой):
 
 ```bash
-git -C ~/trust pull && sudo rsync -a --delete ~/trust/wp-theme/trust/ "$SITE/wp-content/themes/trust/" && sudo chown -R "$OWNER": "$SITE/wp-content/themes/trust"
+cat > /root/trust-update.sh <<'SH'
+#!/usr/bin/env bash
+# Обновление темы Trust из GitHub. Запуск: bash /root/trust-update.sh [--demo]
+set -euo pipefail
+SITE=/var/www/example_usr/data/www/example.ru
+OWNER=$(stat -c '%U' "$SITE/wp-config.php")
+cd "$SITE"
+git -C /root/trust pull --ff-only
+rsync -a --delete /root/trust/wp-theme/trust/ "$SITE/wp-content/themes/trust/"
+chown -R "$OWNER": "$SITE/wp-content/themes/trust"
+if [ "${1:-}" = "--demo" ]; then
+	sudo -u "$OWNER" -- wp --path="$SITE" trust demo import
+fi
+echo "Тема обновлена: $(git -C /root/trust log --oneline -1)"
+SH
 ```
 
-Затем, если в отчёте шага сказано, что демо-контент пополнился:
+После каждого шага разработки:
 
 ```bash
-sudo -u "$OWNER" -- wp --path="$SITE" trust demo import
+bash /root/trust-update.sh
+```
+
+Если в отчёте шага сказано, что демо-контент пополнился, — с ключом `--demo`:
+
+```bash
+bash /root/trust-update.sh --demo
 ```
 
 Тема копируется, а не подключается символической ссылкой: некоторые панели управления
