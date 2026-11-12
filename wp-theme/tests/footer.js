@@ -13,9 +13,8 @@
  * - axe-core, консоль и журнал ошибок.
  */
 
-const { chromium } = require( 'playwright' );
 const path = require( 'path' );
-const { URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle, isolate, getSettings, setSettings } = require( './lib' );
+const { launch, URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle, isolate, getSettings, setSettings } = require( './lib' );
 
 const SERVICES = [ 'Дизайн', 'Создание сайтов', 'Поддержка сайтов', 'SEO-продвижение', 'Задать вопрос SEO-шнику', 'GEO-продвижение', 'Контекстная реклама', 'AI-решения' ];
 const COMPANY = [ 'О компании', 'Наша команда', 'Портфолио', 'Отзывы о нас', 'Блог', 'Карьера' ];
@@ -24,7 +23,7 @@ const DOCS = [ 'Публичная оферта', 'Политика конфид
 ( async () => {
 	clearLog();
 	const saved = getSettings( [ 'address', 'hours', 'footer_legal', 'social_links' ] );
-	const browser = await chromium.launch();
+	const browser = await launch();
 	const context = await browser.newContext( { viewport: { width: 1280, height: 900 } } );
 	await routeMockupFonts( context );
 	const page = await context.newPage();

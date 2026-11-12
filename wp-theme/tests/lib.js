@@ -69,6 +69,40 @@ function checkLog() {
 }
 
 /**
+ * Cookie выбора «только обязательные» (как после нажатия на плашке cookie, шаг 3.7): в тестах
+ * плашка не закрывает низ страницы. Тест плашки (cookie.js) запускает браузер без неё.
+ */
+function consentCookie() {
+	const value = { v: '1', necessary: true, analytics: false, marketing: false, choice: 'necessary', date: '2026-01-01T00:00:00.000Z' };
+	return { name: 'trust_consent', value: encodeURIComponent( JSON.stringify( value ) ), url: URL };
+}
+
+/**
+ * Запускает Chromium: у каждого нового контекста (и страницы browser.newPage) уже сделан выбор
+ * cookie — consentCookie(). login() сохраняет этот выбор.
+ *
+ * @param {Object} options Параметры chromium.launch.
+ */
+async function launch( options = {} ) {
+	const { chromium } = require( 'playwright' );
+	const browser = await chromium.launch( options );
+	const newContext = browser.newContext.bind( browser );
+	browser.newContext = async ( opts ) => {
+		const context = await newContext( opts );
+		context.trustConsent = true;
+		await context.addCookies( [ consentCookie() ] );
+		return context;
+	};
+	browser.newPage = async ( opts ) => {
+		const context = await browser.newContext( opts );
+		const page = await context.newPage();
+		page.on( 'close', () => context.close().catch( () => {} ) );
+		return page;
+	};
+	return browser;
+}
+
+/**
  * Входит в админку.
  *
  * @param {import('playwright').Page} page     Страница.
@@ -77,6 +111,9 @@ function checkLog() {
  */
 async function login( page, user = 'admin', password = 'admin' ) {
 	await page.context().clearCookies();
+	if ( page.context().trustConsent ) {
+		await page.context().addCookies( [ consentCookie() ] );
+	}
 	await page.goto( `${ URL }/wp-login.php` );
 	await page.fill( '#user_login', user );
 	await page.fill( '#user_pass', password );
@@ -335,6 +372,7 @@ async function postForm( type, fields, headers = {} ) {
 
 module.exports = {
 	URL, DEV_DIR, LOG, OUT, REPO, THEME,
+	launch, consentCookie,
 	check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser,
 	routeMockupFonts, mockupUrl, approveMockup, comparePng, settle, isolate, getSettings, setSettings, publishPost, resetFormLimits, formToken, postForm,
 };

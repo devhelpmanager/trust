@@ -14,15 +14,14 @@
  * - ширины 280–1280 px без прокрутки вбок, зоны нажатия ≥ 44 px; axe-core; консоль и журнал ошибок.
  */
 
-const { chromium } = require( 'playwright' );
 const path = require( 'path' );
-const { URL, OUT, check, finish, wp, clearLog, checkLog, collectConsoleErrors, getSettings, setSettings, resetFormLimits } = require( './lib' );
+const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, collectConsoleErrors, getSettings, setSettings, resetFormLimits } = require( './lib' );
 
 ( async () => {
 	clearLog();
 	resetFormLimits();
 	const leadsBefore = wp( 'post', 'list', '--post_type=lead', '--post_status=any', '--field=ID', '--format=ids' );
-	const browser = await chromium.launch();
+	const browser = await launch();
 	const page = await browser.newPage( { viewport: { width: 1280, height: 800 } } );
 	const errors = collectConsoleErrors( page );
 	const dialog = page.locator( '#callback-modal' );
@@ -114,10 +113,14 @@ const { URL, OUT, check, finish, wp, clearLog, checkLog, collectConsoleErrors, g
 	check( 'Повторное открытие: пустая форма', ( await page.locator( '#callback-modal .callback-modal__form-view' ).isVisible() ) && ( await page.inputValue( '#callback-name' ) ) === '' && ! ( await page.isChecked( '#callback-modal .check__input' ) ) );
 
 	// --- Доступность (окно открыто) ---
+	// Пауза: переходы цвета кнопок (0,2 с) после повторного открытия — иначе axe иногда
+	// меряет контраст на середине перехода.
+	await page.mouse.move( 0, 0 );
+	await page.waitForTimeout( 500 );
 	await page.addScriptTag( { path: require.resolve( 'axe-core' ) } );
 	const axe = await page.evaluate( async () => {
 		const r = await window.axe.run( document, { resultTypes: [ 'violations' ] } );
-		return r.violations.filter( ( v ) => [ 'critical', 'serious' ].includes( v.impact ) ).map( ( v ) => `${ v.id } (${ v.nodes.length })` );
+		return r.violations.filter( ( v ) => [ 'critical', 'serious' ].includes( v.impact ) ).map( ( v ) => `${ v.id } (${ v.nodes.length }: ${ v.nodes.map( ( n ) => n.target.join( ' ' ) ).join( '; ' ) })` );
 	} );
 	check( 'axe с открытым окном: нет critical/serious', axe.length === 0, axe.join( ', ' ) );
 

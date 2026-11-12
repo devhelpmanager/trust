@@ -6,9 +6,8 @@
  * Тест создаёт свои записи (заголовки начинаются с «ТестКоманды») и удаляет их в конце.
  */
 
-const { chromium } = require( 'playwright' );
 const path = require( 'path' );
-const { URL, OUT, check, finish, wp, clearLog, checkLog, login, ensureUser, publishPost } = require( './lib' );
+const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, login, ensureUser, publishPost } = require( './lib' );
 
 const MARK = 'ТестКоманды';
 
@@ -45,7 +44,7 @@ async function pick( page, field, search, option ) {
 	ensureUser( 'author', 'author' );
 	// Остатки прерванного прогона.
 	wp( 'eval', `foreach ( get_posts( array( 'post_type' => array( 'team', 'vacancy', 'question', 'review', 'lead' ), 'post_status' => 'any', 'numberposts' => -1 ) ) as $p ) { if ( str_starts_with( $p->post_title, '${ MARK }' ) ) { wp_delete_post( $p->ID, true ); } }` );
-	const browser = await chromium.launch();
+	const browser = await launch();
 
 	try {
 		// --- Регистрация и помощники ---

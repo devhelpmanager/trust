@@ -6,10 +6,9 @@
  * Тест создаёт свои страницы (заголовки начинаются с «ТестТипов») и удаляет их в конце.
  */
 
-const { chromium } = require( 'playwright' );
 const fs = require( 'fs' );
 const path = require( 'path' );
-const { URL, OUT, THEME, check, finish, wp, clearLog, checkLog, login } = require( './lib' );
+const { launch, URL, OUT, THEME, check, finish, wp, clearLog, checkLog, login } = require( './lib' );
 
 const MARK = 'ТестТипов';
 
@@ -48,7 +47,7 @@ async function save( page ) {
 
 ( async () => {
 	clearLog();
-	const browser = await chromium.launch();
+	const browser = await launch();
 	const savedBlog = wp( 'option', 'get', 'page_for_posts' );
 
 	try {

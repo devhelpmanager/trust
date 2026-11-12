@@ -16,9 +16,8 @@
  * - в боковой панели — поля блока.
  */
 
-const { chromium } = require( 'playwright' );
 const path = require( 'path' );
-const { URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle, isolate, login, wp } = require( './lib' );
+const { launch, URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle, isolate, login, wp } = require( './lib' );
 
 const PAGE = `${ URL }/seo/audit/`;
 const QUESTIONS = [
@@ -67,7 +66,7 @@ async function compare( page, width, open ) {
 
 ( async () => {
 	clearLog();
-	const browser = await chromium.launch();
+	const browser = await launch();
 	const context = await browser.newContext( { viewport: { width: 1280, height: 900 } } );
 	await routeMockupFonts( context );
 	const page = await context.newPage();

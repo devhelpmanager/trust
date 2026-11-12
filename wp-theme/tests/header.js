@@ -13,15 +13,14 @@
  * - axe-core без critical/serious, консоль и журнал ошибок.
  */
 
-const { chromium } = require( 'playwright' );
 const path = require( 'path' );
-const { URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle } = require( './lib' );
+const { launch, URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle } = require( './lib' );
 
 const MENU = [ 'Дизайн', 'Создание сайтов', 'Поддержка сайтов', 'SEO', 'GEO', 'Контекстная реклама', 'AI', 'Портфолио', 'Блог', 'О нас' ];
 
 ( async () => {
 	clearLog();
-	const browser = await chromium.launch();
+	const browser = await launch();
 	const context = await browser.newContext( { viewport: { width: 1280, height: 900 } } );
 	await routeMockupFonts( context );
 	const page = await context.newPage();

@@ -20,11 +20,10 @@
  *   сообщение после отправки из настроек.
  */
 
-const { chromium } = require( 'playwright' );
 const crypto = require( 'crypto' );
 const fs = require( 'fs' );
 const path = require( 'path' );
-const { URL, DEV_DIR, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, getSettings, setSettings, resetFormLimits, formToken, postForm } = require( './lib' );
+const { launch, URL, DEV_DIR, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, getSettings, setSettings, resetFormLimits, formToken, postForm } = require( './lib' );
 
 const MU = path.join( DEV_DIR, 'wordpress/wp-content/mu-plugins' );
 const FIXTURES = [ 'trust-test-forms.php', 'trust-test-notify.php' ];
@@ -56,7 +55,7 @@ async function results( id ) {
 	const saved = getSettings( SETTINGS );
 	const adminEmail = wp( 'option', 'get', 'admin_email' );
 	FIXTURES.forEach( ( f ) => fs.copyFileSync( path.join( __dirname, 'fixtures', f ), path.join( MU, f ) ) );
-	const browser = await chromium.launch();
+	const browser = await launch();
 
 	try {
 		setSettings( Object.fromEntries( SETTINGS.map( ( k ) => [ k, '' ] ) ) );

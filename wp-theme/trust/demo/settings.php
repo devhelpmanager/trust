@@ -64,4 +64,7 @@ return array(
 
 	// Блоки по умолчанию: тексты окна звонка — по умолчанию из темы, здесь только страница согласия.
 	'consent_page'         => '{page_id:soglasie-na-obrabotku-dannyh}',
+
+	// Cookie и счётчики: тексты плашки — по умолчанию из темы, здесь только страница политики.
+	'cookie_policy'        => '{page_id:politika-cookie}',
 );

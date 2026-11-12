@@ -7,9 +7,8 @@
  * Демо-записи только открываются, не сохраняются — иначе импорт счёл бы их изменёнными.
  */
 
-const { chromium } = require( 'playwright' );
 const path = require( 'path' );
-const { URL, OUT, check, finish, wp, clearLog, checkLog, login, publishPost } = require( './lib' );
+const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, login, publishPost } = require( './lib' );
 
 const MARK = 'ТестОтзывов';
 
@@ -42,7 +41,7 @@ async function publish( page ) {
 ( async () => {
 	clearLog();
 	const created = [];
-	const browser = await chromium.launch();
+	const browser = await launch();
 
 	try {
 		// --- Регистрация ---

@@ -7,9 +7,8 @@
  * в конце. Демо-рубрики только открываются, не сохраняются — иначе импорт счёл бы их изменёнными.
  */
 
-const { chromium } = require( 'playwright' );
 const path = require( 'path' );
-const { URL, OUT, check, finish, wp, clearLog, checkLog, login, ensureUser } = require( './lib' );
+const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, login, ensureUser } = require( './lib' );
 
 const MARK = 'ТестГлавной';
 
@@ -48,7 +47,7 @@ function setFeatured( id, on ) {
 	ensureUser( 'author', 'author' );
 
 	const created = { posts: [], terms: [] };
-	const browser = await chromium.launch();
+	const browser = await launch();
 
 	try {
 		// --- Регистрация ---

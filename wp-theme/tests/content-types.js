@@ -7,11 +7,10 @@
  * Вкладку «Адреса» меняет через админку и возвращает прежнее значение.
  */
 
-const { chromium } = require( 'playwright' );
 const fs = require( 'fs' );
 const os = require( 'os' );
 const path = require( 'path' );
-const { URL, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser, getSettings, setSettings } = require( './lib' );
+const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser, getSettings, setSettings } = require( './lib' );
 
 /** Код ответа без перехода по редиректам. */
 async function status( url ) {
@@ -82,7 +81,7 @@ function registry() {
 	const savedUrls = getSettings( [ 'urls_case' ] );
 	const created = { posts: [], terms: [] };
 
-	const browser = await chromium.launch();
+	const browser = await launch();
 
 	try {
 		// --- Регистрация ---

@@ -26,10 +26,9 @@
  * - срок хранения: задача WP-Cron, старые заявки удаляются, без срока — не удаляются.
  */
 
-const { chromium } = require( 'playwright' );
 const fs = require( 'fs' );
 const path = require( 'path' );
-const { URL, DEV_DIR, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser, getSettings, setSettings, resetFormLimits, formToken: token, postForm: post } = require( './lib' );
+const { launch, URL, DEV_DIR, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser, getSettings, setSettings, resetFormLimits, formToken: token, postForm: post } = require( './lib' );
 
 const MU_PLUGIN = path.join( DEV_DIR, 'wordpress/wp-content/mu-plugins/trust-test-forms.php' );
 const SETTINGS = [ 'forms_captcha', 'recaptcha_site_key', 'recaptcha_secret_key', 'smartcaptcha_client_key', 'smartcaptcha_server_key', 'forms_retention_days' ];
@@ -50,7 +49,7 @@ const meta = ( id, key ) => {
 	const before = leadIds();
 	const saved = getSettings( SETTINGS );
 	fs.copyFileSync( path.join( __dirname, 'fixtures', 'trust-test-forms.php' ), MU_PLUGIN );
-	const browser = await chromium.launch();
+	const browser = await launch();
 
 	try {
 		setSettings( { forms_captcha: 'none', forms_retention_days: '' } );

@@ -12,21 +12,20 @@
  * - консоль браузера и журнал ошибок WordPress чистые.
  */
 
-const { chromium } = require( 'playwright' );
 const path = require( 'path' );
-const { URL, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser } = require( './lib' );
+const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser } = require( './lib' );
 
 const PAGE = `${ URL }/wp-admin/admin.php?page=trust-settings`;
-const TABS = [ 'Компания', 'Контакты', 'Соцсети', 'Подвал', 'Блоки по умолчанию', 'Формы', 'SEO', 'Адреса' ];
+const TABS = [ 'Компания', 'Контакты', 'Соцсети', 'Подвал', 'Блоки по умолчанию', 'Формы', 'SEO', 'Cookie и счётчики', 'Адреса' ];
 // Технические вкладки — только администратору.
-const ADMIN_TABS = [ 'Формы', 'SEO', 'Адреса' ];
+const ADMIN_TABS = [ 'Формы', 'SEO', 'Cookie и счётчики', 'Адреса' ];
 
 ( async () => {
 	clearLog();
 	ensureUser( 'editor', 'editor' );
 	ensureUser( 'author', 'author' );
 
-	const browser = await chromium.launch();
+	const browser = await launch();
 	const page = await browser.newPage( { viewport: { width: 1280, height: 900 } } );
 	const errors = collectConsoleErrors( page );
 
@@ -77,7 +76,7 @@ const ADMIN_TABS = [ 'Формы', 'SEO', 'Адреса' ];
 	const editorResponse = await page.goto( PAGE );
 	check( 'Редактор открывает «Настройки сайта»', editorResponse.status() === 200 && ( await page.locator( '.acf-tab-wrap' ).count() ) === 1 );
 	const editorTabs = ( await page.locator( '.acf-tab-wrap .acf-tab-button' ).allTextContents() ).map( ( t ) => t.trim() );
-	check( 'Редактор не видит технические вкладки «Формы», «SEO» и «Адреса»', JSON.stringify( editorTabs ) === JSON.stringify( TABS.filter( ( t ) => ! ADMIN_TABS.includes( t ) ) ), editorTabs.join( ', ' ) );
+	check( 'Редактор не видит технические вкладки «Формы», «SEO», «Cookie и счётчики» и «Адреса»', JSON.stringify( editorTabs ) === JSON.stringify( TABS.filter( ( t ) => ! ADMIN_TABS.includes( t ) ) ), editorTabs.join( ', ' ) );
 	await page.locator( '.acf-tab-wrap .acf-tab-button', { hasText: 'Контакты' } ).click();
 	check( 'Редактор не видит «Код интерактивной карты»', ( await page.locator( '[data-name="map_embed"]' ).count() ) === 0 );
 	check( 'Редактор видит телефоны', ( await page.locator( '[data-name="phones"]' ).count() ) === 1 );

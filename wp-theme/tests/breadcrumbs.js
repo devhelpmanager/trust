@@ -6,9 +6,8 @@
  * Тест создаёт свою статью (заголовок начинается с «ТестКрошек») и удаляет её в конце.
  */
 
-const { chromium } = require( 'playwright' );
 const path = require( 'path' );
-const { URL, OUT, check, finish, wp, clearLog, checkLog, login, routeMockupFonts, mockupUrl, comparePng, settle } = require( './lib' );
+const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, login, routeMockupFonts, mockupUrl, comparePng, settle } = require( './lib' );
 
 const MARK = 'ТестКрошек';
 
@@ -53,7 +52,7 @@ async function shootCrumbs( page, selector, file ) {
 
 ( async () => {
 	clearLog();
-	const browser = await chromium.launch();
+	const browser = await launch();
 	const context = await browser.newContext( { viewport: { width: 1280, height: 900 } } );
 	await routeMockupFonts( context );
 	const page = await context.newPage();

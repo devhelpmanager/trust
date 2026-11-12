@@ -14,9 +14,8 @@
  * - axe-core с открытым меню, консоль и журнал ошибок.
  */
 
-const { chromium } = require( 'playwright' );
 const path = require( 'path' );
-const { URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle } = require( './lib' );
+const { launch, URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle } = require( './lib' );
 
 const MENU = [ 'Дизайн', 'Создание сайтов', 'Поддержка сайтов', 'SEO', 'GEO', 'Контекстная реклама', 'AI', 'Портфолио', 'Блог', 'О нас' ];
 
@@ -48,7 +47,7 @@ async function compareState( page, name, themeAction, mockAction ) {
 
 ( async () => {
 	clearLog();
-	const browser = await chromium.launch();
+	const browser = await launch();
 	const context = await browser.newContext( { viewport: { width: 390, height: 844 } } );
 	await routeMockupFonts( context );
 	const page = await context.newPage();
@@ -167,7 +166,7 @@ async function compareState( page, name, themeAction, mockAction ) {
 	check( 'Консоль браузера без ошибок', errors.length === 0, errors.slice( 0, 3 ).join( ' | ' ) );
 
 	// --- Без JavaScript ---
-	const noJsBrowser = await chromium.launch();
+	const noJsBrowser = await launch();
 	const noJs = await noJsBrowser.newPage( { viewport: { width: 390, height: 844 }, javaScriptEnabled: false } );
 	await noJs.goto( `${ URL }/kontakty/` );
 	check( 'Без JS: бургера нет', ! ( await noJs.locator( '.header-burger' ).isVisible() ) );

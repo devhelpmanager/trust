@@ -21,6 +21,9 @@
 	<!-- Галочка (экран «Заявка отправлена», holst-o-nas/Main) -->
 	<symbol id="check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
 
+	<!-- Cookie (плашка согласия, макет seo-bloki/17-cookie.html) -->
+	<symbol id="cookie" viewBox="0 0 24 24"><path d="M21 12.5A9 9 0 1 1 11.5 3a3 3 0 0 0 3.5 3.5 3 3 0 0 0 3.5 3.5 3 3 0 0 0 2.5 2.5z"/><circle cx="8.5" cy="10" r="1" fill="currentColor"/><circle cx="10" cy="15.5" r="1" fill="currentColor"/><circle cx="15" cy="14.5" r="1" fill="currentColor"/></symbol>
+
 	<!-- Стрелка вправо (ссылки «Все статьи», «Не нашли ответ?», кнопки отправки) -->
 	<symbol id="arrow-right" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
 

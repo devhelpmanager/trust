@@ -12,11 +12,10 @@
  * Результат: tests/output/visual/report.html (эталон / тема / разница) и PNG по каждому сравнению.
  */
 
-const { chromium } = require( 'playwright' );
 const fs = require( 'fs' );
 const path = require( 'path' );
 const { PNG } = require( 'pngjs' );
-const { URL, OUT, check, finish, clearLog, checkLog, routeMockupFonts, mockupUrl, comparePng, settle, isolate, getSettings, setSettings } = require( './lib' );
+const { launch, URL, OUT, check, finish, clearLog, checkLog, routeMockupFonts, mockupUrl, comparePng, settle, isolate, getSettings, setSettings } = require( './lib' );
 
 const DIR = path.join( OUT, 'visual' );
 fs.mkdirSync( DIR, { recursive: true } );
@@ -85,7 +84,7 @@ function composite( files, out ) {
 	const saved = getSettings( [ 'hours', 'address', 'footer_legal' ] );
 	const results = [];
 
-	const browser = await chromium.launch();
+	const browser = await launch();
 	const context = await browser.newContext();
 	await routeMockupFonts( context );
 	const page = await context.newPage();

@@ -8,11 +8,10 @@
  * «SEO» и всё возвращает в конце.
  */
 
-const { chromium } = require( 'playwright' );
 const fs = require( 'fs' );
 const os = require( 'os' );
 const path = require( 'path' );
-const { URL, OUT, THEME, check, finish, wp, clearLog, checkLog, login, ensureUser, getSettings, setSettings } = require( './lib' );
+const { launch, URL, OUT, THEME, check, finish, wp, clearLog, checkLog, login, ensureUser, getSettings, setSettings } = require( './lib' );
 
 const MARK = 'ТестСЕО';
 
@@ -54,7 +53,7 @@ async function head( url ) {
 	clearLog();
 	ensureUser( 'editor', 'editor' );
 	const saved = getSettings( [ 'seo_title_post', 'seo_separator', 'seo_tag_threshold' ] );
-	const browser = await chromium.launch();
+	const browser = await launch();
 
 	try {
 		// --- Поля и настройки ---
