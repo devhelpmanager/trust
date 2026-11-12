@@ -38,6 +38,7 @@ final class Theme {
 		Seo::register();
 		Seo_Admin::register();
 		Breadcrumbs::register();
+		Sitemap::register();
 		Settings::register();
 		Blocks::register();
 
