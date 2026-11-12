@@ -24,17 +24,6 @@ final class Reviews {
 	);
 
 	/**
-	 * Статусы для колонки «Статус».
-	 */
-	private const STATUSES = array(
-		'publish' => 'Опубликован',
-		'pending' => 'На проверке',
-		'draft'   => 'Черновик',
-		'future'  => 'Запланирован',
-		'private' => 'Личный',
-	);
-
-	/**
 	 * Регистрирует хуки.
 	 */
 	public static function register(): void {
@@ -199,22 +188,15 @@ final class Reviews {
 	 * @param array $columns Колонки.
 	 */
 	public static function columns( array $columns ): array {
-		$date = $columns['date'] ?? null;
-		unset( $columns['date'] );
-
-		$result = array();
-		foreach ( $columns as $key => $label ) {
-			$result[ $key ] = $label;
-			if ( 'title' === $key ) {
-				$result['trust_kind']   = __( 'Вид', 'trust' );
-				$result['trust_author'] = __( 'Автор отзыва', 'trust' );
-			}
-		}
-		$result['trust_status'] = __( 'Статус', 'trust' );
-		if ( $date ) {
-			$result['date'] = $date;
-		}
-		return $result;
+		return Admin::insert_columns(
+			$columns,
+			'title',
+			array(
+				'trust_kind'   => __( 'Вид', 'trust' ),
+				'trust_author' => __( 'Автор отзыва', 'trust' ),
+			),
+			array( 'trust_status' => __( 'Статус', 'trust' ) )
+		);
 	}
 
 	/**
@@ -232,8 +214,7 @@ final class Reviews {
 				echo esc_html( self::author_line( $post_id ) );
 				break;
 			case 'trust_status':
-				$status = get_post_status( $post_id );
-				echo esc_html( self::STATUSES[ $status ] ?? $status );
+				echo esc_html( Admin::status_label( $post_id ) );
 				break;
 		}
 	}

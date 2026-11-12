@@ -9,7 +9,7 @@
 
 const { chromium } = require( 'playwright' );
 const path = require( 'path' );
-const { URL, OUT, check, finish, wp, clearLog, checkLog, login } = require( './lib' );
+const { URL, OUT, check, finish, wp, clearLog, checkLog, login, publishPost } = require( './lib' );
 
 const MARK = 'ТестОтзывов';
 
@@ -110,11 +110,8 @@ async function publish( page ) {
 		await page.locator( '.acf-field[data-name="trust_results"] .acf-button[data-event="add-row"]' ).first().click();
 		await page.locator( '.acf-field[data-name="trust_results"] .acf-row:not(.acf-clone) input[type="text"]' ).first().fill( '+100% заявок' );
 		await page.screenshot( { path: path.join( OUT, 'cases-reviews-review.png' ), fullPage: true } );
-		await page.click( '#publish' );
 		// SCF сначала проверяет поля запросом, потом отправляет форму.
-		await page.waitForURL( /post\.php\?post=\d+/, { timeout: 30000 } );
-		await page.waitForLoadState( 'load' );
-		const reviewId = new globalThis.URL( page.url() ).searchParams.get( 'post' );
+		const reviewId = await publishPost( page );
 		created.push( reviewId );
 		const saved = php( `echo wp_json_encode( array( get_the_title( ${ Number( reviewId ) } ), get_post_status( ${ Number( reviewId ) } ), get_field( 'trust_kind', ${ Number( reviewId ) } ), get_field( 'trust_results', ${ Number( reviewId ) } ) ) );` );
 		check( 'Текстовый отзыв сохранён: вид, результаты', saved[ 1 ] === 'publish' && saved[ 2 ] === 'text' && saved[ 3 ]?.[ 0 ]?.text === '+100% заявок', JSON.stringify( saved ) );
@@ -135,7 +132,7 @@ async function publish( page ) {
 		const r1 = await row( reviewId );
 		const r2 = await row( pendingId );
 		check( 'Колонки: вид, автор с компанией, статус', r1.kind === 'Текстовый' && r1.author === `${ MARK } Анна, ООО Проверка` && r1.status === 'Опубликован', JSON.stringify( r1 ) );
-		check( 'Отзыв на проверке: «Видео», «Борис, Директор», «На проверке»', r2.kind === 'Видео' && r2.author === 'Борис, Директор' && r2.status === 'На проверке', JSON.stringify( r2 ) );
+		check( 'Отзыв на утверждении: «Видео», «Борис, Директор», «На утверждении»', r2.kind === 'Видео' && r2.author === 'Борис, Директор' && r2.status === 'На утверждении', JSON.stringify( r2 ) );
 
 		// --- Кейс: боковая панель редактора блоков ---
 		const repairId = wp( 'post', 'list', '--post_type=case', '--name=novyy-sayt-i-seo-dlya-kompanii-po-remontu-kvartir', '--field=ID' );

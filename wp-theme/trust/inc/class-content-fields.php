@@ -20,9 +20,9 @@ defined( 'ABSPATH' ) || exit;
 final class Content_Fields {
 
 	/**
-	 * Группы полей. Пополняется на шаге 2.4 (сотрудники, вакансии, вопросы).
+	 * Группы полей: тип записи или таксономия => файл inc/fields/content/<имя>.php.
 	 */
-	private const GROUPS = array( 'post', 'category', 'case', 'review' );
+	private const GROUPS = array( 'post', 'category', 'case', 'review', 'team', 'vacancy', 'question' );
 
 	/**
 	 * Регистрирует хуки.

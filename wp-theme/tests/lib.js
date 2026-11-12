@@ -218,8 +218,33 @@ function setSettings( values ) {
 	wp( 'eval', `foreach ( json_decode( base64_decode( '${ b64 }' ), true ) as $n => $v ) { update_field( Trust\\Fields::key( Trust\\Settings::PREFIX, $n ), $v, 'option' ); }` );
 }
 
+/**
+ * Нажимает «Опубликовать» на классическом экране и ждёт перехода на страницу записи.
+ * Если SCF не пропустил форму — ошибка с его сообщениями.
+ *
+ * @return {Promise<string>} ID сохранённой записи.
+ */
+async function publishPost( page ) {
+	// Пока WordPress автосохраняет черновик, кнопка помечена disabled и нажатие игнорируется.
+	for ( let attempt = 0; attempt < 3; attempt++ ) {
+		await page.waitForFunction( () => ! document.querySelector( '#publish' ).classList.contains( 'disabled' ), null, { timeout: 15000 } );
+		await page.click( '#publish' );
+		try {
+			await page.waitForURL( /post\.php\?post=\d+/, { timeout: 10000 } );
+			await page.waitForLoadState( 'load' );
+			return new globalThis.URL( page.url() ).searchParams.get( 'post' );
+		} catch ( e ) {
+			const messages = await page.locator( '.acf-notice.-error, .acf-error-message, .notice-error' ).allInnerTexts();
+			if ( messages.length ) {
+				throw new Error( `Запись не сохранилась: ${ messages.join( ' | ' ) }` );
+			}
+		}
+	}
+	throw new Error( 'Запись не сохранилась: нажатие «Опубликовать» не сработало три раза' );
+}
+
 module.exports = {
 	URL, DEV_DIR, LOG, OUT, REPO, THEME,
 	check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser,
-	routeMockupFonts, mockupUrl, comparePng, settle, isolate, getSettings, setSettings,
+	routeMockupFonts, mockupUrl, comparePng, settle, isolate, getSettings, setSettings, publishPost,
 };

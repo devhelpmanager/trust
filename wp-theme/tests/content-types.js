@@ -192,7 +192,12 @@ function registry() {
 		const admin = await browser.newPage( { viewport: { width: 1440, height: 1000 } } );
 		const adminErrors = [];
 		admin.on( 'pageerror', ( e ) => adminErrors.push( e.message ) );
-		const menu = async () => ( await admin.locator( '#adminmenu .wp-menu-name' ).allInnerTexts() ).map( ( s ) => s.replace( /\s*\d+\s*$/, '' ).trim() );
+		// Название пункта без счётчика «на утверждении» (он внутри .awaiting-mod).
+		const menu = async () => admin.locator( '#adminmenu .wp-menu-name' ).evaluateAll( ( els ) => els.map( ( el ) => {
+			const copy = el.cloneNode( true );
+			copy.querySelectorAll( '.awaiting-mod, .update-plugins' ).forEach( ( bubble ) => bubble.remove() );
+			return copy.textContent.trim();
+		} ) );
 		const ALL = [ 'Заявки', 'Статьи', 'Вопросы SEO', 'Кейсы', 'Отзывы', 'Сотрудники', 'Вакансии' ];
 
 		await login( admin );

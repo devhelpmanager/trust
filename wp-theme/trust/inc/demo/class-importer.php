@@ -131,10 +131,11 @@ final class Importer {
 	}
 
 	/**
-	 * Создаёт демо-записи типа из demo/<файл>.php: заголовок, анонс, текст, поля темы, термины.
+	 * Создаёт демо-записи типа из demo/<файл>.php: заголовок, анонс, текст, поля темы, термины;
+	 * необязательно — slug (адрес), date (дата публикации), menu_order (порядок), status.
 	 *
 	 * Демо-запись обновляется, если её не меняли вручную (отпечаток учитывает и поля).
-	 * Новые записи получают даты по порядку файла: первая — самая новая, поэтому в списках
+	 * Записи без даты получают даты по порядку файла: первая — самая новая, поэтому в списках
 	 * они идут как в макете.
 	 *
 	 * @param string $type Тип записи.
@@ -164,17 +165,27 @@ final class Importer {
 				'post_title'   => $item['title'],
 				'post_excerpt' => $item['excerpt'] ?? '',
 				'post_content' => $item['content'] ?? '',
+				'menu_order'   => $item['menu_order'] ?? 0,
 			);
+			if ( isset( $item['date'] ) ) {
+				$data['post_date']     = $item['date'];
+				$data['post_date_gmt'] = get_gmt_from_date( $item['date'] );
+			}
 
 			if ( $demo ) {
 				$data['ID'] = $demo->ID;
 				wp_update_post( wp_slash( $data ) );
 				$id = $demo->ID;
 			} else {
-				$data['post_status']   = $item['status'] ?? 'publish';
-				$data['post_date_gmt'] = gmdate( 'Y-m-d H:i:s', $now - ( $index + 1 ) * HOUR_IN_SECONDS );
-				$data['post_date']     = get_date_from_gmt( $data['post_date_gmt'] );
-				$id                    = wp_insert_post( wp_slash( $data ), true );
+				$data['post_status'] = $item['status'] ?? 'publish';
+				if ( isset( $item['slug'] ) ) {
+					$data['post_name'] = $item['slug'];
+				}
+				if ( ! isset( $item['date'] ) ) {
+					$data['post_date_gmt'] = gmdate( 'Y-m-d H:i:s', $now - ( $index + 1 ) * HOUR_IN_SECONDS );
+					$data['post_date']     = get_date_from_gmt( $data['post_date_gmt'] );
+				}
+				$id = wp_insert_post( wp_slash( $data ), true );
 				if ( is_wp_error( $id ) ) {
 					$result['skipped'][] = $key;
 					continue;
@@ -354,7 +365,8 @@ final class Importer {
 		}
 
 		foreach ( self::resolve_links( $data['fields'] ) as $name => $value ) {
-			if ( get_term_meta( $term_id, $name, true ) !== $value ) {
+			$current = get_term_meta( $term_id, $name, true );
+			if ( is_scalar( $value ) ? (string) $current !== (string) $value : $current !== $value ) {
 				update_field( Fields::key( $taxonomy, $name ), $value, 'term_' . $term_id );
 				$changed = true;
 			}
@@ -603,7 +615,8 @@ final class Importer {
 
 	/**
 	 * Заменяет {page:адрес} ссылкой на страницу, {page_id:адрес} — её ID, {post:тип:ключ} — ID
-	 * демо-записи (рекурсивно в массивах; {page:…} — и внутри текста).
+	 * демо-записи, {term_id:таксономия:ключ} — ID демо-термина (рекурсивно в массивах;
+	 * {page:…} — и внутри текста).
 	 * Поэтому страницы импортируются раньше настроек.
 	 *
 	 * @param mixed $value Значение из демо-данных.
@@ -619,6 +632,10 @@ final class Importer {
 		if ( preg_match( '~^\{post:([a-z_]+):([a-z0-9-]+)\}$~', $value, $m ) ) {
 			$post = self::find_demo_post( $m[1], $m[2] );
 			return $post ? $post->ID : 0;
+		}
+		if ( preg_match( '~^\{term_id:([a-z_]+):([a-z0-9-]+)\}$~', $value, $m ) ) {
+			$term = self::find_demo_term( $m[1], $m[1] . ':' . $m[2] );
+			return $term ? $term->term_id : 0;
 		}
 		if ( preg_match( '~^\{page(_id)?:([a-z0-9/-]+)\}$~', $value, $m ) ) {
 			$page = get_page_by_path( $m[2] );

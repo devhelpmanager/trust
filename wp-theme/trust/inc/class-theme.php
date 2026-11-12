@@ -29,6 +29,10 @@ final class Theme {
 		Blog::register();
 		Cases::register();
 		Reviews::register();
+		Team::register();
+		Vacancies::register();
+		Questions::register();
+		Admin::register();
 		Settings::register();
 		Blocks::register();
 
