@@ -20,9 +20,9 @@ defined( 'ABSPATH' ) || exit;
 final class Content_Fields {
 
 	/**
-	 * Группы полей. Пополняется на шагах 2.3 и 2.4 (кейсы, отзывы, сотрудники…).
+	 * Группы полей. Пополняется на шаге 2.4 (сотрудники, вакансии, вопросы).
 	 */
-	private const GROUPS = array( 'post', 'category' );
+	private const GROUPS = array( 'post', 'category', 'case', 'review' );
 
 	/**
 	 * Регистрирует хуки.

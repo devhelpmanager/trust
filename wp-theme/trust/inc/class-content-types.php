@@ -28,6 +28,12 @@ defined( 'ABSPATH' ) || exit;
 final class Content_Types {
 
 	/**
+	 * Типы записей из одних полей (без текста в редакторе) открываются на классическом
+	 * экране: заголовок и поля на одной странице, а не под пустым холстом редактора блоков.
+	 */
+	private const CLASSIC_EDITOR = array( 'review', 'team', 'vacancy' );
+
+	/**
 	 * Регистрирует хуки.
 	 */
 	public static function register(): void {
@@ -36,6 +42,17 @@ final class Content_Types {
 		add_filter( 'post_type_labels_post', array( self::class, 'post_labels' ) );
 		add_filter( 'taxonomy_labels_post_tag', array( self::class, 'tag_labels' ) );
 		add_filter( 'taxonomy_labels_category', array( self::class, 'category_labels' ) );
+		add_filter( 'use_block_editor_for_post_type', array( self::class, 'use_block_editor' ), 10, 2 );
+	}
+
+	/**
+	 * Редактор блоков — только у типов записей с содержимым из блоков.
+	 *
+	 * @param bool   $use_block_editor Использовать ли редактор блоков.
+	 * @param string $post_type        Тип записи.
+	 */
+	public static function use_block_editor( $use_block_editor, $post_type ) {
+		return in_array( $post_type, self::CLASSIC_EDITOR, true ) ? false : $use_block_editor;
 	}
 
 	/**

@@ -24,11 +24,19 @@ defined( 'ABSPATH' ) || exit;
 final class Demo_Command {
 
 	/**
+	 * Демо-записи по типам: тип => array( файл в demo/, подпись ). Порядок — порядок импорта.
+	 */
+	private const POSTS = array(
+		'review' => array( 'reviews', 'Отзывы' ),
+		'case'   => array( 'cases', 'Кейсы' ),
+	);
+
+	/**
 	 * Импортирует демо-контент.
 	 *
 	 * Сейчас импортируются «Настройки сайта» (заглушки из макетов), страницы из меню,
 	 * меню шапки и подвала, политика конфиденциальности, рубрики и теги блога, услуги,
-	 * отрасли, отделы и темы вопросов. Повторный импорт не создаёт дублей и не трогает то, что изменено
+	 * отрасли, отделы и темы вопросов, отзывы и кейсы. Повторный импорт не создаёт дублей и не трогает то, что изменено
 	 * вручную; демо-меню не ставится в область, где уже есть своё меню.
 	 *
 	 * ## EXAMPLES
@@ -60,6 +68,13 @@ final class Demo_Command {
 		WP_CLI::log( sprintf( 'Термины: создано %d, обновлено %d.', count( $terms['created'] ), count( $terms['updated'] ) ) );
 		self::log_list( 'Пропущены (изменены вручную или уже есть свои)', $terms['skipped'] );
 
+		// Отзывы раньше кейсов: кейс ссылается на отзыв клиента.
+		foreach ( self::POSTS as $type => list( $file, $label ) ) {
+			$posts = Importer::import_posts( $type, $file );
+			WP_CLI::log( sprintf( '%s: создано %d, обновлено %d.', $label, count( $posts['created'] ), count( $posts['updated'] ) ) );
+			self::log_list( 'Пропущены (изменены вручную)', $posts['skipped'] );
+		}
+
 		WP_CLI::success( 'Демо-контент импортирован.' );
 	}
 
@@ -75,6 +90,12 @@ final class Demo_Command {
 	 */
 	public function remove( array $args, array $assoc_args ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- сигнатура команды WP-CLI.
 		self::require_scf();
+
+		foreach ( array_reverse( self::POSTS, true ) as $type => list( , $label ) ) {
+			$posts = Importer::remove_posts( $type );
+			WP_CLI::log( sprintf( '%s: удалено %d.', $label, count( $posts['removed'] ) ) );
+			self::log_list( 'Оставлены (изменены вручную)', $posts['kept'] );
+		}
 
 		$terms = Importer::remove_terms();
 		WP_CLI::log( sprintf( 'Термины: удалено %d.', count( $terms['removed'] ) ) );

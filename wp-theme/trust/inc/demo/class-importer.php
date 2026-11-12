@@ -131,6 +131,113 @@ final class Importer {
 	}
 
 	/**
+	 * Создаёт демо-записи типа из demo/<файл>.php: заголовок, анонс, текст, поля темы, термины.
+	 *
+	 * Демо-запись обновляется, если её не меняли вручную (отпечаток учитывает и поля).
+	 * Новые записи получают даты по порядку файла: первая — самая новая, поэтому в списках
+	 * они идут как в макете.
+	 *
+	 * @param string $type Тип записи.
+	 * @param string $file Файл данных в папке demo/ без .php.
+	 * @return array{created: string[], updated: string[], skipped: string[]}
+	 */
+	public static function import_posts( string $type, string $file ): array {
+		$items  = require TRUST_DIR . '/demo/' . $file . '.php';
+		$result = array(
+			'created' => array(),
+			'updated' => array(),
+			'skipped' => array(),
+		);
+		$now    = time();
+
+		foreach ( $items as $index => $item ) {
+			$key  = $item['key'];
+			$demo = self::find_demo_post( $type, $key );
+
+			if ( $demo && self::post_hash( $demo ) !== get_post_meta( $demo->ID, self::META_HASH, true ) ) {
+				$result['skipped'][] = $key;
+				continue;
+			}
+
+			$data = array(
+				'post_type'    => $type,
+				'post_title'   => $item['title'],
+				'post_excerpt' => $item['excerpt'] ?? '',
+				'post_content' => $item['content'] ?? '',
+			);
+
+			if ( $demo ) {
+				$data['ID'] = $demo->ID;
+				wp_update_post( wp_slash( $data ) );
+				$id = $demo->ID;
+			} else {
+				$data['post_status']   = $item['status'] ?? 'publish';
+				$data['post_date_gmt'] = gmdate( 'Y-m-d H:i:s', $now - ( $index + 1 ) * HOUR_IN_SECONDS );
+				$data['post_date']     = get_date_from_gmt( $data['post_date_gmt'] );
+				$id                    = wp_insert_post( wp_slash( $data ), true );
+				if ( is_wp_error( $id ) ) {
+					$result['skipped'][] = $key;
+					continue;
+				}
+				update_post_meta( $id, self::META_ID, $type . ':' . $key );
+			}
+
+			foreach ( $item['terms'] ?? array() as $taxonomy => $keys ) {
+				$term_ids = array();
+				foreach ( $keys as $term_key ) {
+					$term = self::find_demo_term( $taxonomy, $taxonomy . ':' . $term_key );
+					if ( $term ) {
+						$term_ids[] = $term->term_id;
+					}
+				}
+				wp_set_object_terms( $id, $term_ids, $taxonomy );
+			}
+
+			foreach ( self::resolve_links( $item['fields'] ?? array() ) as $name => $value ) {
+				update_field( Fields::key( $type, $name ), $value, $id );
+			}
+
+			update_post_meta( $id, self::META_HASH, self::post_hash( get_post( $id ) ) );
+			$result[ $demo ? 'updated' : 'created' ][] = $key;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Удаляет демо-записи типа, которые не меняли вручную.
+	 *
+	 * @param string $type Тип записи.
+	 * @return array{removed: string[], kept: string[]}
+	 */
+	public static function remove_posts( string $type ): array {
+		$result = array(
+			'removed' => array(),
+			'kept'    => array(),
+		);
+		$posts  = get_posts(
+			array(
+				'post_type'   => $type,
+				'post_status' => 'any',
+				'numberposts' => -1,
+				'meta_key'    => self::META_ID, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- разовая команда WP-CLI.
+			)
+		);
+
+		foreach ( $posts as $post ) {
+			$id = (string) get_post_meta( $post->ID, self::META_ID, true );
+			if ( self::post_hash( $post ) === get_post_meta( $post->ID, self::META_HASH, true ) ) {
+				wp_delete_post( $post->ID, true );
+				$result['removed'][] = $id;
+			} else {
+				$result['kept'][] = $id;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Удаляет демо-страницы, которые не меняли вручную (вложенные — первыми).
 	 *
 	 * @return array{removed: string[], kept: string[]}
@@ -314,14 +421,9 @@ final class Importer {
 	 */
 	private static function term_hash( \WP_Term $term ): string {
 		$source = $term->name . "\n" . $term->slug . "\n" . $term->description;
-		$fields = array_filter(
-			(array) get_term_meta( $term->term_id ),
-			static fn( $key ): bool => str_starts_with( (string) $key, 'trust_' ),
-			ARRAY_FILTER_USE_KEY
-		);
+		$fields = self::theme_meta( (array) get_term_meta( $term->term_id ) );
 
 		if ( $fields ) {
-			ksort( $fields );
 			$source .= "\n" . wp_json_encode( $fields );
 		}
 		return md5( $source );
@@ -462,7 +564,28 @@ final class Importer {
 	 * @param \WP_Post $post Запись.
 	 */
 	private static function post_hash( \WP_Post $post ): string {
-		return md5( $post->post_title . "\n" . $post->post_content );
+		$source = $post->post_title . "\n" . $post->post_content;
+		$fields = self::theme_meta( (array) get_post_meta( $post->ID ) );
+
+		// У страниц нет анонса и полей темы — их отпечаток не меняется.
+		if ( '' !== $post->post_excerpt ) {
+			$source .= "\n" . $post->post_excerpt;
+		}
+		if ( $fields ) {
+			$source .= "\n" . wp_json_encode( $fields );
+		}
+		return md5( $source );
+	}
+
+	/**
+	 * Метаполя полей темы (trust_…) — для отпечатков записей и терминов.
+	 *
+	 * @param array $meta Все метаполя.
+	 */
+	private static function theme_meta( array $meta ): array {
+		$fields = array_filter( $meta, static fn( $key ): bool => str_starts_with( (string) $key, 'trust_' ), ARRAY_FILTER_USE_KEY );
+		ksort( $fields );
+		return $fields;
 	}
 
 	/**
@@ -479,8 +602,8 @@ final class Importer {
 	}
 
 	/**
-	 * Заменяет {page:адрес} ссылкой на страницу, {page_id:адрес} — её ID (рекурсивно в массивах;
-	 * {page:…} — и внутри текста).
+	 * Заменяет {page:адрес} ссылкой на страницу, {page_id:адрес} — её ID, {post:тип:ключ} — ID
+	 * демо-записи (рекурсивно в массивах; {page:…} — и внутри текста).
 	 * Поэтому страницы импортируются раньше настроек.
 	 *
 	 * @param mixed $value Значение из демо-данных.
@@ -492,6 +615,10 @@ final class Importer {
 		}
 		if ( ! is_string( $value ) ) {
 			return $value;
+		}
+		if ( preg_match( '~^\{post:([a-z_]+):([a-z0-9-]+)\}$~', $value, $m ) ) {
+			$post = self::find_demo_post( $m[1], $m[2] );
+			return $post ? $post->ID : 0;
 		}
 		if ( preg_match( '~^\{page(_id)?:([a-z0-9/-]+)\}$~', $value, $m ) ) {
 			$page = get_page_by_path( $m[2] );

@@ -27,6 +27,8 @@ final class Theme {
 		Content_Types::register();
 		Content_Fields::register();
 		Blog::register();
+		Cases::register();
+		Reviews::register();
 		Settings::register();
 		Blocks::register();
 
