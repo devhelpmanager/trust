@@ -21,6 +21,8 @@
 	margin: -12px 0;
 }
 
+/* H1 — отдельной строкой на всю ширину (правка заказчика: в макете он в колонке шириной 780 px
+   рядом с кнопками и переносился, хотя помещался в строку); ниже — текст и кнопки. */
 .b-hero-service__row {
 	display: flex;
 	flex-wrap: wrap;
@@ -29,17 +31,9 @@
 	gap: 28px 48px;
 }
 
-.b-hero-service__text {
-	display: flex;
-	flex: 1 1 520px;
-	flex-direction: column;
-	gap: 20px;
-	max-width: 780px;
-	min-width: 0;
-}
-
 .b-hero-service__title {
-	margin: 0;
+	flex: 0 0 100%;
+	margin: 0 0 -8px; /* до текста — 20 px, как в макете */
 	font-family: var(--f-display);
 	font-size: var(--fs-h1);
 	font-weight: 600;
@@ -49,6 +43,9 @@
 }
 
 .b-hero-service__lead {
+	flex: 1 1 520px;
+	max-width: 780px;
+	min-width: 0;
 	margin: 0;
 	font-size: 19px;
 	line-height: 1.55;

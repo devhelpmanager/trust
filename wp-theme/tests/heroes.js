@@ -16,7 +16,7 @@
  *   o-nas/o-kompanii.html, o-nas/komanda.html, o-nas/karera.html на 1280, 768 и 390 px;
  * - редактор: блоки в категории «Первые экраны», превью с крошками и H1 страницы;
  * - демо-импорт: страница, сохранённая в редакторе без правок, обновляется; с ручной правкой —
- *   пропускается, а с --force=<адрес> — обновляется.
+ *   пропускается, а с --force=<адрес> — обновляется; --force без списка обновляет всё демо.
  */
 
 const path = require( 'path' );
@@ -239,6 +239,17 @@ async function hideHeader( page ) {
 			log = wp( 'trust', 'demo', 'import', '--force=karera' );
 		}
 		check( 'Ручная правка: импорт пропускает страницу; --force=karera возвращает демо-контент', skipped && /Обновлены принудительно[^\n]*karera/.test( log ) && ! wp( 'post', 'get', careerId, '--field=post_content' ).includes( 'Ручная правка' ), log.split( '\n' ).slice( 0, 3 ).join( ' | ' ) );
+
+		// --force без списка (этап разработки): всё демо — заново, включая записи, настройки и меню.
+		const repair = wp( 'post', 'list', '--post_type=case', '--meta_key=_trust_demo_id', '--meta_value=case:repair', '--field=ID' );
+		const repairTitle = wp( 'post', 'get', repair, '--field=post_title' );
+		const brand = wp( 'eval', 'echo Trust\\Settings::brand();' );
+		wp( 'post', 'update', repair, '--post_title=Правка кейса' );
+		wp( 'eval', 'update_field( Trust\\Fields::key( Trust\\Settings::PREFIX, "company_brand" ), "Правка бренда", "option" );' );
+		log = wp( 'trust', 'demo', 'import', '--force' );
+		const menus = JSON.parse( wp( 'eval', 'echo wp_json_encode( array( count( wp_get_nav_menus() ), array_keys( array_filter( (array) get_theme_mod( "nav_menu_locations" ) ) ) ) );' ) );
+		check( '--force без списка: кейс и настройки — снова демо, демо-меню пересозданы без дублей', wp( 'post', 'get', repair, '--field=post_title' ) === repairTitle &&
+			wp( 'eval', 'echo Trust\\Settings::brand();' ) === brand && menus[ 0 ] === 4 && menus[ 1 ].length === 4 && /Режим --force/.test( log ), `${ log.split( '\n' ).slice( 0, 1 ) } ${ JSON.stringify( menus ) }` );
 	} finally {
 		created.forEach( ( id ) => wp( 'post', 'delete', id, '--force' ) );
 		await browser.close();

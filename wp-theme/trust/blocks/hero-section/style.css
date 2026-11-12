@@ -58,11 +58,11 @@
 	padding: clamp(28px, 5vw, 56px);
 }
 
+/* H1 — на всю ширину карточки (правка заказчика); текст — не шире 820 px, как в макете */
 .b-hero-section__head {
 	display: flex;
 	flex-direction: column;
 	gap: 18px;
-	max-width: 820px;
 }
 
 .b-hero-section__badge {
@@ -89,6 +89,7 @@
 }
 
 .b-hero-section__lead {
+	max-width: 820px;
 	margin: 0;
 	font-size: clamp(16px, 1.7vw, 19px);
 	line-height: 1.6;
@@ -114,7 +115,9 @@
 	border-color: rgba(255, 255, 255, 0.6);
 }
 
-/* Цифры: значение над подписью (в разметке подпись <dt> идёт первой) */
+/* Цифры: значение над подписью (в разметке подпись <dt> идёт первой). Значения прижаты к верху —
+   стоят на одной линии, даже если подпись у одной цифры в две строки (в макете прижаты к низу,
+   и значение над длинной подписью поднималось выше соседних — правка заказчика). */
 .b-hero-section__stats {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
@@ -125,6 +128,7 @@
 .b-hero-section__stat {
 	display: flex;
 	flex-direction: column-reverse;
+	justify-content: flex-end;
 	gap: 6px;
 	padding-top: 18px;
 	border-top: 1px solid rgba(255, 255, 255, 0.18);

@@ -44,14 +44,17 @@ final class Demo_Command {
 	 *
 	 * ## OPTIONS
 	 *
-	 * [--force=<paths>]
-	 * : Страницы через запятую (адреса из demo/pages.php, например seo/audit,karera), которые
-	 * обновить, даже если их меняли вручную: ручные правки на них будут заменены демо-контентом.
+	 * [--force[=<items>]]
+	 * : Обновить демо-контент, даже если его меняли вручную (ручные правки будут заменены).
+	 * Без значения — весь: страницы, записи, термины, настройки и демо-меню (для этапа
+	 * разработки). Со значением — только перечисленное через запятую: адреса страниц
+	 * (seo/audit), ключи записей (repair), термины (service_type:seo), имена настроек.
 	 *
 	 * ## EXAMPLES
 	 *
 	 *     wp trust demo import
-	 *     wp trust demo import --force=seo/audit,karera
+	 *     wp trust demo import --force
+	 *     wp trust demo import --force=seo/audit,karera,repair
 	 *
 	 * @param array $args       Позиционные аргументы (не используются).
 	 * @param array $assoc_args Именованные аргументы: force.
@@ -59,7 +62,13 @@ final class Demo_Command {
 	public function import( array $args, array $assoc_args ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundBeforeLastUsed -- сигнатура команды WP-CLI.
 		self::require_scf();
 
-		$force = array_values( array_filter( array_map( static fn( $path ) => trim( (string) $path, " /\t" ), explode( ',', (string) ( $assoc_args['force'] ?? '' ) ) ) ) );
+		$force = $assoc_args['force'] ?? '';
+		if ( true !== $force ) {
+			$force = array_values( array_filter( array_map( static fn( $item ) => trim( (string) $item, " /\t" ), explode( ',', (string) $force ) ) ) );
+		}
+		if ( true === $force ) {
+			WP_CLI::log( 'Режим --force: весь демо-контент будет обновлён, ручные правки заменены.' );
+		}
 
 		// Сначала страницы: на них ссылаются настройки и меню.
 		$pages = Importer::import_pages( $force );
@@ -69,25 +78,31 @@ final class Demo_Command {
 		WP_CLI::log( sprintf( 'Страницы: создано %d, обновлено %d.', count( $pages['created'] ), count( $pages['updated'] ) ) );
 		self::log_list( 'Пропущены (изменены вручную или уже есть свои)', $pages['skipped'] );
 
-		$settings = Importer::import_settings();
+		$settings = Importer::import_settings( $force );
 		WP_CLI::log( sprintf( 'Настройки сайта: записано %d.', count( $settings['written'] ) ) );
 		self::log_list( 'Пропущены (изменены вручную)', $settings['skipped'] );
 
+		// Демо-меню создаются один раз; в режиме --force — заново (свои меню в областях не трогаются).
+		if ( true === $force ) {
+			Importer::remove_menus();
+		}
 		$menus = Importer::import_menus();
 		WP_CLI::log( sprintf( 'Меню: создано %d.', count( $menus['created'] ) ) );
 		self::log_list( 'Пропущены (уже импортированы или в области стоит своё меню)', $menus['skipped'] );
 
 		WP_CLI::log( 'Политика конфиденциальности: ' . Importer::import_privacy_page() . '.' );
 
-		$terms = Importer::import_terms();
+		$terms = Importer::import_terms( $force );
 		WP_CLI::log( sprintf( 'Термины: создано %d, обновлено %d.', count( $terms['created'] ), count( $terms['updated'] ) ) );
 		self::log_list( 'Пропущены (изменены вручную или уже есть свои)', $terms['skipped'] );
+		self::log_list( 'Обновлены принудительно', $terms['forced'] );
 
 		// Сотрудники и отзывы раньше кейсов и вопросов: те ссылаются на них.
 		foreach ( self::POSTS as $type => list( $file, $label ) ) {
-			$posts = Importer::import_posts( $type, $file );
+			$posts = Importer::import_posts( $type, $file, $force );
 			WP_CLI::log( sprintf( '%s: создано %d, обновлено %d.', $label, count( $posts['created'] ), count( $posts['updated'] ) ) );
 			self::log_list( 'Пропущены (изменены вручную)', $posts['skipped'] );
+			self::log_list( 'Обновлены принудительно', $posts['forced'] );
 		}
 
 		// Второй проход по терминам: поля, которые ссылаются на записи («Ведёт рубрику»).

@@ -60,10 +60,10 @@ final class Importer {
 	 * содержимое. В блоках есть ссылки {page:…} на страницы, которые идут в списке ниже
 	 * (из «Аудита» — на «Вопросы SEO»): к моменту заполнения все они уже существуют.
 	 *
-	 * @param string[] $force Адреса страниц, которые обновить, даже если их меняли вручную.
+	 * @param bool|string[] $force Обновить, даже если меняли вручную: true — все, иначе — адреса.
 	 * @return array{created: string[], updated: string[], skipped: string[], forced: string[]}
 	 */
-	public static function import_pages( array $force = array() ): array {
+	public static function import_pages( $force = array() ): array {
 		$pages  = require TRUST_DIR . '/demo/pages.php';
 		$result = array(
 			'created' => array(),
@@ -82,7 +82,7 @@ final class Importer {
 
 			if ( $demo ) {
 				if ( self::post_hash( $demo ) !== get_post_meta( $demo->ID, self::META_HASH, true ) ) {
-					if ( ! in_array( $path, $force, true ) ) {
+					if ( ! self::is_forced( $force, $path ) ) {
 						$result['skipped'][] = $path;
 						continue;
 					}
@@ -158,16 +158,18 @@ final class Importer {
 	 * Записи без даты получают даты по порядку файла: первая — самая новая, поэтому в списках
 	 * они идут как в макете.
 	 *
-	 * @param string $type Тип записи.
-	 * @param string $file Файл данных в папке demo/ без .php.
-	 * @return array{created: string[], updated: string[], skipped: string[]}
+	 * @param string        $type  Тип записи.
+	 * @param string        $file  Файл данных в папке demo/ без .php.
+	 * @param bool|string[] $force Обновить, даже если меняли вручную: true — все, иначе — ключи.
+	 * @return array{created: string[], updated: string[], skipped: string[], forced: string[]}
 	 */
-	public static function import_posts( string $type, string $file ): array {
+	public static function import_posts( string $type, string $file, $force = array() ): array {
 		$items  = require TRUST_DIR . '/demo/' . $file . '.php';
 		$result = array(
 			'created' => array(),
 			'updated' => array(),
 			'skipped' => array(),
+			'forced'  => array(),
 		);
 		$now    = time();
 
@@ -176,8 +178,11 @@ final class Importer {
 			$demo = self::find_demo_post( $type, $key );
 
 			if ( $demo && self::post_hash( $demo ) !== get_post_meta( $demo->ID, self::META_HASH, true ) ) {
-				$result['skipped'][] = $key;
-				continue;
+				if ( ! self::is_forced( $force, $key ) ) {
+					$result['skipped'][] = $key;
+					continue;
+				}
+				$result['forced'][] = $key;
 			}
 
 			$data = array(
@@ -316,14 +321,16 @@ final class Importer {
 	 * Демо-термин обновляется, если его не меняли вручную. Если термин с таким названием
 	 * уже есть и он не демо, он не трогается.
 	 *
-	 * @return array{created: string[], updated: string[], skipped: string[]}
+	 * @param bool|string[] $force Обновить, даже если меняли вручную: true — все, иначе — «таксономия:ключ».
+	 * @return array{created: string[], updated: string[], skipped: string[], forced: string[]}
 	 */
-	public static function import_terms(): array {
+	public static function import_terms( $force = array() ): array {
 		$taxonomies = require TRUST_DIR . '/demo/terms.php';
 		$result     = array(
 			'created' => array(),
 			'updated' => array(),
 			'skipped' => array(),
+			'forced'  => array(),
 		);
 
 		foreach ( $taxonomies as $taxonomy => $terms ) {
@@ -336,10 +343,11 @@ final class Importer {
 				$demo = self::find_demo_term( $taxonomy, $id );
 
 				if ( $demo ) {
-					if ( self::term_hash( $demo ) !== get_term_meta( $demo->term_id, self::META_HASH, true ) ) {
+					$modified = self::term_hash( $demo ) !== get_term_meta( $demo->term_id, self::META_HASH, true );
+					if ( $modified && ! self::is_forced( $force, $id, (string) $key ) ) {
 						$result['skipped'][] = $id;
-					} elseif ( self::write_term( $demo->term_id, $taxonomy, $data ) ) {
-						$result['updated'][] = $id;
+					} elseif ( self::write_term( $demo->term_id, $taxonomy, $data ) || $modified ) {
+						$result[ $modified ? 'forced' : 'updated' ][] = $id;
 					}
 					continue;
 				}
@@ -576,6 +584,17 @@ final class Importer {
 	}
 
 	/**
+	 * Обновлять ли демо-элемент, даже если его меняли вручную: true — все, иначе — по списку
+	 * (адрес страницы, ключ записи, «таксономия:ключ» или ключ термина, имя настройки).
+	 *
+	 * @param bool|string[] $force Всё или список.
+	 * @param string        ...$keys Ключи элемента.
+	 */
+	private static function is_forced( $force, string ...$keys ): bool {
+		return true === $force || ( is_array( $force ) && array_intersect( $keys, $force ) );
+	}
+
+	/**
 	 * Переименование демо-страницы (поле was в demo/pages.php): уже созданная страница
 	 * получает новый ярлык и метку демо-данных. Заголовок меняется, если он прежний (не правился
 	 * вручную), — у неизменённой страницы его и текст затем обновит обычный импорт. Пункты меню,
@@ -802,9 +821,10 @@ final class Importer {
 	 * Поле заполняется, если оно пустое или в нём всё ещё значение прошлого демо-импорта.
 	 * Изменённое вручную поле пропускается.
 	 *
+	 * @param bool|string[] $force Записать, даже если меняли вручную: true — все, иначе — имена полей.
 	 * @return array{written: string[], skipped: string[]}
 	 */
-	public static function import_settings(): array {
+	public static function import_settings( $force = array() ): array {
 		$data   = require TRUST_DIR . '/demo/settings.php';
 		$record = (array) get_option( self::SETTINGS_RECORD, array() );
 		$result = array(
@@ -817,7 +837,7 @@ final class Importer {
 			$is_empty = self::is_empty( $current );
 			$is_demo  = isset( $record[ $name ] ) && self::hash( $current ) === $record[ $name ];
 
-			if ( ! $is_empty && ! $is_demo ) {
+			if ( ! $is_empty && ! $is_demo && ! self::is_forced( $force, $name ) ) {
 				$result['skipped'][] = $name;
 				continue;
 			}

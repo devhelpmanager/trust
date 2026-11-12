@@ -205,10 +205,26 @@ function comparePng( a, b, diffPath ) {
  * Правки макетов, согласованные с заказчиком после их экспорта (docs/inventory.md, раздел 12):
  * перед сравнением с темой они вносятся и в HTML-экспорт макета.
  * - Тексты: пункт меню «Сопровождение сайтов» переименован в «Поддержка сайтов».
- * - CSS по файлу макета: у «Вопрос-ответ» заголовок над вопросами на всех ширинах.
+ * - CSS по файлу макета: у «Вопрос-ответ» заголовок над вопросами на всех ширинах; у цифр
+ *   первого экрана раздела значения прижаты к верху (на одной линии при подписи в две строки);
+ *   H1 первых экранов — на всю ширину (у услуги — отдельной строкой над текстом и кнопками).
  */
 const MOCKUP_TEXTS = [ [ 'Сопровождение сайтов', 'Поддержка сайтов' ] ];
+const HERO_SECTION_CSS = `
+	.dc-hero-box dl > div { justify-content: flex-end !important; }
+	.dc-hero-in > div:first-child { max-width: none !important; }
+	.dc-hero-in > div:first-child > p { max-width: 820px !important; }
+`;
 const MOCKUP_CSS = {
+	'portfolio-blog-404/portfolio.html': HERO_SECTION_CSS,
+	'o-nas/o-kompanii.html': HERO_SECTION_CSS,
+	'o-nas/komanda.html': HERO_SECTION_CSS,
+	'o-nas/karera.html': HERO_SECTION_CSS,
+	'seo-stranitsa/index.html': `
+		main > section:first-of-type > div > div > div:first-child { display: contents !important; }
+		main > section:first-of-type h1 { flex: 0 0 100% !important; margin: 0 0 -8px !important; }
+		main > section:first-of-type h1 + p { flex: 1 1 520px !important; max-width: 780px !important; min-width: 0 !important; }
+	`,
 	'seo-bloki/10-vopros-otvet.html': `
 		section > div { flex-direction: column !important; flex-wrap: nowrap !important; align-items: stretch !important; gap: 40px !important; }
 		section > div > div:first-child { flex: none !important; max-width: 760px !important; }

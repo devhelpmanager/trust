@@ -130,11 +130,12 @@ sudo -u "$OWNER" -- wp --path="$SITE" trust demo import
 «Сопровождение сайтов» → «Поддержка сайтов», `/site-support/`) получает новый адрес, а пункты меню
 на неё — новый заголовок, если их не меняли вручную; редирект со старого адреса не создаётся.
 
-Обновить демо-страницы, которые меняли вручную (ручные правки на них будут заменены): адреса из
-`demo/pages.php` через запятую — импорт перечислит их в строке «Пропущены»:
+Обновить то, что меняли вручную (ручные правки будут заменены): `--force` без значения — весь
+демо-контент, со значением — перечисленное через запятую из строк «Пропущены»: адреса страниц,
+ключи записей, термины `таксономия:ключ`, имена настроек:
 
 ```bash
-sudo -u "$OWNER" -- wp --path="$SITE" trust demo import --force=seo/audit,karera
+sudo -u "$OWNER" -- wp --path="$SITE" trust demo import --force=seo/audit,karera,repair
 ``` Удалить демо-контент (изменённое вручную останется):
 
 ```bash
@@ -148,7 +149,7 @@ sudo -u "$OWNER" -- wp --path="$SITE" trust demo remove
 ```bash
 cat > /root/trust-update.sh <<'SH'
 #!/usr/bin/env bash
-# Обновление темы Trust из GitHub. Запуск: bash /root/trust-update.sh [--demo]
+# Обновление темы Trust из GitHub. Запуск: bash /root/trust-update.sh [--demo | --demo-force]
 set -euo pipefail
 SITE=/var/www/example_usr/data/www/example.ru
 OWNER=$(stat -c '%U' "$SITE/wp-config.php")
@@ -158,6 +159,8 @@ rsync -a --delete /root/trust/wp-theme/trust/ "$SITE/wp-content/themes/trust/"
 chown -R "$OWNER": "$SITE/wp-content/themes/trust"
 if [ "${1:-}" = "--demo" ]; then
 	sudo -u "$OWNER" -- wp --path="$SITE" trust demo import
+elif [ "${1:-}" = "--demo-force" ]; then
+	sudo -u "$OWNER" -- wp --path="$SITE" trust demo import --force
 fi
 echo "Тема обновлена: $(git -C /root/trust log --oneline -1)"
 SH
@@ -173,6 +176,14 @@ bash /root/trust-update.sh
 
 ```bash
 bash /root/trust-update.sh --demo
+```
+
+На этапе разработки, пока на сайте нет ценного контента, — `--demo-force`: весь демо-контент
+обновляется, даже если его меняли вручную (страницы, записи, термины, настройки из демо, демо-меню
+создаются заново). После запуска сайта этот ключ не использовать.
+
+```bash
+bash /root/trust-update.sh --demo-force
 ```
 
 Тема копируется, а не подключается символической ссылкой: некоторые панели управления
@@ -583,7 +594,8 @@ node wp-theme/tests/heroes.js
 стандартной шапки страницы, ширины 1280–280 px, зоны нажатия, axe-core, превью в редакторе (крошки
 без ссылок, H1 — заголовок страницы, второй такой блок вставить нельзя), совпадение с пятью макетами
 на 1280, 768 и 390 px и демо-импорт: страница, сохранённая в редакторе без правок, обновляется,
-с ручной правкой — пропускается, с `--force` — обновляется.
+с ручной правкой — пропускается, с `--force=<адрес>` — обновляется; `--force` без значения
+возвращает весь демо-контент (кейс, настройки, меню без дублей).
 
 Блок «Вопрос-ответ» (страница `/seo/audit/` из демо-контента):
 
