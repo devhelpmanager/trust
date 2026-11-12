@@ -5,7 +5,7 @@
  * Переменные: TRUST_URL (по умолчанию http://localhost:8080), TRUST_DEV_DIR (~/wp-dev).
  *
  * Проверяет:
- * - главная отвечает 200, <html lang="ru-RU">, подключён main.css и предзагрузка шрифтов;
+ * - главная отвечает 200, <html lang="ru"> (язык без страны, как в макетах), подключён main.css и предзагрузка шрифтов;
  * - нет emoji, jQuery, generator, RSD, shortlink, oEmbed-ссылок;
  * - шрифты темы загружаются, в консоли нет ошибок;
  * - ссылка «Перейти к содержимому» появляется при фокусе;
@@ -61,7 +61,7 @@ async function login( page ) {
 	check( 'Главная отвечает 200', response.status() === 200, String( response.status() ) );
 
 	const html = await page.content();
-	check( 'Язык страницы ru-RU', ( await page.getAttribute( 'html', 'lang' ) ) === 'ru-RU' );
+	check( 'Язык страницы ru (без страны, как в макетах)', ( await page.getAttribute( 'html', 'lang' ) ) === 'ru' );
 	check( 'Подключён main.css', /id=['"]trust-main-css['"]/.test( html ) );
 	check( 'Предзагрузка 2 шрифтов', ( html.match( /rel="preload"[^>]+as="font"/g ) || [] ).length === 2 );
 

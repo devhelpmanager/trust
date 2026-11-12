@@ -233,7 +233,7 @@ final class Graph {
 	 * Язык страницы: ru-RU.
 	 */
 	private static function language(): string {
-		return str_replace( '_', '-', get_locale() );
+		return \Trust\Setup::language();
 	}
 
 	/**

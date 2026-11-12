@@ -24,6 +24,27 @@ final class Setup {
 	 */
 	public static function register(): void {
 		add_action( 'after_setup_theme', array( self::class, 'setup' ) );
+		add_filter( 'language_attributes', array( self::class, 'language_attributes' ) );
+	}
+
+	/**
+	 * Язык сайта без страны: «ru», а не «ru-RU» (как в макетах и ТЗ). Аудитория — русскоязычные
+	 * клиенты по всему миру, поэтому язык не привязывается к России.
+	 */
+	public static function language(): string {
+		return strtok( (string) get_bloginfo( 'language' ), '-' );
+	}
+
+	/**
+	 * Атрибут lang у <html> на сайте — язык без страны (админка — как в WordPress).
+	 *
+	 * @param string $output Атрибуты lang и dir.
+	 */
+	public static function language_attributes( string $output ): string {
+		if ( is_admin() ) {
+			return $output;
+		}
+		return (string) preg_replace( '/\blang="[^"]*"/', 'lang="' . esc_attr( self::language() ) . '"', $output );
 	}
 
 	/**

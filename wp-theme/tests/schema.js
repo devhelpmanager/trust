@@ -97,7 +97,7 @@ function references( value, out = [] ) {
 			JSON.stringify( org ) );
 		check( 'Пустых свойств нет: без соцсетей и логотипа нет sameAs и logo', ! ( 'sameAs' in org ) && ! ( 'logo' in org ) );
 		const site = s.byType( 'WebSite' );
-		check( 'WebSite: адрес, имя, язык ru-RU, publisher → организация', site.inLanguage === 'ru-RU' && site.publisher[ '@id' ] === `${ URL }/#organization` );
+		check( 'WebSite: адрес, имя, язык ru, publisher → организация', site.inLanguage === 'ru' && site.publisher[ '@id' ] === `${ URL }/#organization` );
 
 		logoId = wp( 'media', 'import', path.join( THEME, 'screenshot.png' ), `--title=${ MARK } логотип`, '--porcelain' );
 		setSettings( {
@@ -122,7 +122,7 @@ function references( value, out = [] ) {
 		s = await schema( '/seo/audit/' );
 		const page = s.graph.find( ( n ) => [].concat( n[ '@type' ] ).includes( 'FAQPage' ) );
 		check( 'Услуга с блоком «Вопрос-ответ»: страница — ["WebPage","FAQPage"], имя = title, язык, isPartOf, даты',
-			JSON.stringify( page?.[ '@type' ] ) === '["WebPage","FAQPage"]' && page.name === 'Технический аудит сайта — [Бренд]' && page.inLanguage === 'ru-RU' && page.isPartOf[ '@id' ] === `${ URL }/#website` && !! page.datePublished && !! page.dateModified,
+			JSON.stringify( page?.[ '@type' ] ) === '["WebPage","FAQPage"]' && page.name === 'Технический аудит сайта — [Бренд]' && page.inLanguage === 'ru' && page.isPartOf[ '@id' ] === `${ URL }/#website` && !! page.datePublished && !! page.dateModified,
 			JSON.stringify( page && { type: page[ '@type' ], name: page.name } ) );
 		const visible = await fetch( `${ URL }/seo/audit/` ).then( ( r ) => r.text() ).then( ( html ) => [ ...html.matchAll( /<span class="b-faq__num">\d+<\/span>\s*<span>([^<]+)<\/span>/g ) ].map( ( m ) => m[ 1 ].trim() ) );
 		const names = page.mainEntity.map( ( q ) => q.name );
