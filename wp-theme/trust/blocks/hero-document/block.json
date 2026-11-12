@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/hero-document",
+	"title": "Первый экран документа",
+	"description": "Тёмный первый экран документа (оферта, политика, согласие): плашка, H1 — автоматически, даты редакции и вступления в силу, кнопки «Скачать PDF», «Распечатать», «Настроить cookie». Один на странице.",
+	"category": "trust-heroes",
+	"icon": "media-document",
+	"keywords": [ "первый экран", "hero", "документ", "оферта", "политика", "pdf" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false,
+		"multiple": false
+	},
+	"style": [ "trust-hero", "file:./style.css" ],
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

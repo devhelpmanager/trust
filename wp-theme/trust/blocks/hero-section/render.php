@@ -32,7 +32,7 @@ $trust_stats    = array_values(
 $trust_title_id = Blocks::uid( $block, 'title' );
 ?>
 <div class="b-hero-section">
-	<div class="b-hero-section__crumbs">
+	<div class="hero-crumbs">
 		<?php
 		if ( $is_preview ) {
 			Breadcrumbs::render_preview( (int) $post_id );
@@ -41,18 +41,18 @@ $trust_title_id = Blocks::uid( $block, 'title' );
 		}
 		?>
 	</div>
-	<section class="b-hero-section__section" aria-labelledby="<?php echo esc_attr( $trust_title_id ); ?>">
-		<div class="b-hero-section__box">
-			<span class="b-hero-section__circle b-hero-section__circle--top" aria-hidden="true"></span>
-			<span class="b-hero-section__circle b-hero-section__circle--bottom" aria-hidden="true"></span>
-			<div class="b-hero-section__in">
+	<section class="hero-sec" aria-labelledby="<?php echo esc_attr( $trust_title_id ); ?>">
+		<div class="hero-box">
+			<span class="hero-circle hero-circle--top" aria-hidden="true"></span>
+			<span class="hero-circle hero-circle--bottom" aria-hidden="true"></span>
+			<div class="hero-in b-hero-section__in">
 				<div class="b-hero-section__head">
 					<?php if ( '' !== $trust_badge ) : ?>
-						<span class="b-hero-section__badge"><?php echo esc_html( $trust_badge ); ?></span>
+						<span class="hero-badge"><?php echo esc_html( $trust_badge ); ?></span>
 					<?php endif; ?>
-					<h1 class="b-hero-section__title" id="<?php echo esc_attr( $trust_title_id ); ?>"><?php echo esc_html( '' !== $trust_h1 ? $trust_h1 : __( 'Заголовок страницы', 'trust' ) ); ?></h1>
+					<h1 class="hero-title" id="<?php echo esc_attr( $trust_title_id ); ?>"><?php echo esc_html( '' !== $trust_h1 ? $trust_h1 : __( 'Заголовок страницы', 'trust' ) ); ?></h1>
 					<?php if ( '' !== $trust_lead ) : ?>
-						<p class="b-hero-section__lead"><?php echo esc_html( $trust_lead ); ?></p>
+						<p class="hero-lead b-hero-section__lead"><?php echo esc_html( $trust_lead ); ?></p>
 					<?php endif; ?>
 					<?php if ( '' !== $trust_buttons ) : ?>
 						<div class="b-hero-section__buttons">

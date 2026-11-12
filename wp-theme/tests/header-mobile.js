@@ -87,10 +87,12 @@ async function compareState( page, name, themeAction, mockAction ) {
 	check( 'Повторное нажатие сворачивает раздел', ! ( await section( 'О нас' ).locator( '.mobile-nav__sub' ).isVisible() ) );
 
 	// --- Доступность с открытым меню ---
+	// Проверяется шапка с меню: страница под открытым меню перекрыта им, и axe принимал бы фон
+	// меню за фон текста страницы (крошки первого экрана «Контактов»).
 	await page.addScriptTag( { path: require.resolve( 'axe-core' ) } );
 	const axe = await page.evaluate( async () => {
-		const r = await window.axe.run( document, { resultTypes: [ 'violations' ] } );
-		return r.violations.filter( ( v ) => [ 'critical', 'serious' ].includes( v.impact ) ).map( ( v ) => `${ v.id } (${ v.nodes.length })` );
+		const r = await window.axe.run( document.querySelector( '.site-header' ), { resultTypes: [ 'violations' ] } );
+		return r.violations.filter( ( v ) => [ 'critical', 'serious' ].includes( v.impact ) ).map( ( v ) => `${ v.id } (${ v.nodes.length }: ${ v.nodes.map( ( n ) => n.target.join( ' ' ) + ' ' + ( n.any[ 0 ]?.message || '' ).slice( 0, 120 ) ).join( '; ' ) })` );
 	} );
 	check( 'axe с открытым меню: нет critical/serious', axe.length === 0, axe.join( ', ' ) );
 

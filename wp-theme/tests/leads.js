@@ -94,14 +94,15 @@ const meta = ( id, key ) => {
 			const fields = meta( leadId, 'trust_fields' );
 			const src = meta( leadId, 'trust_source' );
 			const consent = meta( leadId, 'trust_consent' );
-			const revision = wp( 'eval', 'echo get_post_modified_time( "Y-m-d", false, Trust\\Settings::get( "consent_page" ) );' );
+			// Дата редакции — «Редакция от» в первом экране страницы согласия (демо — 01.11.2026).
+			const revision = wp( 'eval', 'echo Trust\\Forms::consent_revision();' );
 			check( 'Заявка: заголовок «Обратный звонок: Анна», HTML вырезан', wp( 'post', 'get', leadId, '--field=post_title' ) === 'Обратный звонок: Анна' && meta( leadId, 'trust_name' ) === 'Анна' );
 			check( 'Заявка: поля с подписями', fields?.name?.label === 'Имя' && fields?.phone?.value === '+1 000 000 00 00' && meta( leadId, 'trust_contact' ) === '+1 000 000 00 00', JSON.stringify( fields ) );
 			check( 'Заявка: форма callback, статус «Новая»', meta( leadId, 'trust_form' ) === 'callback' && meta( leadId, 'trust_status' ) === 'new' );
 			check( 'Заявка: страница отправки и её название', meta( leadId, 'trust_page' ) === `${ URL }/kontakty/` && meta( leadId, 'trust_page_title' ) === 'Контакты' );
 			check( 'Заявка: UTM и источник; %-коды целы; лишние ключи отброшены', src?.utm_source === 'yandex' && src?.utm_campaign === 'seo-audit' && src?.referrer === source.referrer && src?.landing === source.landing && ! src?.evil, JSON.stringify( src ) );
 			check( 'Заявка: время первого визита — в часовом поясе сайта', src?.at === wp( 'eval', 'echo wp_date( "Y-m-d H:i:s", strtotime( "2026-11-12T08:00:00Z" ) );' ), src?.at );
-			check( 'Заявка: согласие — галочка, время, документ и дата его редакции', consent?.items?.[ 0 ] === 'Согласие на обработку персональных данных' && /^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$/.test( consent?.at ) && consent?.document === `${ URL }/soglasie-na-obrabotku-dannyh/` && consent?.revision === revision, JSON.stringify( consent ) );
+			check( 'Заявка: согласие — галочка, время, документ и дата его редакции', consent?.items?.[ 0 ] === 'Согласие на обработку персональных данных' && /^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$/.test( consent?.at ) && consent?.document === `${ URL }/soglasie-na-obrabotku-dannyh/` && consent?.revision === revision && '2026-11-01' === revision, JSON.stringify( consent ) );
 		}
 		r = await post( 'callback', { ...callback, page: 'https://evil.example/phish' } );
 		check( 'Страница чужого сайта не сохраняется', r.status === 200 && meta( String( r.body.lead ), 'trust_page' ) === '' );

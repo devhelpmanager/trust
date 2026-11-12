@@ -1,0 +1,65 @@
+/*
+ * Блок «Первый экран документа» (o-nas/oferta.html, politika-cookie.html, soglasie-pd.html).
+ * Крошки, карточка, плашка, H1 и кнопки — общие стили тёмной карточки (assets/css/hero.css).
+ *
+ * H1 — отдельной строкой на всю ширину (правка заказчика: в макете он в колонке рядом
+ * с кнопками); под ним даты слева и кнопки справа, на узком экране кнопки — под датами.
+ */
+
+.b-hero-document__circle {
+	top: -170px;
+	right: -150px;
+	width: 400px;
+	height: 400px;
+	background: #25215C;
+}
+
+.b-hero-document__in {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 28px 40px;
+	padding: clamp(28px, 4.5vw, 48px) clamp(28px, 5vw, 56px);
+}
+
+/* Плашка и H1 — каждый своей строкой; до следующего — 16 px, как в макете */
+.b-hero-document__badge {
+	flex: 0 0 100%;
+	max-width: max-content;
+	margin-bottom: -12px;
+}
+
+.b-hero-document__title {
+	flex: 0 0 100%;
+	margin-bottom: -12px;
+	font-size: clamp(28px, 3.6vw, 44px);
+	line-height: 1.15;
+	text-wrap: balance;
+}
+
+.b-hero-document__dates {
+	flex: 1 1 520px;
+	min-width: 0;
+	margin: 0;
+	font-size: 16px;
+	line-height: 1.6;
+	color: #D4D2F0;
+}
+
+.b-hero-document__buttons {
+	display: flex;
+	flex: 0 1 auto;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.b-hero-document__buttons [hidden] {
+	display: none;
+}
+
+@media (max-width: 640px) {
+	.b-hero-document__in {
+		padding: 28px 20px;
+	}
+}

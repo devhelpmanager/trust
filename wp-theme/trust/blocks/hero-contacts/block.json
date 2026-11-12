@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/hero-contacts",
+	"title": "Первый экран контактов",
+	"description": "Тёмный первый экран страницы «Контакты»: плашка, H1 — автоматически, текст и карточки связи — телефон, email, Telegram, WhatsApp из «Настроек сайта → Контакты». Один на странице.",
+	"category": "trust-heroes",
+	"icon": "phone",
+	"keywords": [ "первый экран", "hero", "контакты", "телефон", "email", "telegram", "whatsapp" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false,
+		"multiple": false
+	},
+	"style": [ "trust-hero", "file:./style.css" ],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

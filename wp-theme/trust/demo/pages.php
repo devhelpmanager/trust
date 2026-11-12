@@ -67,6 +67,23 @@ $trust_section_hero = static function ( string $badge, string $lead, array $stat
 	);
 };
 
+/**
+ * Первый экран документа: плашка «Документы», даты редакции, кнопки.
+ *
+ * @param bool $cookie Кнопка «Настроить cookie».
+ */
+$trust_document_hero = static fn( bool $cookie = false ): array => array(
+	'hero-document',
+	array(
+		'badge'     => 'Документы',
+		'revision'  => '20261101',
+		'effective' => '20261101',
+		'pdf_label' => $cookie ? 'PDF' : '',
+		'print'     => 1,
+		'cookie'    => $cookie ? 1 : 0,
+	),
+);
+
 return array(
 	// Услуги.
 	array(
@@ -186,11 +203,39 @@ return array(
 		'blocks' => array( $trust_service_hero() ),
 	),
 	array(
-		'path'  => 'seo/voprosy',
-		'title' => 'Задать вопрос SEO-шнику',
-		'type'  => 'questions',
-		'seo'   => array(
+		'path'   => 'seo/voprosy',
+		'title'  => 'Задать вопрос SEO-шнику',
+		'type'   => 'questions',
+		'seo'    => array(
 			'trust_crumb_title' => 'Вопросы по SEO',
+		),
+		'blocks' => array(
+			array(
+				'hero-questions',
+				array(
+					'badge'  => 'Бесплатно',
+					'lead'   => 'Задайте вопрос о продвижении сайта — SEO-специалист [Бренд] ответит здесь, на сайте, и расскажет, как поступил бы на вашем месте.',
+					'points' => array(
+						array(
+							'icon' => 'check',
+							'text' => 'Бесплатно и без обязательств',
+						),
+						array(
+							'icon' => 'list',
+							'text' => 'Ответ публикуем на сайте, ссылку присылаем на email',
+						),
+						array(
+							'icon' => 'user',
+							'text' => 'Отвечает практикующий SEO-специалист',
+						),
+					),
+					'link'   => array(
+						'title'  => 'Читать ответы на вопросы',
+						'url'    => '#answers',
+						'target' => '',
+					),
+				),
+			),
 		),
 	),
 	array(
@@ -267,11 +312,20 @@ return array(
 
 	// О нас.
 	array(
-		'path'  => 'kontakty',
-		'title' => 'Контакты',
-		'type'  => 'contacts',
-		'seo'   => array(
+		'path'   => 'kontakty',
+		'title'  => 'Контакты',
+		'type'   => 'contacts',
+		'seo'    => array(
 			'trust_crumb_section' => $trust_about,
+		),
+		'blocks' => array(
+			array(
+				'hero-contacts',
+				array(
+					'badge' => 'О нас',
+					'lead'  => 'Позвоните, напишите в мессенджер или приезжайте в офис — расскажем, как можем помочь вашему проекту.',
+				),
+			),
 		),
 	),
 	array(
@@ -312,11 +366,46 @@ return array(
 		),
 	),
 	array(
-		'path'  => 'otzyvy',
-		'title' => 'Отзывы о нас',
-		'type'  => 'reviews',
-		'seo'   => array(
+		'path'   => 'otzyvy',
+		'title'  => 'Отзывы о нас',
+		'type'   => 'reviews',
+		'seo'    => array(
 			'trust_crumb_section' => $trust_about,
+		),
+		'blocks' => array(
+			array(
+				'hero-reviews',
+				array(
+					'badge'     => 'О нас',
+					'lead'      => 'Публикуем отзывы с именем, должностью и компанией клиента, а также сканы благодарственных писем. Отзывы на независимых площадках можно прочитать по ссылкам ниже.',
+					'platforms' => array(
+						array(
+							'name'   => 'Яндекс Карты',
+							'rating' => '[X,X]',
+							'count'  => '[N] отзывов',
+							'url'    => 'https://yandex.ru/maps/',
+						),
+						array(
+							'name'   => '2ГИС',
+							'rating' => '[X,X]',
+							'count'  => '[N] отзывов',
+							'url'    => 'https://2gis.ru/',
+						),
+						array(
+							'name'   => 'Google Карты',
+							'rating' => '[X,X]',
+							'count'  => '[N] отзывов',
+							'url'    => 'https://www.google.com/maps',
+						),
+						array(
+							'name'   => 'Workspace',
+							'rating' => '[X,X]',
+							'count'  => '[N] отзывов',
+							'url'    => 'https://workspace.ru/',
+						),
+					),
+				),
+			),
 		),
 	),
 	array(
@@ -360,40 +449,52 @@ return array(
 		),
 	),
 	array(
-		'path'  => 'oferta',
-		'title' => 'Публичная оферта',
-		'type'  => 'document',
-		'seo'   => array(
+		'path'   => 'oferta',
+		'title'  => 'Публичная оферта',
+		'type'   => 'document',
+		'seo'    => array(
 			'trust_seo_h1'        => 'Публичная оферта на оказание услуг',
 			'trust_crumb_section' => $trust_about,
+		),
+		'blocks' => array(
+			$trust_document_hero(),
 		),
 	),
 
 	// Документы (меню «Подвал: документы»).
 	array(
-		'path'  => 'politika-konfidencialnosti',
-		'title' => 'Политика конфиденциальности',
-		'type'  => 'document',
-		'seo'   => array(
+		'path'   => 'politika-konfidencialnosti',
+		'title'  => 'Политика конфиденциальности',
+		'type'   => 'document',
+		'seo'    => array(
 			'trust_crumb_section' => $trust_about,
+		),
+		'blocks' => array(
+			$trust_document_hero(),
 		),
 	),
 	array(
-		'path'  => 'soglasie-na-obrabotku-dannyh',
-		'title' => 'Согласие на обработку персональных данных',
-		'type'  => 'document',
-		'seo'   => array(
+		'path'   => 'soglasie-na-obrabotku-dannyh',
+		'title'  => 'Согласие на обработку персональных данных',
+		'type'   => 'document',
+		'seo'    => array(
 			'trust_crumb_section' => $trust_about,
+		),
+		'blocks' => array(
+			$trust_document_hero(),
 		),
 	),
 	array(
-		'path'  => 'politika-cookie',
-		'title' => 'Политика использования файлов cookie',
-		'type'  => 'document',
-		'seo'   => array(
+		'path'   => 'politika-cookie',
+		'title'  => 'Политика использования файлов cookie',
+		'type'   => 'document',
+		'seo'    => array(
 			'trust_seo_title'     => 'Политика cookie {sep} {site}',
 			'trust_crumb_title'   => 'Политика cookie',
 			'trust_crumb_section' => $trust_about,
+		),
+		'blocks' => array(
+			$trust_document_hero( true ),
 		),
 	),
 );

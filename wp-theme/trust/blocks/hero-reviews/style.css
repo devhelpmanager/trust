@@ -1,0 +1,106 @@
+/*
+ * Блок «Первый экран отзывов» (o-nas/otzyvy.html). Крошки, карточка, плашка, H1 и текст —
+ * общие стили тёмной карточки (assets/css/hero.css); здесь — раскладка и рейтинги площадок.
+ */
+
+.b-hero-reviews__in {
+	display: flex;
+	flex-direction: column;
+	gap: 36px;
+}
+
+/* H1 — на всю ширину карточки (правка заказчика); текст — не шире 820 px, как в макете */
+.b-hero-reviews__head {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+
+.b-hero-reviews__lead {
+	max-width: 820px;
+}
+
+/* 4 колонки, до 860 px — 2, до 340 px — 1 */
+.b-hero-reviews__list {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 12px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-hero-reviews__list > li {
+	min-width: 0;
+}
+
+.b-hero-reviews__card {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	height: 100%;
+	padding: 20px;
+	border: 1px solid #3A3672;
+	border-radius: 18px;
+	background: rgba(255, 255, 255, 0.04);
+	color: var(--c-white);
+	text-decoration: none;
+	transition: background 0.2s, border-color 0.2s;
+}
+
+a.b-hero-reviews__card:hover {
+	border-color: #6D5FD0;
+	background: var(--c-indigo-hover);
+	color: var(--c-white);
+}
+
+.b-hero-reviews__name {
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--c-violet-light);
+}
+
+.b-hero-reviews__rating {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 12px;
+}
+
+.b-hero-reviews__value {
+	font-family: var(--f-display);
+	font-size: 30px;
+	font-weight: 600;
+	line-height: 1;
+}
+
+.b-hero-reviews__stars {
+	display: inline-flex;
+	gap: 2px;
+	color: #F5B301;
+}
+
+.b-hero-reviews__stars .is-empty {
+	opacity: 0.3;
+}
+
+.b-hero-reviews__count {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	font-size: 14px;
+	color: #C9C7EA;
+}
+
+@media (max-width: 860px) {
+	.b-hero-reviews__list {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 340px) {
+	.b-hero-reviews__list {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}

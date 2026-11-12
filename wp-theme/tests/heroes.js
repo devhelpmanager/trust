@@ -102,8 +102,8 @@ async function hideHeader( page ) {
 			await page.goto( URL + s.url, { waitUntil: 'networkidle' } );
 			const hero = page.locator( '.b-hero-section' );
 			const got = {
-				crumbs: ( await hero.locator( '.b-hero-section__crumbs .breadcrumbs__item' ).allTextContents() ).map( ( t ) => t.trim() ).join( ' / ' ),
-				badge: ( await hero.locator( '.b-hero-section__badge' ).textContent() ).trim(),
+				crumbs: ( await hero.locator( '.hero-crumbs .breadcrumbs__item' ).allTextContents() ).map( ( t ) => t.trim() ).join( ' / ' ),
+				badge: ( await hero.locator( '.hero-badge' ).textContent() ).trim(),
 				h1: await hero.locator( 'h1' ).textContent(),
 				h1s: await page.locator( 'h1' ).count(),
 				stats: await hero.locator( '.b-hero-section__stat' ).evaluateAll( ( els ) => els.map( ( el ) => `${ el.querySelector( 'dt' ).textContent }: ${ el.querySelector( 'dd' ).textContent }` ) ),
@@ -130,8 +130,8 @@ async function hideHeader( page ) {
 		wp( 'post', 'meta', 'update', landing, '_wp_page_template', 'templates/landing.php' );
 		await page.goto( `${ URL }/?page_id=${ landing }`, { waitUntil: 'networkidle' } );
 		const empty = await page.locator( '.b-hero-section' ).first().evaluate( ( el ) => ( {
-			badge: el.querySelectorAll( '.b-hero-section__badge' ).length,
-			lead: el.querySelectorAll( '.b-hero-section__lead' ).length,
+			badge: el.querySelectorAll( '.hero-badge' ).length,
+			lead: el.querySelectorAll( '.hero-lead' ).length,
 			buttons: el.querySelectorAll( '.b-hero-section__buttons' ).length,
 			stats: el.querySelectorAll( 'dl' ).length,
 			h1: el.querySelector( 'h1' ).textContent,

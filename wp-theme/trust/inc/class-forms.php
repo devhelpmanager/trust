@@ -53,12 +53,7 @@ final class Forms {
 						'error'    => sprintf( __( 'Проверьте номер телефона, например %s', 'trust' ), self::phone_example() ),
 					),
 				),
-				'consents' => array(
-					'consent' => array(
-						'label' => __( 'Согласие на обработку персональных данных', 'trust' ),
-						'error' => __( 'Отметьте согласие — без него мы не сможем ответить на заявку', 'trust' ),
-					),
-				),
+				'consents' => array( 'consent' => self::consent() ),
 				// Поле с именем и поля с контактом — для колонок списка заявок.
 				'name'     => 'name',
 				'contact'  => array( 'phone' ),
@@ -71,6 +66,18 @@ final class Forms {
 		 * @param array $types Описания форм.
 		 */
 		return (array) apply_filters( 'trust_form_types', $types );
+	}
+
+	/**
+	 * Галочка согласия на обработку персональных данных — одна для всех форм.
+	 *
+	 * @return array{label: string, error: string}
+	 */
+	public static function consent(): array {
+		return array(
+			'label' => __( 'Согласие на обработку персональных данных', 'trust' ),
+			'error' => __( 'Отметьте согласие — без него мы не сможем ответить на заявку', 'trust' ),
+		);
 	}
 
 	/**
@@ -189,12 +196,16 @@ final class Forms {
 	}
 
 	/**
-	 * Дата редакции страницы согласия (для записи факта согласия в заявке): дата её
-	 * последнего изменения.
+	 * Дата редакции страницы согласия (для записи факта согласия в заявке): «Редакция от»
+	 * в её первом экране, иначе дата последнего изменения страницы.
 	 */
 	public static function consent_revision(): string {
 		$page = (int) Settings::get( 'consent_page', 0 );
-		return $page ? (string) get_post_modified_time( 'Y-m-d', false, $page ) : '';
+		if ( ! $page ) {
+			return '';
+		}
+		$revision = Documents::revision( $page );
+		return '' !== $revision ? $revision : (string) get_post_modified_time( 'Y-m-d', false, $page );
 	}
 
 	/**

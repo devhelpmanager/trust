@@ -1,0 +1,286 @@
+/*
+ * Блок «Первый экран вопросов» (seo-vopros/vopros-seo.html). Крошки, карточка, H1 — общие
+ * стили тёмной карточки (assets/css/hero.css); поля формы — общие классы форм из main.css.
+ *
+ * H1 — на всю ширину карточки (правка заказчика: в макете он в левой колонке рядом с формой).
+ * До 1000 px всё в одну колонку: плашка, H1, текст, форма, пункты. С 1000 px: плашка и H1
+ * сверху, ниже слева текст и пункты, справа форма.
+ */
+
+.b-hero-questions__in {
+	display: grid;
+	grid-template-areas: "badge" "title" "lead" "form" "extra";
+	grid-template-columns: minmax(0, 1fr);
+	gap: 28px;
+}
+
+/* Плашка, H1 и текст — с отступом 22 px между собой, как в макете */
+.b-hero-questions__badge {
+	display: inline-flex;
+	grid-area: badge;
+	align-items: center;
+	justify-self: start;
+	gap: 10px;
+	margin-bottom: -6px;
+	padding: 9px 18px 9px 14px;
+	font-size: 16px;
+}
+
+.b-hero-questions__badge svg {
+	color: #C4B5FD;
+}
+
+.b-hero-questions__title {
+	grid-area: title;
+	margin-bottom: -6px;
+	font-size: clamp(30px, 3.8vw, 48px);
+	line-height: 1.12;
+	text-wrap: balance;
+}
+
+.b-hero-questions__lead {
+	grid-area: lead;
+	max-width: 520px;
+	margin: 0;
+	font-size: 18px;
+	line-height: 1.6;
+	color: #D4D2F0;
+	text-wrap: pretty;
+}
+
+.b-hero-questions__col {
+	grid-area: form;
+	min-width: 0;
+}
+
+.b-hero-questions__extra {
+	display: flex;
+	grid-area: extra;
+	flex-direction: column;
+	gap: 22px;
+	min-width: 0;
+}
+
+/* Форма — белая карточка */
+.b-hero-questions__card {
+	padding: clamp(22px, 3vw, 32px);
+	border-radius: 22px;
+	background: var(--c-white);
+	box-shadow: 0 24px 48px rgba(10, 6, 40, 0.28);
+	color: var(--c-text);
+}
+
+.b-hero-questions__row {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+	gap: 18px 16px;
+}
+
+.b-hero-questions .field__error,
+.b-hero-questions .field__note {
+	font-size: 13px;
+	line-height: 1.4;
+}
+
+.b-hero-questions .field__note {
+	color: var(--c-muted);
+}
+
+/* Ошибка заменяет подсказку под полем */
+.b-hero-questions .field__error:not([hidden]) + .field__note {
+	display: none;
+}
+
+.b-hero-questions__label-row {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.b-hero-questions__count {
+	font-size: 13px;
+	font-variant-numeric: tabular-nums;
+	color: var(--c-muted-2);
+}
+
+.b-hero-questions .b-hero-questions__textarea {
+	min-height: 168px;
+}
+
+.b-hero-questions .b-hero-questions__submit {
+	min-height: 58px;
+	box-shadow: 0 10px 24px rgba(109, 40, 217, 0.28);
+	transition: background 0.2s, box-shadow 0.2s;
+}
+
+.b-hero-questions .b-hero-questions__submit:hover {
+	box-shadow: 0 14px 30px rgba(91, 33, 182, 0.34);
+}
+
+.b-hero-questions__submit svg {
+	flex: none;
+	transition: transform 0.2s;
+}
+
+.b-hero-questions__submit:hover svg {
+	transform: translateX(3px);
+}
+
+/* «Вопрос отправлен» */
+.b-hero-questions__sent {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 18px;
+	padding: 8px 0;
+}
+
+.b-hero-questions__sent[hidden] {
+	display: none;
+}
+
+.b-hero-questions__sent-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 60px;
+	height: 60px;
+	border-radius: 18px;
+	background: var(--c-lavender-3);
+	color: var(--c-violet);
+}
+
+.b-hero-questions__sent-title {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: 26px;
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+}
+
+.b-hero-questions__sent-text {
+	margin: 0;
+	font-size: 17px;
+	line-height: 1.6;
+	color: var(--c-text-2);
+	text-wrap: pretty;
+}
+
+.b-hero-questions__sent-text strong {
+	overflow-wrap: anywhere;
+}
+
+.b-hero-questions__again {
+	min-height: 48px;
+	padding: 0 20px;
+	border: 1.5px solid var(--c-border-strong);
+	border-radius: var(--r-btn);
+	background: var(--c-white);
+	color: var(--c-violet-dark);
+	font-family: inherit;
+	font-size: 15px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.b-hero-questions__again:hover {
+	border-color: var(--c-violet);
+	color: var(--c-violet-deep);
+}
+
+/* Пункты и ссылка на ответы */
+.b-hero-questions__points {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-size: 16px;
+	line-height: 1.45;
+	color: #E6E4F7;
+}
+
+.b-hero-questions__points li {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.b-hero-questions__point-icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: 10px;
+	background: var(--c-indigo-hover);
+	color: #C4B5FD;
+}
+
+.b-hero-questions__link {
+	display: inline-flex;
+	align-self: flex-start;
+	align-items: center;
+	gap: 8px;
+	min-height: 44px;
+	color: var(--c-violet-light);
+	font-size: 16px;
+	font-weight: 600;
+	text-decoration: underline;
+	text-decoration-color: rgba(226, 216, 255, 0.4);
+	text-underline-offset: 5px;
+}
+
+.b-hero-questions__link:hover {
+	color: var(--c-white);
+}
+
+.b-hero-questions__art {
+	display: none;
+	flex: none;
+	margin-top: auto;
+}
+
+@media (min-width: 1000px) {
+	.b-hero-questions__in {
+		grid-template-areas: "badge badge" "title title" "lead form" "extra form";
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+		grid-template-rows: auto auto auto 1fr;
+		gap: 22px 56px;
+	}
+
+	.b-hero-questions__badge,
+	.b-hero-questions__title {
+		margin-bottom: 0;
+	}
+}
+
+@media (min-width: 1100px) {
+	.b-hero-questions__art {
+		display: block;
+	}
+}
+
+@media (max-width: 640px) {
+	.b-hero-questions__in {
+		gap: 24px;
+	}
+
+	.b-hero-questions__badge,
+	.b-hero-questions__title {
+		margin-bottom: -8px;
+	}
+
+	.b-hero-questions__lead {
+		font-size: 16px;
+	}
+
+	.b-hero-questions__card {
+		padding: 22px 16px;
+		border-radius: 18px;
+	}
+}

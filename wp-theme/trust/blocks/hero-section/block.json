@@ -15,7 +15,7 @@
 		"customClassName": false,
 		"multiple": false
 	},
-	"style": "file:./style.css",
+	"style": [ "trust-hero", "file:./style.css" ],
 	"acf": {
 		"mode": "preview",
 		"renderTemplate": "render.php",

@@ -1,0 +1,95 @@
+/*
+ * Блок «Первый экран контактов» (o-nas/kontakty.html). Крошки, карточка, плашка, H1 и текст —
+ * общие стили тёмной карточки (assets/css/hero.css); здесь — раскладка и карточки связи.
+ */
+
+.b-hero-contacts__in {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+}
+
+/* H1 — на всю ширину карточки (правка заказчика); текст — не шире 760 px, как в макете */
+.b-hero-contacts__head {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+
+.b-hero-contacts__lead {
+	max-width: 760px;
+	font-size: clamp(16px, 1.6vw, 18px);
+}
+
+.b-hero-contacts__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+	gap: 14px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-hero-contacts__list > li {
+	min-width: 0;
+}
+
+.b-hero-contacts__card {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	height: 100%;
+	padding: 20px;
+	border: 1px solid #4B4690;
+	border-radius: 18px;
+	background: #29256A;
+	color: var(--c-white);
+	text-decoration: none;
+	transition: background 0.2s, border-color 0.2s;
+}
+
+.b-hero-contacts__card:hover {
+	border-color: #6D5FD0;
+	background: var(--c-indigo-hover);
+	color: var(--c-white);
+}
+
+.b-hero-contacts__top {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.b-hero-contacts__icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 12px;
+	background: var(--c-violet);
+	color: var(--c-white);
+}
+
+.b-hero-contacts__label {
+	color: #C4B5FD;
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.b-hero-contacts__value {
+	font-size: 19px;
+	font-weight: 700;
+	line-height: 1.3;
+	overflow-wrap: anywhere;
+}
+
+.b-hero-contacts__note {
+	font-size: 14px;
+	line-height: 1.45;
+	color: #C9C7EA;
+}

@@ -207,7 +207,8 @@ function comparePng( a, b, diffPath ) {
  * - Тексты: пункт меню «Сопровождение сайтов» переименован в «Поддержка сайтов».
  * - CSS по файлу макета: у «Вопрос-ответ» заголовок над вопросами на всех ширинах; у цифр
  *   первого экрана раздела значения прижаты к верху (на одной линии при подписи в две строки);
- *   H1 первых экранов — на всю ширину (у услуги — отдельной строкой над текстом и кнопками).
+ *   H1 первых экранов — на всю ширину (у услуги и документа — отдельной строкой над текстом
+ *   и кнопками, у вопросов — над текстом и формой).
  */
 const MOCKUP_TEXTS = [ [ 'Сопровождение сайтов', 'Поддержка сайтов' ] ];
 const HERO_SECTION_CSS = `
@@ -215,11 +216,39 @@ const HERO_SECTION_CSS = `
 	.dc-hero-in > div:first-child { max-width: none !important; }
 	.dc-hero-in > div:first-child > p { max-width: 820px !important; }
 `;
+const HERO_DOCUMENT_CSS = `
+	.dc-hero-in > div:first-child { display: contents !important; }
+	.dc-hero-in > div:first-child > span { flex: 0 0 100% !important; max-width: max-content !important; margin-bottom: -12px !important; }
+	.dc-hero-in > div:first-child > h1 { flex: 0 0 100% !important; margin-bottom: -12px !important; }
+	.dc-hero-in > div:first-child > p { flex: 1 1 520px !important; min-width: 0 !important; }
+`;
 const MOCKUP_CSS = {
 	'portfolio-blog-404/portfolio.html': HERO_SECTION_CSS,
 	'o-nas/o-kompanii.html': HERO_SECTION_CSS,
 	'o-nas/komanda.html': HERO_SECTION_CSS,
 	'o-nas/karera.html': HERO_SECTION_CSS,
+	'o-nas/kontakty.html': `
+		.dc-hero-in > div:first-child { max-width: none !important; }
+		.dc-hero-in > div:first-child > p { max-width: 760px !important; }
+	`,
+	'o-nas/otzyvy.html': HERO_SECTION_CSS,
+	'o-nas/oferta.html': HERO_DOCUMENT_CSS,
+	'o-nas/politika-cookie.html': HERO_DOCUMENT_CSS,
+	'o-nas/soglasie-pd.html': HERO_DOCUMENT_CSS,
+	'seo-vopros/vopros-seo.html': `
+		.dc-ask-intro { display: contents !important; }
+		.dc-ask-intro > span { grid-area: badge; justify-self: start; margin-bottom: -6px !important; }
+		.dc-ask-intro > h1 { grid-area: title; margin-bottom: -6px !important; }
+		.dc-ask-intro > p { grid-area: intro; }
+		.dc-ask-in { grid-template-areas: "badge" "title" "intro" "form" "extra" !important; }
+		@media (min-width: 1000px) {
+			.dc-ask-in { grid-template-areas: "badge badge" "title title" "intro form" "extra form" !important; grid-template-rows: auto auto auto 1fr !important; }
+			.dc-ask-intro > span, .dc-ask-intro > h1 { margin-bottom: 0 !important; }
+		}
+		@media (max-width: 640px) {
+			.dc-ask-intro > span, .dc-ask-intro > h1 { margin-bottom: -8px !important; }
+		}
+	`,
 	'seo-stranitsa/index.html': `
 		main > section:first-of-type > div > div > div:first-child { display: contents !important; }
 		main > section:first-of-type h1 { flex: 0 0 100% !important; margin: 0 0 -8px !important; }

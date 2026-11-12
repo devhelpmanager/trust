@@ -180,7 +180,7 @@ async function results( id ) {
 		await admin.goto( settingsUrl );
 		await admin.locator( '.acf-tab-wrap .acf-tab-button', { hasText: 'Формы' } ).click();
 		const labels = ( await admin.locator( '[data-name^="forms_emails"] .acf-label label' ).allTextContents() ).map( ( s ) => s.trim() );
-		check( 'Получатели: по умолчанию и у каждой формы', JSON.stringify( labels ) === JSON.stringify( [ 'Получатели писем по умолчанию', 'Получатели: Обратный звонок', 'Получатели: Тестовая форма' ] ), labels.join( ' | ' ) );
+		check( 'Получатели: по умолчанию и у каждой формы', JSON.stringify( labels ) === JSON.stringify( [ 'Получатели писем по умолчанию', 'Получатели: Обратный звонок', 'Получатели: Тестовая форма', 'Получатели: Вопрос SEO-специалисту' ] ), labels.join( ' | ' ) );
 		check( 'Подсказка: адрес администратора', ( await admin.getAttribute( '[data-name="forms_emails"] input', 'placeholder' ) ) === adminEmail );
 		check( 'Токен бота и секрет вебхука — поля пароля', ( await admin.getAttribute( '[data-name="telegram_bot_token"] input', 'type' ) ) === 'password' && ( await admin.getAttribute( '[data-name="webhook_secret"] input', 'type' ) ) === 'password' );
 		await admin.fill( '[data-name="forms_emails"] input', 'sales@example.com, not-an-email' );

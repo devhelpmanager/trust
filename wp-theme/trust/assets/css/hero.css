@@ -1,0 +1,159 @@
+/*
+ * Тёмная карточка первых экранов (макеты portfolio.html, o-kompanii.html, komanda.html,
+ * karera.html, kontakty.html, otzyvy.html, oferta.html, vopros-seo.html): крошки над карточкой,
+ * карточка с декоративными кругами, плашка, H1, текст. Общая для блоков «Первый экран раздела»,
+ * «…контактов», «…отзывов», «…документа», «…вопросов»; подключается только на страницах
+ * с этими блоками (стиль trust-hero, Trust\Blocks). Раскладка содержимого — в стилях блоков.
+ */
+
+.hero-crumbs {
+	padding: 28px var(--gutter) 20px;
+}
+
+.hero-crumbs .breadcrumbs {
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.hero-sec {
+	padding: 0 var(--gutter);
+}
+
+.hero-box {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	max-width: var(--content);
+	margin: 0 auto;
+	border-radius: 28px;
+	background: var(--c-indigo);
+	color: var(--c-white);
+}
+
+.hero-circle {
+	position: absolute;
+	z-index: -1;
+	border-radius: 50%;
+}
+
+.hero-circle--top {
+	top: -170px;
+	right: -150px;
+	width: 460px;
+	height: 460px;
+	background: #25215C;
+}
+
+.hero-circle--bottom {
+	bottom: -110px;
+	left: -70px;
+	width: 240px;
+	height: 240px;
+	background: #23205A;
+}
+
+.hero-in {
+	position: relative;
+	padding: clamp(28px, 5vw, 56px);
+}
+
+.hero-badge {
+	align-self: flex-start;
+	padding: 7px 14px;
+	border: 1px solid #4B4690;
+	border-radius: var(--r-pill);
+	background: rgba(255, 255, 255, 0.06);
+	color: var(--c-violet-light);
+	font-family: var(--f-mono);
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+/* H1 — на всю ширину карточки (правка заказчика) */
+.hero-title {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: clamp(32px, 4.2vw, 52px);
+	font-weight: 600;
+	line-height: 1.1;
+	letter-spacing: -0.015em;
+}
+
+.hero-lead {
+	margin: 0;
+	font-size: clamp(16px, 1.7vw, 19px);
+	line-height: 1.6;
+	color: #D4D2F0;
+	text-wrap: pretty;
+}
+
+/* Кнопки на тёмной карточке: полупрозрачные с рамкой (PDF, «Распечатать») */
+.hero-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 48px;
+	padding: 0 18px;
+	border: 1px solid #4B4690;
+	border-radius: var(--r-btn);
+	background: rgba(255, 255, 255, 0.06);
+	color: var(--c-white);
+	font-family: inherit;
+	font-size: 15px;
+	font-weight: 600;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background 0.2s, border-color 0.2s;
+}
+
+.hero-btn:hover {
+	border-color: #6D5FD0;
+	background: var(--c-indigo-hover);
+	color: var(--c-white);
+}
+
+.hero-btn--white {
+	border: 0;
+	background: var(--c-white);
+	color: var(--c-violet-dark);
+}
+
+.hero-btn--white:hover {
+	background: var(--c-lavender-2);
+	color: var(--c-violet-deep);
+}
+
+/* Телефон: карточка во всю ширину, без скруглений */
+@media (max-width: 640px) {
+	.hero-sec {
+		padding: 0;
+	}
+
+	.hero-box {
+		border-radius: 0;
+	}
+
+	.hero-in {
+		padding: 28px 20px;
+	}
+}
+
+/* Печать (документы): без крошек и кругов, карточка белая */
+@media print {
+	.hero-crumbs,
+	.hero-circle,
+	.hero-noprint {
+		display: none !important;
+	}
+
+	.hero-box {
+		background: #FFFFFF;
+		color: var(--c-text);
+	}
+
+	.hero-box * {
+		color: var(--c-text) !important;
+	}
+}

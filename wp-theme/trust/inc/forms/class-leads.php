@@ -255,6 +255,14 @@ final class Leads {
 			$rows[] = array( __( 'Согласие', 'trust' ), wp_kses_post( $text ) );
 		}
 
+		$related = (int) get_post_meta( $post->ID, 'trust_related', true );
+		if ( $related && get_post( $related ) ) {
+			$type   = get_post_type_object( (string) get_post_type( $related ) );
+			$status = get_post_status_object( (string) get_post_status( $related ) );
+			$title  = get_the_title( $related ) . ' — ' . ( $type ? $type->labels->singular_name : '' ) . ( $status ? ', ' . $status->label : '' );
+			$link   = current_user_can( 'edit_post', $related ) ? (string) get_edit_post_link( $related ) : '';
+			$rows[] = array( __( 'Создана запись', 'trust' ), '' !== $link ? '<a href="' . esc_url( $link ) . '">' . esc_html( $title ) . '</a>' : esc_html( $title ) );
+		}
 		$rows[] = array( __( 'Уведомления', 'trust' ), Notifications::summary( $post->ID ) );
 
 		echo '<table class="widefat striped trust-lead-table"><tbody>';

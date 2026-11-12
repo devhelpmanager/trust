@@ -72,6 +72,8 @@ final class Blocks {
 		if ( ! Dependencies::has_scf() ) {
 			return;
 		}
+		// Общие стили тёмной карточки первых экранов: блоки указывают "trust-hero" в block.json.
+		wp_register_style( 'trust-hero', Assets::url( 'assets/css/hero.css' ), array(), Assets::version( 'assets/css/hero.css' ) );
 		foreach ( self::names() as $name ) {
 			register_block_type( TRUST_DIR . '/blocks/' . $name );
 		}
