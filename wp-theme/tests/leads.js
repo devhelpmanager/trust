@@ -29,7 +29,7 @@
 const { chromium } = require( 'playwright' );
 const fs = require( 'fs' );
 const path = require( 'path' );
-const { URL, DEV_DIR, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser, getSettings, setSettings, resetFormLimits } = require( './lib' );
+const { URL, DEV_DIR, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser, getSettings, setSettings, resetFormLimits, formToken: token, postForm: post } = require( './lib' );
 
 const MU_PLUGIN = path.join( DEV_DIR, 'wordpress/wp-content/mu-plugins/trust-test-forms.php' );
 const SETTINGS = [ 'forms_captcha', 'recaptcha_site_key', 'recaptcha_secret_key', 'smartcaptcha_client_key', 'smartcaptcha_server_key', 'forms_retention_days' ];
@@ -43,25 +43,6 @@ const meta = ( id, key ) => {
 		return ''; // Нет такого поля.
 	}
 };
-
-async function token( headers = {} ) {
-	const res = await fetch( `${ URL }/wp-json/trust/v1/forms/token`, { headers } );
-	return { ...( await res.json() ), cache: res.headers.get( 'cache-control' ) || '' };
-}
-
-async function post( type, fields, headers = {} ) {
-	const data = new FormData();
-	for ( const [ key, value ] of Object.entries( fields ) ) {
-		data.append( key, value );
-	}
-	const res = await fetch( `${ URL }/wp-json/trust/v1/forms/${ type }`, { method: 'POST', body: data, headers } );
-	const text = await res.text();
-	let body = null;
-	try {
-		body = JSON.parse( text );
-	} catch ( e ) {}
-	return { status: res.status, body, text };
-}
 
 ( async () => {
 	clearLog();

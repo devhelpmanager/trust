@@ -250,8 +250,41 @@ function resetFormLimits() {
 	wp( 'eval', "global $wpdb; foreach ( $wpdb->get_col( \"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '_transient_trust_form_rate_%'\" ) as $o ) { delete_transient( substr( $o, strlen( '_transient_' ) ) ); }" );
 }
 
+/**
+ * Свежие токен и nonce форм (REST).
+ *
+ * @param {Object} headers Заголовки запроса.
+ * @return {Promise<Object>} { token, nonce, cache }.
+ */
+async function formToken( headers = {} ) {
+	const res = await fetch( `${ URL }/wp-json/trust/v1/forms/token`, { headers } );
+	return { ...( await res.json() ), cache: res.headers.get( 'cache-control' ) || '' };
+}
+
+/**
+ * Отправляет форму через REST.
+ *
+ * @param {string} type    Тип формы.
+ * @param {Object} fields  Поля.
+ * @param {Object} headers Заголовки запроса.
+ * @return {Promise<Object>} { status, body, text }.
+ */
+async function postForm( type, fields, headers = {} ) {
+	const data = new FormData();
+	for ( const [ key, value ] of Object.entries( fields ) ) {
+		data.append( key, value );
+	}
+	const res = await fetch( `${ URL }/wp-json/trust/v1/forms/${ type }`, { method: 'POST', body: data, headers } );
+	const text = await res.text();
+	let body = null;
+	try {
+		body = JSON.parse( text );
+	} catch ( e ) {}
+	return { status: res.status, body, text };
+}
+
 module.exports = {
 	URL, DEV_DIR, LOG, OUT, REPO, THEME,
 	check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser,
-	routeMockupFonts, mockupUrl, comparePng, settle, isolate, getSettings, setSettings, publishPost, resetFormLimits,
+	routeMockupFonts, mockupUrl, comparePng, settle, isolate, getSettings, setSettings, publishPost, resetFormLimits, formToken, postForm,
 };

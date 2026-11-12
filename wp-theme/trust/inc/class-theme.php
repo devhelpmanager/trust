@@ -42,6 +42,7 @@ final class Theme {
 		Schema\Graph::register();
 		Forms\Handler::register();
 		Forms\Leads::register();
+		Forms\Notifications::register();
 		Settings::register();
 		Blocks::register();
 

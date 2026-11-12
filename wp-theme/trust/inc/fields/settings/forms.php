@@ -2,6 +2,9 @@
 /**
  * Настройки сайта → Формы (только администратор).
  *
+ * Уведомления о заявках (ТЗ, раздел 12.2): письма — свои получатели у каждой формы; Telegram-бот;
+ * вебхук CRM. Кнопка «Проверить уведомления» отправляет тестовую заявку во все заданные каналы.
+ *
  * Капча (ТЗ, раздел 12.2): Google reCAPTCHA v2 или Яндекс SmartCaptcha. Ключи получает
  * владелец сайта в кабинете сервиса для домена сайта и вводит здесь; секретный ключ
  * хранится в базе сайта и в браузер не попадает. Пока капча не выбрана или ключи не
@@ -12,6 +15,8 @@
  */
 
 use Trust\Fields;
+use Trust\Forms;
+use Trust\Forms\Notifications;
 use Trust\Forms\Protection;
 
 defined( 'ABSPATH' ) || exit;
@@ -27,10 +32,86 @@ $trust_when     = static fn( string $provider ): array => array(
 	),
 );
 
+// Получатели писем: по умолчанию и у каждой формы (формы блоков добавляются сами).
+$trust_recipients = array(
+	array(
+		'name'         => 'forms_emails',
+		'label'        => __( 'Получатели писем по умолчанию', 'trust' ),
+		'type'         => 'text',
+		'placeholder'  => (string) get_option( 'admin_email' ),
+		'instructions' => __( 'Адреса через запятую. Пусто — адрес администратора из «Настройки → Общие» (серым).', 'trust' ),
+		'trust_emails' => true,
+	),
+);
+foreach ( Forms::types() as $trust_type => $trust_form ) {
+	$trust_recipients[] = array(
+		'name'         => 'forms_emails_' . $trust_type,
+		/* translators: %s: название формы. */
+		'label'        => sprintf( __( 'Получатели: %s', 'trust' ), $trust_form['label'] ),
+		'type'         => 'text',
+		'placeholder'  => __( 'как по умолчанию', 'trust' ),
+		'wrapper'      => array( 'width' => 50 ),
+		'trust_emails' => true,
+	);
+}
+
 return array(
 	'label'  => __( 'Формы', 'trust' ),
 	'cap'    => 'manage_options',
 	'fields' => array(
+		array(
+			'name'    => 'forms_notify_heading',
+			'label'   => __( 'Уведомления о заявках', 'trust' ),
+			'type'    => 'message',
+			'message' => __( 'Каждая заявка сначала сохраняется в «Заявках», затем уходят уведомления: письмо, Telegram, вебхук CRM — те, что заполнены ниже. Ошибка канала не мешает сохранению; итог по каждому каналу виден на экране заявки.', 'trust' ),
+		),
+		...$trust_recipients,
+		array(
+			'name'         => 'telegram_bot_token',
+			'label'        => __( 'Telegram: токен бота', 'trust' ),
+			'type'         => 'password',
+			'instructions' => __( 'В Telegram откройте @BotFather, команда /newbot — он пришлёт токен (вида 123456:ABC…). Не пересылайте токен в письмах и чатах.', 'trust' ),
+			'wrapper'      => array( 'width' => 50 ),
+		),
+		array(
+			'name'         => 'telegram_chat_id',
+			'label'        => __( 'Telegram: chat_id', 'trust' ),
+			'type'         => 'text',
+			'instructions' => __( 'Кому писать. Напишите боту любое сообщение (или добавьте бота в группу и напишите там), сохраните токен и нажмите «Проверить уведомления» — тема покажет chat_id. У групп он начинается с минуса.', 'trust' ),
+			'wrapper'      => array( 'width' => 50 ),
+		),
+		array(
+			'name'         => 'webhook_url',
+			'label'        => __( 'Вебхук CRM: адрес', 'trust' ),
+			'type'         => 'url',
+			'instructions' => __( 'На этот адрес уходит POST с данными заявки в JSON (формат — в README темы).', 'trust' ),
+			'wrapper'      => array( 'width' => 50 ),
+		),
+		array(
+			'name'         => 'webhook_secret',
+			'label'        => __( 'Вебхук CRM: секрет', 'trust' ),
+			'type'         => 'password',
+			'instructions' => __( 'Случайная строка от 32 символов. Подпись — заголовок X-Trust-Signature: «sha256=» и HMAC-SHA256 тела запроса этим секретом; CRM по ней проверяет, что запрос от сайта.', 'trust' ),
+			'wrapper'      => array( 'width' => 50 ),
+		),
+		array(
+			'name'    => 'forms_notify_test',
+			'label'   => __( 'Проверка', 'trust' ),
+			'type'    => 'message',
+			'message' => sprintf(
+				'<a class="button" href="%s">%s</a> %s',
+				esc_url( Notifications::test_url() ),
+				esc_html__( 'Проверить уведомления', 'trust' ),
+				esc_html__( 'Сначала сохраните настройки. Тестовая заявка уйдёт во все заданные каналы; в «Заявках» она не появится.', 'trust' )
+			),
+		),
+		array(
+			'name'         => 'forms_success_text',
+			'label'        => __( 'Сообщение после отправки', 'trust' ),
+			'type'         => 'text',
+			'placeholder'  => Forms::SUCCESS_TEXT,
+			'instructions' => __( 'Для форм без своего экрана «Заявка отправлена». У окна обратного звонка — свои тексты в «Блоках по умолчанию».', 'trust' ),
+		),
 		array(
 			'name'          => 'forms_captcha',
 			'label'         => __( 'Капча', 'trust' ),

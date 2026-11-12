@@ -20,6 +20,11 @@ defined( 'ABSPATH' ) || exit;
 final class Forms {
 
 	/**
+	 * Сообщение после отправки по умолчанию.
+	 */
+	public const SUCCESS_TEXT = 'Заявка отправлена. Мы свяжемся с вами в ближайшее время.';
+
+	/**
 	 * Описания форм.
 	 *
 	 * Тип поля: text, textarea, tel, email, url, contact (телефон или email), choice, checkbox.
@@ -111,7 +116,7 @@ final class Forms {
 			: '';
 		// phpcs:enable
 		$messages = array(
-			'sent'  => __( 'Заявка отправлена. Мы свяжемся с вами в ближайшее время.', 'trust' ),
+			'sent'  => self::success_text(),
 			'error' => __( 'Заявка не отправлена: проверьте поля формы и отправьте её ещё раз или позвоните нам.', 'trust' ),
 		);
 		if ( isset( $messages[ $result ] ) ) {
@@ -119,6 +124,15 @@ final class Forms {
 			return;
 		}
 		echo '<p class="form__status" role="alert" hidden></p>';
+	}
+
+	/**
+	 * Сообщение после отправки формы по умолчанию — «Настройки сайта → Формы»
+	 * (у окна звонка и блоков с экраном успеха — свои тексты).
+	 */
+	public static function success_text(): string {
+		$text = trim( (string) Settings::get( 'forms_success_text', '' ) );
+		return '' !== $text ? $text : self::SUCCESS_TEXT;
 	}
 
 	/**
@@ -150,7 +164,7 @@ final class Forms {
 				'siteKey'  => $captcha['site_key'],
 			) : null,
 			'messages' => array(
-				'sent'    => __( 'Заявка отправлена. Мы свяжемся с вами в ближайшее время.', 'trust' ),
+				'sent'    => self::success_text(),
 				'network' => __( 'Не удалось отправить заявку: нет связи с сайтом. Проверьте интернет и попробуйте ещё раз.', 'trust' ),
 				'failed'  => __( 'Не удалось отправить заявку. Попробуйте ещё раз или позвоните нам.', 'trust' ),
 				'captcha' => __( 'Подтвердите, что вы не робот', 'trust' ),

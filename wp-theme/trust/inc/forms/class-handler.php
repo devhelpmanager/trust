@@ -223,8 +223,14 @@ final class Handler {
 		if ( 'checkbox' === $field['type'] ) {
 			return ! empty( $value );
 		}
-		$value = is_scalar( $value ) ? (string) $value : '';
-		return 'textarea' === $field['type'] ? trim( sanitize_textarea_field( $value ) ) : trim( sanitize_text_field( $value ) );
+		$raw   = is_scalar( $value ) ? (string) $value : '';
+		$value = 'textarea' === $field['type'] ? sanitize_textarea_field( $raw ) : sanitize_text_field( $raw );
+		// Теги вырезаны, но текст после одиночного «<» («цена < 1000 & быстро») очистка
+		// экранирует (&lt;, &amp;) — возвращаем символы: хранится текст, при выводе он экранируется.
+		if ( str_contains( $raw, '<' ) ) {
+			$value = wp_specialchars_decode( $value, ENT_QUOTES );
+		}
+		return trim( $value );
 	}
 
 	/**

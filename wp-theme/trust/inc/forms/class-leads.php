@@ -255,6 +255,8 @@ final class Leads {
 			$rows[] = array( __( 'Согласие', 'trust' ), wp_kses_post( $text ) );
 		}
 
+		$rows[] = array( __( 'Уведомления', 'trust' ), Notifications::summary( $post->ID ) );
+
 		echo '<table class="widefat striped trust-lead-table"><tbody>';
 		foreach ( $rows as list( $label, $value ) ) {
 			echo '<tr><th scope="row">' . esc_html( $label ) . '</th><td>' . $value . '</td></tr>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- значения экранированы выше.
@@ -339,7 +341,7 @@ final class Leads {
 		if ( 'lead' !== get_current_screen()?->post_type ) {
 			return;
 		}
-		echo '<style>.trust-lead-status{display:inline-block;padding:2px 8px;border-radius:10px;background:#f0f0f1}.trust-lead-status--new{background:#fcf0f1;color:#8a2424;font-weight:600}.trust-lead-status--closed{color:#646970}.trust-lead-table th{width:30%}.trust-lead-table td{word-break:break-word}</style>';
+		echo '<style>.trust-lead-status{display:inline-block;padding:2px 8px;border-radius:10px;background:#f0f0f1}.trust-lead-status--new{background:#fcf0f1;color:#8a2424;font-weight:600}.trust-lead-status--closed{color:#646970}.trust-lead-table th{width:30%}.trust-lead-table td{word-break:break-word}.trust-notify--error{color:#b32d2e}.trust-notify--ok{color:#007017}</style>';
 	}
 
 	/**
