@@ -1266,6 +1266,32 @@ textarea.field__input {
 	color: #B42318;
 }
 
+.form__status--ok {
+	background: var(--c-ok-bg);
+	color: #0F6B3A;
+}
+
+/* Поле-ловушка для ботов: людям не видно и не доступно с клавиатуры */
+.form__hp {
+	position: absolute;
+	left: -10000px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+/* Капча: виджет reCAPTCHA шириной 304 px — на узких экранах уменьшается */
+.form__captcha {
+	min-height: 78px;
+}
+
+@media (max-width: 359px) {
+	.form__captcha {
+		transform: scale(0.82);
+		transform-origin: 0 0;
+	}
+}
+
 .form__note {
 	margin: 0;
 	font-size: 13px;

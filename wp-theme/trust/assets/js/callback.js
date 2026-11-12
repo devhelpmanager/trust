@@ -7,13 +7,13 @@
  * крестиком, кнопкой «Закрыть» и щелчком по затемнённому фону; фокус возвращается
  * на кнопку, которая открыла окно. Пока окно открыто, страница не прокручивается.
  *
- * Поля проверяются при отправке, сообщения — как в формах макетов. Отправку заявки
- * выполняет модуль форм (шаг 3.5): window.trustForms.submit( form ) → Promise<boolean>.
- * Пока его нет, форма сообщает, что приём заявок ещё не подключён.
+ * Поля проверяются при отправке, сообщения — как в формах макетов; проверку и отправку
+ * заявки выполняет модуль форм (forms.js, window.trustForms). После отправки окно
+ * показывает «Заявка отправлена»; при следующем открытии — снова пустая форма.
  */
 ( () => {
 	const dialog = document.getElementById( 'callback-modal' );
-	if ( ! dialog || 'function' !== typeof dialog.showModal ) {
+	if ( ! dialog || 'function' !== typeof dialog.showModal || ! window.trustForms ) {
 		return;
 	}
 
@@ -29,37 +29,8 @@
 	// Без JavaScript работает проверка браузера (required), с ним — своя, с сообщениями.
 	form.noValidate = true;
 
-	const errorOf = ( input ) => document.getElementById( input.getAttribute( 'aria-describedby' ) );
-
-	function setError( input, message ) {
-		const error = errorOf( input );
-		if ( message ) {
-			input.setAttribute( 'aria-invalid', 'true' );
-			error.textContent = message;
-			error.hidden = false;
-		} else {
-			input.removeAttribute( 'aria-invalid' );
-			error.textContent = '';
-			error.hidden = true;
-		}
-	}
-
-	function isValid( input ) {
-		if ( 'checkbox' === input.type ) {
-			return input.checked;
-		}
-		if ( 'tel' === input.type ) {
-			const digits = input.value.replace( /\D/g, '' );
-			return digits.length >= 10 && digits.length <= 15;
-		}
-		return input.value.trim().length > 0;
-	}
-
-	function validate( input ) {
-		const ok = isValid( input );
-		setError( input, ok ? '' : input.dataset.error );
-		return ok;
-	}
+	const forms = window.trustForms;
+	const validate = ( input ) => forms.check( input );
 
 	function showStatus( message ) {
 		status.textContent = message;
@@ -78,7 +49,7 @@
 		formView.hidden = false;
 		success.hidden = true;
 		showStatus( '' );
-		fields.forEach( ( input ) => setError( input, '' ) );
+		fields.forEach( ( input ) => forms.setError( input, '' ) );
 		dialog.showModal();
 		document.documentElement.classList.add( 'has-modal' );
 		fields[ 0 ].focus();
@@ -128,13 +99,8 @@
 			return;
 		}
 
-		if ( ! window.trustForms || 'function' !== typeof window.trustForms.submit ) {
-			showStatus( form.dataset.notConnected || '' );
-			return;
-		}
-
 		submit.disabled = true;
-		window.trustForms.submit( form )
+		forms.submit( form )
 			.then( ( ok ) => {
 				if ( ok ) {
 					showSuccess();

@@ -8,17 +8,20 @@
  * - закрытие: Esc, крестик, щелчок по фону; щелчок внутри окна не закрывает; фокус возвращается на кнопку;
  * - фокус не уходит из окна по Tab; страница под окном не прокручивается;
  * - проверку полей: пустые, неверный телефон, нет согласия; ошибки снимаются по мере ввода;
- * - при верных данных — сообщение, что приём заявок ещё не подключён (отправка — шаг 3.5);
+ * - при верных данных — заявка уходит (шаг 3.5), окно показывает «Заявка отправлена»,
+ *   при следующем открытии — снова пустая форма; созданная заявка удаляется в конце;
  * - ссылки на согласие и политику конфиденциальности; тексты окна из «Настроек сайта»;
  * - ширины 280–1280 px без прокрутки вбок, зоны нажатия ≥ 44 px; axe-core; консоль и журнал ошибок.
  */
 
 const { chromium } = require( 'playwright' );
 const path = require( 'path' );
-const { URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, getSettings, setSettings } = require( './lib' );
+const { URL, OUT, check, finish, wp, clearLog, checkLog, collectConsoleErrors, getSettings, setSettings, resetFormLimits } = require( './lib' );
 
 ( async () => {
 	clearLog();
+	resetFormLimits();
+	const leadsBefore = wp( 'post', 'list', '--post_type=lead', '--post_status=any', '--field=ID', '--format=ids' );
 	const browser = await chromium.launch();
 	const page = await browser.newPage( { viewport: { width: 1280, height: 800 } } );
 	const errors = collectConsoleErrors( page );
@@ -92,14 +95,23 @@ const { URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, getSe
 	check( 'Без согласия — ошибка согласия', ( await page.locator( '#callback-consent-error' ).isVisible() ) && ( await page.locator( '#callback-phone-error' ).isHidden() ) );
 	await page.check( '#callback-modal .check__input' );
 	check( 'Ошибка согласия снимается при отметке', await page.locator( '#callback-consent-error' ).isHidden() );
-	await page.click( '.form__submit' );
-	const status = ( await page.locator( '#callback-modal .form__status' ).textContent() ).trim();
-	check( 'Верные данные: сообщение «приём заявок ещё настраивается» (до шага 3.5)', status.startsWith( 'Приём заявок через сайт ещё настраивается' ), status );
 
 	// --- Ссылки ---
 	check( 'Ссылка на согласие', ( await page.getAttribute( '#callback-modal .check a', 'href' ) ) === `${ URL }/soglasie-na-obrabotku-dannyh/` );
 	check( 'Ссылка на политику конфиденциальности', ( await page.getAttribute( '#callback-modal .form__note a', 'href' ) ) === `${ URL }/politika-konfidencialnosti/` );
 	await page.screenshot( { path: path.join( OUT, 'callback-1280.png' ) } );
+
+	// --- Отправка ---
+	await page.click( '.form__submit' );
+	check( 'Пока заявка уходит, кнопка недоступна', await page.locator( '#callback-modal .form__submit' ).isDisabled() );
+	await page.waitForSelector( '#callback-modal .callback-modal__success:not([hidden])', { timeout: 15000 } );
+	check( 'Верные данные: «Заявка отправлена», фокус на «Закрыть»', ( await page.textContent( '#callback-modal .form-success__title' ) ).trim() === 'Заявка отправлена' && await page.evaluate( () => document.activeElement.matches( '.callback-modal__success [data-callback-close]' ) ) );
+	await page.screenshot( { path: path.join( OUT, 'callback-sent-1280.png' ) } );
+	const lead = wp( 'post', 'list', '--post_type=lead', '--post_status=any', '--meta_key=trust_name', '--meta_value=Анна', '--field=ID', '--orderby=ID', '--order=DESC', '--posts_per_page=1' );
+	check( 'Заявка сохранена: «Обратный звонок: Анна»', !! lead && wp( 'post', 'get', lead, '--field=post_title' ) === 'Обратный звонок: Анна' );
+	await page.click( '#callback-modal .callback-modal__success [data-callback-close]' );
+	await page.click( '.header-callback' );
+	check( 'Повторное открытие: пустая форма', ( await page.locator( '#callback-modal .callback-modal__form-view' ).isVisible() ) && ( await page.inputValue( '#callback-name' ) ) === '' && ! ( await page.isChecked( '#callback-modal .check__input' ) ) );
 
 	// --- Доступность (окно открыто) ---
 	await page.addScriptTag( { path: require.resolve( 'axe-core' ) } );
@@ -147,6 +159,12 @@ const { URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, getSe
 	}
 
 	await browser.close();
+
+	// Заявки, созданные тестом.
+	const before = new Set( leadsBefore.split( ' ' ).filter( Boolean ) );
+	wp( 'post', 'list', '--post_type=lead', '--post_status=any', '--field=ID', '--format=ids' ).split( ' ' ).filter( ( id ) => id && ! before.has( id ) ).forEach( ( id ) => wp( 'post', 'delete', id, '--force' ) );
+	resetFormLimits();
+
 	check( 'Консоль браузера без ошибок', errors.length === 0, errors.slice( 0, 3 ).join( ' | ' ) );
 	checkLog();
 	finish();

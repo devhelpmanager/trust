@@ -40,6 +40,8 @@ final class Theme {
 		Breadcrumbs::register();
 		Sitemap::register();
 		Schema\Graph::register();
+		Forms\Handler::register();
+		Forms\Leads::register();
 		Settings::register();
 		Blocks::register();
 

@@ -243,8 +243,15 @@ async function publishPost( page ) {
 	throw new Error( 'Запись не сохранилась: нажатие «Опубликовать» не сработало три раза' );
 }
 
+/**
+ * Сбрасывает лимит частоты отправки форм (все тесты идут с одного адреса 127.0.0.1).
+ */
+function resetFormLimits() {
+	wp( 'eval', "global $wpdb; foreach ( $wpdb->get_col( \"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '_transient_trust_form_rate_%'\" ) as $o ) { delete_transient( substr( $o, strlen( '_transient_' ) ) ); }" );
+}
+
 module.exports = {
 	URL, DEV_DIR, LOG, OUT, REPO, THEME,
 	check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser,
-	routeMockupFonts, mockupUrl, comparePng, settle, isolate, getSettings, setSettings, publishPost,
+	routeMockupFonts, mockupUrl, comparePng, settle, isolate, getSettings, setSettings, publishPost, resetFormLimits,
 };

@@ -47,11 +47,17 @@ final class Assets {
 	public static function enqueue(): void {
 		wp_enqueue_style( 'trust-main', self::url( 'assets/css/main.css' ), array(), self::version( 'assets/css/main.css' ) );
 
-		foreach ( array( 'header', 'callback' ) as $script ) {
+		// Шапка, модуль форм и окно звонка (оно есть на каждой странице и использует модуль форм).
+		$scripts = array(
+			'header'   => array(),
+			'forms'    => array(),
+			'callback' => array( 'trust-forms' ),
+		);
+		foreach ( $scripts as $script => $deps ) {
 			wp_enqueue_script(
 				'trust-' . $script,
 				self::url( 'assets/js/' . $script . '.js' ),
-				array(),
+				$deps,
 				self::version( 'assets/js/' . $script . '.js' ),
 				array(
 					'strategy'  => 'defer',
@@ -59,6 +65,7 @@ final class Assets {
 				)
 			);
 		}
+		wp_add_inline_script( 'trust-forms', 'window.trustFormsConfig = ' . wp_json_encode( Forms::script_config(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP ) . ';', 'before' );
 	}
 
 	/**
