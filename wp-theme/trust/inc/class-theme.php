@@ -33,6 +33,8 @@ final class Theme {
 		Vacancies::register();
 		Questions::register();
 		Admin::register();
+		Page_Types::register();
+		Allowed_Blocks::register();
 		Settings::register();
 		Blocks::register();
 

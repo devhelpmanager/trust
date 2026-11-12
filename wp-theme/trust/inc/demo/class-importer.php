@@ -124,6 +124,13 @@ final class Importer {
 				)
 			);
 			update_post_meta( $id, self::META_HASH, self::post_hash( get_post( $id ) ) );
+
+			// Тип страницы: при создании или если тип ещё не выбран — выбранный вручную не трогаем.
+			$template = \Trust\Page_Types::template( $page['type'] ?? '' );
+			if ( '' !== $template && ( 'created' === $status || '' === get_page_template_slug( $id ) ) ) {
+				update_post_meta( $id, '_wp_page_template', $template );
+			}
+
 			$result[ $status ][] = $path;
 		}
 

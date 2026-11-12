@@ -2,9 +2,10 @@
 /**
  * Демо-контент: страницы сайта из меню (ТЗ, Приложение Б).
  *
- * Поля: path — адрес страницы (родитель/ярлык), title — заголовок, blocks — блоки темы
- * по порядку: array( 'имя блока', array( значения полей ) ); {page:адрес} в значениях —
- * ссылка на страницу. Блоки добавляются на шагах, где они появляются.
+ * Поля: path — адрес страницы (родитель/ярлык), title — заголовок, type — тип страницы
+ * (Trust\Page_Types: шаблон; нет — «Обычная страница»), blocks — блоки темы по порядку:
+ * array( 'имя блока', array( значения полей ) ); {page:адрес} в значениях — ссылка на страницу.
+ * Блоки добавляются на шагах, где они появляются.
  *
  * @package Trust
  */
@@ -16,22 +17,27 @@ return array(
 	array(
 		'path'  => 'dizayn',
 		'title' => 'Дизайн',
+		'type'  => 'service',
 	),
 	array(
 		'path'  => 'sozdanie-saytov',
 		'title' => 'Создание сайтов',
+		'type'  => 'service',
 	),
 	array(
 		'path'  => 'soprovozhdenie-saytov',
 		'title' => 'Сопровождение сайтов',
+		'type'  => 'service',
 	),
 	array(
 		'path'  => 'seo',
 		'title' => 'SEO-продвижение',
+		'type'  => 'service',
 	),
 	array(
 		'path'   => 'seo/audit',
 		'title'  => 'Технический аудит сайта',
+		'type'   => 'service',
 		// Блоки страницы услуги (holst-stranitsy/Main) — по мере готовности блоков.
 		'blocks' => array(
 			array(
@@ -78,48 +84,59 @@ return array(
 	array(
 		'path'  => 'seo/pochasovaya-oplata',
 		'title' => 'SEO с почасовой оплатой',
+		'type'  => 'service',
 	),
 	array(
 		'path'  => 'seo/za-obem-raboty',
 		'title' => 'SEO за объём работы',
+		'type'  => 'service',
 	),
 	array(
 		'path'  => 'seo/voprosy',
 		'title' => 'Задать вопрос SEO-шнику',
+		'type'  => 'questions',
 	),
 	array(
 		'path'  => 'geo',
 		'title' => 'GEO-продвижение',
+		'type'  => 'service',
 	),
 	array(
 		'path'  => 'geo/prodvizhenie-v-ii',
 		'title' => 'Продвижение в ИИ',
+		'type'  => 'service',
 	),
 	array(
 		'path'  => 'geo/audit-vidimosti',
 		'title' => 'Аудит видимости',
+		'type'  => 'service',
 	),
 	array(
 		'path'  => 'kontekstnaya-reklama',
 		'title' => 'Контекстная реклама',
+		'type'  => 'service',
 	),
 	array(
 		'path'  => 'kontekstnaya-reklama/yandeks-direkt',
 		'title' => 'Яндекс Директ',
+		'type'  => 'service',
 	),
 	array(
 		'path'  => 'kontekstnaya-reklama/google-reklama',
 		'title' => 'Google Реклама',
+		'type'  => 'service',
 	),
 	array(
 		'path'  => 'ai',
 		'title' => 'AI-решения',
+		'type'  => 'service',
 	),
 
 	// Разделы.
 	array(
 		'path'  => 'portfolio',
 		'title' => 'Портфолио',
+		'type'  => 'portfolio',
 	),
 	array(
 		'path'  => 'blog',
@@ -130,39 +147,48 @@ return array(
 	array(
 		'path'  => 'kontakty',
 		'title' => 'Контакты',
+		'type'  => 'contacts',
 	),
 	array(
 		'path'  => 'o-kompanii',
 		'title' => 'О компании',
+		'type'  => 'about',
 	),
 	array(
 		'path'  => 'komanda',
 		'title' => 'Наша команда',
+		'type'  => 'team',
 	),
 	array(
 		'path'  => 'otzyvy',
 		'title' => 'Отзывы о нас',
+		'type'  => 'reviews',
 	),
 	array(
 		'path'  => 'karera',
 		'title' => 'Карьера',
+		'type'  => 'career',
 	),
 	array(
 		'path'  => 'oferta',
 		'title' => 'Публичная оферта',
+		'type'  => 'document',
 	),
 
 	// Документы (меню «Подвал: документы»).
 	array(
 		'path'  => 'politika-konfidencialnosti',
 		'title' => 'Политика конфиденциальности',
+		'type'  => 'document',
 	),
 	array(
 		'path'  => 'soglasie-na-obrabotku-dannyh',
 		'title' => 'Согласие на обработку персональных данных',
+		'type'  => 'document',
 	),
 	array(
 		'path'  => 'politika-cookie',
 		'title' => 'Политика использования файлов cookie',
+		'type'  => 'document',
 	),
 );

@@ -1,31 +1,12 @@
 <?php
 /**
- * Страница: стандартная шапка страницы (H1) и блоки во всю ширину.
+ * Обычная страница (тип «Обычная страница») и страницы без выбранного типа.
  *
- * Типы страниц (шаблоны с наборами блоков), хлебные крошки и H1 из SEO-поля появятся на
- * шагах 2.5, 3.1 и 3.2. Когда на странице будет блок первого экрана, он выведет H1 сам.
+ * Типы страниц — шаблоны в папке templates/ (Trust\Page_Types); разметка у всех общая.
  *
  * @package Trust
  */
 
 defined( 'ABSPATH' ) || exit;
 
-get_header();
-
-while ( have_posts() ) :
-	the_post();
-	?>
-	<article <?php post_class( 'page-entry' ); ?>>
-		<header class="page-default">
-			<div class="container">
-				<h1 class="page-default__title"><?php the_title(); ?></h1>
-			</div>
-		</header>
-		<div class="page-entry__content">
-			<?php the_content(); ?>
-		</div>
-	</article>
-	<?php
-endwhile;
-
-get_footer();
+get_template_part( 'template-parts/page/layout' );
