@@ -227,11 +227,16 @@
 	color: #F1ECFE;
 }
 
-/* Стрелка вниз между карточками — только в одну колонку */
+/* Открыт: вместо картинки и короткого текста — подробный (на телефоне картинка остаётся) */
+.b-stages__item.is-open .b-stages__pic,
+.b-stages__item.is-open .b-stages__short {
+	display: none;
+}
+
+/* Стрелка вниз рядом с номером — только в одну колонку */
 .b-stages__down {
 	display: none;
-	justify-content: center;
-	width: 36px;
+	flex: none;
 }
 
 .b-stages__down-line {
@@ -254,10 +259,17 @@
 	}
 }
 
+/* Телефон (правки заказчика): номер и стрелка вниз в одну строку; картинка — узкая полоса
+   (около 20 % высоты) и видна всегда; свёрнуто — название и короткий текст, развёрнуто —
+   название и подробный текст. */
 @media (max-width: 480px) {
 	.b-stages__list {
 		grid-template-columns: minmax(0, 1fr);
-		row-gap: 8px;
+		row-gap: 16px;
+	}
+
+	.b-stages__item {
+		gap: 10px;
 	}
 
 	.b-stages__line,
@@ -266,7 +278,15 @@
 	}
 
 	.b-stages__down {
-		display: flex;
+		display: block;
+	}
+
+	.b-stages__pic {
+		aspect-ratio: 7 / 1;
+	}
+
+	.b-stages__item.is-open .b-stages__pic {
+		display: block;
 	}
 }
 

@@ -1,9 +1,10 @@
 <?php
 /**
- * Плашка согласия на cookie и подсказка «Изменить» (макет seo-bloki/17-cookie.html, ТЗ раздел 14).
+ * Плашка согласия на cookie (макет seo-bloki/17-cookie.html, ТЗ раздел 14).
  *
- * Обе скрыты: их показывает assets/js/cookie.js — плашку при первом визите (или после смены
- * версии согласия), подсказку — сразу после выбора. Без JavaScript плашки нет: без скриптов
+ * Плашка скрыта: её показывает assets/js/cookie.js при первом визите (или после смены версии
+ * согласия). После выбора видимой подсказки нет (правка заказчика), выбор озвучивается
+ * скринридеру строкой состояния. Без JavaScript плашки нет: без скриптов
  * счётчики не работают и спрашивать не о чем. Тексты и ссылка на политику — «Настройки сайта →
  * Cookie и счётчики».
  *
@@ -39,7 +40,5 @@ defined( 'ABSPATH' ) || exit;
 		<button type="button" class="cookie-banner__btn cookie-banner__btn--muted" data-trust-consent-choice="none"><?php esc_html_e( 'Отклонить всё', 'trust' ); ?></button>
 	</div>
 </div>
-<div class="cookie-saved" role="status" data-trust-cookie-saved hidden>
-	<span class="cookie-saved__text"></span>
-	<button type="button" class="cookie-saved__btn" data-trust-cookie-settings><?php esc_html_e( 'Изменить', 'trust' ); ?></button>
-</div>
+<?php // Сообщение о сохранённом выборе — только для скринридеров (видимой подсказки нет по просьбе заказчика). ?>
+<div class="screen-reader-text" role="status" data-trust-cookie-saved></div>

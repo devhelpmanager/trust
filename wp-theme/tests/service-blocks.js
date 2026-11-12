@@ -11,12 +11,16 @@
  * - пустые цена, ссылка и «Что проверяем» не выводятся; свой текст ссылки; подпись над списком.
  * «Этапы работы»:
  * - 5 этапов с номерами, линии со стрелками между этапами, итоговый этап «Результат» выделен;
- * - по нажатию вместо картинки и короткого текста — подробный, несколько сразу, повторное
- *   нажатие возвращает картинку; клавиатура; стрелки вниз только в одну колонку;
- * - колонки: 3 этапа — 3, 6 — 3, 7 — 4; своя картинка из медиатеки с alt.
+ * - вместо картинки и короткого текста — подробный (с клавиатуры несколько сразу, повторное
+ *   нажатие возвращает картинку); стрелки вниз только в одну колонку;
+ * - компьютер: подробности при наведении мыши, щелчок мышью их не закрывает; телефон: номер и
+ *   стрелка в строку, картинка — узкая полоса, по нажатию короткий текст сменяется подробным;
+ * - колонки: 3 этапа — 3, 6 — 3, 7 — 4; своя картинка: alt из блока, «Декоративная», из медиатеки,
+ *   предупреждение в редакторе без alt; «Иконка» — список с превью (правки и ТЗ, п. 8.1).
  * Общее: без JavaScript подробности видны; стили и скрипты только на страницах с блоками;
- * совпадение с макетами seo-bloki/04-chto-vklyuchaet-usluga.html, seo-stranitsa/index.html (Stages)
- * и seo-bloki/06-etapy-raboty.html на 1280, 768 и 390 px (≤ 2 %); ширины 1440–280 px без
+ * совпадение с макетами seo-bloki/04-chto-vklyuchaet-usluga.html (1280, 768, 390 px),
+ * seo-stranitsa/index.html (Stages) и seo-bloki/06-etapy-raboty.html (1280, 768 px; на телефоне
+ * этапы по правкам заказчика) с одобренными отступами секций (≤ 2 %); ширины 1440–280 px без
  * прокрутки вбок, зоны нажатия ≥ 44 px; axe-core; консоль и журнал ошибок; редактор — категория
  * «Услуги», превью, поля в боковой панели.
  */
@@ -50,6 +54,7 @@ const STAGES = [ 'Заявка', 'Анализ и предложение', 'До
  * @param {string}                    o.mockup Файл макета.
  * @param {string}                    o.title Заголовок H2 секции в макете.
  * @param {number[]}                  o.open Номера кнопок (с 0), которые раскрыть.
+ * @param {boolean}                   o.keyboard В теме раскрывать с клавиатуры (Enter).
  */
 async function compare( page, o ) {
 	const name = `${ o.name }-${ o.open.length ? 'open' : 'closed' }-${ o.width }`;
@@ -65,7 +70,19 @@ async function compare( page, o ) {
 
 	await page.goto( PAGE, { waitUntil: 'networkidle' } );
 	await settle( page );
-	await clickAll( o.themeClick );
+	if ( o.keyboard ) {
+		// Этапы на компьютере мышью раскрываются наведением и держат высоту карточки (правка
+		// заказчика); как в макете (по нажатию) они раскрываются с клавиатуры.
+		for ( const i of o.open ) {
+			await page.locator( o.themeClick ).nth( i ).focus();
+			await page.keyboard.press( 'Enter' );
+		}
+		await page.evaluate( () => document.activeElement.blur() );
+		await page.mouse.move( 0, 0 );
+		await page.waitForTimeout( 300 );
+	} else {
+		await clickAll( o.themeClick );
+	}
 	await isolate( page, o.theme );
 	await page.locator( o.theme ).screenshot( { path: path.join( OUT, `${ name }-theme.png` ) } );
 
@@ -114,7 +131,8 @@ function stagesPhp( n, extra = '' ) {
 	const page = await context.newPage();
 	const errors = collectConsoleErrors( page );
 	const created = [];
-	let media = '';
+	let media = [];
+	let imagesPage = '';
 
 	try {
 		// ===== «Что включает услуга» =====
@@ -188,38 +206,85 @@ function stagesPhp( n, extra = '' ) {
 			( await st.locator( '.b-stages__pic:visible' ).count() ) === 5 && ( await st.locator( '.b-stages__short:visible' ).count() ) === 5 );
 
 		const stage = ( i ) => st.locator( '.b-stages__item' ).nth( i );
-		await stage( 1 ).locator( '.b-stages__card' ).click();
-		const opened = await stage( 1 ).evaluate( ( el ) => ( {
-			expanded: el.querySelector( '.b-stages__card' ).getAttribute( 'aria-expanded' ),
-			pic: el.querySelector( '.b-stages__pic' ).hidden,
-			short: el.querySelector( '.b-stages__short' ).hidden,
-			detail: el.querySelector( '.b-stages__detail' ).hidden ? '' : el.querySelector( '.b-stages__detail' ).textContent.trim(),
-		} ) );
-		check( 'Этапы: нажатие показывает подробный текст вместо картинки и короткого текста',
-			opened.expanded === 'true' && opened.pic && opened.short && opened.detail.startsWith( 'Смотрим сайт, нишу и конкурентов' ), JSON.stringify( opened ) );
+		const view = ( i ) => stage( i ).evaluate( ( el ) => {
+			const shown = ( sel ) => 'none' !== getComputedStyle( el.querySelector( sel ) ).display;
+			return {
+				expanded: el.querySelector( '.b-stages__card' ).getAttribute( 'aria-expanded' ),
+				pic: shown( '.b-stages__pic' ),
+				short: shown( '.b-stages__short' ),
+				detail: shown( '.b-stages__detail' ) ? el.querySelector( '.b-stages__detail' ).textContent.trim() : '',
+				picHeight: el.querySelector( '.b-stages__pic' ).getBoundingClientRect().height,
+				picWidth: el.querySelector( '.b-stages__pic' ).getBoundingClientRect().width,
+			};
+		} );
+
+		// Компьютер: подробности при наведении мыши (правка заказчика).
+		await stage( 1 ).locator( '.b-stages__card' ).scrollIntoViewIfNeeded();
+		await stage( 1 ).locator( '.b-stages__card' ).hover();
 		await page.waitForTimeout( 300 );
+		let v = await view( 1 );
+		check( 'Этапы, компьютер: наведение мыши показывает подробный текст вместо картинки и короткого текста',
+			v.expanded === 'true' && ! v.pic && ! v.short && v.detail.startsWith( 'Смотрим сайт, нишу и конкурентов' ), JSON.stringify( v ) );
 		const plus = await stage( 1 ).locator( '.b-stages__plus' ).evaluate( ( el ) => getComputedStyle( el ).backgroundColor + ' ' + getComputedStyle( el.querySelector( 'svg' ) ).transform );
 		check( 'Этапы: у открытого этапа кнопка «+» фиолетовая и повёрнута в «×»', plus.startsWith( 'rgb(109, 40, 217) matrix(0.7' ), plus );
-		await stage( 4 ).locator( '.b-stages__card' ).click();
-		check( 'Этапы: открыты несколько этапов одновременно', ( await st.locator( '.b-stages__item.is-open' ).count() ) === 2 );
 		await stage( 1 ).locator( '.b-stages__card' ).click();
-		check( 'Этапы: повторное нажатие возвращает картинку', await stage( 1 ).locator( '.b-stages__pic' ).isVisible() && ! ( await stage( 1 ).locator( '.b-stages__detail' ).isVisible() ) );
+		check( 'Этапы, компьютер: щелчок мышью по открытому наведением этапу его не закрывает', ( await view( 1 ) ).expanded === 'true' );
+		const cardBox = await stage( 1 ).locator( '.b-stages__card' ).boundingBox();
+		await page.mouse.move( cardBox.x + cardBox.width / 2, cardBox.y + cardBox.height - 3 );
+		await page.waitForTimeout( 300 );
+		check( 'Этапы, компьютер: у нижнего края карточки этап не мигает (остаётся открытым)', ( await view( 1 ) ).expanded === 'true' );
+		await page.mouse.move( 5, 5 );
+		await page.waitForTimeout( 300 );
+		v = await view( 1 );
+		check( 'Этапы, компьютер: мышь ушла — снова картинка и короткий текст', v.expanded === 'false' && v.pic && v.short && ! v.detail, JSON.stringify( v ) );
+
 		await stage( 2 ).locator( '.b-stages__card' ).focus();
 		await page.keyboard.press( 'Enter' );
 		const stEnter = await stage( 2 ).locator( '.b-stages__detail' ).isVisible();
+		await stage( 4 ).locator( '.b-stages__card' ).focus();
+		await page.keyboard.press( 'Enter' );
+		check( 'Этапы: с клавиатуры открыты несколько этапов одновременно', stEnter && ( await st.locator( '.b-stages__item.is-open' ).count() ) === 2 );
 		await page.keyboard.press( 'Space' );
-		check( 'Этапы: Enter раскрывает, пробел закрывает', stEnter && ! ( await stage( 2 ).locator( '.b-stages__detail' ).isVisible() ) );
+		await stage( 2 ).locator( '.b-stages__card' ).focus();
+		await page.keyboard.press( 'Space' );
+		check( 'Этапы: Enter раскрывает, пробел закрывает', ( await st.locator( '.b-stages__item.is-open' ).count() ) === 0 );
 
 		// Колонки и стрелки вниз по ширинам.
 		for ( const [ w, cols ] of [ [ 1280, 5 ], [ 1100, 3 ], [ 760, 2 ], [ 480, 1 ] ] ) {
 			await page.setViewportSize( { width: w, height: 900 } );
-			const res = await st.evaluate( ( el ) => ( {
-				cols: getComputedStyle( el.querySelector( '.b-stages__list' ) ).gridTemplateColumns.split( ' ' ).length,
-				down: [ ...el.querySelectorAll( '.b-stages__down' ) ].filter( ( d ) => d.offsetParent ).length,
-				lines: [ ...el.querySelectorAll( '.b-stages__line' ) ].filter( ( d ) => d.offsetParent ).length,
-			} ) );
+			const res = await st.evaluate( ( el ) => {
+				const shown = ( sel ) => [ ...el.querySelectorAll( sel ) ].filter( ( d ) => 'none' !== getComputedStyle( d ).display ).length;
+				return {
+					cols: getComputedStyle( el.querySelector( '.b-stages__list' ) ).gridTemplateColumns.split( ' ' ).length,
+					down: shown( '.b-stages__down' ),
+					lines: shown( '.b-stages__line' ),
+				};
+			} );
 			check( `Этапы ${ w }px: ${ cols } кол.${ 1 === cols ? ', стрелки вниз вместо линий' : '' }`, res.cols === cols && ( 1 === cols ? res.down === 4 && res.lines === 0 : res.down === 0 && res.lines === 4 ), JSON.stringify( res ) );
 		}
+
+		// Телефон (правки заказчика): номер и стрелка в строку, картинка — узкая полоса и видна всегда.
+		await page.setViewportSize( { width: 390, height: 900 } );
+		await page.reload( { waitUntil: 'networkidle' } );
+		const row = await stage( 0 ).evaluate( ( el ) => {
+			const num = el.querySelector( '.b-stages__num' ).getBoundingClientRect();
+			const down = el.querySelector( '.b-stages__down' ).getBoundingClientRect();
+			return { same: Math.abs( ( num.top + num.bottom ) / 2 - ( down.top + down.bottom ) / 2 ) < 2, right: down.left > num.right };
+		} );
+		check( 'Этапы, телефон: номер и стрелка вниз в одну строку', row.same && row.right, JSON.stringify( row ) );
+		v = await view( 1 );
+		const ratio = v.picHeight / ( v.picWidth * 10 / 16 );
+		check( 'Этапы, телефон: свёрнуто — картинка узкой полосой (15–25 % высоты), название и короткий текст',
+			v.expanded === 'false' && v.pic && v.short && ! v.detail && ratio >= 0.15 && ratio <= 0.25, `${ JSON.stringify( v ) } ${ ratio.toFixed( 2 ) }` );
+		await stage( 1 ).locator( '.b-stages__card' ).click();
+		await page.mouse.move( 0, 0 );
+		v = await view( 1 );
+		check( 'Этапы, телефон: нажатие — картинка-полоса, название и подробный текст', v.expanded === 'true' && v.pic && ! v.short && v.detail.startsWith( 'Смотрим сайт' ), JSON.stringify( v ) );
+		await stage( 1 ).locator( '.b-stages__card' ).click();
+		v = await view( 1 );
+		check( 'Этапы, телефон: повторное нажатие сворачивает', v.expanded === 'false' && v.short && ! v.detail, JSON.stringify( v ) );
+		await page.waitForTimeout( 200 );
+		await st.screenshot( { path: path.join( OUT, 'stages-phone-390.png' ) } );
 		await page.setViewportSize( { width: 1280, height: 900 } );
 
 		// --- Стили и скрипты только на страницах с блоками ---
@@ -268,21 +333,37 @@ function stagesPhp( n, extra = '' ) {
 		check( 'Состав: текст ссылки по умолчанию из поля блока, новая вкладка', c.more === 'Узнать больше' && c.target === '_blank', JSON.stringify( c ) );
 		check( 'Состав: очищенная подпись «Что проверяем» не выводится', c.label === 0 );
 
-		media = wp( 'media', 'import', path.join( THEME, 'assets', 'img', 'page-types', 'service.jpg' ), '--title=Тестовая картинка этапа', '--alt=Схема этапа', '--porcelain' );
+		const jpg = path.join( THEME, 'assets', 'img', 'page-types', 'service.jpg' );
+		media = [
+			wp( 'media', 'import', jpg, '--title=Тестовая картинка этапа', '--alt=Схема этапа', '--porcelain' ),
+			wp( 'media', 'import', jpg, '--title=Тестовая картинка без alt', '--porcelain' ),
+		];
+		const pictures = `array( 'picture' => 'image', 'image' => ${ media[ 0 ] }, 'alt' => 'Своё описание', 'title' => 'Этап 1', 'short' => 'Коротко', 'detail' => 'Подробно' ),
+			array( 'picture' => 'image', 'image' => ${ media[ 0 ] }, 'decorative' => 1, 'title' => 'Этап 2', 'short' => 'Коротко', 'detail' => 'Подробно' ),
+			array( 'picture' => 'image', 'image' => ${ media[ 1 ] }, 'title' => 'Без описания', 'short' => 'Коротко', 'detail' => 'Подробно' ),
+			array( 'picture' => 'image', 'image' => ${ media[ 0 ] }, 'title' => 'Этап 4', 'short' => 'Коротко', 'detail' => 'Подробно' ),
+			array( 'picture' => 'none', 'title' => 'Этап 5', 'short' => 'Коротко', 'detail' => 'Подробно', 'result' => 1 )`;
+		imagesPage = createPage( 'картинки этапов', `Trust\\Blocks::serialize( 'stages', array( 'title' => 'Картинки', 'stages' => array( ${ pictures } ) ) )` );
+		created.push( imagesPage );
+		await page.goto( `${ URL }/?page_id=${ imagesPage }`, { waitUntil: 'networkidle' } );
+		const alts = await page.locator( '.b-stages__item' ).evaluateAll( ( list ) => list.map( ( li ) => {
+			const img = li.querySelector( '.b-stages__pic img' );
+			return img ? img.getAttribute( 'alt' ) + ( img.getAttribute( 'srcset' ) ? '+srcset' : '' ) : ( li.querySelector( '.b-stages__pic' ) ? 'pic' : 'нет' );
+		} ) );
+		check( 'Этапы: alt своей картинки — из поля блока, у декоративной пустой, иначе из медиатеки; srcset; «Без картинки»',
+			JSON.stringify( alts ) === JSON.stringify( [ 'Своё описание+srcset', '+srcset', '+srcset', 'Схема этапа+srcset', 'нет' ] ), JSON.stringify( alts ) );
+		check( 'Этапы: на сайте предупреждения об alt нет', ( await page.locator( '.trust-block-warning' ).count() ) === 0 );
+
 		for ( const [ n, cols ] of [ [ 3, 3 ], [ 6, 3 ], [ 7, 4 ] ] ) {
-			const id = createPage( `этапы ${ n }`, stagesPhp( n, 3 === n ? `, 'picture' => 'image', 'image' => ${ media }` : '' ) );
+			const id = createPage( `этапы ${ n }`, stagesPhp( n ) );
 			created.push( id );
 			await page.goto( `${ URL }/?page_id=${ id }`, { waitUntil: 'networkidle' } );
 			const res = await page.locator( '.b-stages' ).evaluate( ( el ) => ( {
 				cols: getComputedStyle( el.querySelector( '.b-stages__list' ) ).gridTemplateColumns.split( ' ' ).length,
 				items: el.querySelectorAll( '.b-stages__item' ).length,
-				img: el.querySelector( '.b-stages__pic img' ) ? el.querySelector( '.b-stages__pic img' ).getAttribute( 'alt' ) : '',
 				lastLine: !! el.querySelector( '.b-stages__item:last-child .b-stages__line' ),
 			} ) );
 			check( `Этапы: ${ n } шт. — ${ cols } колонки на широком экране`, res.items === n && res.cols === cols && ! res.lastLine, JSON.stringify( res ) );
-			if ( 3 === n ) {
-				check( 'Этапы: своя картинка из медиатеки с alt', res.img === 'Схема этапа', res.img );
-			}
 		}
 
 		// --- Сверка с макетами ---
@@ -290,8 +371,13 @@ function stagesPhp( n, extra = '' ) {
 			for ( const open of [ [], [ 0 ] ] ) {
 				await compare( page, { name: 'includes', width, theme: '.b-includes', themeClick: '.b-includes__toggle', mockup: 'seo-bloki/04-chto-vklyuchaet-usluga.html', title: 'Что включает технический аудит', open } );
 			}
+			// На телефоне «Этапы» свёрстаны по правкам заказчика (полоса картинки, стрелка у номера) —
+			// с макетом не сравниваются, вид проверен выше (снимок stages-phone-390.png).
+			if ( 390 === width ) {
+				continue;
+			}
 			for ( const open of [ [], [ 1, 4 ] ] ) {
-				await compare( page, { name: 'stages', width, theme: '.b-stages', themeClick: '.b-stages__card', mockup: 'seo-stranitsa/index.html', title: 'Этапы работы', open } );
+				await compare( page, { name: 'stages', width, theme: '.b-stages', themeClick: '.b-stages__card', mockup: 'seo-stranitsa/index.html', title: 'Этапы работы', open, keyboard: true } );
 			}
 		}
 		for ( const width of [ 1280, 768 ] ) {
@@ -314,7 +400,8 @@ function stagesPhp( n, extra = '' ) {
 		await page.setViewportSize( { width: 1280, height: 900 } );
 		await page.goto( PAGE, { waitUntil: 'networkidle' } );
 		await page.locator( '.b-includes__toggle' ).first().click();
-		await page.locator( '.b-stages__card' ).nth( 4 ).click();
+		await page.locator( '.b-stages__card' ).nth( 4 ).focus();
+		await page.keyboard.press( 'Enter' );
 		await page.waitForTimeout( 300 );
 		await page.addScriptTag( { path: require.resolve( 'axe-core' ) } );
 		const axe = await page.evaluate( async () => {
@@ -362,13 +449,30 @@ function stagesPhp( n, extra = '' ) {
 			await editor.waitForTimeout( 1500 );
 			const sidebar = await editor.locator( '.interface-complementary-area' ).innerText().catch( () => '' );
 			check( `Редактор: поля блока ${ name } в боковой панели`, labels.every( ( label ) => sidebar.includes( label ) ), sidebar.slice( 0, 120 ).replace( /\s+/g, ' ' ) );
+			if ( 'trust/service-includes' === name ) {
+				const icons = await editor.evaluate( () => [ ...document.querySelectorAll( '.interface-complementary-area .trust-icon-select .select2-selection__rendered' ) ].map( ( el ) => ( el.querySelector( 'svg' ) ? 'svg ' : '' ) + el.textContent.trim() ) );
+				check( 'Редактор: «Иконка» — список с превью значков (8 работ, у выбранного значения — иконка)', icons.length === 8 && icons.every( ( t ) => t.startsWith( 'svg ' ) ) && icons[ 0 ] === 'svg Робот (robots.txt)', JSON.stringify( icons.slice( 0, 2 ) ) );
+				await editor.locator( '.interface-complementary-area .trust-icon-select .select2-selection' ).first().click();
+				const options = await editor.evaluate( () => [ ...document.querySelectorAll( '.select2-results__option' ) ].map( ( o ) => ( o.querySelector( 'svg' ) ? 'svg ' : '' ) + o.textContent.trim() ) );
+				check( 'Редактор: в раскрытом списке у каждой иконки превью', options.length === 13 && options.every( ( t ) => t.startsWith( 'svg ' ) ), JSON.stringify( options.slice( 0, 3 ) ) );
+				await editor.screenshot( { path: path.join( OUT, 'service-blocks-icons.png' ) } );
+				await editor.keyboard.press( 'Escape' );
+			}
 		}
 		await editor.screenshot( { path: path.join( OUT, 'service-blocks-editor.png' ) } );
+
+		// Своя картинка этапа без описания — предупреждение в превью редактора.
+		await editor.goto( `${ URL }/wp-admin/post.php?post=${ imagesPage }&action=edit` );
+		await editor.waitForFunction( () => window.wp && wp.data && wp.data.select( 'core/block-editor' ), null, { timeout: 60000 } );
+		const warnCanvas = editor.frameLocator( 'iframe[name="editor-canvas"]' );
+		await warnCanvas.locator( '.b-stages' ).first().waitFor( { timeout: 30000 } );
+		const warnings = ( await warnCanvas.locator( '.trust-block-warning' ).allTextContents() ).map( ( t ) => t.trim() );
+		check( 'Редактор: предупреждение у картинки этапа без alt (только у неё)', warnings.length === 1 && warnings[ 0 ].startsWith( 'У картинки этапа «Без описания» нет описания (alt)' ), warnings.join( ' | ' ) );
 		check( 'Редактор без ошибок JavaScript', editorErrors.length === 0, editorErrors.slice( 0, 3 ).join( ' | ' ) );
 	} finally {
 		created.forEach( ( id ) => wp( 'post', 'delete', id, '--force' ) );
-		if ( media ) {
-			wp( 'post', 'delete', media, '--force' );
+		if ( media.length ) {
+			media.forEach( ( m ) => wp( 'post', 'delete', m, '--force' ) );
 		}
 	}
 

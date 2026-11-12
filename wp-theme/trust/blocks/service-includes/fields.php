@@ -24,7 +24,6 @@ return array_merge(
 			'default_value' => __( 'Что проверяем', 'trust' ),
 			'maxlength'     => 40,
 			'instructions'  => __( 'Одна для всех работ блока: «Что проверяем», «Что делаем»…', 'trust' ),
-			'wrapper'       => array( 'width' => 50 ),
 		),
 		array(
 			'name'          => 'more_label',
@@ -33,7 +32,6 @@ return array_merge(
 			'default_value' => __( 'Подробнее об услуге', 'trust' ),
 			'maxlength'     => 40,
 			'instructions'  => __( 'Если в работе у ссылки не указан свой текст.', 'trust' ),
-			'wrapper'       => array( 'width' => 50 ),
 		),
 		array(
 			'name'         => 'items',
@@ -46,27 +44,25 @@ return array_merge(
 			'collapsed'    => 'field_trust_block_service_includes_items_title',
 			'instructions' => __( 'Номера 01, 02… ставятся автоматически по порядку, порядок меняется перетаскиванием. На странице все работы закрыты, открыть можно несколько сразу.', 'trust' ),
 			'sub_fields'   => array(
-				array(
-					'name'          => 'icon',
-					'label'         => __( 'Иконка', 'trust' ),
-					'type'          => 'select',
-					'choices'       => array(
-						'robot'    => __( 'Робот (robots.txt)', 'trust' ),
-						'sitemap'  => __( 'Схема (карта сайта, структура)', 'trust' ),
-						'server'   => __( 'Сервер (коды ответа, хостинг)', 'trust' ),
-						'copy'     => __( 'Копии (дубли)', 'trust' ),
-						'bolt'     => __( 'Молния (скорость)', 'trust' ),
-						'mobile'   => __( 'Телефон (мобильная версия)', 'trust' ),
-						'database' => __( 'База данных (индексация)', 'trust' ),
-						'code'     => __( 'Код (микроразметка, вёрстка)', 'trust' ),
-						'list'     => __( 'Список', 'trust' ),
-						'sliders'  => __( 'Настройки', 'trust' ),
-						'chat'     => __( 'Сообщение', 'trust' ),
-						'user'     => __( 'Человек', 'trust' ),
-						'check'    => __( 'Галочка', 'trust' ),
-					),
-					'default_value' => 'check',
-					'wrapper'       => array( 'width' => 35 ),
+				Trust\Icons::field(
+					array(
+						'choices'       => array(
+							'robot'    => __( 'Робот (robots.txt)', 'trust' ),
+							'sitemap'  => __( 'Схема (карта сайта, структура)', 'trust' ),
+							'server'   => __( 'Сервер (коды ответа, хостинг)', 'trust' ),
+							'copy'     => __( 'Копии (дубли)', 'trust' ),
+							'bolt'     => __( 'Молния (скорость)', 'trust' ),
+							'mobile'   => __( 'Телефон (мобильная версия)', 'trust' ),
+							'database' => __( 'База данных (индексация)', 'trust' ),
+							'code'     => __( 'Код (микроразметка, вёрстка)', 'trust' ),
+							'list'     => __( 'Список', 'trust' ),
+							'sliders'  => __( 'Настройки', 'trust' ),
+							'chat'     => __( 'Сообщение', 'trust' ),
+							'user'     => __( 'Человек', 'trust' ),
+							'check'    => __( 'Галочка', 'trust' ),
+						),
+						'default_value' => 'check',
+					)
 				),
 				array(
 					'name'         => 'title',
@@ -75,7 +71,6 @@ return array_merge(
 					'required'     => 1,
 					'maxlength'    => 120,
 					'instructions' => __( 'До 40 символов.', 'trust' ),
-					'wrapper'      => array( 'width' => 65 ),
 				),
 				array(
 					'name'         => 'description',
@@ -94,7 +89,6 @@ return array_merge(
 					'maxlength'    => 40,
 					'placeholder'  => 'от 15 000 ₽',
 					'instructions' => __( 'Необязательно. Как показывать: «от 15 000 ₽».', 'trust' ),
-					'wrapper'      => array( 'width' => 35 ),
 				),
 				array(
 					'name'          => 'link',
@@ -102,7 +96,6 @@ return array_merge(
 					'type'          => 'link',
 					'return_format' => 'array',
 					'instructions'  => __( 'Необязательно. Текст ссылки можно не заполнять — будет «Подробнее об услуге».', 'trust' ),
-					'wrapper'       => array( 'width' => 65 ),
 				),
 				array(
 					'name'         => 'checks',

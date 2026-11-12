@@ -12,13 +12,13 @@
  * - первый визит: плашка внизу, тексты и ссылка на политику из настроек, фокус не уводится,
  *   код счётчиков не выполняется и внешний скрипт не запрашивается;
  * - «Принять»: код аналитики и пикселей выполняется сразу, без перезагрузки; cookie trust_consent
- *   (категории, вариант, дата, версия, срок); подсказка «Все cookie приняты · Изменить» —
- *   прячется через 10 секунд (тест ждёт по-настоящему); при следующем визите код выполняется сразу, плашки нет;
+ *   (категории, вариант, дата, версия, срок); видимой подсказки после выбора нет (правка заказчика),
+ *   скринридер слышит «Все cookie приняты»; при следующем визите код выполняется сразу, плашки нет;
  * - «Изменить» → «Принять только обязательные»: страница перезагружается, код не выполняется,
  *   cookie счётчиков удалены; «Отклонить всё» — без перезагрузки и без кода;
  * - ссылка #cookie-settings открывает плашку; window.trustConsent и событие trust:consent;
  * - новая версия согласия и срок хранения из настроек; без JavaScript плашки нет;
- * - ширины 1280–280 px, зоны нажатия, клавиатура, axe-core; совпадение плашки и подсказки
+ * - ширины 1280–280 px, зоны нажатия, клавиатура, axe-core; совпадение плашки
  *   с макетом seo-bloki/17-cookie.html на 1280 и 390 px.
  */
 
@@ -32,7 +32,7 @@ const MARKETING = '<script src="https://counter.example/pixel.js" async></script
 const PAGE = `${ URL }/seo/audit/`;
 
 const banner = ( page ) => page.locator( '.cookie-banner' );
-const pill = ( page ) => page.locator( '.cookie-saved' );
+const status = ( page ) => page.locator( '[data-trust-cookie-saved]' );
 const consent = async ( page ) => {
 	const cookie = ( await page.context().cookies( URL ) ).find( ( c ) => 'trust_consent' === c.name );
 	return cookie ? { ...JSON.parse( decodeURIComponent( cookie.value ) ), expires: cookie.expires } : null;
@@ -63,7 +63,7 @@ const days = ( c ) => Math.round( ( c.expires * 1000 - Date.now() ) / 86400000 )
 		let v = await visitor();
 		let page = v.page;
 		await page.goto( PAGE, { waitUntil: 'networkidle' } );
-		check( 'Первый визит: плашка видна, подсказки нет', await banner( page ).isVisible() && await pill( page ).isHidden() );
+		check( 'Первый визит: плашка видна, сообщения о выборе нет', await banner( page ).isVisible() && '' === await status( page ).textContent() );
 		check( 'Плашка: role=dialog, заголовок и текст из макета', ( await banner( page ).getAttribute( 'role' ) ) === 'dialog' &&
 			( await page.textContent( '#cookie-banner-title' ) ).trim() === 'Мы используем файлы cookie' &&
 			( await page.textContent( '#cookie-banner-text' ) ).trim() === 'Обязательные cookie нужны для работы сайта, аналитические помогают понять, какие страницы полезны посетителям. Подробнее — в политике использования cookie.' );
@@ -88,15 +88,16 @@ const days = ( c ) => Math.round( ( c.expires * 1000 - Date.now() ) / 86400000 )
 		let c = await consent( page );
 		check( '«Принять»: код аналитики и пикселя выполнен сразу, без перезагрузки', await page.evaluate( () => window.__analytics === 1 && window.__marketing === 1 && !! document.getElementById( 'analytics-marker' ) ) && pixelRequests.length === 1 );
 		check( 'Cookie trust_consent: все категории, вариант «all», дата, версия 1, срок 365 дней', c?.necessary === true && c.analytics === true && c.marketing === true && c.choice === 'all' && c.v === '1' && !! Date.parse( c.date ) && days( c ) === 365, JSON.stringify( c ) );
-		check( 'Плашка скрыта, подсказка «Все cookie приняты · Изменить»', await banner( page ).isHidden() && ( await pill( page ).textContent() ).replace( /\s+/g, ' ' ).trim() === 'Все cookie приняты Изменить' );
-		check( 'Фокус перешёл на «Изменить»', await page.evaluate( () => document.activeElement.matches( '.cookie-saved__btn' ) ) );
+		const after = await page.evaluate( () => {
+			const el = document.querySelector( '[data-trust-cookie-saved]' );
+			const r = el.getBoundingClientRect();
+			return { role: el.getAttribute( 'role' ), text: el.textContent, size: r.width * r.height, focus: document.activeElement === document.body, visible: [ ...document.querySelectorAll( 'body *' ) ].some( ( n ) => /Изменить/.test( n.textContent ) && n.offsetParent && 'BUTTON' === n.tagName ) };
+		} );
+		check( 'Плашка скрыта, видимой подсказки «Изменить» нет (правка заказчика)', await banner( page ).isHidden() && ! after.visible && after.size <= 1, JSON.stringify( after ) );
+		check( 'Скринридер слышит «Все cookie приняты» (role=status), фокус не остался на скрытой кнопке', after.role === 'status' && after.text === 'Все cookie приняты' && after.focus, JSON.stringify( after ) );
 		await page.screenshot( { path: path.join( OUT, 'cookie-saved-1280.png' ) } );
-		await page.evaluate( () => document.activeElement.blur() );
-		await page.mouse.move( 5, 300 );
-		await page.waitForTimeout( 8500 );
-		const visibleAt9 = await pill( page ).isVisible();
-		await page.waitForTimeout( 2500 );
-		check( 'Подсказка прячется через 10 секунд', visibleAt9 && await pill( page ).isHidden() );
+		await page.waitForTimeout( 5500 );
+		check( 'Сообщение для скринридера очищается через 5 секунд', '' === await status( page ).textContent() );
 
 		await page.reload( { waitUntil: 'networkidle' } );
 		check( 'Следующий визит: плашки нет, код выполнен сразу один раз', await banner( page ).isHidden() && await page.evaluate( () => window.__analytics === 1 && window.__marketing === 1 ) );
@@ -136,7 +137,7 @@ const days = ( c ) => Math.round( ( c.expires * 1000 - Date.now() ) / 86400000 )
 		} );
 		await banner( page ).locator( 'button', { hasText: 'Отклонить всё' } ).click();
 		c = await consent( page );
-		check( '«Отклонить всё»: без перезагрузки, без кода, выбор «none»', await page.evaluate( () => window.__loaded === true && ! window.__analytics ) && c?.choice === 'none' && c.analytics === false && ( await pill( page ).textContent() ).includes( 'Необязательные cookie отклонены' ) );
+		check( '«Отклонить всё»: без перезагрузки, без кода, выбор «none»', await page.evaluate( () => window.__loaded === true && ! window.__analytics ) && c?.choice === 'none' && c.analytics === false && ( await status( page ).textContent() ).includes( 'Необязательные cookie отклонены' ) );
 		const api = await page.evaluate( () => {
 			const before = window.trustConsent.has( 'analytics' );
 			window.trustConsent.set( { analytics: true }, 'custom' );
@@ -208,17 +209,7 @@ const days = ( c ) => Math.round( ( c.expires * 1000 - Date.now() ) / 86400000 )
 		} );
 		check( 'axe: плашка без critical/serious', axe.length === 0, axe.join( ', ' ) );
 		await banner( page ).locator( 'button', { hasText: 'Принять только обязательные' } ).click();
-		axe = await page.evaluate( async () => {
-			const r = await window.axe.run( document.querySelector( '.cookie-saved' ), { resultTypes: [ 'violations' ] } );
-			return r.violations.filter( ( x ) => [ 'critical', 'serious' ].includes( x.impact ) ).map( ( x ) => `${ x.id } (${ x.nodes.length })` );
-		} );
-		const pillTarget = await page.evaluate( () => {
-			const btn = document.querySelector( '.cookie-saved__btn' );
-			const r = btn.getBoundingClientRect();
-			const s = getComputedStyle( btn, '::before' );
-			return { h: r.height + 2 * Math.abs( parseFloat( s.top ) ), w: r.width };
-		} );
-		check( 'axe: подсказка без critical/serious; зона нажатия «Изменить» ≥ 44 px', axe.length === 0 && pillTarget.h >= 44 && pillTarget.w >= 44, `${ axe.join( ', ' ) } ${ JSON.stringify( pillTarget ) }` );
+		check( '«Принять только обязательные»: плашка скрыта, скринридер слышит выбор', await banner( page ).isHidden() && 'Приняты только обязательные cookie' === await status( page ).textContent() );
 		check( 'Консоль без ошибок', v.errors.length === 0, v.errors.slice( 0, 3 ).join( ' | ' ) );
 		await v.context.close();
 
@@ -246,21 +237,14 @@ const days = ( c ) => Math.round( ( c.expires * 1000 - Date.now() ) / 86400000 )
 		for ( const w of [ 1280, 390 ] ) {
 			await page.setViewportSize( { width: w, height: 800 } );
 			await mock.setViewportSize( { width: w, height: 800 } );
-			for ( const state of [ 'banner', 'saved' ] ) {
+			for ( const state of [ 'banner' ] ) {
 				await v.context.clearCookies();
 				await page.goto( PAGE, { waitUntil: 'networkidle' } );
 				await mock.goto( mockupUrl( 'seo-bloki/17-cookie.html' ), { waitUntil: 'networkidle' } );
 				await settle( page );
 				await settle( mock );
-				if ( 'saved' === state ) {
-					await banner( page ).locator( 'button', { hasText: /^Принять$/ } ).click();
-					await mock.locator( '[role="dialog"] button', { hasText: /^Принять$/ } ).click();
-					await page.evaluate( () => document.activeElement.blur() );
-					await page.mouse.move( 0, 0 );
-					await mock.mouse.move( 0, 0 );
-				}
-				const themeSel = 'banner' === state ? '.cookie-banner' : '.cookie-saved';
-				const mockSel = 'banner' === state ? '[role="dialog"]' : '[role="status"]';
+				const themeSel = '.cookie-banner';
+				const mockSel = '[role="dialog"]';
 				await backdrop( page, themeSel );
 				await backdrop( mock, mockSel );
 				await page.waitForTimeout( 200 );
@@ -268,7 +252,7 @@ const days = ( c ) => Math.round( ( c.expires * 1000 - Date.now() ) / 86400000 )
 				await page.locator( themeSel ).screenshot( { path: path.join( OUT, `${ name }-theme.png` ) } );
 				await mock.locator( mockSel ).screenshot( { path: path.join( OUT, `${ name }-mockup.png` ) } );
 				const diff = comparePng( path.join( OUT, `${ name }-mockup.png` ), path.join( OUT, `${ name }-theme.png` ), path.join( OUT, `${ name }-diff.png` ) );
-				check( `Макет ${ w }px, ${ 'banner' === state ? 'плашка' : 'подсказка после выбора' }: совпадение (≤ 2 %)`, diff <= 2, `${ diff.toFixed( 2 ) } %` );
+				check( `Макет ${ w }px, плашка: совпадение (≤ 2 %)`, diff <= 2, `${ diff.toFixed( 2 ) } %` );
 			}
 		}
 		await mockContext.close();

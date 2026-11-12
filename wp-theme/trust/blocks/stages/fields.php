@@ -43,7 +43,6 @@ return array_merge(
 					),
 					'default_value' => 'work',
 					'instructions'  => __( 'Рисунки из макета или своя картинка.', 'trust' ),
-					'wrapper'       => array( 'width' => 40 ),
 				),
 				array(
 					'name'              => 'image',
@@ -53,8 +52,7 @@ return array_merge(
 					'preview_size'      => 'medium',
 					'library'           => 'all',
 					'mime_types'        => 'jpg,jpeg,png,webp,svg',
-					'instructions'      => __( 'Пропорции 16:10, не меньше 480×300 px. Описание (alt) — в медиатеке; для украшения оставьте пустым.', 'trust' ),
-					'wrapper'           => array( 'width' => 60 ),
+					'instructions'      => __( 'Пропорции 16:10, не меньше 480×300 px.', 'trust' ),
 					'conditional_logic' => array(
 						array(
 							array(
@@ -64,6 +62,17 @@ return array_merge(
 							),
 						),
 					),
+				),
+				...Trust\Blocks::image_alt_fields(
+					array(
+						array(
+							array(
+								'field'    => 'field_trust_block_stages_stages_picture',
+								'operator' => '==',
+								'value'    => 'image',
+							),
+						),
+					)
 				),
 				array(
 					'name'         => 'title',

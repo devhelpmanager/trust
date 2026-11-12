@@ -84,6 +84,53 @@ final class Icons {
 	}
 
 	/**
+	 * Поле SCF «Иконка» — список с превью значков (ТЗ, п. 8.1): select с поиском, у каждого
+	 * варианта и у выбранного значения — сама иконка (assets/js/icon-select.js).
+	 *
+	 * @param array $field Поле: name, label, choices (имя иконки => подпись), default_value, wrapper и др.
+	 */
+	public static function field( array $field ): array {
+		$wrapper          = $field['wrapper'] ?? array();
+		$wrapper['class'] = trim( ( $wrapper['class'] ?? '' ) . ' trust-icon-select' );
+		return array_merge(
+			array(
+				'name'  => 'icon',
+				'label' => __( 'Иконка', 'trust' ),
+				'type'  => 'select',
+				'ui'    => 1,
+			),
+			$field,
+			array( 'wrapper' => $wrapper )
+		);
+	}
+
+	/**
+	 * Регистрирует хуки: скрипт превью иконок в полях SCF (в редакторе блоков и админке).
+	 */
+	public static function register(): void {
+		add_action( 'acf/input/admin_enqueue_scripts', array( self::class, 'admin_assets' ) );
+	}
+
+	/**
+	 * Скрипт и стили превью иконок; разметка иконок — из спрайта темы.
+	 */
+	public static function admin_assets(): void {
+		wp_enqueue_style( 'trust-icon-select', Assets::url( 'assets/css/icon-select.css' ), array(), Assets::version( 'assets/css/icon-select.css' ) );
+		wp_enqueue_script( 'trust-icon-select', Assets::url( 'assets/js/icon-select.js' ), array( 'acf-input' ), Assets::version( 'assets/js/icon-select.js' ), true );
+		$icons = array();
+		foreach ( array_keys( self::symbols() ) as $id ) {
+			$icons[ $id ] = self::svg(
+				$id,
+				array(
+					'size'         => 20,
+					'stroke_width' => 1.8,
+				)
+			);
+		}
+		wp_add_inline_script( 'trust-icon-select', 'window.trustIcons = ' . wp_json_encode( $icons, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG ) . ';', 'before' );
+	}
+
+	/**
 	 * Есть ли иконка в спрайте.
 	 *
 	 * @param string $id Имя иконки.

@@ -2,12 +2,13 @@
 /**
  * Блок «Этапы работы» (макет holst-stranitsy/Main → Stages, seo-bloki/06-etapy-raboty.html).
  *
- * Над каждой карточкой — номер в круге и линия со стрелкой к следующему этапу (на телефоне —
- * стрелка вниз под карточкой). Карточка — кнопка: картинка, название, короткий текст;
- * по нажатию вместо картинки и короткого текста показывается подробный. Открытыми могут
- * быть несколько этапов. Итоговый этап — фиолетовая карточка с подписью «Результат».
- * До 5 этапов — в один ряд, 6 и 7 — в два (3 и 4 колонки); уже 1100 px — 3 колонки,
- * 760 px — 2, 480 px — одна. Без JavaScript подробный текст виден сразу.
+ * Над каждой карточкой — номер в круге и линия со стрелкой к следующему этапу. Карточка —
+ * кнопка: картинка, название, короткий текст; при наведении мыши (на компьютере) или по нажатию
+ * вместо картинки и короткого текста показывается подробный. Итоговый этап — фиолетовая
+ * карточка с подписью «Результат». До 5 этапов — в один ряд, 6 и 7 — в два (3 и 4 колонки);
+ * уже 1100 px — 3 колонки, 760 px — 2, 480 px — одна: стрелка вниз рядом с номером, картинка —
+ * узкой полосой и видна всегда, по нажатию короткий текст сменяется подробным (правки
+ * заказчика). Без JavaScript подробный текст виден сразу.
  *
  * Переменные SCF: $block (array), $is_preview (bool), $post_id (int|string).
  *
@@ -41,17 +42,17 @@ $trust_cols     = $trust_count <= 5 ? $trust_count : (int) ceil( $trust_count / 
 $trust_picture = static function ( array $row ): string {
 	$picture = (string) ( $row['picture'] ?? 'work' );
 	if ( 'image' === $picture ) {
-		$id = (int) ( $row['image'] ?? 0 );
-		return $id ? (string) wp_get_attachment_image(
-			$id,
+		return Blocks::image(
+			(int) ( $row['image'] ?? 0 ),
 			'medium_large',
-			false,
 			array(
 				'class'   => 'b-stages__img',
 				'loading' => 'lazy',
 				'sizes'   => '(max-width: 480px) 100vw, (max-width: 1100px) 33vw, 240px',
-			)
-		) : '';
+			),
+			(string) ( $row['alt'] ?? '' ),
+			! empty( $row['decorative'] )
+		);
 	}
 	$file = __DIR__ . '/illustrations/' . sanitize_key( $picture ) . '.svg';
 	return is_readable( $file ) ? (string) file_get_contents( $file ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- файл темы.
@@ -73,6 +74,17 @@ $trust_picture = static function ( array $row ): string {
 			</div>
 		<?php endif; ?>
 
+		<?php
+		if ( $is_preview ) {
+			// Своя картинка этапа без описания — предупреждение в редакторе (ТЗ, п. 8.1).
+			foreach ( $trust_stages as $trust_row ) {
+				if ( 'image' === ( $trust_row['picture'] ?? '' ) && Blocks::image_alt_missing( (int) ( $trust_row['image'] ?? 0 ), (string) ( $trust_row['alt'] ?? '' ), ! empty( $trust_row['decorative'] ) ) ) {
+					/* translators: %s: название этапа. */
+					echo Blocks::editor_warning( sprintf( __( 'У картинки этапа «%s» нет описания (alt). Заполните поле «Alt» или отметьте «Декоративная картинка».', 'trust' ), $trust_row['title'] ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- текст экранирован в editor_warning().
+				}
+			}
+		}
+		?>
 		<?php if ( $trust_stages ) : ?>
 			<ol class="b-stages__list b-stages__list--<?php echo esc_attr( (string) $trust_cols ); ?>">
 				<?php foreach ( $trust_stages as $trust_i => $trust_row ) : ?>
@@ -90,6 +102,8 @@ $trust_picture = static function ( array $row ): string {
 							<?php elseif ( ! $trust_last ) : ?>
 								<span class="b-stages__line"></span>
 								<svg class="b-stages__arrow" width="10" height="12" viewBox="0 0 10 12" focusable="false"><path d="M1.5 1l7 5-7 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+								<?php // На телефоне вместо линии — стрелка вниз рядом с номером (правка заказчика). ?>
+								<svg class="b-stages__down" width="12" height="22" viewBox="0 0 12 22" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M6 1v18" class="b-stages__down-line"/><path d="M1.5 15l4.5 4.5 4.5-4.5" class="b-stages__down-head"/></svg>
 							<?php endif; ?>
 						</div>
 						<button type="button" class="b-stages__card" aria-expanded="false">
@@ -103,9 +117,6 @@ $trust_picture = static function ( array $row ): string {
 							<span class="b-stages__short"><?php echo esc_html( $trust_row['short'] ); ?></span>
 							<span class="b-stages__detail" hidden><?php echo esc_html( $trust_row['detail'] ); ?></span>
 						</button>
-						<?php if ( ! $trust_last ) : ?>
-							<span class="b-stages__down" aria-hidden="true"><svg width="12" height="22" viewBox="0 0 12 22" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M6 1v18" class="b-stages__down-line"/><path d="M1.5 15l4.5 4.5 4.5-4.5" class="b-stages__down-head"/></svg></span>
-						<?php endif; ?>
 					</li>
 				<?php endforeach; ?>
 			</ol>

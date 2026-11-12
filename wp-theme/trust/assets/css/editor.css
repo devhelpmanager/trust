@@ -10,3 +10,15 @@
 	margin-right: 0;
 	margin-left: 0;
 }
+
+/* Предупреждение в превью блока (Trust\Blocks::editor_warning()): например, картинка без alt */
+.trust-block-warning {
+	margin: 0;
+	padding: 12px 16px;
+	border-left: 4px solid #D63A2F;
+	border-radius: 8px;
+	background: #FBE6E4;
+	color: #0E0B14;
+	font-size: 14px;
+	line-height: 1.5;
+}

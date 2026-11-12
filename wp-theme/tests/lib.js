@@ -222,6 +222,16 @@ const HERO_DOCUMENT_CSS = `
 	.dc-hero-in > div:first-child > h1 { flex: 0 0 100% !important; margin-bottom: -12px !important; }
 	.dc-hero-in > div:first-child > p { flex: 1 1 520px !important; min-width: 0 !important; }
 `;
+// Правка заказчика для всех макетов: отступы секций 64 / 56 / 48 px вместо 96 (--section-y в main.css).
+const SECTION_SPACING_CSS = `
+	[style*="padding: 96px clamp(20px, 4vw, 48px)"] { padding-top: 64px !important; padding-bottom: 64px !important; }
+	@media (max-width: 1100px) {
+		[style*="padding: 96px clamp(20px, 4vw, 48px)"] { padding-top: 56px !important; padding-bottom: 56px !important; }
+	}
+	@media (max-width: 760px) {
+		[style*="padding: 96px clamp(20px, 4vw, 48px)"] { padding-top: 48px !important; padding-bottom: 48px !important; }
+	}
+`;
 const MOCKUP_CSS = {
 	'portfolio-blog-404/portfolio.html': HERO_SECTION_CSS,
 	'o-nas/o-kompanii.html': HERO_SECTION_CSS,
@@ -253,6 +263,20 @@ const MOCKUP_CSS = {
 		main > section:first-of-type > div > div > div:first-child { display: contents !important; }
 		main > section:first-of-type h1 { flex: 0 0 100% !important; margin: 0 0 -8px !important; }
 		main > section:first-of-type h1 + p { flex: 1 1 520px !important; max-width: 780px !important; min-width: 0 !important; }
+		main > section:first-of-type { padding-bottom: 48px !important; }
+		@media (max-width: 1100px) {
+			main > section:first-of-type { padding-bottom: 40px !important; }
+		}
+		@media (max-width: 760px) {
+			main > section:first-of-type { padding-bottom: 32px !important; }
+		}
+		@media (max-width: 480px) {
+			main > section:first-of-type h1 + p { font-size: 17px !important; }
+			main > section:first-of-type div:has(> a[href="#order"]) { gap: 8px !important; }
+			main > section:first-of-type a[href="#order"], main > section:first-of-type a[href="#calculator"] {
+				min-height: 48px !important; padding: 0 14px !important; font-size: 14px !important; white-space: nowrap !important; box-sizing: border-box !important;
+			}
+		}
 	`,
 	'seo-bloki/10-vopros-otvet.html': `
 		section > div { flex-direction: column !important; flex-wrap: nowrap !important; align-items: stretch !important; gap: 40px !important; }
@@ -272,7 +296,7 @@ async function approveMockup( page ) {
 	if ( ! page.url().startsWith( 'file://' ) ) {
 		return;
 	}
-	await page.evaluate( ( { texts, css } ) => {
+	await page.evaluate( ( { texts, css, common } ) => {
 		const walker = document.createTreeWalker( document.body, NodeFilter.SHOW_TEXT );
 		for ( let node = walker.nextNode(); node; node = walker.nextNode() ) {
 			for ( const [ from, to ] of texts ) {
@@ -282,15 +306,13 @@ async function approveMockup( page ) {
 			}
 		}
 		const file = decodeURIComponent( location.pathname );
-		for ( const [ key, rules ] of Object.entries( css ) ) {
-			if ( file.endsWith( key ) && ! document.getElementById( 'trust-approved-css' ) ) {
-				const style = document.createElement( 'style' );
-				style.id = 'trust-approved-css';
-				style.textContent = rules;
-				document.head.appendChild( style );
-			}
+		if ( ! document.getElementById( 'trust-approved-css' ) ) {
+			const style = document.createElement( 'style' );
+			style.id = 'trust-approved-css';
+			style.textContent = common + Object.entries( css ).filter( ( [ key ] ) => file.endsWith( key ) ).map( ( [ , rules ] ) => rules ).join( '\n' );
+			document.head.appendChild( style );
 		}
-	}, { texts: MOCKUP_TEXTS, css: MOCKUP_CSS } );
+	}, { texts: MOCKUP_TEXTS, css: MOCKUP_CSS, common: SECTION_SPACING_CSS } );
 	await page.evaluate( () => document.fonts.ready );
 }
 

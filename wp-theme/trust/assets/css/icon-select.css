@@ -1,0 +1,14 @@
+/*
+ * Поле «Иконка» с превью (assets/js/icon-select.js): иконка слева от подписи.
+ */
+
+.trust-icon-option {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.trust-icon-option svg {
+	flex: none;
+	color: #6D28D9;
+}

@@ -4,8 +4,8 @@
  * Выбор хранится в cookie trust_consent: { v: версия, necessary, analytics, marketing, choice,
  * date } на срок из настроек. Нет выбора или изменилась версия согласия — показывается плашка.
  * Кнопки: «Принять» — все категории, «Принять только обязательные» и «Отклонить всё» — только
- * обязательные. После выбора плашка скрывается, появляется подсказка с кнопкой «Изменить»
- * (через 10 секунд прячется; пока на ней фокус или курсор — нет).
+ * обязательные. После выбора плашка скрывается; выбор озвучивается скринридеру (скрытая строка
+ * состояния), видимой подсказки нет — правка заказчика (в макете подсказка «Изменить»).
  *
  * Код счётчиков и пикселей лежит в <template data-trust-consent="analytics|marketing"> и
  * вставляется в страницу только при согласии на свою категорию — сразу, без перезагрузки.
@@ -93,32 +93,20 @@
 
 	// --- Плашка и подсказка ---
 
-	function showSaved( choice ) {
+	function announce( choice ) {
 		if ( ! saved ) {
 			return;
 		}
 		clearTimeout( hideTimer );
-		saved.hidden = false;
-		saved.querySelector( '.cookie-saved__text' ).textContent = ( config.messages || {} )[ choice ] || '';
-		const hide = () => {
-			hideTimer = setTimeout( () => {
-				if ( ! saved.matches( ':hover, :focus-within' ) ) {
-					saved.hidden = true;
-				}
-			}, 10000 );
-		};
-		saved.onmouseleave = hide;
-		saved.onfocusout = hide;
-		hide();
+		saved.textContent = ( config.messages || {} )[ choice ] || '';
+		hideTimer = setTimeout( () => {
+			saved.textContent = '';
+		}, 5000 );
 	}
 
 	function open() {
 		if ( ! banner ) {
 			return;
-		}
-		clearTimeout( hideTimer );
-		if ( saved ) {
-			saved.hidden = true;
 		}
 		banner.hidden = false;
 		const current = read();
@@ -152,12 +140,12 @@
 		const all = 'all' === choice;
 		set( { analytics: all, marketing: all }, choice );
 		if ( banner ) {
-			const hadFocus = banner.contains( document.activeElement );
-			banner.hidden = true;
-			showSaved( choice );
-			if ( hadFocus && saved ) {
-				saved.querySelector( 'button' ).focus();
+			// Фокус был на плашке — не оставляем его на скрытой кнопке.
+			if ( banner.contains( document.activeElement ) ) {
+				document.activeElement.blur();
 			}
+			banner.hidden = true;
+			announce( choice );
 		}
 	}
 

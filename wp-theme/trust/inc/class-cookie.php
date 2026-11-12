@@ -142,7 +142,7 @@ final class Cookie {
 	}
 
 	/**
-	 * Плашка, подсказка «Изменить» и код счётчиков (до согласия не выполняется).
+	 * Плашка, сообщение о выборе для скринридеров и код счётчиков (до согласия не выполняется).
 	 */
 	public static function render(): void {
 		get_template_part( 'template-parts/cookie-banner' );

@@ -42,19 +42,18 @@ return array(
 		'button_label' => __( 'Добавить пункт', 'trust' ),
 		'instructions' => __( 'Под текстом (на широком экране) или под формой.', 'trust' ),
 		'sub_fields'   => array(
-			array(
-				'name'          => 'icon',
-				'label'         => __( 'Иконка', 'trust' ),
-				'type'          => 'select',
-				'choices'       => array(
-					'check' => __( 'Галочка', 'trust' ),
-					'list'  => __( 'Документ', 'trust' ),
-					'user'  => __( 'Человек', 'trust' ),
-					'mail'  => __( 'Письмо', 'trust' ),
-					'chat'  => __( 'Сообщение', 'trust' ),
-				),
-				'default_value' => 'check',
-				'wrapper'       => array( 'width' => 30 ),
+			Trust\Icons::field(
+				array(
+					'choices'       => array(
+						'check' => __( 'Галочка', 'trust' ),
+						'list'  => __( 'Документ', 'trust' ),
+						'user'  => __( 'Человек', 'trust' ),
+						'mail'  => __( 'Письмо', 'trust' ),
+						'chat'  => __( 'Сообщение', 'trust' ),
+					),
+					'default_value' => 'check',
+					'wrapper'       => array( 'width' => 30 ),
+				)
 			),
 			array(
 				'name'      => 'text',

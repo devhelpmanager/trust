@@ -4,7 +4,7 @@
  */
 
 .b-hero-service {
-	padding: 40px var(--gutter) 72px;
+	padding: 40px var(--gutter) 48px; /* правка заказчика: в макете снизу 72 px */
 	background: var(--c-white);
 	color: var(--c-text);
 }
@@ -63,4 +63,41 @@
    кнопка в ряду тянется до той же высоты. */
 .b-hero-service__buttons .btn--outline {
 	box-sizing: content-box;
+}
+
+/* Правка заказчика: меньше пустого места под первым экраном — 48 / 40 / 32 px
+   (в макете 72 px на всех ширинах), см. --section-y в main.css. */
+@media (max-width: 1100px) {
+	.b-hero-service {
+		padding-bottom: 40px;
+	}
+}
+
+@media (max-width: 760px) {
+	.b-hero-service {
+		padding-bottom: 32px;
+	}
+}
+
+/* Правка заказчика: на телефоне текст 17 px (в макете 19 px), кнопки компактнее и в одну
+   строку (с 375 px; на более узких экранах переносятся, но не растягиваются). */
+@media (max-width: 480px) {
+	.b-hero-service__lead {
+		font-size: 17px;
+	}
+
+	.b-hero-service__buttons {
+		gap: 8px;
+	}
+
+	.b-hero-service__buttons .btn {
+		min-height: 48px;
+		padding: 0 14px;
+		font-size: 14px;
+		white-space: nowrap;
+	}
+
+	.b-hero-service__buttons .btn--outline {
+		box-sizing: border-box;
+	}
 }

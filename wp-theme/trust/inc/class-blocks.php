@@ -309,6 +309,78 @@ final class Blocks {
 	}
 
 	/**
+	 * Поля «Alt» и «Декоративная картинка» к полю картинки блока (ТЗ, п. 8.1).
+	 *
+	 * @param array $conditional Условие показа (conditional_logic) — как у поля картинки.
+	 */
+	public static function image_alt_fields( array $conditional = array() ): array {
+		$fields = array(
+			array(
+				'name'         => 'alt',
+				'label'        => __( 'Alt', 'trust' ),
+				'type'         => 'text',
+				'maxlength'    => 200,
+				'instructions' => __( 'Что изображено, 5–15 слов. Пусто — описание из медиатеки.', 'trust' ),
+			),
+			array(
+				'name'         => 'decorative',
+				'label'        => __( 'Декоративная картинка', 'trust' ),
+				'type'         => 'true_false',
+				'ui'           => 1,
+				'instructions' => __( 'Только украшение — скринридеры её пропустят (alt="").', 'trust' ),
+			),
+		);
+		if ( $conditional ) {
+			foreach ( $fields as $i => $field ) {
+				$fields[ $i ]['conditional_logic'] = $conditional;
+			}
+		}
+		return $fields;
+	}
+
+	/**
+	 * Картинка блока через wp_get_attachment_image() (srcset, sizes): alt — из поля блока,
+	 * иначе из медиатеки; у декоративной — alt="".
+	 *
+	 * @param int    $id         ID картинки.
+	 * @param string $size       Размер.
+	 * @param array  $attrs      Атрибуты <img>.
+	 * @param string $alt        Поле «Alt» блока.
+	 * @param bool   $decorative Флажок «Декоративная картинка».
+	 */
+	public static function image( int $id, string $size, array $attrs = array(), string $alt = '', bool $decorative = false ): string {
+		if ( ! $id ) {
+			return '';
+		}
+		if ( $decorative ) {
+			$attrs['alt'] = '';
+		} elseif ( '' !== trim( $alt ) ) {
+			$attrs['alt'] = trim( $alt );
+		}
+		return (string) wp_get_attachment_image( $id, $size, false, $attrs );
+	}
+
+	/**
+	 * Нет описания у содержательной картинки: ни в поле «Alt» блока, ни в медиатеке.
+	 *
+	 * @param int    $id         ID картинки.
+	 * @param string $alt        Поле «Alt» блока.
+	 * @param bool   $decorative Флажок «Декоративная картинка».
+	 */
+	public static function image_alt_missing( int $id, string $alt = '', bool $decorative = false ): bool {
+		return $id && ! $decorative && '' === trim( $alt ) && '' === trim( (string) get_post_meta( $id, '_wp_attachment_image_alt', true ) );
+	}
+
+	/**
+	 * Предупреждение в превью блока в редакторе (на сайте не выводится).
+	 *
+	 * @param string $text Текст.
+	 */
+	public static function editor_warning( string $text ): string {
+		return '<p class="trust-block-warning" role="alert">' . esc_html( $text ) . '</p>';
+	}
+
+	/**
 	 * Значение поля «Якорь», пригодное для id (или пустая строка).
 	 *
 	 * @param mixed $value Значение поля.

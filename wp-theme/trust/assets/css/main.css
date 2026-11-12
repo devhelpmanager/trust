@@ -62,7 +62,7 @@
 	--content: 1200px;
 	--text-col: 760px;
 	--gutter: clamp(20px, 4vw, 48px);
-	--section-y: 96px;
+	--section-y: 64px; /* правка заказчика: в макетах 96 px */
 
 	/* Скругления */
 	--r-field: 12px;
@@ -75,6 +75,19 @@
 	/* Тени */
 	--shadow-card: 0 14px 32px rgba(46, 16, 101, 0.10);
 	--shadow-header: 0 6px 24px rgba(30, 27, 75, 0.18);
+}
+
+/* Правка заказчика: отступы секций меньше — 64 / 56 / 48 px (в макетах 96 px на всех ширинах) */
+@media (max-width: 1100px) {
+	:root {
+		--section-y: 56px;
+	}
+}
+
+@media (max-width: 760px) {
+	:root {
+		--section-y: 48px;
+	}
 }
 
 /* ===== 2. Шрифты (локальные, OFL — лицензии в assets/fonts/) ===== */
@@ -1534,8 +1547,7 @@ html.has-modal {
 	color: var(--c-text);
 }
 
-.cookie-banner[hidden],
-.cookie-saved[hidden] {
+.cookie-banner[hidden] {
 	display: none;
 }
 
@@ -1632,47 +1644,5 @@ html.has-modal {
 	.cookie-banner__btn {
 		flex: 1 1 100%;
 	}
-}
-
-/* Подсказка после выбора: «Все cookie приняты · Изменить» */
-.cookie-saved {
-	position: fixed;
-	z-index: 900;
-	bottom: 32px;
-	left: 50%;
-	display: flex;
-	align-items: center;
-	gap: 14px;
-	width: max-content; /* одна строка; на узком экране текст переносится */
-	max-width: calc(100vw - 24px);
-	padding: 10px 10px 10px 18px;
-	border-radius: var(--r-pill);
-	background: var(--c-text);
-	box-shadow: 0 10px 30px rgba(14, 11, 20, 0.2);
-	color: var(--c-white);
-	font-size: 14px;
-	transform: translateX(-50%);
-}
-
-.cookie-saved__btn {
-	position: relative;
-	flex: none;
-	min-height: 36px;
-	padding: 0 14px;
-	border: 0;
-	border-radius: var(--r-pill);
-	background: var(--c-white);
-	color: var(--c-text);
-	font-family: inherit;
-	font-size: 13px;
-	font-weight: 600;
-	cursor: pointer;
-}
-
-/* Зона нажатия 44 px при кнопке 36 px, как в макете */
-.cookie-saved__btn::before {
-	position: absolute;
-	inset: -4px;
-	content: "";
 }
 
