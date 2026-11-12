@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/stages",
+	"title": "Этапы работы",
+	"description": "Карточки этапов со стрелками между ними: номер, картинка, название и короткий текст; по нажатию вместо картинки показывается подробный текст. Итоговый этап выделен фиолетовым.",
+	"category": "trust-services",
+	"icon": "editor-ol",
+	"keywords": [ "этапы", "шаги", "как мы работаем", "процесс", "порядок работы" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

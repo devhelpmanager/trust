@@ -285,6 +285,12 @@ textarea {
 	text-wrap: pretty;
 }
 
+/* Крупный вводный текст (блоки «Что включает услуга», «Этапы работы») */
+.section-lead--lg {
+	font-size: 18px;
+	line-height: 1.55;
+}
+
 .section--violet .eyebrow {
 	color: var(--c-violet-light);
 }

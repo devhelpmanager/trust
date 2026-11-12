@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/service-includes",
+	"title": "Что включает услуга",
+	"description": "Раскрывающийся список работ: номер, иконка и название, по нажатию — описание, цена «от …», ссылка на страницу работы и список «Что проверяем». Номера 01, 02… ставятся автоматически.",
+	"category": "trust-services",
+	"icon": "list-view",
+	"keywords": [ "состав услуги", "работы", "что входит", "аккордеон", "что проверяем" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

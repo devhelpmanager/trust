@@ -11,6 +11,8 @@ const path = require( 'path' );
 const { launch, URL, OUT, THEME, check, finish, wp, clearLog, checkLog, login } = require( './lib' );
 
 const MARK = 'ТестТипов';
+// Набор «Услуги» из блоков, которые уже есть в теме (остальные добавятся на своих шагах).
+const SERVICE_SET = [ 'trust/hero-service', 'trust/service-includes', 'trust/stages', 'trust/faq' ];
 
 /** Выполняет PHP и разбирает JSON-ответ. */
 function php( code ) {
@@ -124,7 +126,7 @@ async function save( page ) {
 		await offer.locator( 'button', { hasText: 'Вставить набор' } ).click();
 		await page.waitForTimeout( 500 );
 		s = await state( page );
-		check( 'Набор вставлен по кнопке: блоки, которые уже есть в теме (первый экран, «Вопрос-ответ»)', JSON.stringify( s.blocks ) === JSON.stringify( [ 'trust/hero-service', 'trust/faq' ] ), JSON.stringify( s.blocks ) );
+		check( 'Набор вставлен по кнопке: блоки, которые уже есть в теме (первый экран, состав, этапы, «Вопрос-ответ»)', JSON.stringify( s.blocks ) === JSON.stringify( SERVICE_SET ), JSON.stringify( s.blocks ) );
 		check( 'На «Услуге» блоки чужих типов скрыты («Кейсы», «Ответы»)', Array.isArray( s.allowed ) && s.allowed.includes( 'trust/faq' ) && ! s.allowed.includes( 'trust/cases-grid' ) && ! s.allowed.includes( 'trust/answers-list' ) );
 		check( 'Страницам доступны стандартные блоки по ТЗ, но не «Обложка» и «Колонки»',
 			[ 'core/paragraph', 'core/heading', 'core/list', 'core/quote', 'core/image', 'core/table', 'core/separator', 'core/buttons', 'core/block' ].every( ( b ) => s.allowed.includes( b ) ) &&
@@ -140,7 +142,7 @@ async function save( page ) {
 		await page.locator( '.trust-page-types__card[data-type="portfolio"]' ).click();
 		await page.waitForTimeout( 500 );
 		s = await state( page );
-		check( 'Смена типа на странице с блоками: шаблон сменён, блоки не тронуты', s.template === 'templates/portfolio.php' && JSON.stringify( s.blocks ) === JSON.stringify( [ 'trust/hero-service', 'trust/faq' ] ), JSON.stringify( s ) );
+		check( 'Смена типа на странице с блоками: шаблон сменён, блоки не тронуты', s.template === 'templates/portfolio.php' && JSON.stringify( s.blocks ) === JSON.stringify( SERVICE_SET ), JSON.stringify( s ) );
 		check( 'На «Портфолио» доступны «Кейсы», но не «Ответы»', s.allowed.includes( 'trust/cases-grid' ) && ! s.allowed.includes( 'trust/answers-list' ) );
 		const panel = await page.locator( '.trust-page-type-panel' ).innerText();
 		check( 'Панель «Тип страницы» показывает текущий тип', panel.includes( 'Портфолио' ) && panel.includes( 'Сменить тип' ) );
