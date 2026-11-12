@@ -4,7 +4,8 @@
  *
  * Поля: path — адрес страницы (родитель/ярлык), title — заголовок, type — тип страницы
  * (Trust\Page_Types: шаблон; нет — «Обычная страница»), blocks — блоки темы по порядку:
- * array( 'имя блока', array( значения полей ) ); {page:адрес} в значениях — ссылка на страницу.
+ * array( 'имя блока', array( значения полей ) ); {page:адрес} в значениях — ссылка на страницу;
+ * seo — поля группы «SEO», где H1 или title в макете отличаются от заголовка страницы.
  * Блоки добавляются на шагах, где они появляются.
  *
  * @package Trust
@@ -137,6 +138,7 @@ return array(
 		'path'  => 'portfolio',
 		'title' => 'Портфолио',
 		'type'  => 'portfolio',
+		'seo'   => array( 'trust_seo_h1' => 'Кейсы и проекты' ),
 	),
 	array(
 		'path'  => 'blog',
@@ -168,11 +170,16 @@ return array(
 		'path'  => 'karera',
 		'title' => 'Карьера',
 		'type'  => 'career',
+		'seo'   => array(
+			'trust_seo_title' => 'Карьера в {site} {sep} вакансии и стажировка',
+			'trust_seo_h1'    => 'Работа в {site}',
+		),
 	),
 	array(
 		'path'  => 'oferta',
 		'title' => 'Публичная оферта',
 		'type'  => 'document',
+		'seo'   => array( 'trust_seo_h1' => 'Публичная оферта на оказание услуг' ),
 	),
 
 	// Документы (меню «Подвал: документы»).
@@ -190,5 +197,6 @@ return array(
 		'path'  => 'politika-cookie',
 		'title' => 'Политика использования файлов cookie',
 		'type'  => 'document',
+		'seo'   => array( 'trust_seo_title' => 'Политика cookie {sep} {site}' ),
 	),
 );

@@ -35,6 +35,8 @@ final class Theme {
 		Admin::register();
 		Page_Types::register();
 		Allowed_Blocks::register();
+		Seo::register();
+		Seo_Admin::register();
 		Settings::register();
 		Blocks::register();
 

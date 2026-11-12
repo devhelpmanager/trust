@@ -17,7 +17,9 @@ const path = require( 'path' );
 const { URL, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser } = require( './lib' );
 
 const PAGE = `${ URL }/wp-admin/admin.php?page=trust-settings`;
-const TABS = [ 'Компания', 'Контакты', 'Соцсети', 'Подвал', 'Блоки по умолчанию', 'Адреса' ];
+const TABS = [ 'Компания', 'Контакты', 'Соцсети', 'Подвал', 'Блоки по умолчанию', 'SEO', 'Адреса' ];
+// Технические вкладки — только администратору.
+const ADMIN_TABS = [ 'SEO', 'Адреса' ];
 
 ( async () => {
 	clearLog();
@@ -75,7 +77,7 @@ const TABS = [ 'Компания', 'Контакты', 'Соцсети', 'Под
 	const editorResponse = await page.goto( PAGE );
 	check( 'Редактор открывает «Настройки сайта»', editorResponse.status() === 200 && ( await page.locator( '.acf-tab-wrap' ).count() ) === 1 );
 	const editorTabs = ( await page.locator( '.acf-tab-wrap .acf-tab-button' ).allTextContents() ).map( ( t ) => t.trim() );
-	check( 'Редактор не видит техническую вкладку «Адреса»', JSON.stringify( editorTabs ) === JSON.stringify( TABS.filter( ( t ) => t !== 'Адреса' ) ), editorTabs.join( ', ' ) );
+	check( 'Редактор не видит технические вкладки «SEO» и «Адреса»', JSON.stringify( editorTabs ) === JSON.stringify( TABS.filter( ( t ) => ! ADMIN_TABS.includes( t ) ) ), editorTabs.join( ', ' ) );
 	await page.locator( '.acf-tab-wrap .acf-tab-button', { hasText: 'Контакты' } ).click();
 	check( 'Редактор не видит «Код интерактивной карты»', ( await page.locator( '[data-name="map_embed"]' ).count() ) === 0 );
 	check( 'Редактор видит телефоны', ( await page.locator( '[data-name="phones"]' ).count() ) === 1 );

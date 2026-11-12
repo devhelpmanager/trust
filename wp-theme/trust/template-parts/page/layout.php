@@ -21,7 +21,7 @@ while ( have_posts() ) :
 		<?php if ( ! Trust\Page_Types::has_hero() ) : ?>
 			<header class="page-default">
 				<div class="container">
-					<h1 class="page-default__title"><?php the_title(); ?></h1>
+					<h1 class="page-default__title"><?php echo esc_html( Trust\Seo::h1() ); ?></h1>
 				</div>
 			</header>
 		<?php endif; ?>

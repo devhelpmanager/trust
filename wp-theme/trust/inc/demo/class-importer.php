@@ -112,6 +112,11 @@ final class Importer {
 		}
 
 		foreach ( $fill as $path => list( $id, $page, $status ) ) {
+			// SEO-поля страницы (группа «SEO»): из макетов, где H1 или title отличаются от заголовка.
+			foreach ( $page['seo'] ?? array() as $name => $value ) {
+				update_field( Fields::key( 'seo', $name ), $value, $id );
+			}
+
 			$content = isset( $page['blocks'] ) ? self::blocks_content( $page['blocks'] ) : ( $page['content'] ?? '' );
 			// wp_slash: WordPress снимает слэши при сохранении, а в данных блоков есть \u003c и т. п.
 			wp_update_post(
