@@ -37,6 +37,7 @@ final class Theme {
 		Allowed_Blocks::register();
 		Seo::register();
 		Seo_Admin::register();
+		Breadcrumbs::register();
 		Settings::register();
 		Blocks::register();
 

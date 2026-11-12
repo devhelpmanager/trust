@@ -113,7 +113,7 @@ final class Importer {
 
 		foreach ( $fill as $path => list( $id, $page, $status ) ) {
 			// SEO-поля страницы (группа «SEO»): из макетов, где H1 или title отличаются от заголовка.
-			foreach ( $page['seo'] ?? array() as $name => $value ) {
+			foreach ( self::resolve_links( $page['seo'] ?? array() ) as $name => $value ) {
 				update_field( Fields::key( 'seo', $name ), $value, $id );
 			}
 
@@ -218,6 +218,10 @@ final class Importer {
 
 			foreach ( self::resolve_links( $item['fields'] ?? array() ) as $name => $value ) {
 				update_field( Fields::key( $type, $name ), $value, $id );
+			}
+			// Поля группы «SEO» (общей для нескольких типов).
+			foreach ( self::resolve_links( $item['seo'] ?? array() ) as $name => $value ) {
+				update_field( Fields::key( 'seo', $name ), $value, $id );
 			}
 
 			update_post_meta( $id, self::META_HASH, self::post_hash( get_post( $id ) ) );

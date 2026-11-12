@@ -53,6 +53,26 @@ return array(
 			'instructions' => __( 'Главный заголовок на странице. Пусто — заголовок записи (название рубрики или тега). Можно {site}.', 'trust' ),
 		),
 		array(
+			'name'  => 'trust_crumbs_accordion',
+			'label' => __( 'Хлебные крошки', 'trust' ),
+			'type'  => 'accordion',
+			'open'  => 0,
+		),
+		array(
+			'name'         => 'trust_crumb_title',
+			'label'        => __( 'Название в хлебных крошках', 'trust' ),
+			'type'         => 'text',
+			'maxlength'    => 60,
+			'instructions' => __( 'Короткое название для цепочки «Главная / … / Страница»: «Технический аудит» вместо «Технический аудит сайта». Пусто — заголовок.', 'trust' ),
+		),
+		array(
+			'name'          => 'trust_crumb_section',
+			'label'         => __( 'Раздел в хлебных крошках', 'trust' ),
+			'type'          => 'link',
+			'return_format' => 'array',
+			'instructions'  => __( 'Для страницы без родителя: пункт перед ней, например «О нас» → страница «О компании». Пусто — «Главная / Страница».', 'trust' ),
+		),
+		array(
 			'name'  => 'trust_seo_index_section',
 			'label' => __( 'Индексация и canonical', 'trust' ),
 			'type'  => 'accordion',

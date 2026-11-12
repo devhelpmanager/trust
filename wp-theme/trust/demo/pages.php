@@ -5,13 +5,21 @@
  * Поля: path — адрес страницы (родитель/ярлык), title — заголовок, type — тип страницы
  * (Trust\Page_Types: шаблон; нет — «Обычная страница»), blocks — блоки темы по порядку:
  * array( 'имя блока', array( значения полей ) ); {page:адрес} в значениях — ссылка на страницу;
- * seo — поля группы «SEO», где H1 или title в макете отличаются от заголовка страницы.
+ * seo — поля группы «SEO»: H1 и title, если в макете они отличаются от заголовка страницы,
+ * название и раздел в хлебных крошках.
  * Блоки добавляются на шагах, где они появляются.
  *
  * @package Trust
  */
 
 defined( 'ABSPATH' ) || exit;
+
+// «Раздел в хлебных крошках» страниц раздела «О нас» (в макетах — «Главная / О нас / …»).
+$trust_about = array(
+	'title'  => 'О нас',
+	'url'    => '{page:o-kompanii}',
+	'target' => '',
+);
 
 return array(
 	// Услуги.
@@ -34,11 +42,17 @@ return array(
 		'path'  => 'seo',
 		'title' => 'SEO-продвижение',
 		'type'  => 'service',
+		'seo'   => array(
+			'trust_crumb_title' => 'SEO',
+		),
 	),
 	array(
 		'path'   => 'seo/audit',
 		'title'  => 'Технический аудит сайта',
 		'type'   => 'service',
+		'seo'    => array(
+			'trust_crumb_title' => 'Технический аудит',
+		),
 		// Блоки страницы услуги (holst-stranitsy/Main) — по мере готовности блоков.
 		'blocks' => array(
 			array(
@@ -96,11 +110,17 @@ return array(
 		'path'  => 'seo/voprosy',
 		'title' => 'Задать вопрос SEO-шнику',
 		'type'  => 'questions',
+		'seo'   => array(
+			'trust_crumb_title' => 'Вопросы по SEO',
+		),
 	),
 	array(
 		'path'  => 'geo',
 		'title' => 'GEO-продвижение',
 		'type'  => 'service',
+		'seo'   => array(
+			'trust_crumb_title' => 'GEO',
+		),
 	),
 	array(
 		'path'  => 'geo/prodvizhenie-v-ii',
@@ -138,7 +158,9 @@ return array(
 		'path'  => 'portfolio',
 		'title' => 'Портфолио',
 		'type'  => 'portfolio',
-		'seo'   => array( 'trust_seo_h1' => 'Кейсы и проекты' ),
+		'seo'   => array(
+			'trust_seo_h1' => 'Кейсы и проекты',
+		),
 	),
 	array(
 		'path'  => 'blog',
@@ -150,6 +172,9 @@ return array(
 		'path'  => 'kontakty',
 		'title' => 'Контакты',
 		'type'  => 'contacts',
+		'seo'   => array(
+			'trust_crumb_section' => $trust_about,
+		),
 	),
 	array(
 		'path'  => 'o-kompanii',
@@ -160,26 +185,36 @@ return array(
 		'path'  => 'komanda',
 		'title' => 'Наша команда',
 		'type'  => 'team',
+		'seo'   => array(
+			'trust_crumb_section' => $trust_about,
+		),
 	),
 	array(
 		'path'  => 'otzyvy',
 		'title' => 'Отзывы о нас',
 		'type'  => 'reviews',
+		'seo'   => array(
+			'trust_crumb_section' => $trust_about,
+		),
 	),
 	array(
 		'path'  => 'karera',
 		'title' => 'Карьера',
 		'type'  => 'career',
 		'seo'   => array(
-			'trust_seo_title' => 'Карьера в {site} {sep} вакансии и стажировка',
-			'trust_seo_h1'    => 'Работа в {site}',
+			'trust_seo_title'     => 'Карьера в {site} {sep} вакансии и стажировка',
+			'trust_seo_h1'        => 'Работа в {site}',
+			'trust_crumb_section' => $trust_about,
 		),
 	),
 	array(
 		'path'  => 'oferta',
 		'title' => 'Публичная оферта',
 		'type'  => 'document',
-		'seo'   => array( 'trust_seo_h1' => 'Публичная оферта на оказание услуг' ),
+		'seo'   => array(
+			'trust_seo_h1'        => 'Публичная оферта на оказание услуг',
+			'trust_crumb_section' => $trust_about,
+		),
 	),
 
 	// Документы (меню «Подвал: документы»).
@@ -187,16 +222,26 @@ return array(
 		'path'  => 'politika-konfidencialnosti',
 		'title' => 'Политика конфиденциальности',
 		'type'  => 'document',
+		'seo'   => array(
+			'trust_crumb_section' => $trust_about,
+		),
 	),
 	array(
 		'path'  => 'soglasie-na-obrabotku-dannyh',
 		'title' => 'Согласие на обработку персональных данных',
 		'type'  => 'document',
+		'seo'   => array(
+			'trust_crumb_section' => $trust_about,
+		),
 	),
 	array(
 		'path'  => 'politika-cookie',
 		'title' => 'Политика использования файлов cookie',
 		'type'  => 'document',
-		'seo'   => array( 'trust_seo_title' => 'Политика cookie {sep} {site}' ),
+		'seo'   => array(
+			'trust_seo_title'     => 'Политика cookie {sep} {site}',
+			'trust_crumb_title'   => 'Политика cookie',
+			'trust_crumb_section' => $trust_about,
+		),
 	),
 );

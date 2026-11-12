@@ -150,7 +150,12 @@ async function head( url ) {
 		seoField( `term_${ auditId }`, 'trust_seo_title', 'Рубрика: свой title' );
 		h = await head( '/blog/rubrika/tehnicheskiy-audit/' );
 		check( 'Рубрика: свой SEO title из поля термина', h.title === 'Рубрика: свой title', h.title );
-		seoField( `term_${ auditId }`, 'trust_seo_title', auditTitle );
+		// Вернуть как было: пустое значение — удалить метаполе (иначе импорт сочтёт рубрику изменённой).
+		if ( auditTitle ) {
+			seoField( `term_${ auditId }`, 'trust_seo_title', auditTitle );
+		} else {
+			wp( 'eval', `delete_term_meta( ${ auditId }, 'trust_seo_title' ); delete_term_meta( ${ auditId }, '_trust_seo_title' );` );
+		}
 
 		h = await head( '/blog/teg/robots-txt/' );
 		check( 'Тег: «#… — блог [Бренд]»; материалов меньше порога 3 — noindex, follow', h.title === '#robots.txt — блог [Бренд]' && /noindex/.test( h.robots ) && /follow/.test( h.robots ), `${ h.title } / ${ h.robots }` );

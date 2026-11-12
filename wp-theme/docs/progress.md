@@ -28,11 +28,12 @@
 | 2.4 Поля сотрудников, вакансий, вопросов; колонки и счётчики | ✅ |
 | 2.5 Типы страниц: шаблоны, окно выбора, наборы блоков, разрешённые блоки | ✅ (этап 2 закрыт) |
 | 3.1 SEO-поля и вывод в `<head>` | ✅ |
-| **3.2 Хлебные крошки и подсветка меню** | следующий |
+| 3.2 Хлебные крошки и подсветка меню | ✅ |
+| **3.3 Карта сайта и robots.txt** | следующий |
 
 Тесты (`wp-theme/tests/`, все сразу — `npm test`): smoke, settings, header, header-mobile, footer,
-callback, faq, content-types, blog-fields, cases-reviews, team-questions, page-types, seo, visual —
-457 проверок, все проходят.
+callback, faq, content-types, blog-fields, cases-reviews, team-questions, page-types, seo,
+breadcrumbs, visual — 485 проверок, все проходят.
 
 Локальный стенд после перезапуска контейнера нужно запустить заново: `wp-theme/bin/local.sh start`.
 

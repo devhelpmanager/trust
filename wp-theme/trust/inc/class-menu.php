@@ -92,6 +92,10 @@ final class Menu {
 				$child_current = $child_current || $child['current'] || $child['in_section'];
 			}
 
+			// Страница пункта есть в цепочке хлебных крошек: у кейса горит «Портфолио»,
+			// у ответа — «SEO» и «Вопросы по SEO», у статьи — «Блог».
+			$in_trail = 'post_type' === $item->type && in_array( (int) $item->object_id, Breadcrumbs::trail_ids(), true );
+
 			$branch[] = array(
 				'id'          => (int) $item->ID,
 				'title'       => (string) $item->title,
@@ -101,7 +105,7 @@ final class Menu {
 				'rel'         => trim( (string) $item->xfn . ( '_blank' === $item->target ? ' noopener' : '' ) ),
 				'classes'     => $user_classes[ $item->ID ] ?? array(),
 				'current'     => ! empty( $item->current ),
-				'in_section'  => $child_current || ! empty( $item->current_item_ancestor ) || ! empty( $item->current_item_parent ),
+				'in_section'  => $child_current || $in_trail || ! empty( $item->current_item_ancestor ) || ! empty( $item->current_item_parent ),
 				'children'    => $children,
 			);
 		}
