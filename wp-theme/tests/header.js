@@ -17,7 +17,7 @@ const { chromium } = require( 'playwright' );
 const path = require( 'path' );
 const { URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle } = require( './lib' );
 
-const MENU = [ 'Дизайн', 'Создание сайтов', 'Сопровождение сайтов', 'SEO', 'GEO', 'Контекстная реклама', 'AI', 'Портфолио', 'Блог', 'О нас' ];
+const MENU = [ 'Дизайн', 'Создание сайтов', 'Поддержка сайтов', 'SEO', 'GEO', 'Контекстная реклама', 'AI', 'Портфолио', 'Блог', 'О нас' ];
 
 ( async () => {
 	clearLog();

@@ -165,12 +165,61 @@ function comparePng( a, b, diffPath ) {
 }
 
 /**
- * Ждёт загрузки шрифтов и небольшой паузы для анимаций.
+ * Правки макетов, согласованные с заказчиком после их экспорта (docs/inventory.md, раздел 12):
+ * перед сравнением с темой они вносятся и в HTML-экспорт макета.
+ * - Тексты: пункт меню «Сопровождение сайтов» переименован в «Поддержка сайтов».
+ * - CSS по файлу макета: у «Вопрос-ответ» заголовок над вопросами на всех ширинах.
+ */
+const MOCKUP_TEXTS = [ [ 'Сопровождение сайтов', 'Поддержка сайтов' ] ];
+const MOCKUP_CSS = {
+	'seo-bloki/10-vopros-otvet.html': `
+		section > div { flex-direction: column !important; flex-wrap: nowrap !important; align-items: stretch !important; gap: 40px !important; }
+		section > div > div:first-child { flex: none !important; max-width: 760px !important; }
+		section > div > div:last-child { flex: none !important; }
+		section > div > div:last-child p { max-width: 860px !important; box-sizing: border-box !important; }
+	`,
+};
+
+/**
+ * Вносит согласованные правки в открытый макет (только страницы file://, тему не трогает).
+ * Повторный вызов безопасен; после перерисовки макета (клик по кнопке) — вызвать снова.
+ *
+ * @param {import('playwright').Page} page Страница.
+ */
+async function approveMockup( page ) {
+	if ( ! page.url().startsWith( 'file://' ) ) {
+		return;
+	}
+	await page.evaluate( ( { texts, css } ) => {
+		const walker = document.createTreeWalker( document.body, NodeFilter.SHOW_TEXT );
+		for ( let node = walker.nextNode(); node; node = walker.nextNode() ) {
+			for ( const [ from, to ] of texts ) {
+				if ( node.nodeValue.includes( from ) ) {
+					node.nodeValue = node.nodeValue.split( from ).join( to );
+				}
+			}
+		}
+		const file = decodeURIComponent( location.pathname );
+		for ( const [ key, rules ] of Object.entries( css ) ) {
+			if ( file.endsWith( key ) && ! document.getElementById( 'trust-approved-css' ) ) {
+				const style = document.createElement( 'style' );
+				style.id = 'trust-approved-css';
+				style.textContent = rules;
+				document.head.appendChild( style );
+			}
+		}
+	}, { texts: MOCKUP_TEXTS, css: MOCKUP_CSS } );
+	await page.evaluate( () => document.fonts.ready );
+}
+
+/**
+ * Ждёт загрузки шрифтов и небольшой паузы для анимаций; в макете — согласованные правки.
  *
  * @param {import('playwright').Page} page Страница.
  */
 async function settle( page ) {
 	await page.evaluate( () => document.fonts.ready );
+	await approveMockup( page );
 	await page.waitForTimeout( 300 );
 }
 
@@ -183,6 +232,7 @@ async function settle( page ) {
  * @param {string}                    selector Элемент.
  */
 async function isolate( page, selector ) {
+	await approveMockup( page );
 	await page.evaluate( ( sel ) => {
 		let el = document.querySelector( sel );
 		while ( el && el !== document.body ) {
@@ -286,5 +336,5 @@ async function postForm( type, fields, headers = {} ) {
 module.exports = {
 	URL, DEV_DIR, LOG, OUT, REPO, THEME,
 	check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser,
-	routeMockupFonts, mockupUrl, comparePng, settle, isolate, getSettings, setSettings, publishPost, resetFormLimits, formToken, postForm,
+	routeMockupFonts, mockupUrl, approveMockup, comparePng, settle, isolate, getSettings, setSettings, publishPost, resetFormLimits, formToken, postForm,
 };

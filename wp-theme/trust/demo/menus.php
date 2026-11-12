@@ -24,8 +24,8 @@ return array(
 				'title' => 'Создание сайтов',
 			),
 			array(
-				'page'  => 'soprovozhdenie-saytov',
-				'title' => 'Сопровождение сайтов',
+				'page'  => 'site-support',
+				'title' => 'Поддержка сайтов',
 			),
 			array(
 				'page'     => 'seo',
@@ -144,8 +144,8 @@ return array(
 				'title' => 'Создание сайтов',
 			),
 			array(
-				'page'  => 'soprovozhdenie-saytov',
-				'title' => 'Сопровождение сайтов',
+				'page'  => 'site-support',
+				'title' => 'Поддержка сайтов',
 			),
 			array(
 				'page'  => 'seo',

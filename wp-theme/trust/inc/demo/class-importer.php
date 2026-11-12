@@ -74,6 +74,9 @@ final class Importer {
 		foreach ( $pages as $page ) {
 			$path = $page['path'];
 			$demo = self::find_demo_post( 'page', $path );
+			if ( ! $demo && ! empty( $page['was'] ) ) {
+				$demo = self::rename_page( $page );
+			}
 
 			if ( $demo ) {
 				if ( self::post_hash( $demo ) !== get_post_meta( $demo->ID, self::META_HASH, true ) ) {
@@ -565,6 +568,69 @@ final class Importer {
 				self::add_menu_items( $menu_id, $item['children'], (int) $item_id, $position );
 			}
 		}
+	}
+
+	/**
+	 * Переименование демо-страницы (поле was в demo/pages.php): уже созданная страница
+	 * получает новый ярлык и метку демо-данных. Заголовок меняется, если он прежний (не правился
+	 * вручную), — у неизменённой страницы его и текст затем обновит обычный импорт. Пункты меню,
+	 * ведущие на страницу, с прежним заголовком получают новый. Редирект со старого адреса не
+	 * создаётся.
+	 *
+	 * @param array $page Страница из demo/pages.php.
+	 */
+	private static function rename_page( array $page ): ?\WP_Post {
+		$old = self::find_demo_post( 'page', $page['was']['path'] );
+		if ( ! $old || get_page_by_path( $page['path'] ) ) {
+			return null;
+		}
+
+		$was_title = (string) ( $page['was']['title'] ?? '' );
+		$unchanged = self::post_hash( $old ) === get_post_meta( $old->ID, self::META_HASH, true );
+		$update    = array(
+			'ID'        => $old->ID,
+			'post_name' => basename( $page['path'] ),
+		);
+		if ( $was_title === $old->post_title ) {
+			$update['post_title'] = $page['title'];
+		}
+		wp_update_post( wp_slash( $update ) );
+		update_post_meta( $old->ID, self::META_ID, 'page:' . $page['path'] );
+		if ( $unchanged ) {
+			update_post_meta( $old->ID, self::META_HASH, self::post_hash( get_post( $old->ID ) ) );
+		}
+
+		$items = get_posts(
+			array(
+				'post_type'   => 'nav_menu_item',
+				'post_status' => 'any',
+				'numberposts' => -1,
+				'meta_query'  => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- разовая команда WP-CLI.
+					array(
+						'key'   => '_menu_item_object_id',
+						'value' => (string) $old->ID,
+					),
+					array(
+						'key'   => '_menu_item_object',
+						'value' => 'page',
+					),
+				),
+			)
+		);
+		foreach ( $items as $item ) {
+			if ( $was_title === $item->post_title ) {
+				wp_update_post(
+					wp_slash(
+						array(
+							'ID'         => $item->ID,
+							'post_title' => $page['title'],
+						)
+					)
+				);
+			}
+		}
+
+		return get_post( $old->ID );
 	}
 
 	/**

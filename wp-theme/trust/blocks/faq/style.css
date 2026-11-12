@@ -1,6 +1,8 @@
 /*
  * Блок «Вопрос-ответ» (holst-blokov/Faq, seo-bloki/10-vopros-otvet.html). Фон белый.
  * Надзаголовок, заголовок и вводный текст — общие классы из main.css.
+ * Заголовок — над вопросами на всех ширинах (по просьбе заказчика: в макете на широком
+ * экране он слева и при длинном тексте становится выше списка вопросов).
  */
 
 .b-faq {
@@ -11,19 +13,17 @@
 
 .b-faq__inner {
 	display: flex;
-	flex-wrap: wrap;
-	align-items: flex-start;
-	gap: 40px 72px;
+	flex-direction: column;
+	gap: 40px;
 	max-width: var(--content);
 	margin: 0 auto;
 }
 
 .b-faq__head {
 	display: flex;
-	flex: 1 1 300px;
 	flex-direction: column;
 	gap: 16px;
-	max-width: 400px;
+	max-width: 760px;
 	min-width: 0;
 }
 
@@ -41,7 +41,6 @@
 
 .b-faq__list {
 	display: flex;
-	flex: 999 1 520px;
 	flex-direction: column;
 	gap: 12px;
 	min-width: 0;
@@ -123,7 +122,9 @@
 	transform: rotate(180deg);
 }
 
+/* Ответ не шире ~90 знаков в строке: карточка на всю ширину, текст — для чтения */
 .b-faq__answer {
+	max-width: 860px;
 	padding: 0 clamp(16px, 2.5vw, 24px) 22px calc(clamp(16px, 2.5vw, 24px) + 40px);
 	font-size: 16px;
 	line-height: 1.65;

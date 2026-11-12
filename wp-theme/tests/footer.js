@@ -17,7 +17,7 @@ const { chromium } = require( 'playwright' );
 const path = require( 'path' );
 const { URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle, isolate, getSettings, setSettings } = require( './lib' );
 
-const SERVICES = [ 'Дизайн', 'Создание сайтов', 'Сопровождение сайтов', 'SEO-продвижение', 'Задать вопрос SEO-шнику', 'GEO-продвижение', 'Контекстная реклама', 'AI-решения' ];
+const SERVICES = [ 'Дизайн', 'Создание сайтов', 'Поддержка сайтов', 'SEO-продвижение', 'Задать вопрос SEO-шнику', 'GEO-продвижение', 'Контекстная реклама', 'AI-решения' ];
 const COMPANY = [ 'О компании', 'Наша команда', 'Портфолио', 'Отзывы о нас', 'Блог', 'Карьера' ];
 const DOCS = [ 'Публичная оферта', 'Политика конфиденциальности', 'Согласие на обработку данных', 'Политика cookie' ];
 
