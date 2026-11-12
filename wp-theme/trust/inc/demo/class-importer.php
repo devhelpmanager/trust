@@ -60,14 +60,16 @@ final class Importer {
 	 * содержимое. В блоках есть ссылки {page:…} на страницы, которые идут в списке ниже
 	 * (из «Аудита» — на «Вопросы SEO»): к моменту заполнения все они уже существуют.
 	 *
-	 * @return array{created: string[], updated: string[], skipped: string[]}
+	 * @param string[] $force Адреса страниц, которые обновить, даже если их меняли вручную.
+	 * @return array{created: string[], updated: string[], skipped: string[], forced: string[]}
 	 */
-	public static function import_pages(): array {
+	public static function import_pages( array $force = array() ): array {
 		$pages  = require TRUST_DIR . '/demo/pages.php';
 		$result = array(
 			'created' => array(),
 			'updated' => array(),
 			'skipped' => array(),
+			'forced'  => array(),
 		);
 		$fill   = array();
 
@@ -80,8 +82,11 @@ final class Importer {
 
 			if ( $demo ) {
 				if ( self::post_hash( $demo ) !== get_post_meta( $demo->ID, self::META_HASH, true ) ) {
-					$result['skipped'][] = $path;
-					continue;
+					if ( ! in_array( $path, $force, true ) ) {
+						$result['skipped'][] = $path;
+						continue;
+					}
+					$result['forced'][] = $path;
 				}
 				$fill[ $path ] = array( $demo->ID, $page, 'updated' );
 				continue;
@@ -672,12 +677,29 @@ final class Importer {
 	}
 
 	/**
-	 * Метаполя полей темы (trust_…) — для отпечатков записей и терминов.
+	 * Метаполя полей темы (trust_…) — для отпечатков записей и терминов. Пустые значения
+	 * («», «0» у флажков, пустой список) не учитываются: Secure Custom Fields записывает их
+	 * во все поля группы, когда запись просто сохраняют в редакторе, — это не ручная правка,
+	 * и демо-импорт должен продолжать обновлять такую запись.
 	 *
 	 * @param array $meta Все метаполя.
 	 */
 	private static function theme_meta( array $meta ): array {
-		$fields = array_filter( $meta, static fn( $key ): bool => str_starts_with( (string) $key, 'trust_' ), ARRAY_FILTER_USE_KEY );
+		$fields = array_filter(
+			$meta,
+			static function ( $values, $key ): bool {
+				if ( ! str_starts_with( (string) $key, 'trust_' ) ) {
+					return false;
+				}
+				foreach ( (array) $values as $value ) {
+					if ( ! in_array( $value, array( '', '0', 'a:0:{}' ), true ) ) {
+						return true;
+					}
+				}
+				return false;
+			},
+			ARRAY_FILTER_USE_BOTH
+		);
 		ksort( $fields );
 		return $fields;
 	}

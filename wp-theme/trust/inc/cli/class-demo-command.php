@@ -42,18 +42,30 @@ final class Demo_Command {
 	 * отрасли, отделы и темы вопросов, сотрудники, отзывы, кейсы, вакансии и вопросы. Повторный импорт не создаёт дублей и не трогает то, что изменено
 	 * вручную; демо-меню не ставится в область, где уже есть своё меню.
 	 *
+	 * ## OPTIONS
+	 *
+	 * [--force=<paths>]
+	 * : Страницы через запятую (адреса из demo/pages.php, например seo/audit,karera), которые
+	 * обновить, даже если их меняли вручную: ручные правки на них будут заменены демо-контентом.
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     wp trust demo import
+	 *     wp trust demo import --force=seo/audit,karera
 	 *
 	 * @param array $args       Позиционные аргументы (не используются).
-	 * @param array $assoc_args Именованные аргументы (не используются).
+	 * @param array $assoc_args Именованные аргументы: force.
 	 */
-	public function import( array $args, array $assoc_args ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- сигнатура команды WP-CLI.
+	public function import( array $args, array $assoc_args ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundBeforeLastUsed -- сигнатура команды WP-CLI.
 		self::require_scf();
 
+		$force = array_values( array_filter( array_map( static fn( $path ) => trim( (string) $path, " /\t" ), explode( ',', (string) ( $assoc_args['force'] ?? '' ) ) ) ) );
+
 		// Сначала страницы: на них ссылаются настройки и меню.
-		$pages = Importer::import_pages();
+		$pages = Importer::import_pages( $force );
+		if ( $pages['forced'] ) {
+			self::log_list( 'Обновлены принудительно (ручные правки заменены)', $pages['forced'] );
+		}
 		WP_CLI::log( sprintf( 'Страницы: создано %d, обновлено %d.', count( $pages['created'] ), count( $pages['updated'] ) ) );
 		self::log_list( 'Пропущены (изменены вручную или уже есть свои)', $pages['skipped'] );
 

@@ -14,7 +14,9 @@
  * - ширины 1280–280 px без прокрутки вбок, зоны нажатия, axe-core, консоль и журнал ошибок;
  * - совпадение с макетами seo-stranitsa/index.html, portfolio-blog-404/portfolio.html,
  *   o-nas/o-kompanii.html, o-nas/komanda.html, o-nas/karera.html на 1280, 768 и 390 px;
- * - редактор: блоки в категории «Первые экраны», превью с крошками и H1 страницы.
+ * - редактор: блоки в категории «Первые экраны», превью с крошками и H1 страницы;
+ * - демо-импорт: страница, сохранённая в редакторе без правок, обновляется; с ручной правкой —
+ *   пропускается, а с --force=<адрес> — обновляется.
  */
 
 const path = require( 'path' );
@@ -214,6 +216,29 @@ async function hideHeader( page ) {
 		} ) );
 		check( 'Превью в редакторе: крошки без ссылок и H1 — заголовок страницы', preview.crumbs === `Главная / ${ MARK } посадочная` && preview.h1 === `${ MARK } посадочная` && 0 === preview.links, JSON.stringify( preview ) );
 		await page.screenshot( { path: path.join( OUT, 'hero-editor.png' ) } );
+
+		// --- Демо-импорт после сохранения страницы в редакторе ---
+		// Открыли «Карьеру» и нажали «Обновить» без правок: SCF записывает пустые SEO-поля —
+		// это не ручная правка, импорт продолжает обновлять страницу.
+		const careerId = wp( 'eval', 'echo get_page_by_path( "karera" )->ID;' );
+		await page.goto( `${ URL }/wp-admin/post.php?post=${ careerId }&action=edit` );
+		await page.waitForFunction( () => window.wp && wp.data && wp.data.select( 'core/editor' ).getCurrentPostId(), null, { timeout: 30000 } );
+		await page.waitForTimeout( 2000 );
+		await page.evaluate( () => wp.data.dispatch( 'core/editor' ).savePost() );
+		await page.waitForFunction( () => ! wp.data.select( 'core/editor' ).isSavingPost(), null, { timeout: 30000 } );
+		await page.waitForTimeout( 1000 );
+		let log = wp( 'trust', 'demo', 'import' );
+		check( 'Страница сохранена в редакторе без правок — демо-импорт её обновляет', ! /Пропущены[^\n]*karera/.test( log ), log.split( '\n' ).slice( 0, 2 ).join( ' | ' ) );
+		const original = wp( 'post', 'get', careerId, '--field=post_content' );
+		wp( 'post', 'update', careerId, `--post_content=${ original }<!-- wp:paragraph --><p>Ручная правка</p><!-- /wp:paragraph -->` );
+		let skipped = false;
+		try {
+			log = wp( 'trust', 'demo', 'import' );
+			skipped = /Пропущены[^\n]*karera/.test( log );
+		} finally {
+			log = wp( 'trust', 'demo', 'import', '--force=karera' );
+		}
+		check( 'Ручная правка: импорт пропускает страницу; --force=karera возвращает демо-контент', skipped && /Обновлены принудительно[^\n]*karera/.test( log ) && ! wp( 'post', 'get', careerId, '--field=post_content' ).includes( 'Ручная правка' ), log.split( '\n' ).slice( 0, 3 ).join( ' | ' ) );
 	} finally {
 		created.forEach( ( id ) => wp( 'post', 'delete', id, '--force' ) );
 		await browser.close();
