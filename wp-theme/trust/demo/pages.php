@@ -22,35 +22,84 @@ $trust_about = array(
 	'target' => '',
 );
 
+// Первый экран услуги: вводный текст (заглушка, если в макете страницы нет) и кнопка «Оставить заявку»,
+// которая открывает окно «Заказать обратный звонок».
+$trust_service_hero = static fn( string $lead = '[Вводный текст: какую задачу решает услуга и что получит клиент — 1–2 предложения.]' ): array => array(
+	'hero-service',
+	array(
+		'lead'    => $lead,
+		'buttons' => array(
+			array(
+				'link' => array(
+					'title'  => 'Оставить заявку',
+					'url'    => '#callback-modal',
+					'target' => '',
+				),
+			),
+		),
+	),
+);
+
+/**
+ * Первый экран раздела (индиго): плашка, текст, кнопки, цифры.
+ *
+ * @param string $badge   Плашка.
+ * @param string $lead    Текст.
+ * @param array  $stats   Цифры: подпись => значение.
+ * @param array  $buttons Кнопки.
+ */
+$trust_section_hero = static function ( string $badge, string $lead, array $stats, array $buttons = array() ): array {
+	$rows = array();
+	foreach ( $stats as $label => $value ) {
+		$rows[] = array(
+			'value' => $value,
+			'label' => $label,
+		);
+	}
+	return array(
+		'hero-section',
+		array(
+			'badge'   => $badge,
+			'lead'    => $lead,
+			'buttons' => $buttons,
+			'stats'   => $rows,
+		),
+	);
+};
+
 return array(
 	// Услуги.
 	array(
-		'path'  => 'dizayn',
-		'title' => 'Дизайн',
-		'type'  => 'service',
+		'path'   => 'dizayn',
+		'title'  => 'Дизайн',
+		'type'   => 'service',
+		'blocks' => array( $trust_service_hero() ),
 	),
 	array(
-		'path'  => 'sozdanie-saytov',
-		'title' => 'Создание сайтов',
-		'type'  => 'service',
+		'path'   => 'sozdanie-saytov',
+		'title'  => 'Создание сайтов',
+		'type'   => 'service',
+		'blocks' => array( $trust_service_hero() ),
 	),
 	array(
-		'path'  => 'site-support',
-		'title' => 'Поддержка сайтов',
-		'type'  => 'service',
+		'path'   => 'site-support',
+		'title'  => 'Поддержка сайтов',
+		'type'   => 'service',
 		// Переименована по просьбе заказчика (было «Сопровождение сайтов»), без редиректа.
-		'was'   => array(
+		'was'    => array(
 			'path'  => 'soprovozhdenie-saytov',
 			'title' => 'Сопровождение сайтов',
 		),
+		'blocks' => array( $trust_service_hero() ),
 	),
 	array(
-		'path'  => 'seo',
-		'title' => 'SEO-продвижение',
-		'type'  => 'service',
-		'seo'   => array(
+		'path'   => 'seo',
+		'title'  => 'SEO-продвижение',
+		'type'   => 'service',
+		'seo'    => array(
 			'trust_crumb_title' => 'SEO',
 		),
+		'blocks' => array( $trust_service_hero() ),
 	),
 	array(
 		'path'   => 'seo/audit',
@@ -61,6 +110,28 @@ return array(
 		),
 		// Блоки страницы услуги (holst-stranitsy/Main) — по мере готовности блоков.
 		'blocks' => array(
+			array(
+				'hero-service',
+				array(
+					'lead'    => 'Найдём ошибки, которые мешают сайту расти в Яндексе и Google, и дадим пошаговый план исправлений.',
+					'buttons' => array(
+						array(
+							'link' => array(
+								'title'  => 'Заказать аудит',
+								'url'    => '#callback-modal',
+								'target' => '',
+							),
+						),
+						array(
+							'link' => array(
+								'title'  => 'Рассчитать стоимость',
+								'url'    => '#calculator',
+								'target' => '',
+							),
+						),
+					),
+				),
+			),
 			array(
 				'faq',
 				array(
@@ -103,14 +174,16 @@ return array(
 		),
 	),
 	array(
-		'path'  => 'seo/pochasovaya-oplata',
-		'title' => 'SEO с почасовой оплатой',
-		'type'  => 'service',
+		'path'   => 'seo/pochasovaya-oplata',
+		'title'  => 'SEO с почасовой оплатой',
+		'type'   => 'service',
+		'blocks' => array( $trust_service_hero() ),
 	),
 	array(
-		'path'  => 'seo/za-obem-raboty',
-		'title' => 'SEO за объём работы',
-		'type'  => 'service',
+		'path'   => 'seo/za-obem-raboty',
+		'title'  => 'SEO за объём работы',
+		'type'   => 'service',
+		'blocks' => array( $trust_service_hero() ),
 	),
 	array(
 		'path'  => 'seo/voprosy',
@@ -121,51 +194,70 @@ return array(
 		),
 	),
 	array(
-		'path'  => 'geo',
-		'title' => 'GEO-продвижение',
-		'type'  => 'service',
-		'seo'   => array(
+		'path'   => 'geo',
+		'title'  => 'GEO-продвижение',
+		'type'   => 'service',
+		'seo'    => array(
 			'trust_crumb_title' => 'GEO',
 		),
+		'blocks' => array( $trust_service_hero() ),
 	),
 	array(
-		'path'  => 'geo/prodvizhenie-v-ii',
-		'title' => 'Продвижение в ИИ',
-		'type'  => 'service',
+		'path'   => 'geo/prodvizhenie-v-ii',
+		'title'  => 'Продвижение в ИИ',
+		'type'   => 'service',
+		'blocks' => array( $trust_service_hero() ),
 	),
 	array(
-		'path'  => 'geo/audit-vidimosti',
-		'title' => 'Аудит видимости',
-		'type'  => 'service',
+		'path'   => 'geo/audit-vidimosti',
+		'title'  => 'Аудит видимости',
+		'type'   => 'service',
+		'blocks' => array( $trust_service_hero() ),
 	),
 	array(
-		'path'  => 'kontekstnaya-reklama',
-		'title' => 'Контекстная реклама',
-		'type'  => 'service',
+		'path'   => 'kontekstnaya-reklama',
+		'title'  => 'Контекстная реклама',
+		'type'   => 'service',
+		'blocks' => array( $trust_service_hero() ),
 	),
 	array(
-		'path'  => 'kontekstnaya-reklama/yandeks-direkt',
-		'title' => 'Яндекс Директ',
-		'type'  => 'service',
+		'path'   => 'kontekstnaya-reklama/yandeks-direkt',
+		'title'  => 'Яндекс Директ',
+		'type'   => 'service',
+		'blocks' => array( $trust_service_hero() ),
 	),
 	array(
-		'path'  => 'kontekstnaya-reklama/google-reklama',
-		'title' => 'Google Реклама',
-		'type'  => 'service',
+		'path'   => 'kontekstnaya-reklama/google-reklama',
+		'title'  => 'Google Реклама',
+		'type'   => 'service',
+		'blocks' => array( $trust_service_hero() ),
 	),
 	array(
-		'path'  => 'ai',
-		'title' => 'AI-решения',
-		'type'  => 'service',
+		'path'   => 'ai',
+		'title'  => 'AI-решения',
+		'type'   => 'service',
+		'blocks' => array( $trust_service_hero() ),
 	),
 
 	// Разделы.
 	array(
-		'path'  => 'portfolio',
-		'title' => 'Портфолио',
-		'type'  => 'portfolio',
-		'seo'   => array(
+		'path'   => 'portfolio',
+		'title'  => 'Портфолио',
+		'type'   => 'portfolio',
+		'seo'    => array(
 			'trust_seo_h1' => 'Кейсы и проекты',
+		),
+		'blocks' => array(
+			$trust_section_hero(
+				'Портфолио',
+				'Показываем, с какой задачей пришёл клиент, что мы сделали и какой получился результат. Цифры берём из систем аналитики клиентов и публикуем с их согласия.',
+				array(
+					'завершённых проектов'           => '[N]+',
+					'отраслей'                       => '[N]',
+					'кейсов с цифрами'               => '[N]',
+					'средний срок работы с клиентом' => '[N] года',
+				)
+			),
 		),
 	),
 	array(
@@ -183,16 +275,40 @@ return array(
 		),
 	),
 	array(
-		'path'  => 'o-kompanii',
-		'title' => 'О компании',
-		'type'  => 'about',
+		'path'   => 'o-kompanii',
+		'title'  => 'О компании',
+		'type'   => 'about',
+		'blocks' => array(
+			$trust_section_hero(
+				'О нас',
+				'[Бренд] — агентство интернет-маркетинга. Продвигаем сайты в Яндексе, Google и нейросетях, создаём сайты и настраиваем рекламу. Открыто пишем, что входит в каждую услугу, и отчитываемся после каждого этапа.',
+				array(
+					'работаем на рынке'              => 'с [ГГГГ]',
+					'завершённых проектов'           => '[N]+',
+					'специалистов в штате'           => '[N]',
+					'средний срок работы с клиентом' => '[N] лет',
+				)
+			),
+		),
 	),
 	array(
-		'path'  => 'komanda',
-		'title' => 'Наша команда',
-		'type'  => 'team',
-		'seo'   => array(
+		'path'   => 'komanda',
+		'title'  => 'Наша команда',
+		'type'   => 'team',
+		'seo'    => array(
 			'trust_crumb_section' => $trust_about,
+		),
+		'blocks' => array(
+			$trust_section_hero(
+				'О нас',
+				'SEO-специалисты, разработчики, дизайнеры, специалисты по рекламе и аналитики — в штате, а не на фрилансе. Знакомьтесь с теми, кто будет работать над вашим проектом.',
+				array(
+					'специалистов в штате'           => '[N]',
+					'средний опыт в профессии'       => '[N] лет',
+					'сертифицированных специалистов' => '[N]',
+					'экспертных статей в блоге'      => '[N]',
+				)
+			),
 		),
 	),
 	array(
@@ -204,13 +320,43 @@ return array(
 		),
 	),
 	array(
-		'path'  => 'karera',
-		'title' => 'Карьера',
-		'type'  => 'career',
-		'seo'   => array(
+		'path'   => 'karera',
+		'title'  => 'Карьера',
+		'type'   => 'career',
+		'seo'    => array(
 			'trust_seo_title'     => 'Карьера в {site} {sep} вакансии и стажировка',
 			'trust_seo_h1'        => 'Работа в {site}',
 			'trust_crumb_section' => $trust_about,
+		),
+		'blocks' => array(
+			$trust_section_hero(
+				'Карьера',
+				'Растим специалистов внутри команды: наставник с первого дня, понятные грейды и реальные проекты. Ищем тех, кому интересно разбираться в поиске, сайтах и рекламе.',
+				array(
+					'человек в команде'       => '[N]',
+					'открытых вакансий'       => '{vacancies}',
+					'стажёров перешли в штат' => '[N]',
+					'средний стаж в компании' => '[N] года',
+				),
+				array(
+					array(
+						'link' => array(
+							'title'  => 'Смотреть вакансии',
+							'url'    => '#vacancies',
+							'target' => '',
+						),
+						'icon' => 'down',
+					),
+					array(
+						'link' => array(
+							'title'  => 'Отправить резюме',
+							'url'    => '#resume',
+							'target' => '',
+						),
+						'icon' => '',
+					),
+				)
+			),
 		),
 	),
 	array(

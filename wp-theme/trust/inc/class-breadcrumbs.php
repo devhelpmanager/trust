@@ -265,6 +265,35 @@ final class Breadcrumbs {
 	}
 
 	/**
+	 * Крошки в превью блока первого экрана в редакторе: «Главная / … / страница» без ссылок
+	 * (в редакторе нет текущей страницы сайта, по которой строится обычная цепочка).
+	 *
+	 * @param int    $post_id     Страница.
+	 * @param string $extra_class Дополнительный класс.
+	 */
+	public static function render_preview( int $post_id, string $extra_class = '' ): void {
+		$post  = get_post( $post_id );
+		$items = array( array( 'title' => __( 'Главная', 'trust' ) ) );
+		if ( $post ) {
+			$items = array_merge( $items, 'page' === $post->post_type ? self::page_chain( $post ) : array( self::from_post( $post ) ) );
+		}
+		echo '<nav class="breadcrumbs' . ( $extra_class ? ' ' . esc_attr( $extra_class ) : '' ) . '" aria-label="' . esc_attr__( 'Хлебные крошки', 'trust' ) . '"><ol class="breadcrumbs__list">';
+		$last = count( $items ) - 1;
+		foreach ( $items as $i => $item ) {
+			if ( $i > 0 ) {
+				echo '<li class="breadcrumbs__sep" aria-hidden="true">/</li>';
+			}
+			$current = $i === $last && $i > 0;
+			printf(
+				'<li class="breadcrumbs__item%s">%s</li>',
+				$current ? ' breadcrumbs__item--current' : '',
+				$current ? esc_html( $item['title'] ) : '<span class="breadcrumbs__link">' . esc_html( $item['title'] ) . '</span>'
+			);
+		}
+		echo '</ol></nav>';
+	}
+
+	/**
 	 * «Раздел в хлебных крошках» — только у страниц.
 	 *
 	 * @param array|false $field Поле SCF.

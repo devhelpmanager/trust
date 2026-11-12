@@ -34,11 +34,12 @@
 | 3.5 Основа форм: приём заявок, защита, reCAPTCHA v2, заявки в админке | ✅ окно звонка отправляет заявки |
 | 3.6 Уведомления: почта, Telegram, вебхук CRM | ✅ |
 | 3.7 Cookie: плашка, согласие, счётчики только после согласия | ✅ (этап 3 закрыт) |
-| **4.1 Первые экраны: услуги и раздела** | следующий |
+| 4.1 Первые экраны: услуги и раздела | ✅ сверка с 5 макетами 0,00–0,25 % |
+| **4.2 Первые экраны: контакты, отзывы, документ, вопросы** | следующий |
 
 Тесты (`wp-theme/tests/`, все сразу — `npm test`): smoke, settings, header, header-mobile, footer,
 callback, faq, content-types, blog-fields, cases-reviews, team-questions, page-types, seo,
-breadcrumbs, sitemap, schema, leads, notifications, cookie, visual — 675 проверок, все проходят.
+breadcrumbs, sitemap, schema, leads, notifications, cookie, heroes, visual — 724 проверки, все проходят.
 Тесты, кроме cookie, запускают браузер с уже сделанным выбором cookie (`launch()` в `lib.js`). Тесты в начале убирают остатки
 прерванного прогона; `fetch` в тестах всегда дочитывает ответ (иначе Node 22 иногда падает).
 

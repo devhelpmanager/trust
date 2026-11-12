@@ -227,6 +227,86 @@ final class Blocks {
 	}
 
 	/**
+	 * Поле «Кнопки» (до $max штук): текст и адрес — поле «Ссылка» WordPress; адрес может быть
+	 * якорем (#раздел), #callback-modal открывает окно «Заказать обратный звонок».
+	 * Первая кнопка — основная, остальные — второстепенные.
+	 *
+	 * @param int  $max  Сколько кнопок можно добавить.
+	 * @param bool $icon Есть ли выбор иконки (стрелка вправо или вниз).
+	 */
+	public static function buttons_field( int $max = 2, bool $icon = false ): array {
+		$sub = array(
+			array(
+				'name'          => 'link',
+				'label'         => __( 'Текст и адрес', 'trust' ),
+				'type'          => 'link',
+				'return_format' => 'array',
+				'required'      => 1,
+			),
+		);
+		if ( $icon ) {
+			$sub[] = array(
+				'name'          => 'icon',
+				'label'         => __( 'Иконка', 'trust' ),
+				'type'          => 'select',
+				'choices'       => array(
+					''      => __( 'Без иконки', 'trust' ),
+					'down'  => __( 'Стрелка вниз — к разделу этой страницы', 'trust' ),
+					'right' => __( 'Стрелка вправо', 'trust' ),
+				),
+				'default_value' => '',
+				'wrapper'       => array( 'width' => 40 ),
+			);
+		}
+		return array(
+			'name'         => 'buttons',
+			'label'        => __( 'Кнопки', 'trust' ),
+			'type'         => 'repeater',
+			'layout'       => 'table',
+			'max'          => $max,
+			'button_label' => __( 'Добавить кнопку', 'trust' ),
+			'instructions' => __( 'Необязательно. Первая — основная, вторая — контурная. Адрес — страница, якорь раздела (#vacancies) или #callback-modal — окно «Заказать обратный звонок».', 'trust' ),
+			'sub_fields'   => $sub,
+		);
+	}
+
+	/**
+	 * Кнопки из поля buttons_field(): <a class="btn …">.
+	 *
+	 * @param mixed    $rows    Значение поля.
+	 * @param string[] $classes Классы кнопок по порядку (последний — для всех следующих).
+	 */
+	public static function buttons( $rows, array $classes ): string {
+		$html = '';
+		foreach ( array_values( is_array( $rows ) ? $rows : array() ) as $i => $row ) {
+			$link = $row['link'] ?? null;
+			if ( ! is_array( $link ) || empty( $link['url'] ) || '' === trim( (string) ( $link['title'] ?? '' ) ) ) {
+				continue;
+			}
+			$class = $classes[ min( $i, count( $classes ) - 1 ) ];
+			$icon  = array(
+				'down'  => 'arrow-down',
+				'right' => 'arrow-right',
+			)[ $row['icon'] ?? '' ] ?? '';
+			$html .= sprintf(
+				'<a class="%s" href="%s"%s>%s%s</a>',
+				esc_attr( $class ),
+				esc_url( $link['url'] ),
+				! empty( $link['target'] ) ? ' target="_blank" rel="noopener"' : '',
+				esc_html( $link['title'] ),
+				$icon ? Icons::svg(
+					$icon,
+					array(
+						'size'         => 18,
+						'stroke_width' => 2.2,
+					)
+				) : ''
+			);
+		}
+		return $html;
+	}
+
+	/**
 	 * Значение поля «Якорь», пригодное для id (или пустая строка).
 	 *
 	 * @param mixed $value Значение поля.

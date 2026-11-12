@@ -1,0 +1,69 @@
+/*
+ * Блок «Первый экран услуги» (holst-stranitsy/Main, seo-stranitsa/index.html). Фон белый.
+ * Кнопки — общие классы .btn и .btn--outline из main.css.
+ */
+
+.b-hero-service {
+	padding: 40px var(--gutter) 72px;
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-hero-service__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-hero-service__crumbs {
+	margin: -12px 0;
+}
+
+.b-hero-service__row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 28px 48px;
+}
+
+.b-hero-service__text {
+	display: flex;
+	flex: 1 1 520px;
+	flex-direction: column;
+	gap: 20px;
+	max-width: 780px;
+	min-width: 0;
+}
+
+.b-hero-service__title {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: var(--fs-h1);
+	font-weight: 600;
+	line-height: 1.08;
+	letter-spacing: -0.015em;
+	text-wrap: balance;
+}
+
+.b-hero-service__lead {
+	margin: 0;
+	font-size: 19px;
+	line-height: 1.55;
+	color: var(--c-muted);
+	text-wrap: pretty;
+}
+
+.b-hero-service__buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+/* Как в макете: рамка контурной кнопки добавляется к высоте 56 px (59 px), основная
+   кнопка в ряду тянется до той же высоты. */
+.b-hero-service__buttons .btn--outline {
+	box-sizing: content-box;
+}

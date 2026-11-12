@@ -40,6 +40,23 @@ final class Vacancies {
 	}
 
 	/**
+	 * Число открытых вакансий (опубликованных, с отметкой «Принимаем резюме») — для {vacancies}
+	 * в цифрах первого экрана «Карьеры».
+	 */
+	public static function open_count(): int {
+		$ids = get_posts(
+			array(
+				'post_type'     => 'vacancy',
+				'post_status'   => 'publish',
+				'numberposts'   => -1,
+				'fields'        => 'ids',
+				'no_found_rows' => true,
+			)
+		);
+		return count( array_filter( $ids, static fn( $id ): bool => self::is_open( (int) $id ) ) );
+	}
+
+	/**
 	 * Пункты раздела: строки текста без пустых.
 	 *
 	 * @param string $items Текст поля «Пункты».

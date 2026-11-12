@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/hero-service",
+	"title": "Первый экран услуги",
+	"description": "Белый первый экран страницы услуги: хлебные крошки и H1 — автоматически, вводный текст, одна-две кнопки. Один на странице.",
+	"category": "trust-heroes",
+	"icon": "cover-image",
+	"keywords": [ "первый экран", "hero", "услуга", "заголовок", "h1" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false,
+		"multiple": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

@@ -92,7 +92,7 @@ async function save( page ) {
 			const h1 = await page.locator( 'h1' ).count();
 			check( `Страница ${ url }: шаблон типа «${ type }», один H1`, res.status() === 200 && body.includes( `page-type-${ type }` ) && h1 === 1, `${ res.status() } ${ h1 }` );
 		}
-		const orphan = wp( 'post', 'create', '--post_type=page', `--post_title=${ MARK } без первого экрана`, '--post_status=publish', '--post_content=<!-- wp:trust/hero-section {"data":{}} /--><!-- wp:paragraph --><p>Текст</p><!-- /wp:paragraph -->', '--porcelain' );
+		const orphan = wp( 'post', 'create', '--post_type=page', `--post_title=${ MARK } без первого экрана`, '--post_status=publish', '--post_content=<!-- wp:trust/hero-unknown {"data":{}} /--><!-- wp:paragraph --><p>Текст</p><!-- /wp:paragraph -->', '--porcelain' );
 		await page.goto( `${ URL }/?page_id=${ orphan }` );
 		check( 'Блок первого экрана, которого нет в теме, не оставляет страницу без H1', ( await page.locator( 'h1' ).innerText() ).includes( 'без первого экрана' ) );
 
@@ -124,7 +124,7 @@ async function save( page ) {
 		await offer.locator( 'button', { hasText: 'Вставить набор' } ).click();
 		await page.waitForTimeout( 500 );
 		s = await state( page );
-		check( 'Набор вставлен по кнопке: блоки, которые уже есть в теме («Вопрос-ответ»)', JSON.stringify( s.blocks ) === JSON.stringify( [ 'trust/faq' ] ), JSON.stringify( s.blocks ) );
+		check( 'Набор вставлен по кнопке: блоки, которые уже есть в теме (первый экран, «Вопрос-ответ»)', JSON.stringify( s.blocks ) === JSON.stringify( [ 'trust/hero-service', 'trust/faq' ] ), JSON.stringify( s.blocks ) );
 		check( 'На «Услуге» блоки чужих типов скрыты («Кейсы», «Ответы»)', Array.isArray( s.allowed ) && s.allowed.includes( 'trust/faq' ) && ! s.allowed.includes( 'trust/cases-grid' ) && ! s.allowed.includes( 'trust/answers-list' ) );
 		check( 'Страницам доступны стандартные блоки по ТЗ, но не «Обложка» и «Колонки»',
 			[ 'core/paragraph', 'core/heading', 'core/list', 'core/quote', 'core/image', 'core/table', 'core/separator', 'core/buttons', 'core/block' ].every( ( b ) => s.allowed.includes( b ) ) &&
@@ -140,7 +140,7 @@ async function save( page ) {
 		await page.locator( '.trust-page-types__card[data-type="portfolio"]' ).click();
 		await page.waitForTimeout( 500 );
 		s = await state( page );
-		check( 'Смена типа на странице с блоками: шаблон сменён, блоки не тронуты', s.template === 'templates/portfolio.php' && JSON.stringify( s.blocks ) === JSON.stringify( [ 'trust/faq' ] ), JSON.stringify( s ) );
+		check( 'Смена типа на странице с блоками: шаблон сменён, блоки не тронуты', s.template === 'templates/portfolio.php' && JSON.stringify( s.blocks ) === JSON.stringify( [ 'trust/hero-service', 'trust/faq' ] ), JSON.stringify( s ) );
 		check( 'На «Портфолио» доступны «Кейсы», но не «Ответы»', s.allowed.includes( 'trust/cases-grid' ) && ! s.allowed.includes( 'trust/answers-list' ) );
 		const panel = await page.locator( '.trust-page-type-panel' ).innerText();
 		check( 'Панель «Тип страницы» показывает текущий тип', panel.includes( 'Портфолио' ) && panel.includes( 'Сменить тип' ) );
