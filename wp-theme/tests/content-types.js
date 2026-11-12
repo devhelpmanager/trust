@@ -16,6 +16,8 @@ const { URL, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleEr
 /** Код ответа без перехода по редиректам. */
 async function status( url ) {
 	const res = await fetch( url.startsWith( 'http' ) ? url : URL + url, { redirect: 'manual' } );
+	// Тело дочитываем: иначе fetch в Node 22 иногда падает (assert(!this.paused)).
+	await res.arrayBuffer();
 	return res.status;
 }
 
@@ -73,6 +75,9 @@ function registry() {
 	ensureUser( 'editor', 'editor' );
 	ensureUser( 'author', 'author' );
 	ensureUser( 'contributor', 'contributor' );
+
+	// Остатки прерванного прогона: записи и термины с меткой теста.
+	wp( 'eval', `foreach ( get_posts( array( 'post_type' => 'any', 'post_status' => 'any', 'numberposts' => -1, 'meta_key' => '_trust_test' ) ) as $p ) { wp_delete_post( $p->ID, true ); } foreach ( get_terms( array( 'taxonomy' => array( 'category', 'post_tag' ), 'hide_empty' => false, 'meta_key' => '_trust_test' ) ) as $t ) { wp_delete_term( $t->term_id, $t->taxonomy ); }` );
 
 	const savedUrls = getSettings( [ 'urls_case' ] );
 	const created = { posts: [], terms: [] };

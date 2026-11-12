@@ -43,6 +43,8 @@ async function pick( page, field, search, option ) {
 	clearLog();
 	ensureUser( 'editor', 'editor' );
 	ensureUser( 'author', 'author' );
+	// Остатки прерванного прогона.
+	wp( 'eval', `foreach ( get_posts( array( 'post_type' => array( 'team', 'vacancy', 'question', 'review', 'lead' ), 'post_status' => 'any', 'numberposts' => -1 ) ) as $p ) { if ( str_starts_with( $p->post_title, '${ MARK }' ) ) { wp_delete_post( $p->ID, true ); } }` );
 	const browser = await chromium.launch();
 
 	try {
@@ -203,7 +205,12 @@ async function pick( page, field, search, option ) {
 		check( 'Демо: команда кейса «Ремонт квартир» и ведущий рубрики «Технический аудит»',
 			demo.caseTeam.join() === 'seo-specialist,designer,frontend' && demo.rubric === 'seo-senior', JSON.stringify( [ demo.caseTeam, demo.rubric ] ) );
 		const pages = [ '/komanda/seo-senior/', wp( 'post', 'list', `--post__in=${ q1 }`, '--post_type=question', '--field=url' ).replace( URL, '' ) ];
-		const codes = await Promise.all( pages.map( async ( u ) => ( await fetch( URL + u, { redirect: 'manual' } ) ).status ) );
+		const codes = [];
+		for ( const u of pages ) {
+			const res = await fetch( URL + u, { redirect: 'manual' } );
+			await res.arrayBuffer();
+			codes.push( res.status );
+		}
 		check( 'Страницы демо-сотрудника и демо-вопроса открываются', codes.every( ( c ) => c === 200 ), `${ pages.join( ', ' ) }: ${ codes.join( ', ' ) }` );
 	} finally {
 		const leftovers = wp( 'eval', `echo implode( ' ', wp_list_pluck( array_filter( get_posts( array( 'post_type' => array( 'team', 'vacancy', 'question', 'review', 'lead' ), 'post_status' => 'any', 'numberposts' => -1 ) ), static fn( $p ) => str_starts_with( $p->post_title, '${ MARK }' ) ), 'ID' ) );` );

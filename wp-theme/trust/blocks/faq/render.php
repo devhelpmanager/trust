@@ -72,6 +72,12 @@ $trust_open      = ! empty( $is_preview );
 						<div class="b-faq__answer" id="<?php echo esc_attr( $trust_panel_id ); ?>"<?php echo $trust_open ? '' : ' hidden'; ?>>
 							<?php echo wp_kses_post( $trust_row['answer'] ); ?>
 						</div>
+						<?php
+						// Вопрос — в микроразметку FAQPage страницы (один FAQPage на все блоки).
+						if ( ! $is_preview ) {
+							Trust\Schema\Graph::faq( (string) $trust_row['question'], (string) $trust_row['answer'] );
+						}
+						?>
 					</div>
 				<?php endforeach; ?>
 			</div>

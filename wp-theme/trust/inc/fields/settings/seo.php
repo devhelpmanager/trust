@@ -1,7 +1,8 @@
 <?php
 /**
  * Настройки сайта → SEO (только администратор): шаблоны title, разделитель, картинка для
- * соцсетей, порог индексации тегов, текст robots.txt. Тип организации для микроразметки — шаг 3.4.
+ * соцсетей, порог индексации тегов, текст robots.txt, тип организации и география услуг для
+ * микроразметки (Trust\Schema\Graph).
  *
  * @package Trust
  */
@@ -67,6 +68,24 @@ return array(
 			'library'       => 'all',
 			'mime_types'    => 'jpg, jpeg, png, webp',
 			'instructions'  => __( '1200×630. Для страниц без своей картинки и обложки, когда ссылкой делятся в мессенджерах и соцсетях.', 'trust' ),
+		),
+		array(
+			'name'          => 'seo_org_type',
+			'label'         => __( 'Тип организации в микроразметке', 'trust' ),
+			'type'          => 'select',
+			'choices'       => Trust\Schema\Graph::ORG_TYPES,
+			'default_value' => 'Organization',
+			'instructions'  => __( '«Компания с офисом» — если клиенты приходят в офис; без адреса в «Контактах» всё равно выводится «Организация».', 'trust' ),
+			'wrapper'       => array( 'width' => 50 ),
+		),
+		array(
+			'name'         => 'seo_area_served',
+			'label'        => __( 'География услуг', 'trust' ),
+			'type'         => 'text',
+			'maxlength'    => 100,
+			'placeholder'  => 'Россия',
+			'instructions' => __( 'Где вы оказываете услуги — свойство areaServed у страниц услуг: страна, город или «весь мир». Пусто — не выводится.', 'trust' ),
+			'wrapper'      => array( 'width' => 50 ),
 		),
 		array(
 			'name'         => 'seo_robots',

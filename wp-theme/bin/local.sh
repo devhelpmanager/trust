@@ -172,10 +172,17 @@ install() {
 }
 
 start() {
-	if [ -f "${PID_FILE}" ] && kill -0 "$(cat "${PID_FILE}")" 2>/dev/null; then
+	# «Запущен» — только если сервер отвечает: после перезапуска контейнера номер процесса
+	# из pid-файла может достаться другому процессу.
+	if curl -fs -o /dev/null "${URL}/wp-login.php"; then
 		say "Сервер уже запущен: ${URL}/"
 		return
 	fi
+	# Старый процесс останавливаем, только если это действительно наш сервер.
+	if [ -f "${PID_FILE}" ] && ps -p "$(cat "${PID_FILE}")" -o args= 2>/dev/null | grep -q "wp-cli.phar.*server"; then
+		kill "$(cat "${PID_FILE}")" 2>/dev/null || true
+	fi
+	rm -f "${PID_FILE}"
 	say "Запускаю сервер: ${URL}/ (журнал: ${LOG_FILE})"
 	nohup php -d memory_limit=512M "${WP_CLI}" --path="${WP_DIR}" "${ROOT_FLAG[@]}" server --host=localhost --port="${PORT}" > "${LOG_FILE}" 2>&1 &
 	echo $! > "${PID_FILE}"
