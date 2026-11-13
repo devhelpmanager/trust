@@ -3,8 +3,9 @@
  * Формы блоков шага 4.6 (ТЗ, раздел 12.1): «Заявка на аудит» (блок «С какими проблемами…»),
  * «Бриф» (полный) и «Бриф (короткий)».
  *
- * В брифах по решению заказчика добавлены «Имя» и «Как с вами связаться?» (телефон или email):
- * в макетах полей для связи нет, а без них ответить на заявку нельзя.
+ * В брифах по решению заказчика добавлены «Имя» и «Как с вами связаться?» — любой способ связи
+ * (телефон, email, Telegram, Instagram…): в макетах полей для связи нет, а без них ответить на
+ * заявку нельзя.
  *
  * @package Trust
  */
@@ -50,11 +51,26 @@ final class Block_Forms {
 	}
 
 	/**
-	 * Общие поля: имя и контакт (телефон или email).
+	 * Общие поля: имя и контакт.
 	 *
 	 * @param string $contact_label Подпись поля контакта.
+	 * @param bool   $any           Любой способ связи (телефон, email, Telegram, Instagram…) —
+	 *                              решение заказчика для брифов; иначе телефон или email.
 	 */
-	private static function person( string $contact_label ): array {
+	private static function person( string $contact_label, bool $any = false ): array {
+		if ( $any ) {
+			return array(
+				'name'    => self::person( $contact_label )['name'],
+				'contact' => array(
+					'label'    => $contact_label,
+					'type'     => 'text',
+					'required' => true,
+					'min'      => 3,
+					'max'      => 100,
+					'error'    => __( 'Укажите, как с вами связаться: телефон, email, Telegram или другой способ', 'trust' ),
+				),
+			);
+		}
 		return array(
 			'name'    => array(
 				'label'    => __( 'Имя', 'trust' ),
@@ -135,7 +151,7 @@ final class Block_Forms {
 					'max'   => 100,
 					'error' => __( 'Выберите варианты из списка', 'trust' ),
 				),
-			) + self::person( __( 'Как с вами связаться', 'trust' ) ),
+			) + self::person( __( 'Как с вами связаться', 'trust' ), true ),
 			'consents' => array( 'consent' => Forms::consent() ),
 			'name'     => 'name',
 			'contact'  => array( 'contact' ),
@@ -144,7 +160,7 @@ final class Block_Forms {
 		$types[ self::BRIEF_QUICK ] = array(
 			'label'    => __( 'Бриф (короткий)', 'trust' ),
 			'captcha'  => false,
-			'fields'   => array( 'url' => self::url() ) + self::person( __( 'Как с вами связаться', 'trust' ) ) + array(
+			'fields'   => array( 'url' => self::url() ) + self::person( __( 'Как с вами связаться', 'trust' ), true ) + array(
 				'share' => array(
 					'label' => __( 'Расшарить доступ к статистике', 'trust' ),
 					'type'  => 'checkbox',

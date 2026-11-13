@@ -17,33 +17,30 @@
 	margin: 0 auto;
 }
 
+/* Шапка по левому краю (правка заказчика: в макете по центру) */
 .b-problems__head {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-items: flex-start;
 	gap: 16px;
 	max-width: var(--text-col);
-	margin: 0 auto;
-	text-align: center;
 }
 
+/* Слева — вводный текст и форма (колонка 280 px), справа — список проблем. На узких экранах
+   (правка заказчика) — по порядку: текст, список, форма. */
 .b-problems__body {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: flex-start;
-	gap: 40px 56px;
-}
-
-.b-problems__aside {
-	display: flex;
-	flex: 1 1 280px;
-	flex-direction: column;
-	gap: 16px;
-	max-width: 400px;
-	min-width: 0;
+	display: grid;
+	grid-template-areas:
+		"lead list"
+		"form list";
+	grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+	grid-template-rows: auto 1fr;
+	align-items: start;
+	gap: 24px 56px;
 }
 
 .b-problems__lead {
+	grid-area: lead;
 	margin: 0;
 	font-size: 16px;
 	line-height: 1.6;
@@ -52,7 +49,7 @@
 }
 
 .b-problems__card {
-	margin-top: 8px;
+	grid-area: form;
 	padding: 20px;
 	border: 1px solid var(--c-border);
 	border-radius: 18px;
@@ -110,7 +107,7 @@
 /* Список проблем */
 .b-problems__list {
 	display: flex;
-	flex: 999 1 380px;
+	grid-area: list;
 	flex-direction: column;
 	min-width: 0;
 	margin: 0;
@@ -161,9 +158,22 @@
 	text-wrap: pretty;
 }
 
-/* На телефоне форма на всю ширину */
-@media (max-width: 760px) {
-	.b-problems__aside {
-		max-width: none;
+@media (max-width: 860px) {
+	/* Меньше от заголовка до текста (правка заказчика) */
+	.b-problems__inner {
+		gap: 24px;
+	}
+
+	.b-problems__body {
+		grid-template-areas:
+			"lead"
+			"list"
+			"form";
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-rows: none;
+	}
+
+	.b-problems__card {
+		margin-top: 8px;
 	}
 }

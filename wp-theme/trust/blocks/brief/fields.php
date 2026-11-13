@@ -53,7 +53,7 @@ return array_merge(
 		Blocks::text_field( 'name_label', __( 'Подпись «Имя»', 'trust' ), __( 'Имя', 'trust' ), 40 ),
 		Blocks::text_field( 'name_placeholder', __( 'Подсказка в поле «Имя»', 'trust' ), __( 'Как к вам обращаться', 'trust' ), 60 ),
 		Blocks::text_field( 'contact_label', __( 'Подпись поля контакта', 'trust' ), __( 'Как с вами связаться?', 'trust' ), 40 ),
-		Blocks::text_field( 'contact_placeholder', __( 'Подсказка в поле контакта', 'trust' ), __( 'Телефон или email', 'trust' ), 60 ),
+		Blocks::text_field( 'contact_placeholder', __( 'Подсказка в поле контакта', 'trust' ), __( 'Телефон, email или Telegram', 'trust' ), 60, __( 'Посетитель пишет любой способ связи: телефон, email, Telegram, Instagram…', 'trust' ) ),
 		Blocks::text_field( 'submit', __( 'Текст кнопки', 'trust' ), __( 'Получить', 'trust' ), 40 ),
 		Blocks::text_field( 'success_title', __( 'Заявка отправлена: заголовок', 'trust' ), __( 'Бриф отправлен', 'trust' ), 60 ),
 		Blocks::text_field( 'success_text', __( 'Заявка отправлена: текст', 'trust' ), __( 'Изучим сайт и задачу и свяжемся с вами в течение рабочего дня.', 'trust' ), 160 ),

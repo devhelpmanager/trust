@@ -12,17 +12,17 @@
 .b-brief__inner {
 	display: flex;
 	flex-direction: column;
-	gap: 48px;
+	gap: 28px; /* правка заказчика: меньше от текста до формы (в макете 48 px) */
 	max-width: 880px;
 	margin: 0 auto;
 }
 
+/* Шапка по левому краю (правка заказчика: в макете по центру) */
 .b-brief__head {
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-items: flex-start;
 	gap: 16px;
-	text-align: center;
 }
 
 .b-brief__lead {
@@ -149,13 +149,15 @@
 	gap: 10px;
 }
 
+/* Ширина «таблетки» не меняется при отметке (правка заказчика: соседние не сдвигаются):
+   у неотмеченной поля по 28 px, у отмеченной 16 px + галочка 16 px + отступ 8 px слева. */
 .b-brief__chip {
 	position: relative;
 	display: inline-flex;
 	align-items: center;
 	gap: 8px;
 	min-height: 44px;
-	padding: 0 16px;
+	padding: 0 28px;
 	border: 1px solid var(--c-border-strong);
 	border-radius: var(--r-pill);
 	background: var(--c-white);
@@ -175,6 +177,7 @@
 }
 
 .b-brief__chip:has(:checked) {
+	padding: 0 16px;
 	border-color: var(--c-violet);
 	background: var(--c-violet);
 	color: var(--c-white);
@@ -208,4 +211,10 @@
 	padding: 0 32px;
 	border-radius: var(--r-btn);
 	font-size: 17px;
+}
+
+@media (max-width: 760px) {
+	.b-brief__inner {
+		gap: 24px;
+	}
 }

@@ -12,8 +12,9 @@
  * заполненная — экран «Заявка отправлена», в «Заявках» — форма, поля (варианты списком), страница;
  * «Отправить ещё» возвращает пустую форму; без JavaScript — обычная отправка и возврат к форме;
  * REST: чужие варианты длиннее 100 символов — ошибка, лишние поля не сохраняются.
- * Общее: совпадение с макетами seo-bloki/07, 11a, 11b на 1280, 768 и 390 px (≤ 2 %; добавленные
- * поля и галочка согласия в теме, «Я не робот» и фраза в макете скрываются); ширины 1440–280 px;
+ * Общее: совпадение с макетами seo-bloki/07 и 11a на 1280, 768 и 390 px (≤ 2 %; добавленные поля
+ * и галочка согласия в теме, «Я не робот» и фраза в макете скрываются; правки заказчика внесены
+ * в макеты); короткий бриф перестроен по правкам заказчика — проверяется разметкой; ширины 1440–280 px;
  * зоны нажатия; axe-core; консоль и журнал ошибок; редактор — категория «Формы», превью.
  */
 
@@ -90,7 +91,26 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 			submit: el.querySelector( 'form [type=submit]' ).textContent.trim(),
 			formLabel: el.querySelector( 'form' ).getAttribute( 'aria-labelledby' ) && document.getElementById( el.querySelector( 'form' ).getAttribute( 'aria-labelledby' ) ).textContent.trim(),
 		} ) );
-		check( 'Проблемы: якорь #problems, H2, надзаголовок «Признаки»', 'problems' === pr.id && 'С какими проблемами вы можете столкнуться' === pr.h2 && pr.label && 'Признаки' === pr.eyebrow, JSON.stringify( pr ).slice( 0, 200 ) );
+		check( 'Проблемы: якорь #problems, H2, надзаголовок «Возможные проблемы» (правка заказчика)', 'problems' === pr.id && 'С какими проблемами вы можете столкнуться' === pr.h2 && pr.label && 'Возможные проблемы' === pr.eyebrow, JSON.stringify( pr ).slice( 0, 200 ) );
+		const heads = await page.evaluate( () => [ '.b-problems', '.b-brief' ].map( ( b ) => {
+			const head = document.querySelector( `${ b } h2` );
+			return getComputedStyle( head ).textAlign + ':' + Math.round( head.getBoundingClientRect().left - document.querySelector( `${ b } h2` ).closest( 'section' ).firstElementChild.getBoundingClientRect().left );
+		} ) );
+		check( 'Проблемы и бриф: заголовки по левому краю (правка заказчика)', heads.every( ( h ) => 'start:0' === h || 'left:0' === h ), JSON.stringify( heads ) );
+		const layout = async ( w ) => {
+			await page.setViewportSize( { width: w, height: 900 } );
+			await page.goto( SEO, { waitUntil: 'networkidle' } );
+			return page.locator( '.b-problems' ).evaluate( ( el ) => {
+				const box = ( s ) => el.querySelector( s ).getBoundingClientRect();
+				return { h2: Math.round( box( 'h2' ).bottom ), lead: Math.round( box( '.b-problems__lead' ).top ), leadX: Math.round( box( '.b-problems__lead' ).left ), list: Math.round( box( '.b-problems__list' ).top ), listX: Math.round( box( '.b-problems__list' ).left ), form: Math.round( box( '.b-problems__card' ).top ), formX: Math.round( box( '.b-problems__card' ).left ) };
+			} );
+		};
+		const desk = await layout( 1280 );
+		const phone = await layout( 390 );
+		check( 'Проблемы: на компьютере слева текст и форма, справа список', desk.leadX === desk.formX && desk.listX > desk.formX && desk.form > desk.lead, JSON.stringify( desk ) );
+		check( 'Проблемы: на телефоне — текст, список, потом форма (правка заказчика); от заголовка до текста 24 px', phone.lead < phone.list && phone.list < phone.form && 24 === phone.lead - phone.h2, JSON.stringify( phone ) );
+		await page.setViewportSize( { width: 1280, height: 900 } );
+		await page.goto( SEO, { waitUntil: 'networkidle' } );
 		check( 'Проблемы: 6 пунктов H3 с красными иконками', 6 === pr.items.length && pr.items.every( ( i ) => i[ 1 ] && 'rgb(214, 58, 47)' === i[ 2 ] ) && 'Трафик из поиска не растёт' === pr.items[ 0 ][ 0 ], pr.items.map( ( i ) => i[ 0 ] ).join( ' | ' ) );
 		check( 'Проблемы: форма «Заявка на аудит» — адрес сайта, имя, телефон или email, галочка согласия (без фразы «Нажимая кнопку…»)',
 			'url:Адрес сайта,name:Имя,contact:Телефон или email' === pr.inputs.join() && pr.consent && 'Проверить точки роста на моём сайте' === pr.submit && 'Заявка на аудит' === pr.formLabel, JSON.stringify( pr.inputs ) );
@@ -144,11 +164,21 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 			JSON.stringify( bf.labels ) === JSON.stringify( [ 'Адрес сайта', 'Тематика сайта', 'Опишите проблему или задачу', 'Имя', 'Как с вами связаться?' ] ), JSON.stringify( bf.labels ) );
 		check( 'Бриф: 8 вариантов из макета, «можно выбрать несколько», галочка согласия, кнопка «Получить»',
 			8 === bf.chips.length && 'Вывести сайт в топ' === bf.chips[ 0 ] && 'Другое' === bf.chips[ 7 ] && bf.legend.endsWith( '· можно выбрать несколько' ) && bf.consent && 'Получить' === bf.submit, JSON.stringify( bf ) );
+		const briefGap = await page.locator( '.b-brief' ).evaluate( ( el ) => Math.round( el.querySelector( '.b-brief__card' ).getBoundingClientRect().top - el.querySelector( '.b-brief__lead' ).getBoundingClientRect().bottom ) );
+		check( 'Бриф: от текста до формы 28 px (правка заказчика, в макете 48)', 28 === briefGap, String( briefGap ) );
+		const chipBoxes = () => brief.locator( '.b-brief__chip' ).evaluateAll( ( list ) => list.map( ( c ) => {
+			const r = c.getBoundingClientRect();
+			const box = c.parentElement.getBoundingClientRect();
+			return [ Math.round( r.left - box.left ), Math.round( r.top - box.top ), Math.round( r.width ) ];
+		} ) );
+		const chipsBefore = await chipBoxes();
 		await brief.locator( '.b-brief__mode', { hasText: 'Бесплатный аудит' } ).click();
 		await brief.locator( '.b-brief__chip', { hasText: 'Вывести сайт в топ' } ).click();
 		await brief.locator( '.b-brief__chip', { hasText: 'Упал трафик' } ).click();
 		await page.mouse.move( 0, 0 );
 		await page.waitForTimeout( 400 );
+		const chipsAfter = await chipBoxes();
+		check( 'Бриф: после отметки вариантов «таблетки» не меняют размер и место (правка заказчика)', JSON.stringify( chipsBefore ) === JSON.stringify( chipsAfter ), JSON.stringify( [ chipsBefore.slice( 0, 3 ), chipsAfter.slice( 0, 3 ) ] ) );
 		const chipStyle = await brief.locator( '.b-brief__chip' ).first().evaluate( ( c ) => [ getComputedStyle( c ).backgroundColor, getComputedStyle( c.querySelector( '.b-brief__chip-check' ) ).display ] );
 		check( 'Бриф: отмеченный вариант — фиолетовая «таблетка» с галочкой', 'rgb(109, 40, 217)' === chipStyle[ 0 ] && 'flex' === chipStyle[ 1 ], JSON.stringify( chipStyle ) );
 		await brief.locator( '[type=submit]' ).click();
@@ -158,15 +188,19 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 		await brief.locator( '[name=topic]' ).fill( 'Интернет-магазин' );
 		await brief.locator( '[name=problem]' ).fill( 'После переезда упал трафик' );
 		await brief.locator( '[name=name]' ).fill( 'Тест Бриф' );
-		await brief.locator( '[name=contact]' ).fill( '+1 000 000 00 00' );
+		await brief.locator( '[name=contact]' ).fill( 'ab' );
 		await brief.locator( '[name=consent]' ).check();
+		await brief.locator( '[type=submit]' ).click();
+		shown = await errorsOf( brief );
+		check( 'Бриф: «Как с вами связаться?» короче 3 символов — ошибка с подсказкой', 1 === shown.length && /Telegram/.test( shown[ 0 ] ), shown.join( ' | ' ) );
+		await brief.locator( '[name=contact]' ).fill( 'Telegram @seo_client' );
 		await brief.locator( '[type=submit]' ).click();
 		await page.locator( '.b-brief .form-sent' ).waitFor( { state: 'visible', timeout: 15000 } );
 		leads = leadsBy( 'Тест Бриф' );
 		const bfFields = leads[ 0 ] && leads[ 0 ].fields;
-		check( 'Бриф: в «Заявках» — тип «Бесплатный аудит», сайт, тематика, задача, варианты списком, контакт',
+		check( 'Бриф: в «Заявках» — тип «Бесплатный аудит», сайт, тематика, задача, варианты списком, контакт — любой (Telegram, правка заказчика)',
 			1 === leads.length && 'brief' === leads[ 0 ].form && 'Бесплатный аудит' === bfFields[ 'Тип заявки' ] && 'https://shop.example.ru' === bfFields[ 'Адрес сайта' ] &&
-			'Интернет-магазин' === bfFields[ 'Тематика сайта' ] && 'Вывести сайт в топ, Упал трафик' === bfFields[ 'Что хотите получить' ] && '+1 000 000 00 00' === bfFields[ 'Как с вами связаться' ], JSON.stringify( leads ) );
+			'Интернет-магазин' === bfFields[ 'Тематика сайта' ] && 'Вывести сайт в топ, Упал трафик' === bfFields[ 'Что хотите получить' ] && 'Telegram @seo_client' === bfFields[ 'Как с вами связаться' ], JSON.stringify( leads ) );
 		await page.locator( '.b-brief .form-sent__again' ).click();
 		const reset = await brief.evaluate( ( f ) => ( { mode: f.querySelector( 'input[name=mode]:checked' ).value, chips: f.querySelectorAll( 'input[name="wants[]"]:checked' ).length } ) );
 		check( 'Бриф: «Заполнить бриф ещё раз» — форма сброшена («Продвижение», варианты не отмечены)', 'promo' === reset.mode && 0 === reset.chips, JSON.stringify( reset ) );
@@ -177,14 +211,19 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 		const qf = await page.locator( '.b-quick' ).evaluate( ( el ) => ( {
 			id: el.id,
 			h2: el.querySelector( 'h2' ).textContent.trim(),
-			inputs: [ ...el.querySelectorAll( '.b-quick__bar .field__input' ) ].map( ( i ) => `${ i.name }:${ i.placeholder }` ),
+			inputs: [ ...el.querySelectorAll( '.b-quick__fields .field__input' ) ].map( ( i ) => `${ i.name }:${ i.placeholder }` ),
 			share: el.querySelector( 'input[name=share]' ) ? el.querySelector( '.b-quick__share-title' ).textContent.trim() : '',
 			note: getComputedStyle( el.querySelector( '.b-quick__share-note' ) ).display,
 			email: el.querySelector( '.b-quick__share-note a' ).getAttribute( 'href' ),
-			divider: el.querySelector( '.b-quick__divider-text' ).textContent.trim(),
+			divider: /Также советуем/.test( el.textContent ),
+			order: [ ...el.querySelector( '.b-quick__card' ).children ].map( ( c ) => c.className.split( ' ' ).find( ( k ) => k.startsWith( 'b-quick__' ) || k.startsWith( 'form__' ) ) ),
+			left: getComputedStyle( el.querySelector( 'h2' ) ).textAlign,
+			gap: Math.round( el.querySelector( '.b-quick__card' ).getBoundingClientRect().top - el.querySelector( '.b-quick__lead' ).getBoundingClientRect().bottom ),
 		} ) );
-		check( 'Короткий бриф: якорь #free-audit, H2, поля адрес, имя, «Как с вами связаться?» (решение заказчика), «Также советуем»',
-			'free-audit' === qf.id && 'Получите бесплатный аудит сайта' === qf.h2 && 'url:https://example.ru,name:Ваше имя,contact:Как с вами связаться?' === qf.inputs.join() && 'Также советуем' === qf.divider, JSON.stringify( qf ) );
+		check( 'Короткий бриф: якорь #free-audit, H2 по левому краю, поля адрес, имя, «Как с вами связаться?» (решение заказчика)',
+			'free-audit' === qf.id && 'Получите бесплатный аудит сайта' === qf.h2 && [ 'start', 'left' ].includes( qf.left ) && 'url:https://example.ru,name:Ваше имя,contact:Как с вами связаться?' === qf.inputs.join(), JSON.stringify( qf ) );
+		check( 'Короткий бриф: «Расшарить доступ» внутри формы — под полями, над согласием и кнопкой; «Также советуем» нет; от текста до формы 24 px (правки заказчика)',
+			'b-quick__fields,b-quick__share,form__consent,form__submit' === qf.order.join() && ! qf.divider && 24 === qf.gap, JSON.stringify( qf ) );
 		await quick.locator( '.b-quick__share-label' ).click();
 		await page.waitForTimeout( 400 );
 		const opened = await page.locator( '.b-quick' ).evaluate( ( el ) => [ getComputedStyle( el.querySelector( '.b-quick__share-note' ) ).display, getComputedStyle( el.querySelector( '.b-quick__share' ) ).borderTopColor ] );
@@ -192,7 +231,7 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 			'none' === qf.note && 'flex' === opened[ 0 ] && 'rgb(109, 40, 217)' === opened[ 1 ] && /^mailto:.+@/.test( qf.email ), JSON.stringify( { qf: qf.email, opened } ) );
 		await quick.locator( '[name=url]' ).fill( 'example.ru' );
 		await quick.locator( '[name=name]' ).fill( 'Тест Короткий' );
-		await quick.locator( '[name=contact]' ).fill( 'quick@example.ru' );
+		await quick.locator( '[name=contact]' ).fill( 'instagram.com/quick_client' );
 		await quick.locator( '[type=submit]' ).click();
 		shown = await errorsOf( quick );
 		check( 'Короткий бриф: без галочки согласия — ошибка у галочки', 1 === shown.length && /согласие/.test( shown[ 0 ] ), shown.join( ' | ' ) );
@@ -200,8 +239,8 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 		await quick.locator( '[type=submit]' ).click();
 		await page.locator( '.b-quick .form-sent' ).waitFor( { state: 'visible', timeout: 15000 } );
 		leads = leadsBy( 'Тест Короткий' );
-		check( 'Короткий бриф: в «Заявках» — сайт, контакт, «Расшарить доступ к статистике: да»',
-			1 === leads.length && 'brief-quick' === leads[ 0 ].form && 'example.ru' === leads[ 0 ].fields[ 'Адрес сайта' ] && 'да' === leads[ 0 ].fields[ 'Расшарить доступ к статистике' ], JSON.stringify( leads ) );
+		check( 'Короткий бриф: в «Заявках» — сайт, контакт (Instagram), «Расшарить доступ к статистике: да»',
+			1 === leads.length && 'brief-quick' === leads[ 0 ].form && 'example.ru' === leads[ 0 ].fields[ 'Адрес сайта' ] && 'instagram.com/quick_client' === leads[ 0 ].fields[ 'Как с вами связаться' ] && 'да' === leads[ 0 ].fields[ 'Расшарить доступ к статистике' ], JSON.stringify( leads ) );
 
 		// Без JavaScript: обычная отправка и возврат к форме с сообщением.
 		resetFormLimits();
@@ -238,7 +277,10 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 
 		// ===== Совпадение с макетами =====
 		// В теме — галочка согласия (вместо фразы «Нажимая кнопку…») и поля для связи в брифах (решения
-		// заказчика): при сверке они скрыты; в макете скрыты фраза и место «Я не робот» (капча на стенде не настроена).
+		// заказчика): при сверке они скрыты; в макете скрыты фраза и место «Я не робот» (капча на стенде не
+		// настроена). Правки заказчика (шапки слева, отступы, ширина «таблеток») внесены в макеты в lib.js;
+		// «Проблемы» на узком экране — текст, список, форма (в макете перестраивается так же); короткий бриф
+		// перестроен по правкам заказчика (карточка «Расшарить доступ» внутри формы) и с макетом не сравнивается.
 		for ( const width of [ 1280, 768, 390 ] ) {
 			await compare( page, {
 				name: 'problems', width, url: SEO, theme: '.b-problems', mockup: 'seo-bloki/07-problemy.html',
@@ -246,6 +288,16 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 				mockBefore: () => {
 					document.querySelector( 'form label:has(input[name=captcha])' ).style.display = 'none';
 					document.querySelector( 'form > p' ).style.display = 'none';
+					document.querySelector( 'header > span' ).textContent = 'Возможные проблемы';
+					if ( innerWidth <= 860 ) {
+						const body = document.querySelector( 'header' ).nextElementSibling;
+						const aside = body.firstElementChild;
+						body.prepend( aside.querySelector( 'p' ) );
+						body.insertBefore( body.querySelector( 'ul' ), aside );
+						aside.style.maxWidth = 'none';
+						body.style.cssText += ';display: grid; gap: 24px';
+						document.querySelector( 'section > div' ).style.gap = '24px';
+					}
 				},
 			} );
 			await compare( page, {
@@ -257,10 +309,6 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 					[ 0, 2 ].forEach( ( i ) => ( form.querySelectorAll( 'input[name="wants[]"]' )[ i ].checked = true ) );
 				},
 				mockBefore: () => ( document.querySelector( 'form p' ).style.display = 'none' ),
-			} );
-			await compare( page, {
-				name: 'brief-quick', width, url: QUICK, theme: '.b-quick', mockup: 'seo-bloki/11b-brif-korotkiy.html',
-				hide: [ '.b-quick__field--name', '.b-quick__field--contact', '.b-quick .form__consent' ],
 			} );
 		}
 

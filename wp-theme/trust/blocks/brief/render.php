@@ -134,7 +134,7 @@ $trust_field = static function ( string $name, string $label, string $hint, stri
 				<div class="b-brief__row">
 					<?php
 					$trust_field( 'name', Blocks::text( 'name_label', __( 'Имя', 'trust' ) ), Blocks::text( 'name_placeholder', __( 'Как к вам обращаться', 'trust' ) ), 'type="text" autocomplete="name"' );
-					$trust_field( 'contact', Blocks::text( 'contact_label', __( 'Как с вами связаться?', 'trust' ) ), Blocks::text( 'contact_placeholder', __( 'Телефон или email', 'trust' ) ), 'type="text" data-type="contact" autocomplete="email"' );
+					$trust_field( 'contact', Blocks::text( 'contact_label', __( 'Как с вами связаться?', 'trust' ) ), Blocks::text( 'contact_placeholder', __( 'Телефон, email или Telegram', 'trust' ) ), 'type="text" minlength="3"' );
 					?>
 				</div>
 

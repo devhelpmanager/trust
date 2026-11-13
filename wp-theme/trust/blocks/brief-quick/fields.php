@@ -24,9 +24,8 @@ return array_merge(
 	array(
 		Blocks::text_field( 'url_placeholder', __( 'Подсказка в поле «Адрес сайта»', 'trust' ), 'https://example.ru', 60 ),
 		Blocks::text_field( 'name_placeholder', __( 'Подсказка в поле «Имя»', 'trust' ), __( 'Ваше имя', 'trust' ), 40 ),
-		Blocks::text_field( 'contact_placeholder', __( 'Подсказка в поле контакта', 'trust' ), __( 'Как с вами связаться?', 'trust' ), 60, __( 'Принимаем телефон или email.', 'trust' ) ),
+		Blocks::text_field( 'contact_placeholder', __( 'Подсказка в поле контакта', 'trust' ), __( 'Как с вами связаться?', 'trust' ), 60, __( 'Посетитель пишет любой способ связи: телефон, email, Telegram, Instagram…', 'trust' ) ),
 		Blocks::text_field( 'submit', __( 'Текст кнопки', 'trust' ), __( 'Получить бесплатный аудит', 'trust' ), 40 ),
-		Blocks::text_field( 'divider', __( 'Разделитель над карточкой', 'trust' ), __( 'Также советуем', 'trust' ), 30 ),
 		Blocks::text_field( 'share_title', __( 'Карточка: заголовок', 'trust' ), __( 'Расшарить доступ к статистике', 'trust' ), 60 ),
 		Blocks::text_field( 'share_text', __( 'Карточка: текст', 'trust' ), __( 'Яндекс Метрика, Вебмастер или Google Search Console — с данными аудит будет точнее', 'trust' ), 160 ),
 		array(

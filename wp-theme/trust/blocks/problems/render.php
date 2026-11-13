@@ -67,40 +67,9 @@ $trust_input = static function ( string $name, string $attrs, string $label, str
 		<?php endif; ?>
 
 		<div class="b-problems__body">
-			<div class="b-problems__aside">
-				<?php if ( '' !== trim( $trust_lead ) ) : ?>
-					<p class="b-problems__lead"><?php echo esc_html( $trust_lead ); ?></p>
-				<?php endif; ?>
-
-				<div class="b-problems__card">
-					<form class="form b-problems__form" id="<?php echo esc_attr( $trust_uid ); ?>-form" method="post" action="<?php echo esc_url( Forms::fallback_url() ); ?>" data-trust-form="<?php echo esc_attr( $trust_type ); ?>" data-success="<?php echo esc_attr( $trust_uid ); ?>-sent" aria-labelledby="<?php echo esc_attr( $trust_uid ); ?>-label" novalidate>
-						<span class="b-problems__label" id="<?php echo esc_attr( $trust_uid ); ?>-label"><?php echo esc_html( Blocks::text( 'form_title', __( 'Заявка на аудит', 'trust' ) ) ); ?></span>
-						<?php Forms::hidden_fields( $trust_type ); ?>
-						<input type="hidden" name="_trust_anchor" value="<?php echo esc_attr( $trust_uid ); ?>-form">
-						<?php
-						$trust_input( 'url', 'type="url" inputmode="url" autocomplete="url"', __( 'Адрес сайта', 'trust' ), Blocks::text( 'url_placeholder', __( 'Адрес сайта', 'trust' ) ) );
-						$trust_input( 'name', 'type="text" autocomplete="name"', __( 'Имя', 'trust' ), Blocks::text( 'name_placeholder', __( 'Ваше имя', 'trust' ) ) );
-						$trust_input( 'contact', 'type="text" data-type="contact" autocomplete="email"', __( 'Телефон или email', 'trust' ), Blocks::text( 'contact_placeholder', __( 'Телефон или email', 'trust' ) ) );
-						Forms::captcha( $trust_type );
-						Forms::consent_check( $trust_uid, $trust_type );
-						?>
-						<button type="submit" class="form__submit b-problems__submit">
-							<span><?php echo esc_html( Blocks::text( 'submit', __( 'Проверить точки роста на моём сайте', 'trust' ) ) ); ?></span>
-							<?php
-							Icons::render(
-								'arrow-right',
-								array(
-									'size'         => 18,
-									'stroke_width' => 2,
-								)
-							);
-							?>
-						</button>
-						<?php Forms::status( $trust_type ); ?>
-					</form>
-					<?php Forms::sent_screen( $trust_uid . '-sent', Blocks::text( 'success_title', __( 'Заявка отправлена', 'trust' ) ), Blocks::text( 'success_text', __( 'Проверим сайт и свяжемся с вами в течение рабочего дня.', 'trust' ) ), Blocks::text( 'again', __( 'Отправить ещё одну заявку', 'trust' ) ) ); ?>
-				</div>
-			</div>
+			<?php if ( '' !== trim( $trust_lead ) ) : ?>
+				<p class="b-problems__lead"><?php echo esc_html( $trust_lead ); ?></p>
+			<?php endif; ?>
 
 			<?php if ( $trust_problems ) : ?>
 				<ul class="b-problems__list">
@@ -127,6 +96,35 @@ $trust_input = static function ( string $name, string $attrs, string $label, str
 					<?php endforeach; ?>
 				</ul>
 			<?php endif; ?>
+
+			<div class="b-problems__card">
+				<form class="form b-problems__form" id="<?php echo esc_attr( $trust_uid ); ?>-form" method="post" action="<?php echo esc_url( Forms::fallback_url() ); ?>" data-trust-form="<?php echo esc_attr( $trust_type ); ?>" data-success="<?php echo esc_attr( $trust_uid ); ?>-sent" aria-labelledby="<?php echo esc_attr( $trust_uid ); ?>-label" novalidate>
+					<span class="b-problems__label" id="<?php echo esc_attr( $trust_uid ); ?>-label"><?php echo esc_html( Blocks::text( 'form_title', __( 'Заявка на аудит', 'trust' ) ) ); ?></span>
+					<?php Forms::hidden_fields( $trust_type ); ?>
+					<input type="hidden" name="_trust_anchor" value="<?php echo esc_attr( $trust_uid ); ?>-form">
+					<?php
+					$trust_input( 'url', 'type="url" inputmode="url" autocomplete="url"', __( 'Адрес сайта', 'trust' ), Blocks::text( 'url_placeholder', __( 'Адрес сайта', 'trust' ) ) );
+					$trust_input( 'name', 'type="text" autocomplete="name"', __( 'Имя', 'trust' ), Blocks::text( 'name_placeholder', __( 'Ваше имя', 'trust' ) ) );
+					$trust_input( 'contact', 'type="text" data-type="contact" autocomplete="email"', __( 'Телефон или email', 'trust' ), Blocks::text( 'contact_placeholder', __( 'Телефон или email', 'trust' ) ) );
+					Forms::captcha( $trust_type );
+					Forms::consent_check( $trust_uid, $trust_type );
+					?>
+					<button type="submit" class="form__submit b-problems__submit">
+						<span><?php echo esc_html( Blocks::text( 'submit', __( 'Проверить точки роста на моём сайте', 'trust' ) ) ); ?></span>
+						<?php
+						Icons::render(
+							'arrow-right',
+							array(
+								'size'         => 18,
+								'stroke_width' => 2,
+							)
+						);
+						?>
+					</button>
+					<?php Forms::status( $trust_type ); ?>
+				</form>
+				<?php Forms::sent_screen( $trust_uid . '-sent', Blocks::text( 'success_title', __( 'Заявка отправлена', 'trust' ) ), Blocks::text( 'success_text', __( 'Проверим сайт и свяжемся с вами в течение рабочего дня.', 'trust' ) ), Blocks::text( 'again', __( 'Отправить ещё одну заявку', 'trust' ) ) ); ?>
+			</div>
 		</div>
 	</div>
 </section>

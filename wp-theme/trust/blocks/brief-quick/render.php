@@ -2,11 +2,12 @@
 /**
  * Блок «Бриф — короткий» (макет holst-blokov/BriefQuick, seo-bloki/11b-brif-korotkiy.html).
  *
- * Лавандовая секция, шапка по центру, белая полоса формы «Бриф (короткий)»
+ * Лавандовая секция, шапка слева, белая карточка формы «Бриф (короткий)»
  * (Trust\Forms\Block_Forms::BRIEF_QUICK): адрес сайта, имя и «Как с вами связаться?» (решение
- * заказчика: в макете — только адрес) и кнопка; галочка согласия; под разделителем «Также
- * советуем» — карточка-флажок «Расшарить доступ к статистике» (уходит в заявке), при отметке
- * раскрывается подсказка с email для доступа. После отправки — экран «Заявка отправлена».
+ * заказчика: в макете — только адрес; способ связи — любой), под полями — карточка-флажок
+ * «Расшарить доступ к статистике» (уходит в заявке; при отметке раскрывается подсказка с email
+ * для доступа), галочка согласия и кнопка (правка заказчика: в макете карточка — отдельно под
+ * разделителем «Также советуем»). После отправки — экран «Заявка отправлена».
  *
  * Переменные SCF: $block (array), $is_preview (bool), $post_id (int|string).
  *
@@ -77,12 +78,36 @@ $trust_input = static function ( string $name, string $attrs, string $label, str
 			<?php Forms::hidden_fields( $trust_type ); ?>
 			<input type="hidden" name="_trust_anchor" value="<?php echo esc_attr( $trust_uid ); ?>-form">
 
-			<div class="b-quick__bar">
-				<?php
-				$trust_input( 'url', 'type="url" inputmode="url" autocomplete="url"', __( 'Адрес сайта', 'trust' ), Blocks::text( 'url_placeholder', 'https://example.ru' ) );
-				$trust_input( 'name', 'type="text" autocomplete="name"', __( 'Имя', 'trust' ), Blocks::text( 'name_placeholder', __( 'Ваше имя', 'trust' ) ) );
-				$trust_input( 'contact', 'type="text" data-type="contact" autocomplete="email"', __( 'Как с вами связаться? Телефон или email', 'trust' ), Blocks::text( 'contact_placeholder', __( 'Как с вами связаться?', 'trust' ) ) );
-				?>
+			<div class="b-quick__card">
+				<div class="b-quick__fields">
+					<?php
+					$trust_input( 'url', 'type="url" inputmode="url" autocomplete="url"', __( 'Адрес сайта', 'trust' ), Blocks::text( 'url_placeholder', 'https://example.ru' ) );
+					$trust_input( 'name', 'type="text" autocomplete="name"', __( 'Имя', 'trust' ), Blocks::text( 'name_placeholder', __( 'Ваше имя', 'trust' ) ) );
+					$trust_input( 'contact', 'type="text" minlength="3"', __( 'Как с вами связаться? Телефон, email, Telegram или другой способ', 'trust' ), Blocks::text( 'contact_placeholder', __( 'Как с вами связаться?', 'trust' ) ) );
+					?>
+				</div>
+
+				<div class="b-quick__share">
+					<label class="b-quick__share-label">
+						<input class="check__input b-quick__share-input" type="checkbox" name="share" value="1" aria-describedby="<?php echo esc_attr( $trust_uid ); ?>-share-text">
+						<span class="b-quick__share-body">
+							<span class="b-quick__share-title"><?php echo esc_html( Blocks::text( 'share_title', __( 'Расшарить доступ к статистике', 'trust' ) ) ); ?></span>
+							<span class="b-quick__share-text" id="<?php echo esc_attr( $trust_uid ); ?>-share-text"><?php echo esc_html( Blocks::text( 'share_text', __( 'Яндекс Метрика, Вебмастер или Google Search Console — с данными аудит будет точнее', 'trust' ) ) ); ?></span>
+						</span>
+						<span class="b-quick__share-icon" aria-hidden="true">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg>
+						</span>
+					</label>
+					<?php if ( '' !== $trust_email ) : ?>
+						<div class="b-quick__share-note">
+							<?php Icons::render( 'mail', array( 'size' => 18 ) ); ?>
+							<span><?php echo esc_html( Blocks::text( 'share_note', __( 'Предоставьте нам доступ к статистике на email', 'trust' ) ) ); ?> <a href="mailto:<?php echo esc_attr( $trust_email ); ?>"><?php echo esc_html( $trust_email ); ?></a></span>
+						</div>
+					<?php endif; ?>
+				</div>
+
+				<?php Forms::consent_check( $trust_uid, $trust_type ); ?>
+
 				<button type="submit" class="form__submit b-quick__submit">
 					<?php echo esc_html( Blocks::text( 'submit', __( 'Получить бесплатный аудит', 'trust' ) ) ); ?>
 					<?php
@@ -95,32 +120,6 @@ $trust_input = static function ( string $name, string $attrs, string $label, str
 					);
 					?>
 				</button>
-			</div>
-			<?php Forms::consent_check( $trust_uid, $trust_type ); ?>
-
-			<div class="b-quick__divider">
-				<span class="b-quick__divider-line" aria-hidden="true"></span>
-				<span class="b-quick__divider-text"><?php echo esc_html( Blocks::text( 'divider', __( 'Также советуем', 'trust' ) ) ); ?></span>
-				<span class="b-quick__divider-line" aria-hidden="true"></span>
-			</div>
-
-			<div class="b-quick__share">
-				<label class="b-quick__share-label">
-					<input class="check__input b-quick__share-input" type="checkbox" name="share" value="1" aria-describedby="<?php echo esc_attr( $trust_uid ); ?>-share-text">
-					<span class="b-quick__share-body">
-						<span class="b-quick__share-title"><?php echo esc_html( Blocks::text( 'share_title', __( 'Расшарить доступ к статистике', 'trust' ) ) ); ?></span>
-						<span class="b-quick__share-text" id="<?php echo esc_attr( $trust_uid ); ?>-share-text"><?php echo esc_html( Blocks::text( 'share_text', __( 'Яндекс Метрика, Вебмастер или Google Search Console — с данными аудит будет точнее', 'trust' ) ) ); ?></span>
-					</span>
-					<span class="b-quick__share-icon" aria-hidden="true">
-						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg>
-					</span>
-				</label>
-				<?php if ( '' !== $trust_email ) : ?>
-					<div class="b-quick__share-note">
-						<?php Icons::render( 'mail', array( 'size' => 18 ) ); ?>
-						<span><?php echo esc_html( Blocks::text( 'share_note', __( 'Предоставьте нам доступ к статистике на email', 'trust' ) ) ); ?> <a href="mailto:<?php echo esc_attr( $trust_email ); ?>"><?php echo esc_html( $trust_email ); ?></a></span>
-					</div>
-				<?php endif; ?>
 			</div>
 			<?php Forms::status( $trust_type ); ?>
 		</form>

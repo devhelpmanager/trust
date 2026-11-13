@@ -293,6 +293,20 @@ const MOCKUP_CSS = {
 			}
 		}
 	`,
+	// «С какими проблемами…»: шапка по левому краю (правка заказчика).
+	'seo-bloki/07-problemy.html': `
+		section > div > header { align-items: flex-start !important; text-align: left !important; margin: 0 !important; }
+	`,
+	// «Бриф — полный»: шапка по левому краю, от текста до формы 28 / 24 px, «таблетки» одной ширины
+	// в обоих состояниях (правки заказчика).
+	'seo-bloki/11a-brif-polnyy.html': `
+		section > div { gap: 28px !important; }
+		section > div > header { align-items: flex-start !important; text-align: left !important; }
+		fieldset button[aria-pressed="false"] { padding: 0 28px !important; }
+		@media (max-width: 760px) {
+			section > div { gap: 24px !important; }
+		}
+	`,
 	// «Блок с текстом»: колонка 960 px (правка заказчика, в макете 760), строки заголовка заполняют колонку.
 	'seo-bloki/03-tekst.html': `
 		section > article { max-width: 960px !important; }
