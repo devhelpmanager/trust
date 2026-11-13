@@ -12,7 +12,7 @@
 .b-stages__inner {
 	display: flex;
 	flex-direction: column;
-	gap: 48px;
+	gap: 32px; /* правка заказчика: от вводного текста до этапов меньше (в макете 48 px) */
 	max-width: var(--content);
 	margin: 0 auto;
 }
@@ -50,57 +50,36 @@
 	min-width: 0;
 }
 
-/* Номер, линия и стрелка к следующему этапу */
+/* Правка заказчика: номер этапа — в скруглённом прямоугольнике на всю ширину карточки
+   (в макете — номер в круге и линия со стрелкой к следующему этапу). */
 .b-stages__top {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-}
-
-.b-stages__num {
-	display: flex;
-	flex: none;
-	align-items: center;
 	justify-content: center;
-	width: 36px;
+	gap: 10px;
 	height: 36px;
 	border: 2px solid var(--c-violet);
-	border-radius: var(--r-pill);
+	border-radius: 10px;
 	background: var(--c-white);
 	color: var(--c-violet);
 	font-family: var(--f-mono);
-	font-size: 13px;
 	font-weight: 500;
 }
 
-.b-stages__line {
-	flex: 1 1 auto;
-	height: 2px;
-	background: var(--c-border-strong);
-}
-
-.b-stages__arrow {
-	flex: none;
-	color: var(--c-decor);
-}
-
-.b-stages__item--result .b-stages__top {
-	gap: 10px;
-}
-
-.b-stages__item--result .b-stages__num {
-	border-color: var(--c-violet-dark);
-	background: var(--c-violet-dark);
-	color: var(--c-white);
+.b-stages__num {
+	font-size: 13px;
 }
 
 .b-stages__label {
-	font-family: var(--f-mono);
 	font-size: 12px;
-	font-weight: 500;
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
-	color: var(--c-violet);
+}
+
+.b-stages__item--result .b-stages__top {
+	border-color: var(--c-violet-dark);
+	background: var(--c-violet-dark);
+	color: var(--c-white);
 }
 
 /* Карточка этапа — кнопка */
@@ -246,20 +225,6 @@
 	display: none;
 }
 
-/* Стрелка вниз рядом с номером — только в одну колонку */
-.b-stages__down {
-	display: none;
-	flex: none;
-}
-
-.b-stages__down-line {
-	stroke: var(--c-border-strong);
-}
-
-.b-stages__down-head {
-	stroke: var(--c-decor);
-}
-
 @media (max-width: 1100px) {
 	.b-stages__list {
 		grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -267,14 +232,17 @@
 }
 
 @media (max-width: 760px) {
+	.b-stages__inner {
+		gap: 24px;
+	}
+
 	.b-stages__list {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 }
 
-/* Телефон (правки заказчика): номер и стрелка вниз в одну строку; картинка — узкая полоса
-   (около 20 % высоты) и видна всегда; свёрнуто — название и короткий текст, развёрнуто —
-   название и подробный текст. */
+/* Телефон (правки заказчика): картинка — узкая полоса (около 20 % высоты) и видна всегда;
+   свёрнуто — название и короткий текст, развёрнуто — название и подробный текст. */
 @media (max-width: 480px) {
 	.b-stages__list {
 		grid-template-columns: minmax(0, 1fr);
@@ -283,15 +251,6 @@
 
 	.b-stages__item {
 		gap: 10px;
-	}
-
-	.b-stages__line,
-	.b-stages__arrow {
-		display: none;
-	}
-
-	.b-stages__down {
-		display: block;
 	}
 
 	.b-stages__pic {

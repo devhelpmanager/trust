@@ -10,11 +10,12 @@
  *   и «Что проверяем»; открыты могут быть несколько; повторное нажатие закрывает; клавиатура;
  * - пустые цена, ссылка и «Что проверяем» не выводятся; свой текст ссылки; подпись над списком.
  * «Этапы работы»:
- * - 5 этапов с номерами, линии со стрелками между этапами, итоговый этап «Результат» выделен;
+ * - 5 этапов; номер — в скруглённом прямоугольнике на всю ширину карточки (правка заказчика),
+ *   итоговый этап «Результат» выделен; от вводного текста до этапов 32 px (на телефоне 24);
  * - вместо картинки и короткого текста — подробный (с клавиатуры несколько сразу, повторное
- *   нажатие возвращает картинку); стрелки вниз только в одну колонку;
- * - компьютер: подробности при наведении мыши, щелчок мышью их не закрывает; телефон: номер и
- *   стрелка в строку, картинка — узкая полоса, по нажатию короткий текст сменяется подробным;
+ *   нажатие возвращает картинку);
+ * - компьютер: подробности при наведении мыши, щелчок мышью их не закрывает; телефон: картинка —
+ *   узкая полоса, по нажатию короткий текст сменяется подробным; у раскрытого этапа другой фон;
  * - колонки: 3 этапа — 3, 6 — 3, 7 — 4; своя картинка: alt из блока, «Декоративная», из медиатеки,
  *   предупреждение в редакторе без alt; «Иконка» — список с превью (правки и ТЗ, п. 8.1).
  * Общее: без JavaScript подробности видны; стили и скрипты только на страницах с блоками;
@@ -191,17 +192,21 @@ function stagesPhp( n, extra = '' ) {
 			title: li.querySelector( '.b-stages__title' ).textContent.trim(),
 			result: li.classList.contains( 'b-stages__item--result' ),
 			label: li.querySelector( '.b-stages__label' ) ? li.querySelector( '.b-stages__label' ).textContent.trim() : '',
-			line: !! li.querySelector( '.b-stages__line' ) && !! li.querySelector( '.b-stages__arrow' ),
-			down: !! li.querySelector( '.b-stages__down' ),
+			arrows: li.querySelectorAll( '.b-stages__line, .b-stages__arrow, .b-stages__down' ).length,
 			pic: !! li.querySelector( '.b-stages__pic svg' ),
 		} ) ) );
 		check( 'Этапы: 5 этапов 01–05 по порядку', JSON.stringify( stages.map( ( s ) => s.num + ' ' + s.title ) ) === JSON.stringify( STAGES.map( ( t, i ) => `0${ i + 1 } ${ t }` ) ), stages.map( ( s ) => s.title ).join( ' | ' ) );
 		check( 'Этапы: рисунки из макета у всех этапов', stages.every( ( s ) => s.pic ) );
-		check( 'Этапы: линии со стрелками у 1–4, у итогового — подпись «Результат»',
-			stages.slice( 0, 4 ).every( ( s ) => s.line && ! s.result ) && stages[ 4 ].result && ! stages[ 4 ].line && stages[ 4 ].label === 'Результат' );
+		check( 'Этапы: стрелок между этапами нет; у итогового в прямоугольнике «05 Результат»',
+			stages.every( ( s ) => 0 === s.arrows ) && stages.slice( 0, 4 ).every( ( s ) => ! s.result && ! s.label ) && stages[ 4 ].result && stages[ 4 ].label === 'Результат' );
+		const boxes = await st.locator( '.b-stages__top' ).evaluateAll( ( list ) => list.map( ( t ) => {
+			const cs = getComputedStyle( t );
+			return [ cs.borderTopColor, cs.backgroundColor, cs.color, cs.borderTopLeftRadius ].join( ' ' );
+		} ) );
+		check( 'Этапы: прямоугольник номера — рамка #6D28D9 на белом, скругление 10 px; у итогового — заливка #5B21B6, белый текст',
+			boxes.slice( 0, 4 ).every( ( b ) => b === 'rgb(109, 40, 217) rgb(255, 255, 255) rgb(109, 40, 217) 10px' ) && boxes[ 4 ] === 'rgb(91, 33, 182) rgb(91, 33, 182) rgb(255, 255, 255) 10px', boxes.join( ' | ' ) );
 		const resultLook = await st.locator( '.b-stages__item--result .b-stages__card' ).evaluate( ( el ) => getComputedStyle( el ).backgroundColor + ' ' + getComputedStyle( el ).color );
 		check( 'Этапы: итоговая карточка фиолетовая (#5B21B6), текст белый', resultLook === 'rgb(91, 33, 182) rgb(255, 255, 255)', resultLook );
-		check( 'Этапы: стрелки вниз есть у 1–4, на широком экране скрыты', stages.slice( 0, 4 ).every( ( s ) => s.down ) && ! stages[ 4 ].down && ( await st.locator( '.b-stages__down:visible' ).count() ) === 0 );
 		check( 'Этапы: подробности закрыты, видны картинки и короткие тексты', ( await st.locator( '.b-stages__detail:visible' ).count() ) === 0 &&
 			( await st.locator( '.b-stages__pic:visible' ).count() ) === 5 && ( await st.locator( '.b-stages__short:visible' ).count() ) === 5 );
 
@@ -258,29 +263,23 @@ function stagesPhp( n, extra = '' ) {
 		await page.keyboard.press( 'Space' );
 		check( 'Этапы: Enter раскрывает, пробел закрывает', ( await st.locator( '.b-stages__item.is-open' ).count() ) === 0 );
 
-		// Колонки и стрелки вниз по ширинам.
-		for ( const [ w, cols ] of [ [ 1280, 5 ], [ 1100, 3 ], [ 760, 2 ], [ 480, 1 ] ] ) {
+		// Колонки, прямоугольник номера на всю ширину карточки, отступ от вводного текста — по ширинам.
+		for ( const [ w, cols, gap ] of [ [ 1280, 5, 32 ], [ 1100, 3, 32 ], [ 760, 2, 24 ], [ 480, 1, 24 ], [ 390, 1, 24 ] ] ) {
 			await page.setViewportSize( { width: w, height: 900 } );
 			const res = await st.evaluate( ( el ) => {
-				const shown = ( sel ) => [ ...el.querySelectorAll( sel ) ].filter( ( d ) => 'none' !== getComputedStyle( d ).display ).length;
+				const items = [ ...el.querySelectorAll( '.b-stages__item' ) ];
 				return {
 					cols: getComputedStyle( el.querySelector( '.b-stages__list' ) ).gridTemplateColumns.split( ' ' ).length,
-					down: shown( '.b-stages__down' ),
-					lines: shown( '.b-stages__line' ),
+					full: items.every( ( li ) => Math.abs( li.querySelector( '.b-stages__top' ).getBoundingClientRect().width - li.querySelector( '.b-stages__card' ).getBoundingClientRect().width ) < 1 ),
+					gap: Math.round( el.querySelector( '.b-stages__top' ).getBoundingClientRect().top - el.querySelector( '.section-lead' ).getBoundingClientRect().bottom ),
 				};
 			} );
-			check( `Этапы ${ w }px: ${ cols } кол.${ 1 === cols ? ', стрелки вниз вместо линий' : '' }`, res.cols === cols && ( 1 === cols ? res.down === 4 && res.lines === 0 : res.down === 0 && res.lines === 4 ), JSON.stringify( res ) );
+			check( `Этапы ${ w }px: ${ cols } кол., номер на всю ширину карточки, от текста до этапов ${ gap } px`, res.cols === cols && res.full && res.gap === gap, JSON.stringify( res ) );
 		}
 
-		// Телефон (правки заказчика): номер и стрелка в строку, картинка — узкая полоса и видна всегда.
+		// Телефон (правки заказчика): картинка — узкая полоса и видна всегда.
 		await page.setViewportSize( { width: 390, height: 900 } );
 		await page.reload( { waitUntil: 'networkidle' } );
-		const row = await stage( 0 ).evaluate( ( el ) => {
-			const num = el.querySelector( '.b-stages__num' ).getBoundingClientRect();
-			const down = el.querySelector( '.b-stages__down' ).getBoundingClientRect();
-			return { same: Math.abs( ( num.top + num.bottom ) / 2 - ( down.top + down.bottom ) / 2 ) < 2, right: down.left > num.right };
-		} );
-		check( 'Этапы, телефон: номер и стрелка вниз в одну строку', row.same && row.right, JSON.stringify( row ) );
 		v = await view( 1 );
 		const ratio = v.picHeight / ( v.picWidth * 10 / 16 );
 		check( 'Этапы, телефон: свёрнуто — картинка узкой полосой (15–25 % высоты), название и короткий текст',
@@ -370,9 +369,8 @@ function stagesPhp( n, extra = '' ) {
 			const res = await page.locator( '.b-stages' ).evaluate( ( el ) => ( {
 				cols: getComputedStyle( el.querySelector( '.b-stages__list' ) ).gridTemplateColumns.split( ' ' ).length,
 				items: el.querySelectorAll( '.b-stages__item' ).length,
-				lastLine: !! el.querySelector( '.b-stages__item:last-child .b-stages__line' ),
 			} ) );
-			check( `Этапы: ${ n } шт. — ${ cols } колонки на широком экране`, res.items === n && res.cols === cols && ! res.lastLine, JSON.stringify( res ) );
+			check( `Этапы: ${ n } шт. — ${ cols } колонки на широком экране`, res.items === n && res.cols === cols, JSON.stringify( res ) );
 		}
 
 		// --- Сверка с макетами ---

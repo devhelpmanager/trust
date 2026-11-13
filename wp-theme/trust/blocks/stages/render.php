@@ -2,13 +2,13 @@
 /**
  * Блок «Этапы работы» (макет holst-stranitsy/Main → Stages, seo-bloki/06-etapy-raboty.html).
  *
- * Над каждой карточкой — номер в круге и линия со стрелкой к следующему этапу. Карточка —
- * кнопка: картинка, название, короткий текст; при наведении мыши (на компьютере) или по нажатию
- * вместо картинки и короткого текста показывается подробный. Итоговый этап — фиолетовая
- * карточка с подписью «Результат». До 5 этапов — в один ряд, 6 и 7 — в два (3 и 4 колонки);
- * уже 1100 px — 3 колонки, 760 px — 2, 480 px — одна: стрелка вниз рядом с номером, картинка —
- * узкой полосой и видна всегда, по нажатию короткий текст сменяется подробным (правки
- * заказчика). Без JavaScript подробный текст виден сразу.
+ * Над каждой карточкой — скруглённый прямоугольник на всю её ширину с номером этапа (правка
+ * заказчика; в макете — номер в круге и линия со стрелкой). Карточка — кнопка: картинка, название,
+ * короткий текст; при наведении мыши (на компьютере) или по нажатию вместо картинки и короткого
+ * текста показывается подробный. Итоговый этап — фиолетовая карточка, в прямоугольнике «Результат».
+ * До 5 этапов — в один ряд, 6 и 7 — в два (3 и 4 колонки); уже 1100 px — 3 колонки, 760 px — 2,
+ * 480 px — одна: картинка узкой полосой и видна всегда, по нажатию короткий текст сменяется
+ * подробным (правки заказчика). Без JavaScript подробный текст виден сразу.
  *
  * Переменные SCF: $block (array), $is_preview (bool), $post_id (int|string).
  *
@@ -90,7 +90,6 @@ $trust_picture = static function ( array $row ): string {
 				<?php foreach ( $trust_stages as $trust_i => $trust_row ) : ?>
 					<?php
 					$trust_result  = ! empty( $trust_row['result'] );
-					$trust_last    = $trust_i === $trust_count - 1;
 					$trust_pic     = $trust_picture( $trust_row );
 					$trust_classes = 'b-stages__item' . ( $trust_result ? ' b-stages__item--result' : '' );
 					?>
@@ -99,11 +98,6 @@ $trust_picture = static function ( array $row ): string {
 							<span class="b-stages__num"><?php echo esc_html( str_pad( (string) ( $trust_i + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span>
 							<?php if ( $trust_result ) : ?>
 								<span class="b-stages__label"><?php esc_html_e( 'Результат', 'trust' ); ?></span>
-							<?php elseif ( ! $trust_last ) : ?>
-								<span class="b-stages__line"></span>
-								<svg class="b-stages__arrow" width="10" height="12" viewBox="0 0 10 12" focusable="false"><path d="M1.5 1l7 5-7 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-								<?php // На телефоне вместо линии — стрелка вниз рядом с номером (правка заказчика). ?>
-								<svg class="b-stages__down" width="12" height="22" viewBox="0 0 12 22" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M6 1v18" class="b-stages__down-line"/><path d="M1.5 15l4.5 4.5 4.5-4.5" class="b-stages__down-head"/></svg>
 							<?php endif; ?>
 						</div>
 						<button type="button" class="b-stages__card" aria-expanded="false">

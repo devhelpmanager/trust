@@ -232,8 +232,17 @@ const SECTION_SPACING_CSS = `
 		[style*="padding: 96px clamp(20px, 4vw, 48px)"] { padding-top: 48px !important; padding-bottom: 48px !important; }
 	}
 `;
-// Правка заказчика: у раскрытого этапа «Этапов работы» меняется фон карточки.
+// Правки заказчика в «Этапах работы»: номер — в скруглённом прямоугольнике на всю ширину карточки
+// (без линий и стрелок), от вводного текста до этапов 32 px (на телефоне 24), у раскрытого этапа
+// другой фон карточки.
 const STAGES_OPEN_CSS = `
+	ol.dc-steps > li > div:first-child { justify-content: center !important; gap: 10px !important; height: 36px !important; box-sizing: border-box !important; border: 2px solid #6D28D9 !important; border-radius: 10px !important; background: #FFFFFF !important; }
+	ol.dc-steps > li > div:first-child > span:first-child { width: auto !important; height: auto !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; }
+	ol.dc-steps > li:not(:last-child) > div:first-child > :not(:first-child), ol.dc-steps .dc-step-down { display: none !important; }
+	ol.dc-steps > li:last-child > div:first-child { border-color: #5B21B6 !important; background: #5B21B6 !important; }
+	ol.dc-steps > li:last-child > div:first-child > span { color: #FFFFFF !important; }
+	section:has(> div > ol.dc-steps) > div { gap: 32px !important; }
+	@media (max-width: 760px) { section:has(> div > ol.dc-steps) > div { gap: 24px !important; } }
 	ol.dc-steps > li > button[aria-expanded="true"] { background: #F8F5FF !important; border-color: #CDBDFF !important; }
 	ol.dc-steps > li:last-child > button[aria-expanded="true"] { background: #4C1D95 !important; border-color: #4C1D95 !important; }
 `;
