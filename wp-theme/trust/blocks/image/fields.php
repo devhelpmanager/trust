@@ -45,7 +45,7 @@ return array_merge(
 			'type'          => 'button_group',
 			'choices'       => array(
 				'wide' => __( 'Во всю ширину (1200 px)', 'trust' ),
-				'text' => __( 'По ширине текста (760 px)', 'trust' ),
+				'text' => __( 'По ширине текста (960 px)', 'trust' ),
 			),
 			'default_value' => 'wide',
 		),

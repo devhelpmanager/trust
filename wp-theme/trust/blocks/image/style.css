@@ -18,7 +18,7 @@
 }
 
 .b-image__figure--text {
-	max-width: var(--text-col);
+	max-width: var(--text-block);
 }
 
 .b-image__frame {

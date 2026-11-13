@@ -1,5 +1,6 @@
 /*
- * Блок «Блок с текстом» (holst-blokov/TextBlock, seo-bloki/03-tekst.html). Фон белый.
+ * Блок «Блок с текстом» (holst-blokov/TextBlock, seo-bloki/03-tekst.html). Фон белый, колонка
+ * 960 px (правка заказчика, в макете 760).
  * Оформление самого текста — .prose в main.css (общее со статьями блога).
  */
 
@@ -10,6 +11,6 @@
 }
 
 .b-text__body {
-	max-width: var(--text-col);
+	max-width: var(--text-block);
 	margin: 0 auto;
 }

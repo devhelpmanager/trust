@@ -293,6 +293,10 @@ const MOCKUP_CSS = {
 			}
 		}
 	`,
+	// «Блок с текстом»: колонка 960 px (правка заказчика, в макете 760).
+	'seo-bloki/03-tekst.html': `
+		section > article { max-width: 960px !important; }
+	`,
 	'seo-bloki/10-vopros-otvet.html': `
 		section > div { flex-direction: column !important; flex-wrap: nowrap !important; align-items: stretch !important; gap: 40px !important; }
 		section > div > div:first-child { flex: none !important; max-width: 760px !important; }
