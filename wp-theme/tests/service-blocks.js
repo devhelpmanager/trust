@@ -20,9 +20,9 @@
  *   предупреждение в редакторе без alt; «Иконка» — список с превью (правки и ТЗ, п. 8.1).
  * Общее: рисунки справа от шапок секций (правка заказчика; уже 900 px скрыты, выключаются полем);
  * без JavaScript подробности видны; стили и скрипты только на страницах с блоками;
- * совпадение с макетами seo-bloki/04-chto-vklyuchaet-usluga.html (1280, 768, 390 px),
- * seo-stranitsa/index.html (Stages) и seo-bloki/06-etapy-raboty.html (1280, 768 px; на телефоне
- * этапы по правкам заказчика) с одобренными отступами секций (≤ 2 %); ширины 1440–280 px без
+ * совпадение «Что включает услуга» с макетом seo-bloki/04-chto-vklyuchaet-usluga.html (1280, 768,
+ * 390 px) с одобренными отступами секций (≤ 2 %); «Этапы работы» переработаны по правкам заказчика —
+ * с макетами не сравниваются, снимки stages-<ширина>.png; ширины 1440–280 px без
  * прокрутки вбок, зоны нажатия ≥ 44 px; axe-core; консоль и журнал ошибок; редактор — категория
  * «Услуги», превью, поля в боковой панели.
  */
@@ -56,7 +56,6 @@ const STAGES = [ 'Заявка', 'Анализ и предложение', 'До
  * @param {string}                    o.mockup Файл макета.
  * @param {string}                    o.title Заголовок H2 секции в макете.
  * @param {number[]}                  o.open Номера кнопок (с 0), которые раскрыть.
- * @param {boolean}                   o.keyboard В теме раскрывать с клавиатуры (Enter).
  */
 async function compare( page, o ) {
 	const name = `${ o.name }-${ o.open.length ? 'open' : 'closed' }-${ o.width }`;
@@ -72,19 +71,7 @@ async function compare( page, o ) {
 
 	await page.goto( PAGE, { waitUntil: 'networkidle' } );
 	await settle( page );
-	if ( o.keyboard ) {
-		// Этапы на компьютере мышью раскрываются наведением и держат высоту карточки (правка
-		// заказчика); как в макете (по нажатию) они раскрываются с клавиатуры.
-		for ( const i of o.open ) {
-			await page.locator( o.themeClick ).nth( i ).focus();
-			await page.keyboard.press( 'Enter' );
-		}
-		await page.evaluate( () => document.activeElement.blur() );
-		await page.mouse.move( 0, 0 );
-		await page.waitForTimeout( 300 );
-	} else {
-		await clickAll( o.themeClick );
-	}
+	await clickAll( o.themeClick );
 	await isolate( page, o.theme );
 	await page.locator( o.theme ).screenshot( { path: path.join( OUT, `${ name }-theme.png` ) } );
 
@@ -198,14 +185,23 @@ function stagesPhp( n, extra = '' ) {
 		} ) ) );
 		check( 'Этапы: 5 этапов 01–05 по порядку', JSON.stringify( stages.map( ( s ) => s.num + ' ' + s.title ) ) === JSON.stringify( STAGES.map( ( t, i ) => `0${ i + 1 } ${ t }` ) ), stages.map( ( s ) => s.title ).join( ' | ' ) );
 		check( 'Этапы: рисунки из макета у всех этапов', stages.every( ( s ) => s.pic ) );
-		check( 'Этапы: стрелок между этапами нет; у итогового в прямоугольнике «05 Результат»',
+		check( 'Этапы: стрелок между этапами нет; у итогового рядом с номером «Результат»',
 			stages.every( ( s ) => 0 === s.arrows ) && stages.slice( 0, 4 ).every( ( s ) => ! s.result && ! s.label ) && stages[ 4 ].result && stages[ 4 ].label === 'Результат' );
-		const boxes = await st.locator( '.b-stages__top' ).evaluateAll( ( list ) => list.map( ( t ) => {
-			const cs = getComputedStyle( t );
-			return [ cs.borderTopColor, cs.backgroundColor, cs.color, cs.borderTopLeftRadius ].join( ' ' );
+		const steps = await st.locator( '.b-stages__item' ).evaluateAll( ( list ) => list.map( ( li ) => {
+			const card = li.querySelector( '.b-stages__card' );
+			const step = li.querySelector( '.b-stages__step' );
+			const cs = getComputedStyle( step );
+			return {
+				inCard: card.firstElementChild === step && li.children.length === 1,
+				line: 'solid' === cs.borderBottomStyle && parseFloat( cs.borderBottomWidth ) >= 1,
+				full: Math.abs( step.getBoundingClientRect().width - card.clientWidth ) < 1,
+				radius: getComputedStyle( card ).borderTopLeftRadius,
+				color: cs.color,
+			};
 		} ) );
-		check( 'Этапы: прямоугольник номера — рамка #6D28D9 на белом, скругление 10 px; у итогового — заливка #5B21B6, белый текст',
-			boxes.slice( 0, 4 ).every( ( b ) => b === 'rgb(109, 40, 217) rgb(255, 255, 255) rgb(109, 40, 217) 10px' ) && boxes[ 4 ] === 'rgb(91, 33, 182) rgb(91, 33, 182) rgb(255, 255, 255) 10px', boxes.join( ' | ' ) );
+		check( 'Этапы: номер внутри карточки сверху, подчёркнут линией на всю ширину карточки; карточка со скруглением и обводкой (правка заказчика)',
+			steps.every( ( x ) => x.inCard && x.line && x.full && '18px' === x.radius ) &&
+			steps.slice( 0, 4 ).every( ( x ) => 'rgb(109, 40, 217)' === x.color ) && 'rgb(255, 255, 255)' === steps[ 4 ].color, JSON.stringify( steps[ 0 ] ) );
 		const resultLook = await st.locator( '.b-stages__item--result .b-stages__card' ).evaluate( ( el ) => getComputedStyle( el ).backgroundColor + ' ' + getComputedStyle( el ).color );
 		check( 'Этапы: итоговая карточка фиолетовая (#5B21B6), текст белый', resultLook === 'rgb(91, 33, 182) rgb(255, 255, 255)', resultLook );
 		check( 'Этапы: подробности закрыты, видны картинки и короткие тексты', ( await st.locator( '.b-stages__detail:visible' ).count() ) === 0 &&
@@ -264,18 +260,18 @@ function stagesPhp( n, extra = '' ) {
 		await page.keyboard.press( 'Space' );
 		check( 'Этапы: Enter раскрывает, пробел закрывает', ( await st.locator( '.b-stages__item.is-open' ).count() ) === 0 );
 
-		// Колонки, прямоугольник номера на всю ширину карточки, отступ от вводного текста — по ширинам.
+		// Колонки, линия под номером на всю ширину карточки, отступ от вводного текста — по ширинам.
 		for ( const [ w, cols, gap ] of [ [ 1280, 5, 32 ], [ 1100, 3, 32 ], [ 760, 2, 24 ], [ 480, 1, 24 ], [ 390, 1, 24 ] ] ) {
 			await page.setViewportSize( { width: w, height: 900 } );
 			const res = await st.evaluate( ( el ) => {
 				const items = [ ...el.querySelectorAll( '.b-stages__item' ) ];
 				return {
 					cols: getComputedStyle( el.querySelector( '.b-stages__list' ) ).gridTemplateColumns.split( ' ' ).length,
-					full: items.every( ( li ) => Math.abs( li.querySelector( '.b-stages__top' ).getBoundingClientRect().width - li.querySelector( '.b-stages__card' ).getBoundingClientRect().width ) < 1 ),
-					gap: Math.round( el.querySelector( '.b-stages__top' ).getBoundingClientRect().top - el.querySelector( '.section-lead' ).getBoundingClientRect().bottom ),
+					full: items.every( ( li ) => Math.abs( li.querySelector( '.b-stages__step' ).getBoundingClientRect().width - li.querySelector( '.b-stages__card' ).clientWidth ) < 1 ),
+					gap: Math.round( el.querySelector( '.b-stages__card' ).getBoundingClientRect().top - el.querySelector( '.section-lead' ).getBoundingClientRect().bottom ),
 				};
 			} );
-			check( `Этапы ${ w }px: ${ cols } кол., номер на всю ширину карточки, от текста до этапов ${ gap } px`, res.cols === cols && res.full && res.gap === gap, JSON.stringify( res ) );
+			check( `Этапы ${ w }px: ${ cols } кол., линия под номером на всю ширину карточки, от текста до этапов ${ gap } px`, res.cols === cols && res.full && res.gap === gap, JSON.stringify( res ) );
 		}
 
 		// Рисунки справа от шапки секций (правка заказчика): на широком экране — справа, не выше шапки; уже 900 px — скрыты.
@@ -420,17 +416,15 @@ function stagesPhp( n, extra = '' ) {
 			for ( const open of [ [], [ 0 ] ] ) {
 				await compare( page, { name: 'includes', width, theme: '.b-includes', themeClick: '.b-includes__toggle', mockup: 'seo-bloki/04-chto-vklyuchaet-usluga.html', title: 'Что включает технический аудит', open } );
 			}
-			// На телефоне «Этапы» свёрстаны по правкам заказчика (полоса картинки, стрелка у номера) —
-			// с макетом не сравниваются, вид проверен выше (снимок stages-phone-390.png).
-			if ( 390 === width ) {
-				continue;
-			}
-			for ( const open of [ [], [ 1, 4 ] ] ) {
-				await compare( page, { name: 'stages', width, theme: '.b-stages', themeClick: '.b-stages__card', mockup: 'seo-stranitsa/index.html', title: 'Этапы работы', open, keyboard: true } );
-			}
 		}
-		for ( const width of [ 1280, 768 ] ) {
-			await compare( page, { name: 'stages-06', width, theme: '.b-stages', themeClick: '.b-stages__card', mockup: 'seo-bloki/06-etapy-raboty.html', title: 'Этапы работы', open: [] } );
+		// «Этапы работы» переработаны по правкам заказчика (номер внутри карточки, без стрелок,
+		// компактный вид на телефоне) — с макетом не сравниваются; устройство проверено выше.
+		for ( const width of [ 1280, 768, 390 ] ) {
+			await page.setViewportSize( { width, height: 900 } );
+			await page.goto( PAGE, { waitUntil: 'networkidle' } );
+			await settle( page );
+			await isolate( page, '.b-stages' );
+			await page.locator( '.b-stages' ).screenshot( { path: path.join( OUT, `stages-${ width }.png` ) } );
 		}
 
 		// --- Ширины ---

@@ -46,28 +46,27 @@
 .b-stages__item {
 	display: flex;
 	flex-direction: column;
-	gap: 14px;
 	min-width: 0;
 }
 
-/* Правка заказчика: номер этапа — в скруглённом прямоугольнике на всю ширину карточки
-   (в макете — номер в круге и линия со стрелкой к следующему этапу). */
-.b-stages__top {
+/* Правка заказчика: номер этапа — внутри карточки, сверху, подчёркнут линией на всю ширину
+   карточки (в макете — номер в круге над карточкой и линия со стрелкой к следующему этапу). */
+.b-stages__step {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	gap: 10px;
-	height: 36px;
-	border: 2px solid var(--c-violet);
-	border-radius: 10px;
-	background: var(--c-white);
+	margin: 0 -12px;
+	padding: 0 12px 10px;
+	border-bottom: 1.5px solid var(--c-border-strong);
 	color: var(--c-violet);
 	font-family: var(--f-mono);
 	font-weight: 500;
+	line-height: 1.4;
 }
 
 .b-stages__num {
-	font-size: 13px;
+	font-size: 14px;
 }
 
 .b-stages__label {
@@ -76,9 +75,8 @@
 	text-transform: uppercase;
 }
 
-.b-stages__item--result .b-stages__top {
-	border-color: var(--c-violet-dark);
-	background: var(--c-violet-dark);
+.b-stages__item--result .b-stages__step {
+	border-bottom-color: rgba(255, 255, 255, 0.28);
 	color: var(--c-white);
 }
 
@@ -247,10 +245,6 @@
 	.b-stages__list {
 		grid-template-columns: minmax(0, 1fr);
 		row-gap: 16px;
-	}
-
-	.b-stages__item {
-		gap: 10px;
 	}
 
 	.b-stages__pic {

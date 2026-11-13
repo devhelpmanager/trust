@@ -2,10 +2,10 @@
 /**
  * Блок «Этапы работы» (макет holst-stranitsy/Main → Stages, seo-bloki/06-etapy-raboty.html).
  *
- * Над каждой карточкой — скруглённый прямоугольник на всю её ширину с номером этапа (правка
- * заказчика; в макете — номер в круге и линия со стрелкой). Карточка — кнопка: картинка, название,
+ * Карточка этапа — кнопка: сверху номер этапа, подчёркнутый линией (правка заказчика; в макете —
+ * номер в круге над карточкой и линия со стрелкой к следующему этапу), ниже картинка, название,
  * короткий текст; при наведении мыши (на компьютере) или по нажатию вместо картинки и короткого
- * текста показывается подробный. Итоговый этап — фиолетовая карточка, в прямоугольнике «Результат».
+ * текста показывается подробный. Итоговый этап — фиолетовая карточка, рядом с номером «Результат».
  * До 5 этапов — в один ряд, 6 и 7 — в два (3 и 4 колонки); уже 1100 px — 3 колонки, 760 px — 2,
  * 480 px — одна: картинка узкой полосой и видна всегда, по нажатию короткий текст сменяется
  * подробным (правки заказчика). Без JavaScript подробный текст виден сразу.
@@ -97,13 +97,13 @@ $trust_picture = static function ( array $row ): string {
 					$trust_classes = 'b-stages__item' . ( $trust_result ? ' b-stages__item--result' : '' );
 					?>
 					<li class="<?php echo esc_attr( $trust_classes ); ?>">
-						<div class="b-stages__top" aria-hidden="true">
-							<span class="b-stages__num"><?php echo esc_html( str_pad( (string) ( $trust_i + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span>
-							<?php if ( $trust_result ) : ?>
-								<span class="b-stages__label"><?php esc_html_e( 'Результат', 'trust' ); ?></span>
-							<?php endif; ?>
-						</div>
 						<button type="button" class="b-stages__card" aria-expanded="false">
+							<span class="b-stages__step" aria-hidden="true">
+								<span class="b-stages__num"><?php echo esc_html( str_pad( (string) ( $trust_i + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span>
+								<?php if ( $trust_result ) : ?>
+									<span class="b-stages__label"><?php esc_html_e( 'Результат', 'trust' ); ?></span>
+								<?php endif; ?>
+							</span>
 							<?php if ( '' !== $trust_pic ) : ?>
 								<span class="b-stages__pic"><?php echo $trust_pic; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- рисунок темы или wp_get_attachment_image(). ?></span>
 							<?php endif; ?>

@@ -237,22 +237,7 @@ const SECTION_SPACING_CSS = `
 		footer.dc-foot { padding-top: 32px !important; }
 	}
 `;
-// Правки заказчика в «Этапах работы»: номер — в скруглённом прямоугольнике на всю ширину карточки
-// (без линий и стрелок), от вводного текста до этапов 32 px (на телефоне 24), у раскрытого этапа
-// другой фон карточки.
-const STAGES_OPEN_CSS = `
-	ol.dc-steps > li > div:first-child { justify-content: center !important; gap: 10px !important; height: 36px !important; box-sizing: border-box !important; border: 2px solid #6D28D9 !important; border-radius: 10px !important; background: #FFFFFF !important; }
-	ol.dc-steps > li > div:first-child > span:first-child { width: auto !important; height: auto !important; border: 0 !important; border-radius: 0 !important; background: transparent !important; }
-	ol.dc-steps > li:not(:last-child) > div:first-child > :not(:first-child), ol.dc-steps .dc-step-down { display: none !important; }
-	ol.dc-steps > li:last-child > div:first-child { border-color: #5B21B6 !important; background: #5B21B6 !important; }
-	ol.dc-steps > li:last-child > div:first-child > span { color: #FFFFFF !important; }
-	section:has(> div > ol.dc-steps) > div { gap: 32px !important; }
-	@media (max-width: 760px) { section:has(> div > ol.dc-steps) > div { gap: 24px !important; } }
-	ol.dc-steps > li > button[aria-expanded="true"] { background: #F8F5FF !important; border-color: #CDBDFF !important; }
-	ol.dc-steps > li:last-child > button[aria-expanded="true"] { background: #4C1D95 !important; border-color: #4C1D95 !important; }
-`;
 const MOCKUP_CSS = {
-	'seo-bloki/06-etapy-raboty.html': STAGES_OPEN_CSS,
 	'portfolio-blog-404/portfolio.html': HERO_SECTION_CSS,
 	'o-nas/o-kompanii.html': HERO_SECTION_CSS,
 	'o-nas/komanda.html': HERO_SECTION_CSS,
@@ -279,7 +264,7 @@ const MOCKUP_CSS = {
 			.dc-ask-intro > span, .dc-ask-intro > h1 { margin-bottom: -8px !important; }
 		}
 	`,
-	'seo-stranitsa/index.html': STAGES_OPEN_CSS + `
+	'seo-stranitsa/index.html': `
 		main > section:first-of-type > div > div > div:first-child { display: contents !important; }
 		main > section:first-of-type h1 { flex: 0 0 100% !important; margin: 0 0 -8px !important; }
 		main > section:first-of-type h1 + p { flex: 1 1 520px !important; max-width: 780px !important; min-width: 0 !important; }
