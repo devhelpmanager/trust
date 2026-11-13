@@ -447,6 +447,26 @@ async function compare( page, o ) {
 		await page.goto( `${ URL }/?page_id=${ heroShort }`, { waitUntil: 'networkidle' } );
 		hs = await heroState();
 		check( 'Иконка: при тексте короче 380 символов не выводится; одна кнопка — шире (от 280 px)', ! hs.art && hs.btnW >= 280, JSON.stringify( hs ) );
+		// Две кнопки (как на /seo/audit/) — одного размера; иконка над ними не меньше 180 px.
+		const twoButtons = "array( array( 'link' => array( 'title' => 'Заказать аудит', 'url' => '#callback-modal', 'target' => '' ) ), array( 'link' => array( 'title' => 'Рассчитать стоимость', 'url' => '#calculator', 'target' => '' ) ) )";
+		const heroTwo = createPage( 'иконка, две кнопки', `Trust\\Blocks::serialize( 'hero-service', array( 'lead' => '${ longLead.slice( 0, 480 ) }', 'art' => 'code', 'buttons' => ${ twoButtons } ) )` );
+		created.push( heroTwo );
+		const twoState = () => page.evaluate( () => ( {
+			btns: [ ...document.querySelectorAll( '.b-hero-service__buttons .btn' ) ].map( ( b ) => [ Math.round( b.getBoundingClientRect().width ), Math.round( b.getBoundingClientRect().height ), Math.round( b.getBoundingClientRect().top ) ] ),
+			art: document.querySelector( '.b-hero-service__art' ) && 'none' !== getComputedStyle( document.querySelector( '.b-hero-service__art' ) ).display ? Math.round( document.querySelector( '.b-hero-service__art svg' ).getBoundingClientRect().height ) : 0,
+			scroll: document.documentElement.scrollWidth > innerWidth,
+		} ) );
+		for ( const w of [ 1280, 1024, 768 ] ) {
+			await page.setViewportSize( { width: w, height: 900 } );
+			await page.goto( `${ URL }/?page_id=${ heroTwo }`, { waitUntil: 'networkidle' } );
+			const two = await twoState();
+			const same = two.btns[ 0 ][ 0 ] === two.btns[ 1 ][ 0 ] && two.btns[ 0 ][ 1 ] === two.btns[ 1 ][ 1 ] && two.btns[ 0 ][ 2 ] === two.btns[ 1 ][ 2 ];
+			check( `Две кнопки ${ w }px: одного размера и в один ряд${ 1280 === w ? ', иконка над ними от 180 px' : ', иконки нет' }`, same && ( 1280 === w ? two.art >= 180 : 0 === two.art ) && ! two.scroll, JSON.stringify( two ) );
+		}
+		await page.setViewportSize( { width: 390, height: 844 } );
+		await page.goto( `${ URL }/?page_id=${ heroTwo }`, { waitUntil: 'networkidle' } );
+		const twoPhone = await twoState();
+		check( 'Две кнопки 390px: в один ряд во всю ширину, одной высоты', twoPhone.btns[ 0 ][ 0 ] + twoPhone.btns[ 1 ][ 0 ] + 8 >= 349 && twoPhone.btns[ 0 ][ 1 ] === twoPhone.btns[ 1 ][ 1 ] && twoPhone.btns[ 0 ][ 2 ] === twoPhone.btns[ 1 ][ 2 ], JSON.stringify( twoPhone ) );
 		for ( const [ w, min ] of [ [ 768, 280 ], [ 390, 350 ] ] ) {
 			await page.setViewportSize( { width: w, height: 900 } );
 			await page.goto( `${ URL }/?page_id=${ heroArt }`, { waitUntil: 'networkidle' } );

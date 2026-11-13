@@ -54,10 +54,14 @@
 	text-wrap: pretty;
 }
 
+/* Правка заказчика: две кнопки одного размера (по более длинной надписи), в один ряд */
 .b-hero-service__buttons {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-auto-columns: 1fr;
+	grid-auto-flow: column;
 	gap: 12px;
+	width: max-content;
+	max-width: 100%;
 }
 
 /* Правка заказчика: одна кнопка шире (в макете по тексту) */
@@ -66,16 +70,21 @@
 }
 
 /* Иконка справа над кнопками (правка заказчика): при длинном вводном тексте справа колонка
-   340 px — сверху рисунок (Trust\Hero_Art) по высоте оставшегося места, снизу кнопки во всю
-   ширину колонки. Высоту первого экрана задаёт текст, рисунок под неё подстраивается. */
+   от 340 px (две кнопки — по их ширине) — сверху рисунок (Trust\Hero_Art), снизу кнопки.
+   Рисунок занимает место над кнопками по высоте текста (до 260 px), но не меньше 180 px:
+   если текст ниже, колонка выше текста, а текст прижат к верху. */
 .b-hero-service__side {
 	display: flex;
-	flex: 0 0 340px;
+	flex: 0 0 auto;
 	flex-direction: column;
 	align-self: stretch;
 	justify-content: flex-end;
 	gap: 24px;
-	min-width: 0;
+	min-width: 340px;
+}
+
+.b-hero-service--art .b-hero-service__lead {
+	align-self: flex-start;
 }
 
 .b-hero-service__art {
@@ -83,7 +92,7 @@
 	flex: 1 1 0;
 	align-items: center;
 	justify-content: center;
-	min-height: 0;
+	min-height: 180px;
 }
 
 .b-hero-service__art svg {
@@ -94,12 +103,28 @@
 }
 
 .b-hero-service__side .b-hero-service__buttons {
-	flex-direction: column;
+	width: auto;
 }
 
-.b-hero-service__side .btn {
-	width: 100%;
+.b-hero-service__side .btn:only-child {
 	min-width: 0;
+}
+
+/* Две кнопки с иконкой не помещаются рядом с текстом уже 1100 px — иконки нет, кнопки под текстом */
+@media (max-width: 1100px) {
+	.b-hero-service__side:has(.btn + .btn) {
+		flex: 1 1 100%;
+		align-self: auto;
+		min-width: 0;
+	}
+
+	.b-hero-service__side:has(.btn + .btn) .b-hero-service__art {
+		display: none;
+	}
+
+	.b-hero-service__side:has(.btn + .btn) .b-hero-service__buttons {
+		width: max-content;
+	}
 }
 
 /* Планшеты и телефоны: текст во всю ширину, кнопки под ним, иконки нет */
@@ -107,6 +132,7 @@
 	.b-hero-service__side {
 		flex: 1 1 100%;
 		align-self: auto;
+		min-width: 0;
 	}
 
 	.b-hero-service__art {
@@ -114,11 +140,7 @@
 	}
 
 	.b-hero-service__side .b-hero-service__buttons {
-		flex-direction: row;
-	}
-
-	.b-hero-service__side .btn {
-		width: auto;
+		width: max-content;
 	}
 
 	.b-hero-service__side .btn:only-child {
@@ -157,8 +179,13 @@
 		gap: 8px;
 	}
 
-	/* Правка заказчика: кнопки во всю ширину экрана (одна — целиком, две — поровну по тексту) */
-	.b-hero-service__buttons {
+	/* Правка заказчика: кнопки во всю ширину экрана (одна — целиком, две — в ряд по длине надписей:
+	   поровну не помещается «Рассчитать стоимость») */
+	.b-hero-service__buttons,
+	.b-hero-service__side .b-hero-service__buttons,
+	.b-hero-service__side:has(.btn + .btn) .b-hero-service__buttons {
+		display: flex;
+		flex-wrap: wrap;
 		width: 100%;
 	}
 
