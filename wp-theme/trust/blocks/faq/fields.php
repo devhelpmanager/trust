@@ -17,6 +17,7 @@ return array_merge(
 		)
 	),
 	array(
+		Trust\Blocks::head_art_field(),
 		array(
 			'name'          => 'more_link',
 			'label'         => __( 'Ссылка под заголовком', 'trust' ),

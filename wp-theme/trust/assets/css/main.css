@@ -273,6 +273,38 @@ textarea {
 	padding-top: 0;
 }
 
+/* Правка заказчика: справа от шапки секции — рисунок по теме блока (Trust\Blocks::head_art()).
+   Не выше шапки, на экранах уже 900 px скрыт. */
+.section-top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 48px;
+}
+
+.section-top > :first-child {
+	flex: 0 1 auto;
+	min-width: 0;
+}
+
+.section-art {
+	flex: none;
+	width: clamp(180px, 19vw, 240px); /* уменьшается вместе с заголовком, чтобы не быть выше шапки */
+	line-height: 0;
+}
+
+.section-art svg {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+@media (max-width: 900px) {
+	.section-art {
+		display: none;
+	}
+}
+
 /* Шапка секции: надзаголовок → H2 → вводный текст */
 .section-head {
 	display: flex;

@@ -229,6 +229,38 @@ final class Blocks {
 	}
 
 	/**
+	 * Поле «Картинка справа от заголовка» (правка заказчика): рисунок по теме блока справа от
+	 * надзаголовка, заголовка и вводного текста — файл head-art.svg в папке блока.
+	 */
+	public static function head_art_field(): array {
+		return array(
+			'name'          => 'head_art',
+			'label'         => __( 'Картинка справа от заголовка', 'trust' ),
+			'type'          => 'true_false',
+			'ui'            => 1,
+			'default_value' => 1,
+			'instructions'  => __( 'Рисунок по теме блока. Показывается на экранах шире 900 px, на телефоне скрыт.', 'trust' ),
+		);
+	}
+
+	/**
+	 * Рисунок справа от шапки секции (см. head_art_field()) — украшение, скрыт от скринридеров.
+	 *
+	 * @param string $name Имя блока (папка с head-art.svg).
+	 */
+	public static function head_art( string $name ): string {
+		$on = get_field( 'head_art' );
+		if ( null !== $on && ! $on ) {
+			return '';
+		}
+		$file = TRUST_DIR . '/blocks/' . $name . '/head-art.svg';
+		if ( ! is_readable( $file ) ) {
+			return '';
+		}
+		return '<div class="section-art" aria-hidden="true">' . file_get_contents( $file ) . '</div>'; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- файл темы.
+	}
+
+	/**
 	 * Поле «Кнопки» (до $max штук): текст и адрес — поле «Ссылка» WordPress; адрес может быть
 	 * якорем (#раздел), #callback-modal открывает окно «Заказать обратный звонок».
 	 * Первая кнопка — основная, остальные — второстепенные.

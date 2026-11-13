@@ -17,6 +17,7 @@ return array_merge(
 		)
 	),
 	array(
+		Trust\Blocks::head_art_field(),
 		array(
 			'name'         => 'stages',
 			'label'        => __( 'Этапы', 'trust' ),

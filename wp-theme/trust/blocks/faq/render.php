@@ -32,22 +32,25 @@ $trust_open      = ! empty( $is_preview );
 ?>
 <section class="b-faq trust-bg-white"<?php echo $trust_anchor ? ' id="' . esc_attr( $trust_anchor ) . '"' : ''; ?><?php echo $trust_title ? ' aria-labelledby="' . esc_attr( $trust_title_id ) . '"' : ''; ?>>
 	<div class="b-faq__inner">
-		<div class="b-faq__head">
-			<?php if ( $trust_eyebrow ) : ?>
-				<span class="eyebrow"><?php echo esc_html( $trust_eyebrow ); ?></span>
-			<?php endif; ?>
-			<?php if ( $trust_title ) : ?>
-				<h2 class="section-title" id="<?php echo esc_attr( $trust_title_id ); ?>"><?php echo esc_html( $trust_title ); ?></h2>
-			<?php endif; ?>
-			<?php if ( $trust_lead ) : ?>
-				<p class="section-lead"><?php echo esc_html( $trust_lead ); ?></p>
-			<?php endif; ?>
-			<?php if ( is_array( $trust_link ) && ! empty( $trust_link['url'] ) && ! empty( $trust_link['title'] ) ) : ?>
-				<a class="b-faq__more" href="<?php echo esc_url( $trust_link['url'] ); ?>"<?php echo ! empty( $trust_link['target'] ) ? ' target="_blank" rel="noopener"' : ''; ?>>
-					<?php echo esc_html( $trust_link['title'] ); ?>
-					<?php Icons::render( 'arrow-right', array( 'size' => 18 ) ); ?>
-				</a>
-			<?php endif; ?>
+		<div class="section-top">
+			<div class="b-faq__head">
+				<?php if ( $trust_eyebrow ) : ?>
+					<span class="eyebrow"><?php echo esc_html( $trust_eyebrow ); ?></span>
+				<?php endif; ?>
+				<?php if ( $trust_title ) : ?>
+					<h2 class="section-title" id="<?php echo esc_attr( $trust_title_id ); ?>"><?php echo esc_html( $trust_title ); ?></h2>
+				<?php endif; ?>
+				<?php if ( $trust_lead ) : ?>
+					<p class="section-lead"><?php echo esc_html( $trust_lead ); ?></p>
+				<?php endif; ?>
+				<?php if ( is_array( $trust_link ) && ! empty( $trust_link['url'] ) && ! empty( $trust_link['title'] ) ) : ?>
+					<a class="b-faq__more" href="<?php echo esc_url( $trust_link['url'] ); ?>"<?php echo ! empty( $trust_link['target'] ) ? ' target="_blank" rel="noopener"' : ''; ?>>
+						<?php echo esc_html( $trust_link['title'] ); ?>
+						<?php Icons::render( 'arrow-right', array( 'size' => 18 ) ); ?>
+					</a>
+				<?php endif; ?>
+			</div>
+			<?php echo Blocks::head_art( 'faq' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- рисунок темы. ?>
 		</div>
 
 		<?php if ( $trust_questions ) : ?>

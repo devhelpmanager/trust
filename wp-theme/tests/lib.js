@@ -359,6 +359,11 @@ async function isolate( page, selector ) {
 		if ( el && el.previousElementSibling ) {
 			el.parentElement.prepend( el );
 		}
+		// Рисунки справа от шапки секций — добавлены по просьбе заказчика, в макетах их нет: при
+		// сверке не видны (место остаётся, шапка не сдвигается; сами рисунки проверяются отдельно).
+		if ( 'file:' !== location.protocol ) {
+			document.querySelectorAll( '.section-art' ).forEach( ( art ) => art.style.setProperty( 'visibility', 'hidden', 'important' ) );
+		}
 		while ( el && el !== document.body ) {
 			let prev = el.previousElementSibling;
 			while ( prev ) {

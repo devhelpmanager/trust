@@ -37,16 +37,19 @@ $trust_open     = ! empty( $is_preview );
 <section class="b-includes trust-bg-lavender"<?php echo $trust_anchor ? ' id="' . esc_attr( $trust_anchor ) . '"' : ''; ?><?php echo $trust_title ? ' aria-labelledby="' . esc_attr( $trust_title_id ) . '"' : ''; ?>>
 	<div class="b-includes__inner">
 		<?php if ( $trust_eyebrow || $trust_title || $trust_lead ) : ?>
-			<div class="b-includes__head">
-				<?php if ( $trust_eyebrow ) : ?>
-					<span class="eyebrow"><?php echo esc_html( $trust_eyebrow ); ?></span>
-				<?php endif; ?>
-				<?php if ( $trust_title ) : ?>
-					<h2 class="section-title" id="<?php echo esc_attr( $trust_title_id ); ?>"><?php echo esc_html( $trust_title ); ?></h2>
-				<?php endif; ?>
-				<?php if ( $trust_lead ) : ?>
-					<p class="section-lead section-lead--lg"><?php echo esc_html( $trust_lead ); ?></p>
-				<?php endif; ?>
+			<div class="section-top">
+				<div class="b-includes__head">
+					<?php if ( $trust_eyebrow ) : ?>
+						<span class="eyebrow"><?php echo esc_html( $trust_eyebrow ); ?></span>
+					<?php endif; ?>
+					<?php if ( $trust_title ) : ?>
+						<h2 class="section-title" id="<?php echo esc_attr( $trust_title_id ); ?>"><?php echo esc_html( $trust_title ); ?></h2>
+					<?php endif; ?>
+					<?php if ( $trust_lead ) : ?>
+						<p class="section-lead section-lead--lg"><?php echo esc_html( $trust_lead ); ?></p>
+					<?php endif; ?>
+				</div>
+				<?php echo Blocks::head_art( 'service-includes' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- рисунок темы. ?>
 			</div>
 		<?php endif; ?>
 

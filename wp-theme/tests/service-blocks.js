@@ -18,7 +18,8 @@
  *   узкая полоса, по нажатию короткий текст сменяется подробным; у раскрытого этапа другой фон;
  * - колонки: 3 этапа — 3, 6 — 3, 7 — 4; своя картинка: alt из блока, «Декоративная», из медиатеки,
  *   предупреждение в редакторе без alt; «Иконка» — список с превью (правки и ТЗ, п. 8.1).
- * Общее: без JavaScript подробности видны; стили и скрипты только на страницах с блоками;
+ * Общее: рисунки справа от шапок секций (правка заказчика; уже 900 px скрыты, выключаются полем);
+ * без JavaScript подробности видны; стили и скрипты только на страницах с блоками;
  * совпадение с макетами seo-bloki/04-chto-vklyuchaet-usluga.html (1280, 768, 390 px),
  * seo-stranitsa/index.html (Stages) и seo-bloki/06-etapy-raboty.html (1280, 768 px; на телефоне
  * этапы по правкам заказчика) с одобренными отступами секций (≤ 2 %); ширины 1440–280 px без
@@ -277,6 +278,27 @@ function stagesPhp( n, extra = '' ) {
 			check( `Этапы ${ w }px: ${ cols } кол., номер на всю ширину карточки, от текста до этапов ${ gap } px`, res.cols === cols && res.full && res.gap === gap, JSON.stringify( res ) );
 		}
 
+		// Рисунки справа от шапки секций (правка заказчика): на широком экране — справа, не выше шапки; уже 900 px — скрыты.
+		for ( const [ w, shown ] of [ [ 1280, true ], [ 1000, true ], [ 900, false ], [ 390, false ] ] ) {
+			await page.setViewportSize( { width: w, height: 900 } );
+			const arts = await page.evaluate( () => [ '.b-includes', '.b-stages', '.b-faq' ].map( ( sel ) => {
+				const top = document.querySelector( `${ sel } .section-top` );
+				const art = top && top.querySelector( '.section-art' );
+				if ( ! art ) {
+					return 'нет';
+				}
+				const a = art.getBoundingClientRect();
+				const h = top.firstElementChild.getBoundingClientRect();
+				return 'none' === getComputedStyle( art ).display ? 'скрыт' : [
+					art.getAttribute( 'aria-hidden' ) === 'true' && !! art.querySelector( 'svg' ) ? 'svg' : 'не svg',
+					a.left >= h.right ? 'справа' : 'не справа',
+					a.height <= h.height + 0.5 ? 'не выше шапки' : 'выше шапки',
+				].join( ' ' );
+			} ) );
+			check( `${ w }px: рисунки справа от шапки «Состав услуги», «Этапы работы», «Вопрос-ответ» — ${ shown ? 'видны' : 'скрыты' }`,
+				arts.every( ( a ) => ( shown ? 'svg справа не выше шапки' : 'скрыт' ) === a ), arts.join( ' | ' ) );
+		}
+
 		// Два белых блока подряд («Этапы работы» → «Вопрос-ответ»): между ними один отступ (правка заказчика).
 		for ( const [ w, gap ] of [ [ 1280, 64 ], [ 1024, 56 ], [ 390, 48 ] ] ) {
 			await page.setViewportSize( { width: w, height: 900 } );
@@ -329,7 +351,7 @@ function stagesPhp( n, extra = '' ) {
 
 		// --- Свои значения и пустые поля (тестовые страницы) ---
 		const custom = createPage( 'состав', `Trust\\Blocks::serialize( 'service-includes', array(
-			'eyebrow' => '', 'lead' => '', 'checks_label' => '', 'more_label' => 'Узнать больше',
+			'eyebrow' => '', 'lead' => '', 'checks_label' => '', 'more_label' => 'Узнать больше', 'head_art' => 0,
 			'items' => array(
 				array( 'icon' => 'bolt', 'title' => 'Только описание', 'description' => 'Без цены, ссылки и списка.' ),
 				array( 'icon' => 'нет-такой', 'title' => 'Со ссылкой', 'description' => 'Ссылка со своим текстом.', 'price' => 'от 5 000 ₽',
@@ -351,6 +373,7 @@ function stagesPhp( n, extra = '' ) {
 				more: items[ 1 ].querySelector( '.b-includes__more' ).textContent.trim(),
 				target: items[ 1 ].querySelector( '.b-includes__more' ).getAttribute( 'target' ),
 				label: items[ 1 ].querySelectorAll( '.b-includes__checks-title' ).length,
+				art: el.querySelectorAll( '.section-art' ).length,
 			};
 		} );
 		check( 'Состав: работа без описания не выводится; пустые надзаголовок и вводный текст не выводятся', c.count === 2 && c.eyebrow === 0 && c.lead === 0, JSON.stringify( c ) );
@@ -358,6 +381,7 @@ function stagesPhp( n, extra = '' ) {
 		check( 'Состав: неизвестная иконка заменяется галочкой', c.icon );
 		check( 'Состав: текст ссылки по умолчанию из поля блока, новая вкладка', c.more === 'Узнать больше' && c.target === '_blank', JSON.stringify( c ) );
 		check( 'Состав: очищенная подпись «Что проверяем» не выводится', c.label === 0 );
+		check( 'Состав: «Картинка справа от заголовка» выключена — рисунка нет', c.art === 0 );
 
 		const jpg = path.join( THEME, 'assets', 'img', 'page-types', 'service.jpg' );
 		media = [
@@ -464,8 +488,8 @@ function stagesPhp( n, extra = '' ) {
 			( await canvas.locator( '.b-stages__detail:visible' ).count() ) === 5 );
 
 		for ( const [ name, labels ] of [
-			[ 'trust/service-includes', [ 'Подпись над списком', 'Текст ссылки на страницу работы', 'Работы' ] ],
-			[ 'trust/stages', [ 'Надзаголовок', 'Заголовок (H2)', 'Этапы' ] ],
+			[ 'trust/service-includes', [ 'Картинка справа от заголовка', 'Подпись над списком', 'Текст ссылки на страницу работы', 'Работы' ] ],
+			[ 'trust/stages', [ 'Надзаголовок', 'Заголовок (H2)', 'Картинка справа от заголовка', 'Этапы' ] ],
 		] ) {
 			await editor.evaluate( ( n ) => {
 				const block = wp.data.select( 'core/block-editor' ).getBlocks().find( ( b ) => n === b.name );
