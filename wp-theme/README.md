@@ -754,6 +754,12 @@ node wp-theme/tests/visual.js
 cd wp-theme/tests && npm test
 ```
 
+Только часть тестов (с той же сводкой):
+
+```bash
+node wp-theme/tests/run-all.js smoke header faq
+```
+
 ### Блоки
 
 Каждый блок — папка `trust/blocks/<имя>/`, регистрируется автоматически (`Trust\Blocks`), только

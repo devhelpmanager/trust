@@ -2,6 +2,7 @@
  * Запуск всех автотестов темы по очереди с итоговой сводкой.
  *
  * Запуск: node wp-theme/tests/run-all.js (или npm test в папке wp-theme/tests).
+ * Часть тестов: node wp-theme/tests/run-all.js smoke header faq.
  * Нужен запущенный стенд с импортированным демо-контентом (wp-theme/bin/local.sh).
  */
 
@@ -13,7 +14,9 @@ const TESTS = [ 'smoke', 'settings', 'header', 'header-mobile', 'footer', 'callb
 let failed = 0;
 const summary = [];
 
-for ( const name of TESTS ) {
+const names = process.argv.length > 2 ? process.argv.slice( 2 ) : TESTS;
+
+for ( const name of names ) {
 	const run = spawnSync( process.execPath, [ path.join( __dirname, `${ name }.js` ) ], { encoding: 'utf8' } );
 	const out = `${ run.stdout || '' }${ run.stderr || '' }`;
 	const total = ( out.match( /(\d+) из (\d+) проверок пройдено/ ) || [] ).slice( 1 );
