@@ -253,20 +253,31 @@ final class Importer {
 
 	/**
 	 * Картинка демо-контента из demo/images/ в медиатеке: при первом импорте копируется
-	 * в «Загрузки» (с уменьшенными копиями), дальше берётся уже загруженная.
+	 * в «Загрузки» (с уменьшенными копиями), дальше берётся уже загруженная; если файл в теме
+	 * изменился — загружается заново, недостающие размеры нарезаются.
 	 *
 	 * @param string $file Имя файла в demo/images/.
 	 * @param string $alt  Описание картинки.
 	 * @return int ID картинки или 0.
 	 */
 	public static function demo_image( string $file, string $alt ): int {
-		$found = self::find_demo_post( 'attachment', $file );
-		if ( $found ) {
-			return $found->ID;
-		}
 		$path = TRUST_DIR . '/demo/images/' . basename( $file );
 		if ( ! is_readable( $path ) ) {
 			return 0;
+		}
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		$hash  = (string) md5_file( $path );
+		$found = self::find_demo_post( 'attachment', $file );
+		if ( $found && get_post_meta( $found->ID, self::META_HASH, true ) === $hash ) {
+			// Картинка загружена до того, как тема завела новые размеры, — нарезать недостающие.
+			if ( wp_get_missing_image_subsizes( $found->ID ) ) {
+				wp_update_image_subsizes( $found->ID );
+			}
+			return $found->ID;
+		}
+		if ( $found ) {
+			// Файл в теме обновился — старая картинка заменяется новой.
+			wp_delete_attachment( $found->ID, true );
 		}
 		$upload = wp_upload_bits( basename( $file ), null, (string) file_get_contents( $path ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- файл темы.
 		if ( ! empty( $upload['error'] ) ) {
@@ -288,6 +299,7 @@ final class Importer {
 		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $upload['file'] ) );
 		update_post_meta( $id, '_wp_attachment_image_alt', $alt );
 		update_post_meta( $id, self::META_ID, 'attachment:' . $file );
+		update_post_meta( $id, self::META_HASH, $hash );
 		return $id;
 	}
 

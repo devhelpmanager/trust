@@ -116,12 +116,13 @@ $trust_title_id = Blocks::uid( $block, 'title' );
 									echo has_post_thumbnail( $trust_post )
 										? get_the_post_thumbnail(
 											$trust_post,
-											'medium_large',
+											'trust-cover',
 											array(
 												'class'   => 'b-posts__img',
 												'alt'     => '',
 												'loading' => 'lazy',
-												'sizes'   => '(max-width: 760px) 100vw, 400px',
+												// Колонка от 320 px: в одну колонку — почти вся ширина, в две — половина, в три — 384 px.
+												'sizes'   => '(max-width: 760px) calc(100vw - 40px), (max-width: 1100px) 50vw, 384px',
 											)
 										)
 										: '<span class="b-posts__placeholder"></span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- разметка WordPress.

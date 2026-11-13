@@ -20,6 +20,18 @@ final class Setup {
 	public const CONTENT_WIDTH = 760;
 
 	/**
+	 * Размеры картинок под форматы макетов (ТЗ, п. 8.1): имя => array( ширина, высота, обрезка ).
+	 * Обложки статей 16:9 — карточки «Статей из блога» (384 px на компьютере, во всю ширину
+	 * на телефоне); три размера для srcset, браузер берёт подходящий по ширине и плотности экрана.
+	 * Форматы карточек кейсов, скриншотов и фото сотрудников добавляются с их блоками.
+	 */
+	public const IMAGE_SIZES = array(
+		'trust-cover-sm' => array( 480, 270, true ),
+		'trust-cover'    => array( 768, 432, true ),
+		'trust-cover-lg' => array( 1200, 675, true ),
+	);
+
+	/**
 	 * Регистрирует хуки.
 	 */
 	public static function register(): void {
@@ -57,6 +69,9 @@ final class Setup {
 
 		add_theme_support( 'title-tag' );
 		add_theme_support( 'post-thumbnails' );
+		foreach ( self::IMAGE_SIZES as $name => list( $width, $height, $crop ) ) {
+			add_image_size( $name, $width, $height, $crop );
+		}
 		add_theme_support( 'responsive-embeds' );
 		add_theme_support( 'editor-styles' );
 		add_theme_support(

@@ -256,6 +256,20 @@ async function compare( page, o ) {
 		check( 'Вид «3 карточки с обложками»: 3 последние статьи, обложки из медиатеки, анонсы, время чтения; без кнопки «Все статьи»',
 			byTitle[ 'Карточки' ] && 'cards' === byTitle[ 'Карточки' ].view && 3 === byTitle[ 'Карточки' ].titles.length && byTitle[ 'Карточки' ].covers.join() === 'img,img,img' &&
 			3 === byTitle[ 'Карточки' ].excerpts && byTitle[ 'Карточки' ].times[ 0 ] === `${ views[ 0 ][ 1 ] } мин чтения` && ! byTitle[ 'Карточки' ].more, JSON.stringify( byTitle[ 'Карточки' ] ) );
+		const sizes = JSON.parse( wp( 'eval', "$s = wp_get_registered_image_subsizes(); echo wp_json_encode( array_map( static fn( $n ) => $s[ $n ] ?? null, array( 'trust-cover-sm', 'trust-cover', 'trust-cover-lg' ) ) );" ) );
+		check( 'Размеры обложек 16:9 зарегистрированы (ТЗ, п. 8.1): 480×270, 768×432, 1200×675 с обрезкой',
+			JSON.stringify( sizes.map( ( x ) => x && `${ x.width }x${ x.height }${ x.crop ? ' crop' : '' }` ) ) === JSON.stringify( [ '480x270 crop', '768x432 crop', '1200x675 crop' ] ), JSON.stringify( sizes ) );
+		const img = await page.locator( '.b-posts--cards .b-posts__img' ).first().evaluate( ( el ) => ( {
+			src: el.getAttribute( 'src' ),
+			srcset: el.getAttribute( 'srcset' ) || '',
+			sizes: el.getAttribute( 'sizes' ) || '',
+			loading: el.getAttribute( 'loading' ),
+			alt: el.getAttribute( 'alt' ),
+			ratio: Math.round( el.naturalWidth / el.naturalHeight * 100 ) / 100,
+		} ) );
+		check( 'Обложка: размер trust-cover (768×432), srcset 480/768/1200, sizes по колонкам, лениво, alt="" (украшение в ссылке)',
+			/-768x432\./.test( img.src ) && [ '480w', '768w', '1200w' ].every( ( w ) => img.srcset.includes( w ) ) && img.sizes.includes( '384px' ) &&
+			'lazy' === img.loading && '' === img.alt && 1.78 === img.ratio, JSON.stringify( img ) );
 		check( 'Источник «Рубрика»: только статьи рубрики', byTitle[ 'Рубрика' ] && JSON.stringify( byTitle[ 'Рубрика' ].titles ) === JSON.stringify( [ POSTS[ 1 ] ] ), JSON.stringify( byTitle[ 'Рубрика' ] ) );
 		check( 'Источник «Вручную»: выбранные статьи в заданном порядке', byTitle[ 'Вручную' ] && JSON.stringify( byTitle[ 'Вручную' ].titles ) === JSON.stringify( [ POSTS[ 3 ], POSTS[ 2 ] ] ), JSON.stringify( byTitle[ 'Вручную' ] ) );
 		check( 'Количество: 2 статьи', byTitle[ 'Две' ] && 2 === byTitle[ 'Две' ].titles.length );
