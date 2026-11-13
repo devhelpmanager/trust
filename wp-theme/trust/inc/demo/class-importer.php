@@ -821,19 +821,21 @@ final class Importer {
 	/**
 	 * Содержимое страницы из блоков темы.
 	 *
-	 * @param array $blocks Список array( 'имя блока', array( значения полей ) ).
+	 * @param array $blocks Список array( 'имя блока', array( значения полей ), 'вложенные блоки' ):
+	 *                      третий элемент — разметка блоков ядра внутри блока (например, «Блок с текстом»).
 	 */
 	private static function blocks_content( array $blocks ): string {
 		$parts = array();
 		foreach ( $blocks as $block ) {
-			$parts[] = \Trust\Blocks::serialize( $block[0], self::resolve_links( $block[1] ) );
+			$parts[] = \Trust\Blocks::serialize( $block[0], self::resolve_links( $block[1] ), self::resolve_links( $block[2] ?? '' ) );
 		}
 		return implode( "\n\n", $parts );
 	}
 
 	/**
 	 * Заменяет {page:адрес} ссылкой на страницу, {page_id:адрес} — её ID, {post:тип:ключ} — ID
-	 * демо-записи, {term_id:таксономия:ключ} — ID демо-термина (рекурсивно в массивах;
+	 * демо-записи, {term_id:таксономия:ключ} — ID демо-термина, {image:файл|alt} — ID картинки
+	 * из demo/images/ (загружается в медиатеку) (рекурсивно в массивах;
 	 * {page:…} — и внутри текста).
 	 * Поэтому страницы импортируются раньше настроек.
 	 *
@@ -854,6 +856,9 @@ final class Importer {
 		if ( preg_match( '~^\{term_id:([a-z_]+):([a-z0-9-]+)\}$~', $value, $m ) ) {
 			$term = self::find_demo_term( $m[1], $m[1] . ':' . $m[2] );
 			return $term ? $term->term_id : 0;
+		}
+		if ( preg_match( '~^\{image:([a-z0-9-]+\.(?:jpg|png|webp))(?:\|([^}]*))?\}$~', $value, $m ) ) {
+			return self::demo_image( $m[1], $m[2] ?? '' );
 		}
 		if ( preg_match( '~^\{page(_id)?:([a-z0-9/-]+)\}$~', $value, $m ) ) {
 			$page = get_page_by_path( $m[2] );

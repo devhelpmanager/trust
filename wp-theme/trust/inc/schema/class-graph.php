@@ -74,6 +74,13 @@ final class Graph {
 	private static array $faq = array();
 
 	/**
+	 * Тарифы блока «Выбор тарифа» с числовой ценой: название => array( цена, описание ).
+	 *
+	 * @var array<string, array{0: float, 1: string}>
+	 */
+	private static array $offers = array();
+
+	/**
 	 * Регистрирует хуки.
 	 */
 	public static function register(): void {
@@ -91,6 +98,55 @@ final class Graph {
 		if ( '' !== $question && ! isset( self::$faq[ $question ] ) ) {
 			self::$faq[ $question ] = trim( wp_kses( $answer, self::ANSWER_TAGS ) );
 		}
+	}
+
+	/**
+	 * Блок «Выбор тарифа» сообщает тариф с числовой ценой (вызывается из render.php на сайте).
+	 *
+	 * @param string $name        Название тарифа.
+	 * @param float  $price       Цена, ₽.
+	 * @param string $description Кому подходит.
+	 */
+	public static function offer( string $name, float $price, string $description = '' ): void {
+		$name = self::text( $name );
+		if ( '' !== $name && $price >= 0 && ! isset( self::$offers[ $name ] ) ) {
+			self::$offers[ $name ] = array( $price, self::text( $description ) );
+		}
+	}
+
+	/**
+	 * Цены услуги для Service.offers: один тариф — Offer, несколько — AggregateOffer
+	 * с наименьшей и наибольшей ценой и списком тарифов (ТЗ, раздел 11).
+	 *
+	 * @param string $url Адрес страницы.
+	 */
+	private static function offers( string $url ): ?array {
+		if ( ! self::$offers ) {
+			return null;
+		}
+		$list = array();
+		foreach ( self::$offers as $name => list( $price, $description ) ) {
+			$list[] = array(
+				'@type'         => 'Offer',
+				'name'          => $name,
+				'description'   => $description,
+				'price'         => $price,
+				'priceCurrency' => 'RUB',
+				'url'           => $url,
+			);
+		}
+		if ( 1 === count( $list ) ) {
+			return $list[0];
+		}
+		$prices = array_column( $list, 'price' );
+		return array(
+			'@type'         => 'AggregateOffer',
+			'priceCurrency' => 'RUB',
+			'lowPrice'      => min( $prices ),
+			'highPrice'     => max( $prices ),
+			'offerCount'    => count( $list ),
+			'offers'        => $list,
+		);
 	}
 
 	/**
@@ -350,6 +406,7 @@ final class Graph {
 				'url'         => $url,
 				'provider'    => array( '@id' => self::site() . '#organization' ),
 				'areaServed'  => trim( (string) Settings::get( 'seo_area_served', '' ) ),
+				'offers'      => self::offers( $url ),
 			);
 		}
 

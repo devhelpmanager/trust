@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/image",
+	"title": "Картинка",
+	"description": "Картинка с подписью «Рис. N» (номер — по порядку на странице) и описанием. Ширина — по контенту (1200 px) или по тексту (760 px); можно добавить отдельную картинку для телефона.",
+	"category": "trust-content",
+	"icon": "format-image",
+	"keywords": [ "картинка", "изображение", "рисунок", "скриншот", "фото" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

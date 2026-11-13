@@ -1,0 +1,257 @@
+/*
+ * Блок «Выбор тарифа» (holst-blokov/Main → Tariffs, seo-bloki/01-tarify.html).
+ * Фон лавандовый, карточки белые; рекомендуемая — тёмная.
+ */
+
+.b-tariffs {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-lavender);
+	color: var(--c-text);
+}
+
+.b-tariffs__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 56px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-tariffs__head {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	max-width: var(--text-col);
+	min-width: 0;
+}
+
+.b-tariffs__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+	align-items: stretch;
+	gap: 24px;
+}
+
+.b-tariffs__card {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	min-width: 0;
+	padding: 32px;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-card-lg);
+	background: var(--c-white);
+}
+
+.b-tariffs__about {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.b-tariffs__name {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	min-height: 30px;
+}
+
+.b-tariffs__title {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.b-tariffs__badge {
+	flex: none;
+	padding: 6px 10px;
+	border-radius: var(--r-pill);
+	background: var(--c-decor);
+	color: var(--c-text);
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.b-tariffs__who {
+	margin: 0;
+	font-size: 15px;
+	line-height: 1.55;
+	color: var(--c-muted);
+	text-wrap: pretty;
+}
+
+.b-tariffs__prices {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.b-tariffs__old {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.b-tariffs__old s {
+	font-size: 17px;
+	color: var(--c-muted-2);
+}
+
+.b-tariffs__discount {
+	padding: 4px 8px;
+	border-radius: var(--r-pill);
+	background: var(--c-lavender-3);
+	color: var(--c-violet);
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+}
+
+.b-tariffs__now {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 8px;
+}
+
+.b-tariffs__price {
+	font-family: var(--f-display);
+	font-size: 40px;
+	font-weight: 600;
+	line-height: 1.1;
+	letter-spacing: -0.02em;
+}
+
+.b-tariffs__period {
+	font-size: 15px;
+	color: var(--c-muted);
+}
+
+/* Состав: «включено» — зелёная галочка, «не включено» — красный крестик, текст бледнее */
+.b-tariffs__items {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	gap: 14px;
+	margin: 0;
+	padding: 24px 0 0;
+	border-top: 1px solid var(--c-border);
+	list-style: none;
+}
+
+.b-tariffs__item {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	font-size: 15px;
+	line-height: 22px;
+}
+
+.b-tariffs__item--no {
+	color: var(--c-muted-2);
+}
+
+.b-tariffs__mark {
+	flex: none;
+}
+
+.b-tariffs__mark--yes circle {
+	fill: var(--c-ok-bg);
+}
+
+.b-tariffs__mark--yes path {
+	stroke: var(--c-ok);
+}
+
+.b-tariffs__mark--no circle {
+	fill: var(--c-bad-bg);
+}
+
+.b-tariffs__mark--no path {
+	stroke: var(--c-bad);
+}
+
+.b-tariffs__btn {
+	display: flex;
+	box-sizing: content-box; /* как в макете: 52 px без рамки */
+	align-items: center;
+	justify-content: center;
+	min-height: 52px;
+	border: 1.5px solid var(--c-text);
+	border-radius: var(--r-btn);
+	color: var(--c-text);
+	font-size: 16px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.b-tariffs__btn:hover {
+	background: var(--c-text);
+	color: var(--c-white);
+}
+
+/* Рекомендуемый тариф — тёмная карточка */
+.b-tariffs__card--rec {
+	border-color: var(--c-text);
+	background: var(--c-text);
+	color: var(--c-white);
+}
+
+.b-tariffs__card--rec .b-tariffs__who,
+.b-tariffs__card--rec .b-tariffs__period {
+	color: #BDB6CC;
+}
+
+.b-tariffs__card--rec .b-tariffs__old s,
+.b-tariffs__card--rec .b-tariffs__item--no {
+	color: #8F889E;
+}
+
+.b-tariffs__card--rec .b-tariffs__discount {
+	background: #2A1F4A;
+	color: #CDBDFF;
+}
+
+.b-tariffs__card--rec .b-tariffs__items {
+	border-top-color: #2A2533;
+}
+
+.b-tariffs__card--rec .b-tariffs__mark--yes circle {
+	fill: #183B2A;
+}
+
+.b-tariffs__card--rec .b-tariffs__mark--yes path {
+	stroke: #4CD38B;
+}
+
+.b-tariffs__card--rec .b-tariffs__mark--no circle {
+	fill: #3F2220;
+}
+
+.b-tariffs__card--rec .b-tariffs__mark--no path {
+	stroke: #FF8074;
+}
+
+.b-tariffs__card--rec .b-tariffs__btn {
+	border-color: var(--c-violet-bright);
+	background: var(--c-violet-bright);
+	color: var(--c-white);
+}
+
+.b-tariffs__card--rec .b-tariffs__btn:hover {
+	border-color: var(--c-violet);
+	background: var(--c-violet);
+}
+
+.b-tariffs__empty {
+	margin: 0;
+	color: var(--c-muted);
+}

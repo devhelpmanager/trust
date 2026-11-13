@@ -36,6 +36,12 @@ final class Blocks {
 	);
 
 	/**
+	 * Блоки ядра внутри «Блока с текстом» (ТЗ, п. 8.1): абзац, заголовок H2–H4, список, цитата,
+	 * картинка, таблица. Видео — отдельным блоком темы (шаг 4.9).
+	 */
+	public const TEXT_BLOCKS = array( 'core/paragraph', 'core/heading', 'core/list', 'core/list-item', 'core/quote', 'core/image', 'core/table' );
+
+	/**
 	 * Поля блоков с ключами: имя блока => поля.
 	 *
 	 * @var array<string, array>
@@ -50,6 +56,55 @@ final class Blocks {
 		add_filter( 'block_type_metadata', array( self::class, 'metadata' ) );
 		add_action( 'init', array( self::class, 'register_blocks' ) );
 		add_action( 'acf/init', array( self::class, 'register_fields' ) );
+		add_action( 'init', array( self::class, 'register_styles' ) );
+		add_filter( 'render_block_core/quote', array( self::class, 'quote_important' ), 10, 2 );
+		add_action( 'enqueue_block_editor_assets', array( self::class, 'editor_assets' ) );
+	}
+
+	/**
+	 * Стили цитаты из макетов (ТЗ, п. 8.3, № 3): «С автором» — лавандовая плашка со знаком
+	 * цитаты, текстом и подписью (имя первой строкой, ниже должность); «Важно» — крупный текст
+	 * между двумя линиями.
+	 */
+	public static function register_styles(): void {
+		register_block_style(
+			'core/quote',
+			array(
+				'name'  => 'author',
+				'label' => __( 'С автором', 'trust' ),
+			)
+		);
+		register_block_style(
+			'core/quote',
+			array(
+				'name'  => 'important',
+				'label' => __( 'Важно', 'trust' ),
+			)
+		);
+	}
+
+	/**
+	 * Цитата «Важно» — не цитата, а выделенная мысль: на сайте выводится боковой плашкой
+	 * <aside> с подписью «Важно» (как в макете), а не <blockquote>.
+	 *
+	 * @param string $html  Разметка блока.
+	 * @param array  $block Блок.
+	 */
+	public static function quote_important( string $html, array $block ): string {
+		$class = (string) ( $block['attrs']['className'] ?? '' );
+		if ( ! preg_match( '/(^|\s)is-style-important(\s|$)/', $class ) ) {
+			return $html;
+		}
+		$html = (string) preg_replace( '~<blockquote\b([^>]*)>~', '<aside$1><span class="prose__label">' . esc_html__( 'Важно', 'trust' ) . '</span>', $html, 1 );
+		$html = (string) preg_replace( '~<cite>.*?</cite>~s', '', $html );
+		return (string) preg_replace( '~</blockquote>\s*$~', '</aside>', $html );
+	}
+
+	/**
+	 * Скрипт редактора: уровни заголовков H2–H4 (H1 — первый экран страницы, ТЗ п. 8.1).
+	 */
+	public static function editor_assets(): void {
+		wp_enqueue_script( 'trust-editor-blocks', Assets::url( 'assets/js/editor-blocks.js' ), array( 'wp-hooks', 'wp-blocks' ), Assets::version( 'assets/js/editor-blocks.js' ), false );
 	}
 
 	/**
@@ -117,12 +172,25 @@ final class Blocks {
 		$metadata['version'] = $times ? (string) max( $times ) : TRUST_VERSION;
 
 		if ( is_readable( $dir . '/example.php' ) ) {
+			$values = require $dir . '/example.php';
+			// Вложенные блоки превью (блоки с InnerBlocks): 'inner_blocks' => array( array( имя, атрибуты ) ).
+			$inner = $values['inner_blocks'] ?? array();
+			unset( $values['inner_blocks'] );
 			$metadata['example'] = array(
 				'attributes' => array(
 					'mode' => 'preview',
-					'data' => self::flatten( self::fields( basename( $dir ) ), require $dir . '/example.php' ),
+					'data' => self::flatten( self::fields( basename( $dir ) ), $values ),
 				),
 			);
+			if ( $inner ) {
+				$metadata['example']['innerBlocks'] = array_map(
+					static fn( array $item ): array => array(
+						'name'       => $item[0],
+						'attributes' => $item[1] ?? array(),
+					),
+					$inner
+				);
+			}
 		}
 
 		return $metadata;
@@ -404,6 +472,98 @@ final class Blocks {
 	}
 
 	/**
+	 * Номер рисунка блока «Картинка» — порядковый среди картинок страницы с подписью «Рис.»
+	 * (без тех, у кого в поле «Номер рисунка» стоит 0). Блок находится в содержимом записи
+	 * по данным полей; одинаковые блоки различаются по порядку вывода (в редакторе у них номер
+	 * первого). В редакторе после правки полей блока (данные ещё не сохранены) — по картинке,
+	 * иначе номер за последним; после сохранения номер уточняется.
+	 *
+	 * @param array      $block   Блок SCF.
+	 * @param int|string $post_id ID записи.
+	 */
+	public static function figure_number( array $block, $post_id ): int {
+		static $figures = array();
+		static $used    = array();
+
+		$post_id = (int) $post_id;
+		if ( ! isset( $figures[ $post_id ] ) ) {
+			$figures[ $post_id ] = array();
+			$used[ $post_id ]    = array();
+			if ( $post_id ) {
+				self::collect_figures( parse_blocks( (string) get_post_field( 'post_content', $post_id ) ), $figures[ $post_id ] );
+			}
+		}
+		$list = $figures[ $post_id ];
+		$data = self::figure_data( (array) ( $block['data'] ?? array() ) );
+
+		// Тот же блок, ещё не выведенный на этой странице; все выведены — содержимое выводится заново.
+		if ( count( $used[ $post_id ] ) >= count( $list ) ) {
+			$used[ $post_id ] = array();
+		}
+		$by_image = 0;
+		foreach ( $list as $i => $figure ) {
+			if ( isset( $used[ $post_id ][ $i ] ) ) {
+				continue;
+			}
+			if ( $figure['data'] == $data ) { // phpcs:ignore Universal.Operators.StrictComparisons.LooseEqual -- данные из редактора и из записи: числа могут прийти строками.
+				$used[ $post_id ][ $i ] = true;
+				return $figure['number'];
+			}
+			if ( ! $by_image && ! empty( $data['image'] ) && (int) ( $figure['data']['image'] ?? 0 ) === (int) $data['image'] ) {
+				$by_image = $figure['number'];
+			}
+		}
+		if ( $by_image ) {
+			return $by_image;
+		}
+		$numbered = array_filter( wp_list_pluck( $list, 'number' ) );
+		return count( $numbered ) + 1;
+	}
+
+	/**
+	 * Данные полей блока «Картинка» в виде имя => значение: SCF хранит их либо так (с парами
+	 * _имя => ключ поля), либо по ключам полей (field_trust_block_image_имя).
+	 *
+	 * @param array $data Данные блока.
+	 */
+	private static function figure_data( array $data ): array {
+		$prefix = Fields::key( 'block_image', '' );
+		$values = array();
+		foreach ( $data as $key => $value ) {
+			$key = (string) $key;
+			if ( str_starts_with( $key, '_' ) ) {
+				continue;
+			}
+			$values[ str_starts_with( $key, $prefix ) ? substr( $key, strlen( $prefix ) ) : $key ] = $value;
+		}
+		ksort( $values );
+		return $values;
+	}
+
+	/**
+	 * Блоки «Картинка» в порядке документа (с вложенными): данные полей и номер рисунка (0 — без «Рис.»).
+	 *
+	 * @param array $blocks  Разобранные блоки (parse_blocks()).
+	 * @param array $figures Список, в который добавляются картинки.
+	 */
+	private static function collect_figures( array $blocks, array &$figures ): void {
+		foreach ( $blocks as $parsed ) {
+			if ( 'trust/image' === ( $parsed['blockName'] ?? '' ) ) {
+				$data      = self::figure_data( (array) ( $parsed['attrs']['data'] ?? array() ) );
+				$numbered  = '0' !== trim( (string) ( $data['number'] ?? '' ) );
+				$count     = count( array_filter( wp_list_pluck( $figures, 'number' ) ) );
+				$figures[] = array(
+					'data'   => $data,
+					'number' => $numbered ? $count + 1 : 0,
+				);
+			}
+			if ( ! empty( $parsed['innerBlocks'] ) ) {
+				self::collect_figures( $parsed['innerBlocks'], $figures );
+			}
+		}
+	}
+
+	/**
 	 * Предупреждение в превью блока в редакторе (на сайте не выводится).
 	 *
 	 * @param string $text Текст.
@@ -476,12 +636,27 @@ final class Blocks {
 	}
 
 	/**
-	 * Разметка блока для содержимого записи: <!-- wp:trust/имя {…} /-->.
+	 * Разметка блока для содержимого записи: <!-- wp:trust/имя {…} /-->, с вложенными блоками
+	 * (блоки с InnerBlocks, например «Блок с текстом») — <!-- wp:trust/имя {…} -->…<!-- /wp:trust/имя -->.
 	 *
 	 * @param string $name   Имя блока (папка).
 	 * @param array  $values Значения полей.
+	 * @param string $inner  Разметка вложенных блоков ядра или ''.
 	 */
-	public static function serialize( string $name, array $values ): string {
+	public static function serialize( string $name, array $values, string $inner = '' ): string {
+		$inner_blocks = array_values(
+			array_filter(
+				'' === $inner ? array() : parse_blocks( $inner ),
+				static fn( array $parsed ): bool => null !== $parsed['blockName']
+			)
+		);
+		$content      = array();
+		foreach ( $inner_blocks as $i => $parsed ) {
+			if ( $i ) {
+				$content[] = "\n\n";
+			}
+			$content[] = null;
+		}
 		return serialize_block(
 			array(
 				'blockName'    => 'trust/' . $name,
@@ -490,9 +665,9 @@ final class Blocks {
 					'data' => self::flatten( self::fields( $name ), $values ),
 					'mode' => 'preview',
 				),
-				'innerBlocks'  => array(),
+				'innerBlocks'  => $inner_blocks,
 				'innerHTML'    => '',
-				'innerContent' => array(),
+				'innerContent' => $content,
 			)
 		);
 	}

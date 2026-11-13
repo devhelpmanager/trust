@@ -1,0 +1,15 @@
+/*
+ * Блок «Блок с текстом» (holst-blokov/TextBlock, seo-bloki/03-tekst.html). Фон белый.
+ * Оформление самого текста — .prose в main.css (общее со статьями блога).
+ */
+
+.b-text {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-text__body {
+	max-width: var(--text-col);
+	margin: 0 auto;
+}

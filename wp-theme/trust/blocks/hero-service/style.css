@@ -33,6 +33,7 @@
 
 .b-hero-service__title {
 	flex: 0 0 100%;
+	min-width: 0; /* длинное слово («SEO-продвижение») на узком экране переносится, а не раздвигает страницу */
 	margin: 0 0 -8px; /* до текста — 20 px, как в макете */
 	font-family: var(--f-display);
 	font-size: var(--fs-h1);
@@ -99,5 +100,12 @@
 
 	.b-hero-service__buttons .btn--outline {
 		box-sizing: border-box;
+	}
+}
+
+/* Очень узкие экраны: длинное слово заголовка — с переносом по слогам («продви-жение») */
+@media (max-width: 360px) {
+	.b-hero-service__title {
+		hyphens: auto;
 	}
 }

@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/tariffs",
+	"title": "Выбор тарифа",
+	"description": "Карточки тарифов (1–4): название, кому подходит, цена со скидкой, период, состав «включено / не включено», кнопка. Рекомендуемый тариф — тёмная карточка. Числовая цена попадает в микроразметку услуги.",
+	"category": "trust-services",
+	"icon": "money-alt",
+	"keywords": [ "тарифы", "цены", "стоимость", "пакеты", "прайс" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

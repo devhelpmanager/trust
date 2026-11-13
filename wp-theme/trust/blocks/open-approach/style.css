@@ -1,0 +1,130 @@
+/*
+ * Блок «Почему мы открыто пишем про всё» (holst-blokov/OpenApproach, seo-bloki/05-otkryto-pishem.html).
+ * Фиолетовый фон с точками; отступы больше обычных (в макете 112 px при 96 у остальных блоков).
+ */
+
+.b-open {
+	padding: calc(var(--section-y) * 1.25) var(--gutter);
+	background-color: var(--c-violet-dark);
+	background-image: radial-gradient(#6E38C9 1px, transparent 1px);
+	background-size: 24px 24px;
+	color: var(--c-white);
+}
+
+.b-open__inner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 48px 80px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-open__head {
+	display: flex;
+	flex: 1 1 320px;
+	flex-direction: column;
+	gap: 16px;
+	min-width: 0;
+}
+
+.b-open .eyebrow {
+	color: var(--c-violet-light);
+}
+
+.b-open__title {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: clamp(26px, 2.8vw, 36px);
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+	text-wrap: balance;
+}
+
+.b-open__figure {
+	display: flex;
+	flex: 999 1 560px;
+	flex-direction: column;
+	gap: 28px;
+	min-width: 0;
+	margin: 0;
+}
+
+.b-open__mark {
+	fill: var(--c-violet-light);
+}
+
+.b-open__quote {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	margin: 0;
+}
+
+.b-open__lead {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: clamp(22px, 2.5vw, 30px);
+	font-weight: 500;
+	line-height: 1.4;
+	letter-spacing: -0.01em;
+	text-wrap: pretty;
+}
+
+.b-open__text {
+	margin: 0;
+	font-size: 18px;
+	line-height: 1.7;
+	color: var(--c-on-violet);
+	text-wrap: pretty;
+}
+
+.b-open__author {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding-top: 24px;
+	border-top: 1px solid #8456D2;
+}
+
+.b-open__avatar {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	overflow: hidden;
+	border-radius: var(--r-pill);
+	background: var(--c-violet-plate);
+	color: var(--c-violet-light);
+}
+
+.b-open__photo {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.b-open__who {
+	display: flex;
+	flex-direction: column;
+	line-height: 1.35;
+}
+
+.b-open__name {
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.b-open__role {
+	font-size: 14px;
+	color: var(--c-on-violet);
+}
+
+.b-open__empty {
+	margin: 0;
+	color: var(--c-on-violet);
+}

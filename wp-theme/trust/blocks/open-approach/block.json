@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/open-approach",
+	"title": "Почему мы открыто пишем про всё",
+	"description": "Фиолетовый блок: слева заголовок, справа крупная цитата и подпись автора — сотрудник (фото, имя, должность) или данные вручную.",
+	"category": "trust-services",
+	"icon": "format-quote",
+	"keywords": [ "цитата", "открытость", "позиция", "руководитель", "мнение" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

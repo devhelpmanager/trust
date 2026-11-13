@@ -1694,3 +1694,283 @@ html.has-modal {
 	}
 }
 
+
+/* ===== Текст: «Блок с текстом» и статьи блога (seo-bloki/03-tekst.html) ===== */
+
+.prose {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	font-size: 18px;
+	line-height: 1.7;
+	color: var(--c-text-2);
+}
+
+.prose > * {
+	margin: 0;
+}
+
+.prose p {
+	text-wrap: pretty;
+}
+
+.prose a {
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 4px;
+}
+
+.prose h2 {
+	margin-bottom: 8px;
+	font-family: var(--f-display);
+	font-size: clamp(26px, 3vw, 36px);
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+	color: var(--c-text);
+	text-wrap: balance;
+}
+
+.prose h3 {
+	margin-top: 16px;
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 1.3;
+	color: var(--c-text);
+}
+
+.prose h4 {
+	margin-top: 8px;
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 1.35;
+	color: var(--c-text);
+}
+
+/* После цитаты и плашки (у них свой отступ) — без лишнего отступа над заголовком */
+.prose > :is(blockquote, aside, figure) + :is(h3, h4) {
+	margin-top: 0;
+}
+
+/* Маркированный список — фиолетовые квадраты, нумерованный — номера в тёмных кругах */
+.prose ul,
+.prose ol {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 0;
+	list-style: none;
+}
+
+.prose ol {
+	gap: 16px;
+	counter-reset: prose;
+}
+
+.prose ul > li,
+.prose ol > li {
+	position: relative;
+}
+
+.prose ul > li {
+	padding-left: 24px;
+}
+
+.prose ul > li::before {
+	position: absolute;
+	top: 11px;
+	left: 0;
+	width: 8px;
+	height: 8px;
+	background: var(--c-violet);
+	content: "";
+}
+
+.prose ol > li {
+	min-height: 30px;
+	padding-left: 46px;
+	counter-increment: prose;
+}
+
+.prose ol > li::before {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	border-radius: var(--r-pill);
+	background: var(--c-text);
+	color: var(--c-white);
+	font-family: var(--f-mono);
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1;
+	content: counter(prose);
+}
+
+.prose li > :is(ul, ol) {
+	margin-top: 12px;
+}
+
+/* Цитата по умолчанию */
+.prose blockquote {
+	padding-left: 20px;
+	border-left: 3px solid var(--c-violet);
+}
+
+.prose blockquote p {
+	margin: 0;
+}
+
+.prose blockquote cite {
+	display: block;
+	margin-top: 8px;
+	font-size: 15px;
+	font-style: normal;
+	color: var(--c-muted);
+}
+
+/* Цитата «С автором»: лавандовая плашка, знак цитаты, подпись — имя первой строкой, ниже должность */
+.prose .wp-block-quote.is-style-author {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	margin: 16px 0;
+	padding: clamp(28px, 4vw, 44px);
+	border: 0;
+	border-radius: var(--r-card-lg);
+	background: var(--c-lavender-2);
+}
+
+.prose .wp-block-quote.is-style-author::before {
+	width: 44px;
+	height: 34px;
+	background: var(--c-violet);
+	content: "";
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 34'%3E%3Cpath d='M0 34V20.4C0 8.9 6.2 2.1 17.4 0l1.9 4.6C13 6.4 10.2 10 9.8 15.3H18V34H0zm25 0V20.4C25 8.9 31.2 2.1 42.4 0l1.6 4.6c-6.3 1.8-9.1 5.4-9.5 10.7H43V34H25z'/%3E%3C/svg%3E") no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 34'%3E%3Cpath d='M0 34V20.4C0 8.9 6.2 2.1 17.4 0l1.9 4.6C13 6.4 10.2 10 9.8 15.3H18V34H0zm25 0V20.4C25 8.9 31.2 2.1 42.4 0l1.6 4.6c-6.3 1.8-9.1 5.4-9.5 10.7H43V34H25z'/%3E%3C/svg%3E") no-repeat;
+}
+
+.prose .wp-block-quote.is-style-author p {
+	font-size: clamp(19px, 2vw, 22px);
+	font-weight: 500;
+	line-height: 1.55;
+	color: var(--c-text);
+	text-wrap: pretty;
+}
+
+.prose .wp-block-quote.is-style-author cite {
+	position: relative;
+	min-height: 44px;
+	margin: 0;
+	padding: 2px 0 0 58px;
+	font-size: 14px;
+	line-height: 1.35;
+	color: var(--c-muted);
+}
+
+.prose .wp-block-quote.is-style-author cite::first-line {
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--c-text);
+}
+
+/* Аватар автора: круг с силуэтом (как в макете) */
+.prose .wp-block-quote.is-style-author cite::before {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 44px;
+	height: 44px;
+	border-radius: var(--r-pill);
+	background: #D9CAFC url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236D28D9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6'/%3E%3C/svg%3E") center / 22px no-repeat;
+	content: "";
+}
+
+/* «Важно»: выделенная мысль между двумя линиями (на сайте — <aside>) */
+.prose .is-style-important {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	margin: 16px 0;
+	padding: 28px 0;
+	border: 0;
+	border-top: 2px solid var(--c-text);
+	border-bottom: 2px solid var(--c-text);
+}
+
+.prose .is-style-important p {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: clamp(20px, 2.2vw, 26px);
+	font-weight: 500;
+	line-height: 1.4;
+	letter-spacing: -0.01em;
+	color: var(--c-text);
+	text-wrap: pretty;
+}
+
+.prose__label {
+	font-family: var(--f-mono);
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--c-violet);
+}
+
+/* В редакторе у «Важно» подпись — тоже над текстом */
+.editor-styles-wrapper .prose .wp-block-quote.is-style-important::before {
+	font-family: var(--f-mono);
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--c-violet);
+	content: "Важно";
+}
+
+/* Картинки, таблицы, видео */
+.prose figure img,
+.prose figure video,
+.prose figure iframe {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	border-radius: var(--r-card);
+}
+
+.prose figcaption {
+	margin-top: 10px;
+	font-size: 15px;
+	line-height: 1.55;
+	color: var(--c-muted);
+}
+
+.prose table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 16px;
+	line-height: 1.5;
+}
+
+.prose th,
+.prose td {
+	padding: 10px 14px;
+	border: 1px solid var(--c-border);
+	text-align: left;
+	vertical-align: top;
+}
+
+.prose thead th {
+	background: var(--c-lavender);
+	color: var(--c-text);
+	font-weight: 600;
+}
+
+.prose .wp-block-table {
+	overflow-x: auto;
+}

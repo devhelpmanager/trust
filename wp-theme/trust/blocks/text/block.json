@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/text",
+	"title": "Блок с текстом",
+	"description": "Колонка текста по ширине 760 px: абзацы, заголовки H2–H4, списки, цитаты (стили «С автором» и «Важно»), картинки, таблицы. Текст печатается прямо в блоке.",
+	"category": "trust-content",
+	"icon": "text",
+	"keywords": [ "текст", "статья", "описание", "абзац", "цитата" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false,
+		"jsx": true
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

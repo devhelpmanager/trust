@@ -1,0 +1,85 @@
+/*
+ * Блок «Картинка» (holst-blokov/ImageBlock, seo-bloki/08-kartinka.html). Фон белый, рамка
+ * со скруглением 20 px, подпись «Рис. N» моноширинным шрифтом и описание.
+ */
+
+.b-image {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-image__figure {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-image__figure--text {
+	max-width: var(--text-col);
+}
+
+.b-image__frame {
+	overflow: hidden;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-card-lg);
+	background: var(--c-lavender-2);
+}
+
+.b-image__img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.b-image__caption {
+	display: flex;
+	align-items: baseline;
+	gap: 12px;
+	font-size: 15px;
+	line-height: 1.55;
+	color: var(--c-muted);
+}
+
+.b-image__num {
+	flex: none;
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--c-violet);
+}
+
+.b-image__text {
+	text-wrap: pretty;
+}
+
+/* Без картинки — только в редакторе */
+.b-image__placeholder {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 14px;
+	aspect-ratio: 16 / 9;
+	padding: 24px;
+	background: repeating-linear-gradient(135deg, var(--c-lavender-2) 0 18px, var(--c-lavender-3) 18px 36px);
+	font-size: 18px;
+	font-weight: 600;
+	text-align: center;
+}
+
+.b-image__placeholder-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 72px;
+	height: 72px;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-card-lg);
+	background: var(--c-white);
+	color: var(--c-violet);
+}
