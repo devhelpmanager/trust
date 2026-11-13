@@ -104,6 +104,8 @@ const DOCS = [ 'Публичная оферта', 'Политика конфид
 			await page.goto( `${ URL }/`, { waitUntil: 'networkidle' } );
 			await settle( page );
 			await isolate( page, '.site-footer' );
+			const top = await footer.evaluate( ( el ) => getComputedStyle( el ).paddingTop );
+			check( `${ w }px: отступ сверху в подвале ${ 1280 === w ? 40 : 32 } px (правка заказчика, в макете 72)`, top === ( 1280 === w ? '40px' : '32px' ), top );
 			await footer.screenshot( { path: path.join( OUT, `footer-theme-${ w }.png` ) } );
 			const themeH = ( await footer.boundingBox() ).height;
 			await page.goto( mockupUrl( 'portfolio-blog-404/portfolio.html' ), { waitUntil: 'networkidle' } );

@@ -231,6 +231,11 @@ const SECTION_SPACING_CSS = `
 	@media (max-width: 760px) {
 		[style*="padding: 96px clamp(20px, 4vw, 48px)"] { padding-top: 48px !important; padding-bottom: 48px !important; }
 	}
+	/* Подвал: сверху 40 px, на телефоне 32 (в макетах 72) */
+	footer.dc-foot { padding-top: 40px !important; }
+	@media (max-width: 760px) {
+		footer.dc-foot { padding-top: 32px !important; }
+	}
 `;
 // Правки заказчика в «Этапах работы»: номер — в скруглённом прямоугольнике на всю ширину карточки
 // (без линий и стрелок), от вводного текста до этапов 32 px (на телефоне 24), у раскрытого этапа

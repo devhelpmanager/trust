@@ -973,9 +973,15 @@ html:not(.js) .main-nav__item:focus-within > .main-nav__dropdown {
 /* ===== 7. Подвал (holst-portfolio/Footer) ===== */
 
 .site-footer {
-	padding: 72px var(--gutter) 32px;
+	padding: 40px var(--gutter) 32px; /* правка заказчика: сверху меньше (в макете 72 px) */
 	background: var(--c-indigo);
 	color: var(--c-white);
+}
+
+@media (max-width: 760px) {
+	.site-footer {
+		padding-top: 32px;
+	}
 }
 
 .site-footer__inner {
