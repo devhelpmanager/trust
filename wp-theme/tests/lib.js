@@ -232,7 +232,13 @@ const SECTION_SPACING_CSS = `
 		[style*="padding: 96px clamp(20px, 4vw, 48px)"] { padding-top: 48px !important; padding-bottom: 48px !important; }
 	}
 `;
+// Правка заказчика: у раскрытого этапа «Этапов работы» меняется фон карточки.
+const STAGES_OPEN_CSS = `
+	ol.dc-steps > li > button[aria-expanded="true"] { background: #F8F5FF !important; border-color: #CDBDFF !important; }
+	ol.dc-steps > li:last-child > button[aria-expanded="true"] { background: #4C1D95 !important; border-color: #4C1D95 !important; }
+`;
 const MOCKUP_CSS = {
+	'seo-bloki/06-etapy-raboty.html': STAGES_OPEN_CSS,
 	'portfolio-blog-404/portfolio.html': HERO_SECTION_CSS,
 	'o-nas/o-kompanii.html': HERO_SECTION_CSS,
 	'o-nas/komanda.html': HERO_SECTION_CSS,
@@ -259,7 +265,7 @@ const MOCKUP_CSS = {
 			.dc-ask-intro > span, .dc-ask-intro > h1 { margin-bottom: -8px !important; }
 		}
 	`,
-	'seo-stranitsa/index.html': `
+	'seo-stranitsa/index.html': STAGES_OPEN_CSS + `
 		main > section:first-of-type > div > div > div:first-child { display: contents !important; }
 		main > section:first-of-type h1 { flex: 0 0 100% !important; margin: 0 0 -8px !important; }
 		main > section:first-of-type h1 + p { flex: 1 1 520px !important; max-width: 780px !important; min-width: 0 !important; }

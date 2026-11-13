@@ -117,12 +117,25 @@
 	color: var(--c-text);
 	text-align: left;
 	cursor: pointer;
+	transition: background 0.2s, border-color 0.2s;
 }
 
 .b-stages__item--result .b-stages__card {
 	border-color: var(--c-violet-dark);
 	background: var(--c-violet-dark);
 	color: var(--c-white);
+}
+
+/* Правка заказчика: у раскрытого этапа меняется фон — лавандовый с сиреневой рамкой, как у открытого
+   вопроса в «Вопрос-ответ»; у итогового — темнее фиолетовый (в макете фон не меняется). */
+.b-stages__item.is-open .b-stages__card {
+	border-color: #CDBDFF;
+	background: var(--c-lavender);
+}
+
+.b-stages__item--result.is-open .b-stages__card {
+	border-color: var(--c-violet-deep);
+	background: var(--c-violet-deep);
 }
 
 .b-stages__pic {

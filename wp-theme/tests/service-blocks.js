@@ -225,6 +225,8 @@ function stagesPhp( n, extra = '' ) {
 		let v = await view( 1 );
 		check( 'Этапы, компьютер: наведение мыши показывает подробный текст вместо картинки и короткого текста',
 			v.expanded === 'true' && ! v.pic && ! v.short && v.detail.startsWith( 'Смотрим сайт, нишу и конкурентов' ), JSON.stringify( v ) );
+		const openBg = await stage( 1 ).locator( '.b-stages__card' ).evaluate( ( el ) => getComputedStyle( el ).backgroundColor + ' ' + getComputedStyle( el ).borderTopColor );
+		check( 'Этапы: у раскрытого этапа меняется фон — лавандовый, рамка #CDBDFF (правка заказчика)', openBg === 'rgb(248, 245, 255) rgb(205, 189, 255)', openBg );
 		const plus = await stage( 1 ).locator( '.b-stages__plus' ).evaluate( ( el ) => getComputedStyle( el ).backgroundColor + ' ' + getComputedStyle( el.querySelector( 'svg' ) ).transform );
 		check( 'Этапы: у открытого этапа кнопка «+» фиолетовая и повёрнута в «×»', plus.startsWith( 'rgb(109, 40, 217) matrix(0.7' ), plus );
 		await stage( 1 ).locator( '.b-stages__card' ).click();
@@ -237,6 +239,13 @@ function stagesPhp( n, extra = '' ) {
 		await page.waitForTimeout( 300 );
 		v = await view( 1 );
 		check( 'Этапы, компьютер: мышь ушла — снова картинка и короткий текст', v.expanded === 'false' && v.pic && v.short && ! v.detail, JSON.stringify( v ) );
+		await page.waitForTimeout( 300 );
+		const closedBg = await stage( 1 ).locator( '.b-stages__card' ).evaluate( ( el ) => getComputedStyle( el ).backgroundColor );
+		await stage( 4 ).locator( '.b-stages__card' ).hover();
+		await page.waitForTimeout( 300 );
+		const resultBg = await stage( 4 ).locator( '.b-stages__card' ).evaluate( ( el ) => getComputedStyle( el ).backgroundColor );
+		await page.mouse.move( 5, 5 );
+		check( 'Этапы: закрытый — снова белый; раскрытый итоговый — тёмно-фиолетовый #4C1D95', closedBg === 'rgb(255, 255, 255)' && resultBg === 'rgb(76, 29, 149)', `${ closedBg } ${ resultBg }` );
 
 		await stage( 2 ).locator( '.b-stages__card' ).focus();
 		await page.keyboard.press( 'Enter' );
