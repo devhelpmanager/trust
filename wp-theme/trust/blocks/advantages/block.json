@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/advantages",
+	"title": "Наши преимущества",
+	"description": "Фиолетовый блок с пунктами: крупный номер 01, 02…, иконка, заголовок и текст. До 6 пунктов, номера ставятся автоматически.",
+	"category": "trust-services",
+	"icon": "awards",
+	"keywords": [ "преимущества", "почему мы", "плюсы", "пункты" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

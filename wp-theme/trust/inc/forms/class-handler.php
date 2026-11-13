@@ -93,6 +93,9 @@ final class Handler {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$type   = isset( $_POST['trust_form_type'] ) ? sanitize_key( wp_unslash( $_POST['trust_form_type'] ) ) : '';
 		$params = wp_unslash( $_POST );
+		// Куда вернуться на странице: форма, из которой пришла заявка (у одной формы может быть
+		// несколько мест — окно звонка и блок «Кнопка связи»).
+		$anchor = isset( $_POST['_trust_anchor'] ) ? sanitize_html_class( wp_unslash( $_POST['_trust_anchor'] ) ) : '';
 		// phpcs:enable
 		$result = self::process( $type, is_array( $params ) ? $params : array() );
 
@@ -103,7 +106,7 @@ final class Handler {
 			'trust_form'      => $result['body']['ok'] ? 'sent' : 'error',
 			'trust_form_type' => $type,
 		);
-		wp_safe_redirect( add_query_arg( $args, $back ) . '#form-' . $type );
+		wp_safe_redirect( add_query_arg( $args, $back ) . '#' . ( '' !== $anchor ? $anchor : 'form-' . $type ) );
 		exit;
 	}
 

@@ -232,6 +232,13 @@ final class Importer {
 			foreach ( self::resolve_links( $item['fields'] ?? array() ) as $name => $value ) {
 				update_field( Fields::key( $type, $name ), $value, $id );
 			}
+			// Обложка — картинка из demo/images/ (в медиатеку добавляется один раз).
+			if ( ! empty( $item['thumbnail'] ) ) {
+				$image = self::demo_image( $item['thumbnail'], $item['title'] );
+				if ( $image ) {
+					set_post_thumbnail( $id, $image );
+				}
+			}
 			// Поля группы «SEO» (общей для нескольких типов).
 			foreach ( self::resolve_links( $item['seo'] ?? array() ) as $name => $value ) {
 				update_field( Fields::key( 'seo', $name ), $value, $id );
@@ -242,6 +249,82 @@ final class Importer {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Картинка демо-контента из demo/images/ в медиатеке: при первом импорте копируется
+	 * в «Загрузки» (с уменьшенными копиями), дальше берётся уже загруженная.
+	 *
+	 * @param string $file Имя файла в demo/images/.
+	 * @param string $alt  Описание картинки.
+	 * @return int ID картинки или 0.
+	 */
+	public static function demo_image( string $file, string $alt ): int {
+		$found = self::find_demo_post( 'attachment', $file );
+		if ( $found ) {
+			return $found->ID;
+		}
+		$path = TRUST_DIR . '/demo/images/' . basename( $file );
+		if ( ! is_readable( $path ) ) {
+			return 0;
+		}
+		$upload = wp_upload_bits( basename( $file ), null, (string) file_get_contents( $path ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- файл темы.
+		if ( ! empty( $upload['error'] ) ) {
+			return 0;
+		}
+		$type = wp_check_filetype( $upload['file'] );
+		$id   = wp_insert_attachment(
+			array(
+				'post_mime_type' => $type['type'],
+				'post_title'     => $alt,
+				'post_status'    => 'inherit',
+			),
+			$upload['file']
+		);
+		if ( ! $id || is_wp_error( $id ) ) {
+			return 0;
+		}
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $upload['file'] ) );
+		update_post_meta( $id, '_wp_attachment_image_alt', $alt );
+		update_post_meta( $id, self::META_ID, 'attachment:' . $file );
+		return $id;
+	}
+
+	/**
+	 * Переносит в корзину пример WordPress «Hello world!» / «Привет, мир!», если его не меняли:
+	 * демо-статьи блога заменяют его (а на сайте он не нужен). Из корзины его можно вернуть.
+	 *
+	 * @return bool Перенесён ли.
+	 */
+	public static function trash_sample_post(): bool {
+		$post = get_post( 1 );
+		if ( ! $post || 'post' !== $post->post_type || 'publish' !== $post->post_status
+			|| ! in_array( $post->post_title, array( 'Hello world!', 'Привет, мир!' ), true )
+			|| $post->post_modified_gmt !== $post->post_date_gmt ) {
+			return false;
+		}
+		return (bool) wp_trash_post( $post->ID );
+	}
+
+	/**
+	 * Удаляет картинки демо-контента (вместе с файлами).
+	 *
+	 * @return int Сколько удалено.
+	 */
+	public static function remove_images(): int {
+		$images = get_posts(
+			array(
+				'post_type'   => 'attachment',
+				'post_status' => 'any',
+				'numberposts' => -1,
+				'meta_key'    => self::META_ID, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- разовая команда WP-CLI.
+			)
+		);
+		foreach ( $images as $image ) {
+			wp_delete_attachment( $image->ID, true );
+		}
+		return count( $images );
 	}
 
 	/**

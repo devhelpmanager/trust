@@ -28,6 +28,7 @@ final class Demo_Command {
 	 */
 	private const POSTS = array(
 		'team'     => array( 'team', 'Сотрудники' ),
+		'post'     => array( 'posts', 'Статьи' ),
 		'review'   => array( 'reviews', 'Отзывы' ),
 		'case'     => array( 'cases', 'Кейсы' ),
 		'vacancy'  => array( 'vacancies', 'Вакансии' ),
@@ -97,6 +98,10 @@ final class Demo_Command {
 		self::log_list( 'Пропущены (изменены вручную или уже есть свои)', $terms['skipped'] );
 		self::log_list( 'Обновлены принудительно', $terms['forced'] );
 
+		if ( Importer::trash_sample_post() ) {
+			WP_CLI::log( 'Пример WordPress «Hello world!» перенесён в корзину (его заменяют демо-статьи).' );
+		}
+
 		// Сотрудники и отзывы раньше кейсов и вопросов: те ссылаются на них.
 		foreach ( self::POSTS as $type => list( $file, $label ) ) {
 			$posts = Importer::import_posts( $type, $file, $force );
@@ -132,6 +137,8 @@ final class Demo_Command {
 			WP_CLI::log( sprintf( '%s: удалено %d.', $label, count( $posts['removed'] ) ) );
 			self::log_list( 'Оставлены (изменены вручную)', $posts['kept'] );
 		}
+
+		WP_CLI::log( sprintf( 'Картинки демо-контента: удалено %d.', Importer::remove_images() ) );
 
 		$terms = Importer::remove_terms();
 		WP_CLI::log( sprintf( 'Термины: удалено %d.', count( $terms['removed'] ) ) );

@@ -37,6 +37,7 @@ return array(
 		'sites'    => 'Сайты',
 		'ppc'      => 'Контекстная реклама',
 		'ai'       => 'AI',
+		'reports'  => 'Отчёты',
 	),
 	'post_tag'       => array(
 		'robots'    => array(

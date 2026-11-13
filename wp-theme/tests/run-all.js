@@ -9,7 +9,7 @@
 const { spawnSync } = require( 'child_process' );
 const path = require( 'path' );
 
-const TESTS = [ 'smoke', 'settings', 'header', 'header-mobile', 'footer', 'callback', 'faq', 'content-types', 'blog-fields', 'cases-reviews', 'team-questions', 'page-types', 'seo', 'breadcrumbs', 'sitemap', 'schema', 'leads', 'notifications', 'cookie', 'heroes', 'heroes-pages', 'service-blocks', 'visual' ];
+const TESTS = [ 'smoke', 'settings', 'header', 'header-mobile', 'footer', 'callback', 'faq', 'content-types', 'blog-fields', 'cases-reviews', 'team-questions', 'page-types', 'seo', 'breadcrumbs', 'sitemap', 'schema', 'leads', 'notifications', 'cookie', 'heroes', 'heroes-pages', 'service-blocks', 'service-page', 'visual' ];
 
 let failed = 0;
 const summary = [];

@@ -224,12 +224,12 @@ const HERO_DOCUMENT_CSS = `
 `;
 // Правка заказчика для всех макетов: отступы секций 64 / 56 / 48 px вместо 96 (--section-y в main.css).
 const SECTION_SPACING_CSS = `
-	[style*="padding: 96px clamp(20px, 4vw, 48px)"] { padding-top: 64px !important; padding-bottom: 64px !important; }
+	[style*="padding: 96px clamp(20px, 4vw, 48px)"], [style*="padding: 88px clamp(20px, 4vw, 48px)"] { padding-top: 64px !important; padding-bottom: 64px !important; }
 	@media (max-width: 1100px) {
-		[style*="padding: 96px clamp(20px, 4vw, 48px)"] { padding-top: 56px !important; padding-bottom: 56px !important; }
+		[style*="padding: 96px clamp(20px, 4vw, 48px)"], [style*="padding: 88px clamp(20px, 4vw, 48px)"] { padding-top: 56px !important; padding-bottom: 56px !important; }
 	}
 	@media (max-width: 760px) {
-		[style*="padding: 96px clamp(20px, 4vw, 48px)"] { padding-top: 48px !important; padding-bottom: 48px !important; }
+		[style*="padding: 96px clamp(20px, 4vw, 48px)"], [style*="padding: 88px clamp(20px, 4vw, 48px)"] { padding-top: 48px !important; padding-bottom: 48px !important; }
 	}
 	/* Подвал: сверху 40 px, на телефоне 32 (в макетах 72) */
 	footer.dc-foot { padding-top: 40px !important; }
@@ -265,20 +265,20 @@ const MOCKUP_CSS = {
 		}
 	`,
 	'seo-stranitsa/index.html': `
-		main > section:first-of-type > div > div > div:first-child { display: contents !important; }
-		main > section:first-of-type h1 { flex: 0 0 100% !important; margin: 0 0 -8px !important; }
-		main > section:first-of-type h1 + p { flex: 1 1 520px !important; max-width: 780px !important; min-width: 0 !important; }
-		main > section:first-of-type { padding-bottom: 48px !important; }
+		main > section:has(h1) > div > div > div:first-child { display: contents !important; }
+		main > section:has(h1) h1 { flex: 0 0 100% !important; margin: 0 0 -8px !important; }
+		main > section:has(h1) h1 + p { flex: 1 1 520px !important; max-width: 780px !important; min-width: 0 !important; }
+		main > section:has(h1) { padding-bottom: 48px !important; }
 		@media (max-width: 1100px) {
-			main > section:first-of-type { padding-bottom: 40px !important; }
+			main > section:has(h1) { padding-bottom: 40px !important; }
 		}
 		@media (max-width: 760px) {
-			main > section:first-of-type { padding-bottom: 32px !important; }
+			main > section:has(h1) { padding-bottom: 32px !important; }
 		}
 		@media (max-width: 480px) {
-			main > section:first-of-type h1 + p { font-size: 17px !important; }
-			main > section:first-of-type div:has(> a[href="#order"]) { gap: 8px !important; }
-			main > section:first-of-type a[href="#order"], main > section:first-of-type a[href="#calculator"] {
+			main > section:has(h1) h1 + p { font-size: 17px !important; }
+			main > section:has(h1) div:has(> a[href="#order"]) { gap: 8px !important; }
+			main > section:has(h1) a[href="#order"], main > section:has(h1) a[href="#calculator"] {
 				min-height: 48px !important; padding: 0 14px !important; font-size: 14px !important; white-space: nowrap !important; box-sizing: border-box !important;
 			}
 		}

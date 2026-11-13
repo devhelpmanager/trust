@@ -86,5 +86,20 @@ return array(
 			'ui'            => 1,
 			'instructions'  => __( 'Ссылка из галочки согласия во всех формах сайта.', 'trust' ),
 		),
+		array(
+			'name'    => 'blog_heading',
+			'label'   => __( 'Блог', 'trust' ),
+			'type'    => 'message',
+			'message' => __( 'Время чтения статьи считается по числу слов текста.', 'trust' ),
+		),
+		array(
+			'name'         => 'blog_read_speed',
+			'label'        => __( 'Скорость чтения, слов в минуту', 'trust' ),
+			'type'         => 'number',
+			'min'          => 60,
+			'max'          => 600,
+			'placeholder'  => (string) Trust\Blog::READ_SPEED,
+			'instructions' => __( 'Пусто — 180 слов в минуту. Время округляется вверх, минимум 1 минута.', 'trust' ),
+		),
 	),
 );

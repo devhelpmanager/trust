@@ -295,9 +295,14 @@ function stagesPhp( n, extra = '' ) {
 				arts.every( ( a ) => ( shown ? 'svg справа не выше шапки' : 'скрыт' ) === a ), arts.join( ' | ' ) );
 		}
 
-		// Два белых блока подряд («Этапы работы» → «Вопрос-ответ»): между ними один отступ (правка заказчика).
+		// Два белых блока подряд («Этапы работы» → «Вопрос-ответ», своя страница): между ними один
+		// отступ (правка заказчика); у блока другого фона («Преимущества» после «Этапов» на демо-
+		// странице) верхний отступ остаётся.
+		const twoWhite = createPage( 'два белых', `${ stagesPhp( 3 ) } . "\n\n" . Trust\\Blocks::serialize( 'faq', array( 'title' => 'Вопросы', 'questions' => array( array( 'question' => 'Вопрос?', 'answer' => '<p>Ответ.</p>' ) ) ) )` );
+		created.push( twoWhite );
 		for ( const [ w, gap ] of [ [ 1280, 64 ], [ 1024, 56 ], [ 390, 48 ] ] ) {
 			await page.setViewportSize( { width: w, height: 900 } );
+			await page.goto( `${ URL }/?page_id=${ twoWhite }`, { waitUntil: 'networkidle' } );
 			const res = await page.evaluate( () => {
 				const stages = document.querySelector( '.b-stages' );
 				const faq = document.querySelector( '.b-faq' );
@@ -305,13 +310,15 @@ function stagesPhp( n, extra = '' ) {
 				return {
 					next: stages.nextElementSibling === faq,
 					faqTop: getComputedStyle( faq ).paddingTop,
-					gap: Math.round( faq.querySelector( '.eyebrow' ).getBoundingClientRect().top - last ),
-					includesTop: getComputedStyle( document.querySelector( '.b-includes' ) ).paddingTop,
+					gap: Math.round( faq.querySelector( '.section-top' ).getBoundingClientRect().top - last ),
 				};
 			} );
+			await page.goto( PAGE, { waitUntil: 'networkidle' } );
+			const other = await page.evaluate( () => getComputedStyle( document.querySelector( '.b-stages + .b-advantages' ) ).paddingTop );
 			check( `${ w }px: между «Этапами работы» и «Вопрос-ответ» (оба белые) — ${ gap } px, у блока другого фона отступ сверху остаётся`,
-				res.next && '0px' === res.faqTop && res.gap === gap && `${ gap }px` === res.includesTop, JSON.stringify( res ) );
+				res.next && '0px' === res.faqTop && res.gap === gap && `${ gap }px` === other, JSON.stringify( { ...res, other } ) );
 		}
+		await page.goto( PAGE, { waitUntil: 'networkidle' } );
 
 		// Телефон (правки заказчика): картинка — узкая полоса и видна всегда.
 		await page.setViewportSize( { width: 390, height: 900 } );

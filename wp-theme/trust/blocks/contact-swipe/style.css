@@ -1,0 +1,262 @@
+/*
+ * Блок «Кнопка связи» (holst-stranitsy/Main → ContactSwipe, seo-bloki/09-knopka-svyazi.html).
+ * Фон фиолетовый; поля и галочка — общие классы форм из main.css.
+ */
+
+.b-swipe {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-violet-dark);
+	color: var(--c-white);
+}
+
+.b-swipe__inner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 40px 80px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-swipe__head {
+	display: flex;
+	flex: 1 1 360px;
+	flex-direction: column;
+	gap: 16px;
+	min-width: 0;
+}
+
+.b-swipe .eyebrow {
+	color: var(--c-violet-light);
+}
+
+.b-swipe .section-lead {
+	color: var(--c-on-violet);
+}
+
+/* Белая карточка с формой */
+.b-swipe__form {
+	display: flex;
+	flex: 1 1 380px;
+	flex-direction: column;
+	gap: 12px;
+	min-width: 0;
+	padding: clamp(20px, 3vw, 28px);
+	border-radius: var(--r-form);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-swipe__label {
+	margin-bottom: 4px;
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-align: center;
+	text-transform: uppercase;
+	color: var(--c-violet);
+}
+
+.b-swipe__form .field {
+	gap: 4px;
+}
+
+.b-swipe__consent .check {
+	min-height: 0;
+	font-size: 13px;
+	color: var(--c-muted);
+}
+
+.b-swipe__consent .check__input {
+	width: 20px;
+	height: 20px;
+}
+
+.b-swipe__consent .field__error--check {
+	padding-left: 32px;
+}
+
+/* Свайп-кнопка: дорожка 224 px, круглая ручка 40 px, заливка тянется за ручкой */
+.b-swipe__track {
+	--b-swipe-dx: 0px;
+	--b-swipe-p: 0;
+
+	position: relative;
+	align-self: center;
+	width: 224px;
+	max-width: 100%;
+	height: 46px;
+	margin-top: 4px;
+	overflow: hidden;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-pill);
+	background: var(--c-lavender-2);
+	user-select: none;
+	touch-action: none;
+}
+
+.b-swipe__fill,
+.b-swipe__sending {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.b-swipe__fill {
+	width: calc(var(--b-swipe-dx) + 44px);
+	border-radius: var(--r-pill);
+	background: var(--c-violet);
+}
+
+.b-swipe__hint {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	padding-left: 44px;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--c-violet-dark);
+	opacity: max(0, calc(1 - var(--b-swipe-p) * 2.2));
+}
+
+.b-swipe__hint svg {
+	color: var(--c-violet);
+}
+
+.b-swipe__sending {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: calc(var(--b-swipe-dx) + 2px);
+	overflow: hidden;
+	font-size: 13px;
+	font-weight: 600;
+	white-space: nowrap;
+	color: var(--c-white);
+	opacity: clamp(0, calc((var(--b-swipe-p) - 0.3) / 0.3), 1);
+}
+
+.b-swipe__knob {
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	padding: 0;
+	border: 0;
+	border-radius: var(--r-pill);
+	background: var(--c-white);
+	box-shadow: 0 2px 6px rgba(14, 11, 20, 0.18);
+	color: var(--c-violet);
+	cursor: grab;
+	touch-action: none;
+	transform: translateX(var(--b-swipe-dx));
+}
+
+/* Зона нажатия 44 px при ручке 40 px, как в макете */
+.b-swipe__knob::before {
+	position: absolute;
+	inset: -2px;
+	content: "";
+}
+
+.b-swipe__track.is-dragging .b-swipe__knob {
+	cursor: grabbing;
+}
+
+/* Плавное возвращение и довод до конца (во время перетаскивания — без задержки) */
+.b-swipe__track:not(.is-dragging) .b-swipe__fill,
+.b-swipe__track:not(.is-dragging) .b-swipe__sending,
+.b-swipe__track:not(.is-dragging) .b-swipe__knob,
+.b-swipe__track:not(.is-dragging) .b-swipe__hint {
+	transition: transform 0.25s ease, width 0.25s ease, opacity 0.25s ease;
+}
+
+.b-swipe__track.is-sending .b-swipe__knob {
+	cursor: progress;
+}
+
+/* Заявка отправлена */
+.b-swipe__sent {
+	display: flex;
+	align-self: center;
+	align-items: center;
+	gap: 12px;
+	max-width: 100%;
+	min-height: 46px;
+	margin-top: 4px;
+	padding: 3px 18px 3px 3px;
+	border-radius: var(--r-pill);
+	background: var(--c-violet);
+	color: var(--c-white);
+}
+
+.b-swipe__sent-icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: var(--r-pill);
+	background: var(--c-white);
+	color: var(--c-violet);
+}
+
+.b-swipe__sent-text {
+	display: flex;
+	flex-direction: column;
+	line-height: 1.3;
+}
+
+.b-swipe__sent-title {
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.b-swipe__sent-note {
+	font-size: 13px;
+	color: var(--c-on-violet);
+}
+
+.b-swipe__again {
+	align-self: center;
+	min-height: 44px;
+	padding: 0 12px;
+	border: 0;
+	background: transparent;
+	color: var(--c-violet);
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	cursor: pointer;
+}
+
+/* Без JavaScript свайп не работает — обычная кнопка отправки */
+.b-swipe .b-swipe__fallback {
+	display: none;
+}
+
+html:not(.js) .b-swipe__track {
+	display: none;
+}
+
+html:not(.js) .b-swipe .b-swipe__fallback {
+	display: flex;
+}
+
+.b-swipe .form__status {
+	margin: 0;
+	font-size: 14px;
+	text-align: center;
+}

@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/contact-swipe",
+	"title": "Кнопка связи",
+	"description": "Фиолетовый блок с формой «Обратный звонок»: имя, телефон, согласие и свайп-кнопка — заявка уходит, если потянуть кнопку вправо (или нажать Enter).",
+	"category": "trust-forms",
+	"icon": "phone",
+	"keywords": [ "обратный звонок", "форма", "заявка", "свайп", "связаться", "перезвоним" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

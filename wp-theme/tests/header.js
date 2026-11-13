@@ -87,7 +87,7 @@ const MENU = [ 'Дизайн', 'Создание сайтов', 'Поддерж�
 	check( 'После Esc фокус на пункте «О нас»', await page.evaluate( () => document.activeElement.classList.contains( 'main-nav__toggle' ) && document.activeElement.textContent.trim() === 'О нас' ) );
 
 	await page.keyboard.press( 'Enter' );
-	await page.mouse.click( 640, 600 );
+	await page.mouse.click( 5, 600 ); // Поле у края страницы: посередине главной теперь карточки статей.
 	check( 'Клик вне меню закрывает подменю', ! ( await about.locator( '.main-nav__dropdown' ).isVisible() ) );
 
 	// --- Сверка с макетом на 1280 ---

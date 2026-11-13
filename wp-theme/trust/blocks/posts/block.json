@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/posts",
+	"title": "Статьи из блога",
+	"description": "Карточки статей блога: «Наш блог» — до 5 карточек без обложек, или 3 карточки с обложками и анонсом. Статьи — последние, из рубрики, популярные или выбранные вручную; кнопка «Все статьи».",
+	"category": "trust-lists",
+	"icon": "admin-post",
+	"keywords": [ "блог", "статьи", "наш блог", "записи", "публикации" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

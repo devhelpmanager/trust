@@ -94,6 +94,61 @@ final class Blog {
 	}
 
 	/**
+	 * Скорость чтения по умолчанию, слов в минуту (ТЗ, раздел 13).
+	 */
+	public const READ_SPEED = 180;
+
+	/**
+	 * Время чтения в минутах: слова текста / скорость из «Настроек сайта → Блоки по умолчанию»,
+	 * округление вверх, минимум 1 минута (ТЗ, раздел 13).
+	 *
+	 * @param int|\WP_Post $post Статья.
+	 */
+	public static function reading_time( $post ): int {
+		$post  = get_post( $post );
+		$text  = $post ? wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) : '';
+		$words = (int) preg_match_all( '/[\p{L}\p{N}]+/u', $text );
+		$speed = (int) Settings::get( 'blog_read_speed', 0 );
+		$speed = $speed > 0 ? $speed : self::READ_SPEED;
+		return max( 1, (int) ceil( $words / $speed ) );
+	}
+
+	/**
+	 * Дата статьи по-русски: «5 ноября 2026» (не зависит от языковых файлов WordPress).
+	 *
+	 * @param int|\WP_Post $post Статья.
+	 */
+	public static function date( $post ): string {
+		$time   = get_post_timestamp( $post );
+		$months = array( 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря' );
+		return $time ? wp_date( 'j', $time ) . ' ' . $months[ (int) wp_date( 'n', $time ) - 1 ] . ' ' . wp_date( 'Y', $time ) : '';
+	}
+
+	/**
+	 * Рубрика статьи для плашки в карточке: первая рубрика (кроме «Без рубрики»).
+	 *
+	 * @param int|\WP_Post $post Статья.
+	 */
+	public static function rubric( $post ): ?\WP_Term {
+		$default = (int) get_option( 'default_category' );
+		$terms   = get_the_category( get_post( $post )->ID ?? 0 );
+		$named   = array_values( array_filter( $terms, static fn( $term ) => (int) $term->term_id !== $default ) );
+		return $named[0] ?? null;
+	}
+
+	/**
+	 * Адрес списка статей: страница записей из «Настроек → Чтение», страница /blog/ или /blog/.
+	 */
+	public static function index_url(): string {
+		$page = (int) get_option( 'page_for_posts' );
+		if ( $page ) {
+			return (string) get_permalink( $page );
+		}
+		$blog = get_page_by_path( 'blog' );
+		return $blog ? (string) get_permalink( $blog ) : home_url( '/blog/' );
+	}
+
+	/**
 	 * Главная статья блога или рубрики: самая новая из отмеченных «Главная статья»,
 	 * если отмеченных нет — самая новая статья.
 	 *

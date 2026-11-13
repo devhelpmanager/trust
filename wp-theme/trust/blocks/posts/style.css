@@ -1,0 +1,232 @@
+/*
+ * Блок «Статьи из блога»: вид «Наш блог» (seo-stranitsa/index.html) и «3 карточки с обложками»
+ * (seo-bloki/16-blog.html). Фон лавандовый, карточки белые.
+ */
+
+.b-posts {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-lavender);
+	color: var(--c-text);
+}
+
+.b-posts__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-posts--cards .b-posts__inner {
+	gap: 48px;
+}
+
+/* Заголовок слева, «Все статьи» справа внизу */
+.b-posts__top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 20px;
+}
+
+.b-posts--cards .b-posts__top {
+	gap: 24px;
+}
+
+.b-posts__head {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	max-width: var(--text-col);
+	min-width: 0;
+}
+
+/* Как в макете: рамка добавляется к высоте 48 px (51 px) */
+.b-posts__all {
+	box-sizing: content-box;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 48px;
+	padding: 0 20px;
+	border: 1.5px solid var(--c-violet);
+	border-radius: var(--r-btn);
+	background: var(--c-white);
+	color: var(--c-violet-dark);
+	font-size: 15px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: background 0.2s;
+}
+
+.b-posts__all:hover {
+	background: var(--c-lavender-2);
+	color: var(--c-violet-dark);
+}
+
+.b-posts__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+	gap: 16px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-posts--cards .b-posts__list {
+	grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+	gap: 24px;
+}
+
+.b-posts__list > li {
+	min-width: 0;
+}
+
+/* Карточка — ссылка на статью целиком */
+.b-posts__card {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	height: 100%;
+	min-height: 210px;
+	padding: 20px;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-card);
+	background: var(--c-white);
+	color: var(--c-text);
+	text-decoration: none;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.b-posts__card:hover {
+	border-color: var(--c-decor);
+	box-shadow: var(--shadow-card);
+	color: var(--c-text);
+}
+
+.b-posts__rubric {
+	align-self: flex-start;
+	padding: 5px 10px;
+	border-radius: var(--r-pill);
+	background: var(--c-lavender-3);
+	color: var(--c-violet-dark);
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.b-posts__title {
+	margin: 0;
+	font-family: inherit;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.b-posts__meta {
+	display: flex;
+	justify-content: space-between;
+	gap: 12px;
+	margin-top: auto;
+	font-size: 13px;
+	color: var(--c-muted);
+}
+
+.b-posts__read {
+	font-weight: 600;
+	color: var(--c-violet);
+}
+
+/* Вид «3 карточки с обложками» */
+.b-posts--cards .b-posts__card {
+	gap: 0;
+	min-height: 0;
+	padding: 0;
+	overflow: hidden;
+	border-radius: var(--r-card-lg);
+}
+
+.b-posts__cover {
+	display: block;
+	aspect-ratio: 16 / 9;
+	overflow: hidden;
+	background: var(--c-lavender-3);
+}
+
+.b-posts__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* Статья без обложки — фиолетовый фон с кругами, как обложки в макете */
+.b-posts__placeholder {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background:
+		radial-gradient(circle at 88% 17%, var(--c-violet-bright) 0 33%, transparent 33.2%),
+		radial-gradient(circle at 9% 94%, var(--c-violet-dark) 0 28%, transparent 28.2%),
+		var(--c-violet);
+}
+
+.b-posts__body {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	gap: 12px;
+	padding: 24px;
+}
+
+.b-posts__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.b-posts--cards .b-posts__rubric {
+	font-size: 11px;
+}
+
+.b-posts__time {
+	font-size: 13px;
+	color: var(--c-muted);
+}
+
+.b-posts--cards .b-posts__title {
+	font-size: 20px;
+	line-height: 1.3;
+	text-wrap: balance;
+}
+
+.b-posts__excerpt {
+	font-size: 15px;
+	line-height: 1.55;
+	color: var(--c-muted);
+	text-wrap: pretty;
+}
+
+.b-posts--cards .b-posts__meta {
+	align-items: center;
+	padding-top: 8px;
+}
+
+.b-posts--cards .b-posts__read {
+	font-size: 15px;
+}
+
+.b-posts__empty {
+	margin: 0;
+	color: var(--c-muted);
+}
+
+@media (max-width: 640px) {
+	.b-posts__card {
+		min-height: 0;
+	}
+}

@@ -79,7 +79,7 @@ const DOCS = [ 'Публичная оферта', 'Политика конфид
 		check( 'Соцсети появляются: значки, подписи, новая вкладка', JSON.stringify( labels ) === JSON.stringify( [ 'Telegram|_blank|noopener|currentColor', 'YouTube|_blank|noopener|currentColor' ] ), labels.join( ', ' ) );
 		const socialBox = await socials.first().boundingBox();
 		check( 'Значок соцсети 44 × 44 px', Math.round( socialBox.width ) === 44 && Math.round( socialBox.height ) === 44 );
-		await page.screenshot( { path: path.join( OUT, 'footer-socials-1280.png' ), clip: await footer.boundingBox() } );
+		await footer.screenshot( { path: path.join( OUT, 'footer-socials-1280.png' ) } );
 		setSettings( { social_links: saved.social_links || [] } );
 
 		// --- Ширины ---
