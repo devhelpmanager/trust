@@ -277,6 +277,24 @@ function stagesPhp( n, extra = '' ) {
 			check( `Этапы ${ w }px: ${ cols } кол., номер на всю ширину карточки, от текста до этапов ${ gap } px`, res.cols === cols && res.full && res.gap === gap, JSON.stringify( res ) );
 		}
 
+		// Два белых блока подряд («Этапы работы» → «Вопрос-ответ»): между ними один отступ (правка заказчика).
+		for ( const [ w, gap ] of [ [ 1280, 64 ], [ 1024, 56 ], [ 390, 48 ] ] ) {
+			await page.setViewportSize( { width: w, height: 900 } );
+			const res = await page.evaluate( () => {
+				const stages = document.querySelector( '.b-stages' );
+				const faq = document.querySelector( '.b-faq' );
+				const last = stages.querySelector( '.b-stages__item:last-child .b-stages__card' ).getBoundingClientRect().bottom;
+				return {
+					next: stages.nextElementSibling === faq,
+					faqTop: getComputedStyle( faq ).paddingTop,
+					gap: Math.round( faq.querySelector( '.eyebrow' ).getBoundingClientRect().top - last ),
+					includesTop: getComputedStyle( document.querySelector( '.b-includes' ) ).paddingTop,
+				};
+			} );
+			check( `${ w }px: между «Этапами работы» и «Вопрос-ответ» (оба белые) — ${ gap } px, у блока другого фона отступ сверху остаётся`,
+				res.next && '0px' === res.faqTop && res.gap === gap && `${ gap }px` === res.includesTop, JSON.stringify( res ) );
+		}
+
 		// Телефон (правки заказчика): картинка — узкая полоса и видна всегда.
 		await page.setViewportSize( { width: 390, height: 900 } );
 		await page.reload( { waitUntil: 'networkidle' } );

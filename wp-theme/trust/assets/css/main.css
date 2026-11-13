@@ -263,6 +263,16 @@ textarea {
 	color: var(--c-white);
 }
 
+/* Правка заказчика: два блока одного фона подряд — без двойного отступа между ними (у второго
+   нет верхнего отступа, между блоками остаётся один --section-y). Класс trust-bg-* — у корневой
+   секции каждого блока по его фону. */
+.trust-bg-white + .trust-bg-white,
+.trust-bg-lavender + .trust-bg-lavender,
+.trust-bg-violet + .trust-bg-violet,
+.trust-bg-indigo + .trust-bg-indigo {
+	padding-top: 0;
+}
+
 /* Шапка секции: надзаголовок → H2 → вводный текст */
 .section-head {
 	display: flex;

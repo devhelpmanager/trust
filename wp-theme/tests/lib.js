@@ -354,6 +354,11 @@ async function isolate( page, selector ) {
 	await approveMockup( page );
 	await page.evaluate( ( sel ) => {
 		let el = document.querySelector( sel );
+		// Блок — первым среди соседей: снимок блока сам по себе, без правила «два блока одного
+		// фона подряд — у второго нет верхнего отступа» (оно проверяется отдельно).
+		if ( el && el.previousElementSibling ) {
+			el.parentElement.prepend( el );
+		}
 		while ( el && el !== document.body ) {
 			let prev = el.previousElementSibling;
 			while ( prev ) {

@@ -22,7 +22,7 @@ $trust_lead     = trim( (string) get_field( 'lead' ) );
 $trust_buttons  = Blocks::buttons( get_field( 'buttons' ), array( 'btn', 'btn btn--outline' ) );
 $trust_title_id = Blocks::uid( $block, 'title' );
 ?>
-<section class="b-hero-service" aria-labelledby="<?php echo esc_attr( $trust_title_id ); ?>">
+<section class="b-hero-service trust-bg-white" aria-labelledby="<?php echo esc_attr( $trust_title_id ); ?>">
 	<div class="b-hero-service__inner">
 		<?php
 		if ( $is_preview ) {

@@ -58,7 +58,7 @@ $trust_picture = static function ( array $row ): string {
 	return is_readable( $file ) ? (string) file_get_contents( $file ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- файл темы.
 };
 ?>
-<section class="b-stages"<?php echo $trust_anchor ? ' id="' . esc_attr( $trust_anchor ) . '"' : ''; ?><?php echo $trust_title ? ' aria-labelledby="' . esc_attr( $trust_title_id ) . '"' : ''; ?>>
+<section class="b-stages trust-bg-white"<?php echo $trust_anchor ? ' id="' . esc_attr( $trust_anchor ) . '"' : ''; ?><?php echo $trust_title ? ' aria-labelledby="' . esc_attr( $trust_title_id ) . '"' : ''; ?>>
 	<div class="b-stages__inner">
 		<?php if ( $trust_eyebrow || $trust_title || $trust_lead ) : ?>
 			<div class="b-stages__head">

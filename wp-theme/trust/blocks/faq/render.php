@@ -30,7 +30,7 @@ $trust_anchor    = Blocks::anchor( get_field( 'anchor' ) );
 $trust_title_id  = Blocks::uid( $block, 'title' );
 $trust_open      = ! empty( $is_preview );
 ?>
-<section class="b-faq"<?php echo $trust_anchor ? ' id="' . esc_attr( $trust_anchor ) . '"' : ''; ?><?php echo $trust_title ? ' aria-labelledby="' . esc_attr( $trust_title_id ) . '"' : ''; ?>>
+<section class="b-faq trust-bg-white"<?php echo $trust_anchor ? ' id="' . esc_attr( $trust_anchor ) . '"' : ''; ?><?php echo $trust_title ? ' aria-labelledby="' . esc_attr( $trust_title_id ) . '"' : ''; ?>>
 	<div class="b-faq__inner">
 		<div class="b-faq__head">
 			<?php if ( $trust_eyebrow ) : ?>

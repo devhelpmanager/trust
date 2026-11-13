@@ -813,7 +813,8 @@ node wp-theme/tests/run-all.js smoke header faq
 картинка»), вывод `Trust\Blocks::image()` (alt из блока, иначе из медиатеки, у декоративной пустой;
 `srcset`), предупреждение в редакторе — `Blocks::image_alt_missing()` и `Blocks::editor_warning()`.
 Отступы секций — `--section-y` в `main.css`: 64 px, на планшете 56, на телефоне 48 (правка заказчика,
-в макетах 96).
+в макетах 96). Корневая секция блока получает класс фона `trust-bg-white|lavender|violet|indigo`:
+у второго из двух блоков одного фона подряд нет верхнего отступа (между ними один отступ, а не два).
 
 Кнопки блоков — поле «Ссылка» WordPress (`Trust\Blocks::buttons_field()` / `buttons()`): адрес —
 страница, якорь раздела (`#vacancies`) или `#callback-modal` — такая ссылка в любом блоке или меню
