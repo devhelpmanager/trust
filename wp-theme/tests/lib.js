@@ -231,14 +231,14 @@ const SECTION_SPACING_CSS = `
 	@media (max-width: 760px) {
 		[style*="padding: 96px clamp(20px, 4vw, 48px)"], [style*="padding: 88px clamp(20px, 4vw, 48px)"] { padding-top: 48px !important; padding-bottom: 48px !important; }
 	}
-	/* «Почему мы открыто пишем»: 112 px → 1,25 отступа секции (80 / 70 / 60); «Картинка»: 64 px → отступ секции */
-	[style*="padding: 112px clamp(20px, 4vw, 48px)"] { padding-top: 80px !important; padding-bottom: 80px !important; }
+	/* «Почему мы открыто пишем» (112 px) и «Картинка» (64 px) — отступ секции, как у всех блоков */
+	[style*="padding: 112px clamp(20px, 4vw, 48px)"] { padding-top: 64px !important; padding-bottom: 64px !important; }
 	@media (max-width: 1100px) {
-		[style*="padding: 112px clamp(20px, 4vw, 48px)"] { padding-top: 70px !important; padding-bottom: 70px !important; }
+		[style*="padding: 112px clamp(20px, 4vw, 48px)"] { padding-top: 56px !important; padding-bottom: 56px !important; }
 		[style*="padding: 64px clamp(20px, 4vw, 48px)"] { padding-top: 56px !important; padding-bottom: 56px !important; }
 	}
 	@media (max-width: 760px) {
-		[style*="padding: 112px clamp(20px, 4vw, 48px)"] { padding-top: 60px !important; padding-bottom: 60px !important; }
+		[style*="padding: 112px clamp(20px, 4vw, 48px)"] { padding-top: 48px !important; padding-bottom: 48px !important; }
 		[style*="padding: 64px clamp(20px, 4vw, 48px)"] { padding-top: 48px !important; padding-bottom: 48px !important; }
 	}
 	/* Подвал: сверху 40 px, на телефоне 32 (в макетах 72) */

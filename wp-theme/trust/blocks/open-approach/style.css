@@ -1,10 +1,10 @@
 /*
  * Блок «Почему мы открыто пишем про всё» (holst-blokov/OpenApproach, seo-bloki/05-otkryto-pishem.html).
- * Фиолетовый фон с точками; отступы больше обычных (в макете 112 px при 96 у остальных блоков).
+ * Фиолетовый фон с точками; отступы — как у всех блоков (правка заказчика, в макете 112 px).
  */
 
 .b-open {
-	padding: calc(var(--section-y) * 1.25) var(--gutter);
+	padding: var(--section-y) var(--gutter);
 	background-color: var(--c-violet-dark);
 	background-image: radial-gradient(#6E38C9 1px, transparent 1px);
 	background-size: 24px 24px;

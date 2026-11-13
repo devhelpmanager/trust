@@ -311,8 +311,8 @@ async function compare( page, o ) {
 			dots: getComputedStyle( el ).backgroundImage.startsWith( 'radial-gradient' ),
 			pad: getComputedStyle( el ).paddingTop,
 		} ) );
-		check( 'Открыто пишем: H2, надзаголовок «Открытость», фиолетовый фон с точками, отступ 80 px',
-			'Почему мы открыто пишем про всё' === open.h2 && open.label && 'Открытость' === open.eyebrow && 'rgb(91, 33, 182)' === open.bg && open.dots && '80px' === open.pad, JSON.stringify( open ) );
+		check( 'Открыто пишем: H2, надзаголовок «Открытость», фиолетовый фон с точками, отступ 64 px — как у всех',
+			'Почему мы открыто пишем про всё' === open.h2 && open.label && 'Открытость' === open.eyebrow && 'rgb(91, 33, 182)' === open.bg && open.dots && '64px' === open.pad, JSON.stringify( open ) );
 		check( 'Открыто пишем: цитата — крупная фраза и продолжение', 2 === open.quote.length && open.quote[ 0 ].startsWith( 'Мы открыто пишем' ) && open.quote[ 1 ].startsWith( 'Прочитать «проверка' ), open.quote.join( ' | ' ) );
 		check( 'Открыто пишем: автор из «Команды», должность из поля блока', '[Имя Фамилия] руководитель агентства' === open.author, open.author );
 		const authors = createPage( 'авторы', blocks(
@@ -325,6 +325,27 @@ async function compare( page, o ) {
 		const signs = await page.locator( '.b-open' ).evaluateAll( ( all ) => all.map( ( el ) => ( el.querySelector( 'figcaption' ) ? el.querySelector( 'figcaption' ).innerText.replace( /\s+/g, ' ' ).trim() : '' ) ) );
 		check( 'Открыто пишем: без своей должности — из карточки сотрудника; вручную — имя и должность; «Без автора» — без подписи',
 			JSON.stringify( signs ) === JSON.stringify( [ '[Имя Фамилия] Основатель и генеральный директор', 'Иван Петров SEO-специалист', '' ] ), JSON.stringify( signs ) );
+
+		// ===== Отступы: у всех блоков одинаковые (правка заказчика) =====
+		for ( const w of [ 1280, 768, 390 ] ) {
+			const expected = { 1280: 64, 768: 56, 390: 48 }[ w ];
+			await page.setViewportSize( { width: w, height: 900 } );
+			const wrong = [];
+			for ( const url of [ PAGE, `${ URL }/seo/audit/` ] ) {
+				await page.goto( url, { waitUntil: 'networkidle' } );
+				wrong.push( ...await page.evaluate( ( y ) => {
+					const list = [ ...document.querySelectorAll( '.page-entry__content > section' ) ].filter( ( s ) => ! /^b-hero-/.test( s.className ) );
+					const bg = ( s ) => ( s.className.match( /trust-bg-\w+/ ) || [ '' ] )[ 0 ];
+					return list.filter( ( s ) => {
+						const cs = getComputedStyle( s );
+						const prev = s.previousElementSibling;
+						const top = prev && bg( prev ) && bg( prev ) === bg( s ) ? 0 : y; // два блока одного фона подряд — один отступ
+						return parseFloat( cs.paddingTop ) !== top || parseFloat( cs.paddingBottom ) !== y;
+					} ).map( ( s ) => `${ location.pathname } ${ s.className.split( ' ' )[ 0 ] } ${ getComputedStyle( s ).paddingTop }/${ getComputedStyle( s ).paddingBottom }` );
+				}, expected ) );
+			}
+			check( `Отступы ${ w }px: у всех блоков /seo/ и /seo/audit/ — ${ expected } px сверху и снизу (одного фона подряд — один)`, 0 === wrong.length, wrong.join( ' | ' ) );
+		}
 
 		// ===== Совпадение с макетами =====
 		for ( const width of [ 1280, 768, 390 ] ) {
