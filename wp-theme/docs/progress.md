@@ -46,7 +46,7 @@
 
 Тесты (`wp-theme/tests/`, все сразу — `npm test`): smoke, settings, header, header-mobile, footer,
 callback, faq, content-types, blog-fields, cases-reviews, team-questions, page-types, seo,
-breadcrumbs, sitemap, schema, leads, notifications, cookie, heroes, heroes-pages, service-blocks, service-page, content-blocks, visual — 980 проверок, все проходят. Часть тестов: `node run-all.js smoke header faq`.
+breadcrumbs, sitemap, schema, leads, notifications, cookie, heroes, heroes-pages, service-blocks, service-page, content-blocks, visual — 986 проверок, все проходят. Часть тестов: `node run-all.js smoke header faq`.
 Тесты, кроме cookie, запускают браузер с уже сделанным выбором cookie (`launch()` в `lib.js`). Тесты в начале убирают остатки
 прерванного прогона; `fetch` в тестах всегда дочитывает ответ (иначе Node 22 иногда падает).
 
@@ -92,6 +92,7 @@ breadcrumbs, sitemap, schema, leads, notifications, cookie, heroes, heroes-pages
 | «Этапы работы» | На компьютере — при наведении мыши; на телефоне — компактно; у раскрытого этапа другой фон; номер — внутри карточки сверху, подчёркнут линией, без стрелок; от вводного текста до этапов меньше (п. 78–79, 81–82) |
 | Блок «Вопрос-ответ» после проверки | Размер шрифта и работа устраивают |
 | Рисунки справа от шапок блоков | «Состав услуги», «Этапы работы», «Вопрос-ответ» — рисунок по теме справа от текста; на телефоне и планшете скрыт (п. 84) |
+| Наведение на тариф | Вариант D «Активный тариф» из пяти: подъём, тень, фиолетовая рамка, кнопка фиолетовая; то же по Tab; на сенсорных экранах нет (п. 95) |
 | Дополнения к ТЗ по макетам (инвентарь, раздел 12, п. 6–14) | Показаны заказчику, возражений не было |
 
 ## Открытые вопросы

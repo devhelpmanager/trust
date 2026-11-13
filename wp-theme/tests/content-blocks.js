@@ -6,6 +6,7 @@
  *
  * «Выбор тарифа»: H2, три тарифа H3, «Рекомендуем» — тёмная карточка, состав (входит / не входит
  * с подписями для скринридеров), старая цена, скидка, цена и период, кнопка открывает окно звонка;
+ * активный тариф — наведение мышью и Tab (на сенсорном экране нет, без подъёма при «Уменьшить движение»);
  * микроразметка — цены только из поля «Цена числом»: один тариф — Offer, несколько — AggregateOffer.
  * «Блок с текстом»: H2/H3, списки, цитата «С автором», «Важно» — <aside>, ссылки; колонка 760 px;
  * в редакторе внутри только текстовые блоки, заголовки H2–H4.
@@ -64,6 +65,7 @@ async function compare( page, o ) {
 	await page.goto( o.url || PAGE, { waitUntil: 'networkidle' } );
 	await settle( page );
 	const arg = o.before ? await page.evaluate( o.before ) : null;
+	await page.mouse.move( 0, 0 ); // без наведения на карточки
 	await isolate( page, o.theme );
 	await page.locator( o.theme ).screenshot( { path: path.join( OUT, `${ name }-theme.png` ) } );
 
@@ -126,6 +128,63 @@ async function compare( page, o ) {
 		await page.waitForTimeout( 400 );
 		check( 'Тарифы: по кнопке открывается окно «Заказать обратный звонок»', await page.locator( '#callback-modal' ).isVisible() );
 		await page.keyboard.press( 'Escape' );
+
+		// Активный тариф (правка заказчика, вариант D): наведение мышью и Tab.
+		const cardState = ( i ) => tar.locator( '.b-tariffs__card' ).nth( i ).evaluate( ( c ) => ( {
+			lift: new DOMMatrixReadOnly( getComputedStyle( c ).transform ).m42,
+			border: getComputedStyle( c ).borderTopColor,
+			shadow: 'none' !== getComputedStyle( c ).boxShadow,
+			btn: getComputedStyle( c.querySelector( '.b-tariffs__btn' ) ).backgroundColor,
+		} ) );
+		const hoverCard = async ( i ) => {
+			const box = await tar.locator( '.b-tariffs__card' ).nth( i ).boundingBox();
+			await page.mouse.move( box.x + box.width / 2, box.y + 150 );
+			await page.waitForTimeout( 400 );
+		};
+		await page.mouse.move( 0, 0 );
+		await tar.locator( '.b-tariffs__card' ).first().scrollIntoViewIfNeeded();
+		await page.waitForTimeout( 400 );
+		const idle = await cardState( 0 );
+		await hoverCard( 0 );
+		const start = [ await cardState( 0 ), await cardState( 2 ) ];
+		check( 'Тарифы: без наведения карточка на месте, без тени, кнопка контурная', 0 === idle.lift && ! idle.shadow && 'rgba(0, 0, 0, 0)' === idle.btn, JSON.stringify( idle ) );
+		check( 'Тарифы: наведение на «Старт» — подъём на 8 px, тень, фиолетовая рамка, кнопка фиолетовая; другие без изменений',
+			-8 === start[ 0 ].lift && start[ 0 ].shadow && 'rgb(109, 40, 217)' === start[ 0 ].border && 'rgb(109, 40, 217)' === start[ 0 ].btn && 0 === start[ 1 ].lift && ! start[ 1 ].shadow, JSON.stringify( start ) );
+		await hoverCard( 1 );
+		const rec = await cardState( 1 );
+		check( 'Тарифы: наведение на «Бизнес» — подъём, фиолетовая тень и рамка', -8 === rec.lift && rec.shadow && 'rgb(124, 58, 237)' === rec.border && 'rgb(124, 58, 237)' === rec.btn, JSON.stringify( rec ) );
+		await page.mouse.move( 0, 0 );
+		await page.waitForTimeout( 400 );
+		await tar.locator( '.b-tariffs__btn' ).nth( 2 ).focus();
+		await page.keyboard.press( 'Shift+Tab' );
+		await page.keyboard.press( 'Tab' );
+		await page.waitForTimeout( 400 );
+		const kb = await cardState( 2 );
+		check( 'Тарифы: Tab до кнопки — карточка тоже становится активной', -8 === kb.lift && kb.shadow && 'rgb(109, 40, 217)' === kb.btn, JSON.stringify( kb ) );
+		await page.evaluate( () => document.activeElement.blur() );
+		await page.emulateMedia( { reducedMotion: 'reduce' } );
+		await hoverCard( 0 );
+		const calm = await cardState( 0 );
+		check( 'Тарифы: «Уменьшить движение» — карточка не поднимается, рамка и кнопка выделяются', 0 === calm.lift && 'rgb(109, 40, 217)' === calm.border && 'rgb(109, 40, 217)' === calm.btn, JSON.stringify( calm ) );
+		await page.emulateMedia( { reducedMotion: 'no-preference' } );
+		// Планшет с сенсорным экраном: наведения нет (hover: none), карточка как в макете.
+		const tablet = await browser.newContext( { viewport: { width: 1024, height: 900 }, isMobile: true, hasTouch: true } );
+		const tp = await tablet.newPage();
+		await tp.goto( PAGE, { waitUntil: 'networkidle' } );
+		const tCard = tp.locator( '.b-tariffs__card' ).first();
+		await tCard.scrollIntoViewIfNeeded();
+		const tBox = await tCard.boundingBox();
+		await tp.mouse.move( tBox.x + tBox.width / 2, tBox.y + 150 );
+		await tp.waitForTimeout( 400 );
+		const touch = await tCard.evaluate( ( c ) => ( {
+			hover: matchMedia( '(hover: hover)' ).matches,
+			lift: new DOMMatrixReadOnly( getComputedStyle( c ).transform ).m42,
+			shadow: 'none' !== getComputedStyle( c ).boxShadow,
+			btn: getComputedStyle( c.querySelector( '.b-tariffs__btn' ) ).backgroundColor,
+		} ) );
+		await tablet.close();
+		check( 'Тарифы: на сенсорном экране наведения нет — карточка как в макете', ! touch.hover && 0 === touch.lift && ! touch.shadow && 'rgba(0, 0, 0, 0)' === touch.btn, JSON.stringify( touch ) );
+		await page.mouse.move( 0, 0 );
 
 		let graph = await graphOf( page, PAGE );
 		let service = graph.find( ( n ) => 'Service' === n[ '@type' ] );

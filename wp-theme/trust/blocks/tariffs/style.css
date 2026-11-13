@@ -251,6 +251,81 @@
 	background: var(--c-violet);
 }
 
+/*
+ * Активный тариф (правка заказчика, вариант D): под мышью карточка приподнимается, появляются
+ * тень и фиолетовая рамка, кнопка заливается фиолетовым. То же — при переходе по кнопкам клавишей
+ * Tab. На телефонах и планшетах наведения нет — карточки как в макете; при «Уменьшить движение»
+ * карточка не поднимается (остаются рамка, тень и кнопка).
+ */
+.b-tariffs__card {
+	transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.b-tariffs__card:hover {
+		border-color: var(--c-violet);
+		box-shadow: 0 22px 48px rgba(46, 16, 101, 0.18);
+		transform: translateY(-8px);
+	}
+
+	.b-tariffs__card:hover .b-tariffs__btn {
+		border-color: var(--c-violet);
+		background: var(--c-violet);
+		color: var(--c-white);
+	}
+
+	.b-tariffs__card:hover .b-tariffs__btn:hover {
+		border-color: var(--c-violet-dark);
+		background: var(--c-violet-dark);
+	}
+
+	.b-tariffs__card--rec:hover {
+		border-color: var(--c-violet-bright);
+		box-shadow: 0 22px 48px rgba(91, 33, 182, 0.45);
+	}
+
+	.b-tariffs__card--rec:hover .b-tariffs__btn {
+		border-color: var(--c-violet-bright);
+		background: var(--c-violet-bright);
+	}
+
+	.b-tariffs__card--rec:hover .b-tariffs__btn:hover {
+		border-color: var(--c-violet);
+		background: var(--c-violet);
+	}
+}
+
+.b-tariffs__card:has(.b-tariffs__btn:focus-visible) {
+	border-color: var(--c-violet);
+	box-shadow: 0 22px 48px rgba(46, 16, 101, 0.18);
+	transform: translateY(-8px);
+}
+
+.b-tariffs__card:has(.b-tariffs__btn:focus-visible) .b-tariffs__btn {
+	border-color: var(--c-violet);
+	background: var(--c-violet);
+	color: var(--c-white);
+}
+
+.b-tariffs__card--rec:has(.b-tariffs__btn:focus-visible) {
+	border-color: var(--c-violet-bright);
+	box-shadow: 0 22px 48px rgba(91, 33, 182, 0.45);
+}
+
+.b-tariffs__card--rec:has(.b-tariffs__btn:focus-visible) .b-tariffs__btn {
+	border-color: var(--c-violet-bright);
+	background: var(--c-violet-bright);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.b-tariffs__card,
+	.b-tariffs__card:hover,
+	.b-tariffs__card:has(.b-tariffs__btn:focus-visible) {
+		transform: none;
+		transition: none;
+	}
+}
+
 .b-tariffs__empty {
 	margin: 0;
 	color: var(--c-muted);
