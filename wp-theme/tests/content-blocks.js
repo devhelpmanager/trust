@@ -1,6 +1,6 @@
 /**
- * Тест блоков шага 4.5: «Выбор тарифа», «Блок с текстом», «Картинка», «Почему мы открыто пишем
- * про всё» на локальном стенде с демо-контентом (страница /seo/).
+ * Тест блоков шага 4.5: «Выбор тарифа», «Блок с текстом», «Картинка», «Главная мысль» (в макете —
+ * «Почему мы открыто пишем про всё») на локальном стенде с демо-контентом (страница /seo/).
  *
  * Запуск: node wp-theme/tests/content-blocks.js
  *
@@ -13,7 +13,7 @@
  * «Картинка»: alt, srcset, картинка для телефона (<picture>, до 600 px), «Рис. N» по порядку
  * (0 — без подписи, свой номер, одинаковые блоки), ширина по тексту, декоративная, без картинки —
  * блока нет; в редакторе — предупреждение без alt.
- * «Почему мы открыто пишем»: цитата, автор из «Команды» (должность — своя или из карточки),
+ * «Главная мысль»: цитата, автор из «Команды» (должность — своя или из карточки),
  * вручную, без автора.
  * Общее: совпадение с макетами seo-bloki/01, 03, 05, 08 на 1280, 768 и 390 px (≤ 2 %); ширины
  * 1440–280 px; зоны нажатия; axe-core; консоль и журнал ошибок; редактор — категории и превью.
@@ -94,8 +94,8 @@ async function compare( page, o ) {
 		// ===== Страница целиком =====
 		await page.goto( PAGE, { waitUntil: 'networkidle' } );
 		const order = await page.evaluate( () => [ ...document.querySelectorAll( '.page-entry__content > section' ) ].map( ( s ) => s.className.split( ' ' )[ 0 ] ) );
-		check( 'Страница /seo/: первый экран, тарифы, текст, картинка, «Открыто пишем»',
-			JSON.stringify( order ) === JSON.stringify( [ 'b-hero-service', 'b-tariffs', 'b-text', 'b-image', 'b-open' ] ), order.join( ', ' ) );
+		check( 'Страница /seo/: первый экран, тарифы, текст, картинка, «Главная мысль»',
+			JSON.stringify( order ) === JSON.stringify( [ 'b-hero-service', 'b-tariffs', 'b-text', 'b-image', 'b-idea' ] ), order.join( ', ' ) );
 
 		// ===== «Выбор тарифа» =====
 		const tar = page.locator( '.b-tariffs' );
@@ -235,6 +235,19 @@ async function compare( page, o ) {
 		check( 'Текст: цитата «С автором» — имя и должность', '[Имя Фамилия] SEO-специалист' === text.author, text.author );
 		check( 'Текст: «Важно» — боковая плашка <aside> с подписью, не цитата', text.important.startsWith( 'Важно Одна строка в robots.txt' ) && 1 === text.quotes, text.important );
 		check( 'Текст: ссылки ведут на разделы страницы аудита', text.links.join() === [ '#faq', '#includes', '#includes', '#includes' ].map( ( h ) => `${ URL }/seo/audit/${ h }` ).join(), text.links.join( ' ' ) );
+		// Заголовок на телефоне — строки заполняют колонку (правка заказчика; было «узко» из-за balance).
+		await page.setViewportSize( { width: 390, height: 844 } );
+		await page.goto( PAGE, { waitUntil: 'networkidle' } );
+		const h2 = await page.locator( '.b-text h2' ).evaluate( ( h ) => {
+			const range = document.createRange();
+			range.selectNodeContents( h );
+			const left = h.getBoundingClientRect().left;
+			const widest = Math.max( ...[ ...range.getClientRects() ].map( ( r ) => r.right - left ) );
+			return { wrap: getComputedStyle( h ).textWrap, share: Math.round( widest / h.getBoundingClientRect().width * 100 ) };
+		} );
+		check( 'Текст: на телефоне строки заголовка заполняют ширину колонки (≥ 85 %)', 'wrap' === h2.wrap && h2.share >= 85, JSON.stringify( h2 ) );
+		await page.setViewportSize( { width: 1280, height: 900 } );
+		await page.goto( PAGE, { waitUntil: 'networkidle' } );
 
 		// ===== «Картинка» =====
 		const img = await page.locator( '.b-image' ).evaluate( ( el ) => {
@@ -299,9 +312,77 @@ async function compare( page, o ) {
 		check( 'Картинка: «По ширине текста» — 960 px, как «Блок с текстом»; без картинки для телефона — без <source>', 960 === list[ 2 ].width && 1184 === list[ 0 ].width && ! list[ 0 ].picture, JSON.stringify( list.map( ( f ) => f.width ) ) );
 		check( 'Картинка: на сайте предупреждения об alt нет', ( await page.locator( '.trust-block-warning' ).count() ) === 0 );
 
-		// ===== «Почему мы открыто пишем про всё» =====
+		// ===== Картинки на весь экран (правка заказчика) =====
+		const lbState = () => page.evaluate( () => {
+			const d = document.querySelector( '.lightbox' );
+			const i = d && d.querySelector( 'img' );
+			return d ? {
+				open: d.open,
+				src: i.getAttribute( 'src' ) ? i.getAttribute( 'src' ).split( '/' ).pop() : '',
+				alt: i.alt,
+				caption: d.querySelector( 'figcaption' ).hidden ? '' : d.querySelector( 'figcaption' ).textContent.replace( /\s+/g, ' ' ).trim(),
+				focus: document.activeElement.className,
+				lock: document.documentElement.classList.contains( 'lightbox-open' ),
+				fits: i.getBoundingClientRect().width <= innerWidth && i.getBoundingClientRect().height <= innerHeight,
+			} : { open: false };
+		} );
 		await page.goto( PAGE, { waitUntil: 'networkidle' } );
-		const open = await page.locator( '.b-open' ).evaluate( ( el ) => ( {
+		const zoom = page.locator( '.b-image__open' );
+		const zoomAttr = await zoom.evaluate( ( a ) => [ a.getAttribute( 'href' ).split( '/' ).pop(), ( a.dataset.fullMobile || '' ).split( '/' ).pop(), a.getAttribute( 'aria-label' ) ] );
+		check( 'На весь экран: картинка — ссылка на оригинал (без JavaScript откроется файл), у ссылки подпись для скринридеров',
+			'image-audit-report.jpg' === zoomAttr[ 0 ] && 'image-audit-report-mobile.jpg' === zoomAttr[ 1 ] && zoomAttr[ 2 ].startsWith( 'Открыть на весь экран: Фрагмент отчёта' ), JSON.stringify( zoomAttr ) );
+		await zoom.scrollIntoViewIfNeeded();
+		await zoom.click();
+		await page.waitForTimeout( 500 );
+		let lb = await lbState();
+		check( 'На весь экран: по клику — окно с оригиналом, «Рис. 1» и описанием, помещается в экран, фокус на «Закрыть», страница не прокручивается',
+			lb.open && 'image-audit-report.jpg' === lb.src && lb.caption.startsWith( 'Рис. 1 Фрагмент отчёта' ) && lb.fits && 'lightbox__close' === lb.focus && lb.lock && lb.alt.startsWith( 'Фрагмент отчёта' ), JSON.stringify( lb ) );
+		await page.keyboard.press( 'Escape' );
+		await page.waitForTimeout( 300 );
+		lb = await lbState();
+		check( 'На весь экран: Esc закрывает, фокус возвращается на картинку', ! lb.open && 'b-image__open' === lb.focus && ! lb.lock, JSON.stringify( lb ) );
+		await zoom.click();
+		await page.waitForTimeout( 400 );
+		await page.mouse.click( 20, 880 );
+		await page.waitForTimeout( 300 );
+		const byBackdrop = ! ( await lbState() ).open;
+		await zoom.click();
+		await page.waitForTimeout( 400 );
+		await page.locator( '.lightbox__close' ).click();
+		await page.waitForTimeout( 300 );
+		check( 'На весь экран: закрывается нажатием мимо картинки и кнопкой «Закрыть»', byBackdrop && ! ( await lbState() ).open );
+		const phone = await browser.newContext( { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true } );
+		const pp = await phone.newPage();
+		await pp.goto( PAGE, { waitUntil: 'networkidle' } );
+		await pp.locator( '.b-image__open' ).scrollIntoViewIfNeeded();
+		const hint = await pp.locator( '.b-image__zoom' ).evaluate( ( el ) => getComputedStyle( el ).opacity );
+		await pp.locator( '.b-image__open' ).tap();
+		await pp.waitForTimeout( 600 );
+		const ph = await pp.evaluate( () => {
+			const i = document.querySelector( '.lightbox img' );
+			const r = i.getBoundingClientRect();
+			return { open: document.querySelector( '.lightbox' ).open, src: i.getAttribute( 'src' ).split( '/' ).pop(), w: Math.round( r.width ), h: Math.round( r.height ), vw: innerWidth, vh: innerHeight };
+		} );
+		await phone.close();
+		check( 'На весь экран на телефоне: значок «развернуть» виден, по нажатию — картинка для телефона во всю ширину экрана',
+			'1' === hint && ph.open && 'image-audit-report-mobile.jpg' === ph.src && ph.w >= ph.vw - 24 && ph.h <= ph.vh, JSON.stringify( { hint, ...ph } ) );
+		const prosePage = createPage( 'картинка в тексте', `Trust\\Blocks::serialize( 'text', array(), '<!-- wp:paragraph --><p>Текст.</p><!-- /wp:paragraph --><!-- wp:image {"id":${ media[ 0 ] },"sizeSlug":"medium"} --><figure class="wp-block-image size-medium"><img src="' . wp_get_attachment_image_url( ${ media[ 0 ] }, 'medium' ) . '" alt="Схема в тексте" class="wp-image-${ media[ 0 ] }"/><figcaption class="wp-element-caption">Подпись в тексте</figcaption></figure><!-- /wp:image -->' )` );
+		created.push( prosePage );
+		await page.goto( `${ URL }/?page_id=${ prosePage }`, { waitUntil: 'networkidle' } );
+		const proseImg = page.locator( '.b-text .wp-block-image img' );
+		const pa = await proseImg.evaluate( ( i ) => [ i.getAttribute( 'role' ), i.tabIndex, i.getAttribute( 'aria-label' ), getComputedStyle( i ).cursor ] );
+		await proseImg.focus();
+		await page.keyboard.press( 'Enter' );
+		await page.waitForTimeout( 500 );
+		lb = await lbState();
+		check( 'На весь экран: картинка в «Блоке с текстом» — с клавиатуры (Enter) открывается самый большой вариант с подписью',
+			'button' === pa[ 0 ] && 0 === pa[ 1 ] && 'Открыть на весь экран: Схема в тексте' === pa[ 2 ] && 'zoom-in' === pa[ 3 ] && lb.open && ! /-\d+x\d+\./.test( lb.src ) && 'Подпись в тексте' === lb.caption, JSON.stringify( { pa, lb } ) );
+		await page.keyboard.press( 'Escape' );
+		await page.waitForTimeout( 300 );
+
+		// ===== «Главная мысль» (в макете — «Почему мы открыто пишем про всё») =====
+		await page.goto( PAGE, { waitUntil: 'networkidle' } );
+		const open = await page.locator( '.b-idea' ).evaluate( ( el ) => ( {
 			h2: el.querySelector( 'h2' ).textContent.trim(),
 			label: el.getAttribute( 'aria-labelledby' ) === el.querySelector( 'h2' ).id,
 			eyebrow: el.querySelector( '.eyebrow' ).textContent.trim(),
@@ -311,20 +392,29 @@ async function compare( page, o ) {
 			dots: getComputedStyle( el ).backgroundImage.startsWith( 'radial-gradient' ),
 			pad: getComputedStyle( el ).paddingTop,
 		} ) );
-		check( 'Открыто пишем: H2, надзаголовок «Открытость», фиолетовый фон с точками, отступ 64 px — как у всех',
-			'Почему мы открыто пишем про всё' === open.h2 && open.label && 'Открытость' === open.eyebrow && 'rgb(91, 33, 182)' === open.bg && open.dots && '64px' === open.pad, JSON.stringify( open ) );
-		check( 'Открыто пишем: цитата — крупная фраза и продолжение', 2 === open.quote.length && open.quote[ 0 ].startsWith( 'Мы открыто пишем' ) && open.quote[ 1 ].startsWith( 'Прочитать «проверка' ), open.quote.join( ' | ' ) );
-		check( 'Открыто пишем: автор из «Команды», должность из поля блока', '[Имя Фамилия] руководитель агентства' === open.author, open.author );
+		check( 'Главная мысль: H2, надзаголовок «Главная мысль», фиолетовый фон с точками, отступ 64 px — как у всех',
+			'Почему мы открыто пишем про всё' === open.h2 && open.label && 'Главная мысль' === open.eyebrow && 'rgb(91, 33, 182)' === open.bg && open.dots && '64px' === open.pad, JSON.stringify( open ) );
+		check( 'Главная мысль: цитата — крупная фраза и продолжение', 2 === open.quote.length && open.quote[ 0 ].startsWith( 'Мы открыто пишем' ) && open.quote[ 1 ].startsWith( 'Прочитать «проверка' ), open.quote.join( ' | ' ) );
+		check( 'Главная мысль: автор из «Команды», должность из поля блока', '[Имя Фамилия] руководитель агентства' === open.author, open.author );
 		const authors = createPage( 'авторы', blocks(
-			block( 'open-approach', "array( 'title' => 'А', 'quote' => 'Цитата', 'author_source' => 'team', 'author' => (int) get_page_by_path( 'ceo', OBJECT, 'team' )->ID )" ),
-			block( 'open-approach', "array( 'title' => 'Б', 'quote' => 'Цитата', 'author_source' => 'manual', 'author_name' => 'Иван Петров', 'author_role' => 'SEO-специалист' )" ),
-			block( 'open-approach', "array( 'title' => 'В', 'quote' => 'Цитата', 'author_source' => 'none', 'author_role' => 'Не выводится' )" ),
+			block( 'key-idea', "array( 'title' => 'А', 'quote' => 'Цитата', 'author_source' => 'team', 'author' => (int) get_page_by_path( 'ceo', OBJECT, 'team' )->ID )" ),
+			block( 'key-idea', "array( 'title' => 'Б', 'quote' => 'Цитата', 'author_source' => 'manual', 'author_name' => 'Иван Петров', 'author_role' => 'SEO-специалист' )" ),
+			block( 'key-idea', "array( 'title' => 'В', 'quote' => 'Цитата', 'author_source' => 'none', 'author_role' => 'Не выводится' )" ),
 		) );
 		created.push( authors );
 		await page.goto( `${ URL }/?page_id=${ authors }`, { waitUntil: 'networkidle' } );
-		const signs = await page.locator( '.b-open' ).evaluateAll( ( all ) => all.map( ( el ) => ( el.querySelector( 'figcaption' ) ? el.querySelector( 'figcaption' ).innerText.replace( /\s+/g, ' ' ).trim() : '' ) ) );
-		check( 'Открыто пишем: без своей должности — из карточки сотрудника; вручную — имя и должность; «Без автора» — без подписи',
+		const signs = await page.locator( '.b-idea' ).evaluateAll( ( all ) => all.map( ( el ) => ( el.querySelector( 'figcaption' ) ? el.querySelector( 'figcaption' ).innerText.replace( /\s+/g, ' ' ).trim() : '' ) ) );
+		check( 'Главная мысль: без своей должности — из карточки сотрудника; вручную — имя и должность; «Без автора» — без подписи',
 			JSON.stringify( signs ) === JSON.stringify( [ '[Имя Фамилия] Основатель и генеральный директор', 'Иван Петров SEO-специалист', '' ] ), JSON.stringify( signs ) );
+
+		// ===== Вводный текст первого экрана — до 1000 символов (правка заказчика) =====
+		const leadMax = wp( 'eval', "foreach ( Trust\\Blocks::fields( 'hero-service' ) as $f ) { if ( 'lead' === $f['name'] ) { echo $f['maxlength']; } }" );
+		const longLead = 'Вводный текст. '.repeat( 67 ).slice( 0, 999 ) + '.';
+		const heroPage = createPage( 'длинный вводный текст', `Trust\\Blocks::serialize( 'hero-service', array( 'lead' => '${ longLead }' ) )` );
+		created.push( heroPage );
+		await page.goto( `${ URL }/?page_id=${ heroPage }`, { waitUntil: 'networkidle' } );
+		const leadLen = await page.locator( '.b-hero-service__lead' ).evaluate( ( p ) => p.textContent.length );
+		check( 'Первый экран услуги: «Вводный текст» — до 1000 символов, выводится целиком', '1000' === leadMax && 1000 === leadLen, `${ leadMax } / ${ leadLen }` );
 
 		// ===== Отступы: у всех блоков одинаковые (правка заказчика) =====
 		for ( const w of [ 1280, 768, 390 ] ) {
@@ -364,7 +454,7 @@ async function compare( page, o ) {
 					const i = document.querySelector( '.b-image__img' );
 					i.loading = 'eager';
 					await i.decode().catch( () => {} );
-					return document.querySelector( '.b-image__frame' ).innerHTML;
+					return document.querySelector( '.b-image__frame picture' ).outerHTML;
 				},
 				mockBefore: async ( html ) => {
 					const frame = document.querySelector( 'figure > div' );
@@ -375,7 +465,13 @@ async function compare( page, o ) {
 					await i.decode().catch( () => {} );
 				},
 			} );
-			await compare( page, { name: 'open', width, theme: '.b-open', mockup: 'seo-bloki/05-otkryto-pishem.html', mock: 'section' } );
+			// Надзаголовок «Главная мысль» (правка заказчика, в макете «Открытость»).
+			await compare( page, {
+				name: 'idea', width, theme: '.b-idea', mockup: 'seo-bloki/05-otkryto-pishem.html', mock: 'section',
+				mockBefore: () => {
+					[ ...document.querySelectorAll( 'span' ) ].find( ( el ) => 'Открытость' === el.textContent.trim() ).textContent = 'Главная мысль';
+				},
+			} );
 		}
 
 		// ===== Ширины, зоны нажатия, доступность =====
@@ -392,7 +488,7 @@ async function compare( page, o ) {
 		await page.goto( PAGE, { waitUntil: 'networkidle' } );
 		await page.addScriptTag( { path: require.resolve( 'axe-core' ) } );
 		const axe = await page.evaluate( async () => {
-			const r = await window.axe.run( { include: [ '.b-tariffs', '.b-text', '.b-image', '.b-open' ] }, { resultTypes: [ 'violations' ] } );
+			const r = await window.axe.run( { include: [ '.b-tariffs', '.b-text', '.b-image', '.b-idea' ] }, { resultTypes: [ 'violations' ] } );
 			return r.violations.filter( ( v ) => [ 'critical', 'serious' ].includes( v.impact ) ).map( ( v ) => `${ v.id } (${ v.nodes.length })` );
 		} );
 		check( 'axe: нет нарушений critical/serious', axe.length === 0, axe.join( ', ' ) );
@@ -406,23 +502,23 @@ async function compare( page, o ) {
 		const id = wp( 'eval', 'echo get_page_by_path( "seo" )->ID;' );
 		await editor.goto( `${ URL }/wp-admin/post.php?post=${ id }&action=edit` );
 		await editor.waitForFunction( () => window.wp && wp.data && wp.data.select( 'core/block-editor' ), null, { timeout: 60000 } );
-		const reg = await editor.evaluate( () => [ 'trust/tariffs', 'trust/text', 'trust/image', 'trust/open-approach' ].map( ( name ) => {
+		const reg = await editor.evaluate( () => [ 'trust/tariffs', 'trust/text', 'trust/image', 'trust/key-idea' ].map( ( name ) => {
 			const type = wp.blocks.getBlockType( name );
 			return [ name, type && type.title, type && type.category, !! ( type && type.example ) ];
 		} ) );
-		check( 'Редактор: «Выбор тарифа» и «Открыто пишем» — «Услуги», «Блок с текстом» и «Картинка» — «Текст и медиа», у всех превью',
+		check( 'Редактор: «Выбор тарифа» и «Главная мысль» — «Услуги», «Блок с текстом» и «Картинка» — «Текст и медиа», у всех превью',
 			JSON.stringify( reg ) === JSON.stringify( [
 				[ 'trust/tariffs', 'Выбор тарифа', 'trust-services', true ],
 				[ 'trust/text', 'Блок с текстом', 'trust-content', true ],
 				[ 'trust/image', 'Картинка', 'trust-content', true ],
-				[ 'trust/open-approach', 'Почему мы открыто пишем про всё', 'trust-services', true ],
+				[ 'trust/key-idea', 'Главная мысль', 'trust-services', true ],
 			] ), JSON.stringify( reg ) );
 		const canvas = editor.frameLocator( 'iframe[name="editor-canvas"]' );
-		await canvas.locator( '.b-open' ).first().waitFor( { timeout: 30000 } );
+		await canvas.locator( '.b-idea' ).first().waitFor( { timeout: 30000 } );
 		await canvas.locator( '.b-text p' ).first().waitFor( { timeout: 30000 } );
 		check( 'Редактор: превью блоков на странице (3 тарифа, текст, «Рис. 1», цитата)',
 			3 === await canvas.locator( '.b-tariffs__card' ).count() && 3 === await canvas.locator( '.b-text h2, .b-text h3' ).count() &&
-			'Рис. 1' === ( await canvas.locator( '.b-image__num' ).textContent() ).trim() && 1 === await canvas.locator( '.b-open__quote' ).count() );
+			'Рис. 1' === ( await canvas.locator( '.b-image__num' ).textContent() ).trim() && 1 === await canvas.locator( '.b-idea__quote' ).count() );
 		const inner = await editor.evaluate( () => {
 			const sel = wp.data.select( 'core/block-editor' );
 			const textBlock = sel.getBlocks().find( ( b ) => 'trust/text' === b.name );
@@ -447,6 +543,7 @@ async function compare( page, o ) {
 		await figCanvas.locator( '.b-image' ).nth( 6 ).waitFor( { timeout: 30000 } );
 		await editor.waitForTimeout( 1500 );
 		const warnings = ( await figCanvas.locator( '.trust-block-warning' ).allTextContents() ).map( ( t ) => t.trim() );
+		check( 'Редактор: в превью картинка не ссылка (просмотр на весь экран — только на сайте)', 0 === await figCanvas.locator( '.b-image__open' ).count() );
 		check( 'Редактор: предупреждение только у картинки без alt', 1 === warnings.length && warnings[ 0 ].startsWith( 'У картинки нет описания (alt)' ), warnings.join( ' | ' ) );
 		const nums = await figCanvas.locator( '.b-image' ).evaluateAll( ( all ) => all.map( ( el ) => ( el.querySelector( '.b-image__num' ) ? el.querySelector( '.b-image__num' ).textContent.trim() : '' ) ) );
 		check( 'Редактор: «Рис. N» как на сайте (у одинаковых блоков — номер первого), без картинки — заглушка',

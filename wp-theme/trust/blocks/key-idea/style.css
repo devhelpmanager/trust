@@ -1,9 +1,9 @@
 /*
- * Блок «Почему мы открыто пишем про всё» (holst-blokov/OpenApproach, seo-bloki/05-otkryto-pishem.html).
+ * Блок «Главная мысль» (holst-blokov/OpenApproach, seo-bloki/05-otkryto-pishem.html).
  * Фиолетовый фон с точками; отступы — как у всех блоков (правка заказчика, в макете 112 px).
  */
 
-.b-open {
+.b-idea {
 	padding: var(--section-y) var(--gutter);
 	background-color: var(--c-violet-dark);
 	background-image: radial-gradient(#6E38C9 1px, transparent 1px);
@@ -11,7 +11,7 @@
 	color: var(--c-white);
 }
 
-.b-open__inner {
+.b-idea__inner {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: flex-start;
@@ -20,7 +20,7 @@
 	margin: 0 auto;
 }
 
-.b-open__head {
+.b-idea__head {
 	display: flex;
 	flex: 1 1 320px;
 	flex-direction: column;
@@ -28,11 +28,11 @@
 	min-width: 0;
 }
 
-.b-open .eyebrow {
+.b-idea .eyebrow {
 	color: var(--c-violet-light);
 }
 
-.b-open__title {
+.b-idea__title {
 	margin: 0;
 	font-family: var(--f-display);
 	font-size: clamp(26px, 2.8vw, 36px);
@@ -42,7 +42,7 @@
 	text-wrap: balance;
 }
 
-.b-open__figure {
+.b-idea__figure {
 	display: flex;
 	flex: 999 1 560px;
 	flex-direction: column;
@@ -51,18 +51,18 @@
 	margin: 0;
 }
 
-.b-open__mark {
+.b-idea__mark {
 	fill: var(--c-violet-light);
 }
 
-.b-open__quote {
+.b-idea__quote {
 	display: flex;
 	flex-direction: column;
 	gap: 24px;
 	margin: 0;
 }
 
-.b-open__lead {
+.b-idea__lead {
 	margin: 0;
 	font-family: var(--f-display);
 	font-size: clamp(22px, 2.5vw, 30px);
@@ -72,7 +72,7 @@
 	text-wrap: pretty;
 }
 
-.b-open__text {
+.b-idea__text {
 	margin: 0;
 	font-size: 18px;
 	line-height: 1.7;
@@ -80,7 +80,7 @@
 	text-wrap: pretty;
 }
 
-.b-open__author {
+.b-idea__author {
 	display: flex;
 	align-items: center;
 	gap: 14px;
@@ -88,7 +88,7 @@
 	border-top: 1px solid #8456D2;
 }
 
-.b-open__avatar {
+.b-idea__avatar {
 	display: flex;
 	flex: none;
 	align-items: center;
@@ -101,30 +101,30 @@
 	color: var(--c-violet-light);
 }
 
-.b-open__photo {
+.b-idea__photo {
 	display: block;
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
 }
 
-.b-open__who {
+.b-idea__who {
 	display: flex;
 	flex-direction: column;
 	line-height: 1.35;
 }
 
-.b-open__name {
+.b-idea__name {
 	font-size: 16px;
 	font-weight: 600;
 }
 
-.b-open__role {
+.b-idea__role {
 	font-size: 14px;
 	color: var(--c-on-violet);
 }
 
-.b-open__empty {
+.b-idea__empty {
 	margin: 0;
 	color: var(--c-on-violet);
 }

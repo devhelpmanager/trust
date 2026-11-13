@@ -129,6 +129,17 @@ final class Blocks {
 		}
 		// Общие стили тёмной карточки первых экранов: блоки указывают "trust-hero" в block.json.
 		wp_register_style( 'trust-hero', Assets::url( 'assets/css/hero.css' ), array(), Assets::version( 'assets/css/hero.css' ) );
+		// Просмотр картинок на весь экран: блоки «Картинка» и «Блок с текстом» указывают "trust-lightbox".
+		wp_register_script(
+			'trust-lightbox',
+			Assets::url( 'assets/js/lightbox.js' ),
+			array(),
+			Assets::version( 'assets/js/lightbox.js' ),
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => true,
+			)
+		);
 		foreach ( self::names() as $name ) {
 			register_block_type( TRUST_DIR . '/blocks/' . $name );
 		}

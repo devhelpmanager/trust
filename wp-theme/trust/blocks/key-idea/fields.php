@@ -1,6 +1,6 @@
 <?php
 /**
- * Поля блока «Почему мы открыто пишем про всё» (макет holst-blokov/OpenApproach,
+ * Поля блока «Главная мысль» (макет holst-blokov/OpenApproach — «Почему мы открыто пишем про всё»,
  * seo-bloki/05-otkryto-pishem.html).
  *
  * @package Trust
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 $trust_author_is = static fn( string $value ): array => array(
 	array(
 		array(
-			'field'    => 'field_trust_block_open_approach_author_source',
+			'field'    => 'field_trust_block_key_idea_author_source',
 			'operator' => '==',
 			'value'    => $value,
 		),
@@ -21,8 +21,8 @@ $trust_author_is = static fn( string $value ): array => array(
 return array_merge(
 	Trust\Blocks::section_fields(
 		array(
-			'anchor'  => 'open',
-			'eyebrow' => __( 'Открытость', 'trust' ),
+			'anchor'  => 'idea',
+			'eyebrow' => __( 'Главная мысль', 'trust' ),
 			'title'   => __( 'Почему мы открыто пишем про всё', 'trust' ),
 			'lead'    => false,
 		)
@@ -94,7 +94,7 @@ return array_merge(
 			'conditional_logic' => array(
 				array(
 					array(
-						'field'    => 'field_trust_block_open_approach_author_source',
+						'field'    => 'field_trust_block_key_idea_author_source',
 						'operator' => '!=',
 						'value'    => 'none',
 					),

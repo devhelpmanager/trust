@@ -1729,7 +1729,8 @@ html.has-modal {
 	line-height: 1.2;
 	letter-spacing: -0.01em;
 	color: var(--c-text);
-	text-wrap: balance;
+	/* Строки заполняют колонку (правка заказчика: на телефоне заголовок был «узким» из-за balance) */
+	text-wrap: wrap;
 }
 
 .prose h3 {
@@ -1974,4 +1975,131 @@ html.has-modal {
 
 .prose .wp-block-table {
 	overflow-x: auto;
+}
+
+/* Картинка в тексте открывается на весь экран (assets/js/lightbox.js) */
+.prose img.is-zoomable {
+	cursor: zoom-in;
+}
+
+/* ===== Просмотр картинки на весь экран (правка заказчика; assets/js/lightbox.js) ===== */
+
+html.lightbox-open {
+	overflow: hidden;
+}
+
+.lightbox {
+	position: fixed;
+	inset: 0;
+	box-sizing: border-box;
+	width: 100%;
+	max-width: none;
+	height: 100%;
+	max-height: none;
+	margin: 0;
+	padding: 72px 16px 24px;
+	border: 0;
+	background: rgba(14, 11, 20, 0.98);
+	color: var(--c-white);
+	overflow: auto;
+	overscroll-behavior: contain;
+}
+
+.lightbox[open] {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.lightbox::backdrop {
+	background: transparent;
+}
+
+.lightbox__figure {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 14px;
+	max-width: 100%;
+	margin: auto;
+}
+
+.lightbox__img {
+	display: block;
+	width: auto;
+	max-width: 100%;
+	height: auto;
+	max-height: calc(100dvh - 160px);
+	border-radius: var(--r-field);
+	background: var(--c-white);
+	object-fit: contain;
+	transition: opacity 0.2s;
+}
+
+.lightbox.is-loading .lightbox__img {
+	opacity: 0;
+}
+
+.lightbox__caption {
+	max-width: var(--text-block);
+	font-size: 15px;
+	line-height: 1.55;
+	color: var(--c-on-violet);
+	text-align: center;
+	text-wrap: pretty;
+}
+
+.lightbox__num {
+	margin-right: 10px;
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--c-decor);
+}
+
+.lightbox__close {
+	position: fixed;
+	top: 12px;
+	right: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	padding: 0;
+	border: 0;
+	border-radius: var(--r-pill);
+	background: rgba(255, 255, 255, 0.14);
+	color: var(--c-white);
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.lightbox__close:hover {
+	background: rgba(255, 255, 255, 0.26);
+}
+
+@media (max-width: 600px) {
+	.lightbox {
+		padding: 68px 8px 16px;
+	}
+
+	.lightbox__img {
+		max-height: calc(100dvh - 140px);
+		border-radius: 8px;
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.lightbox[open] {
+		animation: lightbox-in 0.2s ease;
+	}
+}
+
+@keyframes lightbox-in {
+	from {
+		opacity: 0;
+	}
 }

@@ -6,7 +6,7 @@
  * (960 px — как «Блок с текстом»), ниже подпись «Рис. N» и описание. Номер — по порядку
  * картинок на странице (Trust\Blocks::figure_number()), можно задать вручную. Картинка для
  * телефона — <picture> с источником до 600 px. alt — из поля блока, иначе из медиатеки;
- * декоративная — alt="".
+ * декоративная — alt="". По клику картинка открывается на весь экран (assets/js/lightbox.js).
  *
  * Переменные SCF: $block (array), $is_preview (bool), $post_id (int|string).
  *
@@ -43,6 +43,16 @@ $trust_img     = Blocks::image(
 // Размеры картинки для телефона — у <source>, иначе браузер оставит пропорции основной картинки.
 $trust_mobile_src = $trust_mobile ? wp_get_attachment_image_src( $trust_mobile, 'full' ) : false;
 
+// Просмотр на весь экран (правка заказчика): ссылка на оригинал, скрипт открывает его поверх
+// страницы (assets/js/lightbox.js); без JavaScript ссылка просто открывает файл картинки.
+$trust_full     = $trust_id ? (string) wp_get_attachment_image_url( $trust_id, 'full' ) : '';
+$trust_alt_text = $trust_deco ? '' : ( '' !== trim( $trust_alt ) ? trim( $trust_alt ) : trim( (string) get_post_meta( $trust_id, '_wp_attachment_image_alt', true ) ) );
+$trust_zoom     = '' !== $trust_alt_text
+	/* translators: %s: описание картинки (alt). */
+	? sprintf( __( 'Открыть на весь экран: %s', 'trust' ), $trust_alt_text )
+	: __( 'Открыть картинку на весь экран', 'trust' );
+$trust_open = ! $is_preview && '' !== $trust_full;
+
 if ( '' === $trust_img && ! $is_preview ) {
 	return;
 }
@@ -56,12 +66,19 @@ if ( '' === $trust_img && ! $is_preview ) {
 	<figure class="b-image__figure<?php echo $trust_wide ? '' : ' b-image__figure--text'; ?>">
 		<div class="b-image__frame">
 			<?php if ( '' !== $trust_img ) : ?>
+				<?php if ( $trust_open ) : ?>
+					<a class="b-image__open" href="<?php echo esc_url( $trust_full ); ?>" data-trust-lightbox<?php echo $trust_mobile_src ? ' data-full-mobile="' . esc_url( $trust_mobile_src[0] ) . '"' : ''; ?> aria-label="<?php echo esc_attr( $trust_zoom ); ?>">
+				<?php endif; ?>
 				<picture>
 					<?php if ( $trust_mobile ) : ?>
 						<source media="(max-width: 600px)" srcset="<?php echo esc_attr( (string) wp_get_attachment_image_srcset( $trust_mobile, 'full' ) ); ?>" sizes="calc(100vw - 40px)"<?php echo $trust_mobile_src ? ' width="' . (int) $trust_mobile_src[1] . '" height="' . (int) $trust_mobile_src[2] . '"' : ''; ?>>
 					<?php endif; ?>
 					<?php echo $trust_img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image(). ?>
 				</picture>
+				<?php if ( $trust_open ) : ?>
+						<span class="b-image__zoom" aria-hidden="true"><?php Icons::render( 'expand', array( 'size' => 20 ) ); ?></span>
+					</a>
+				<?php endif; ?>
 			<?php else : ?>
 				<span class="b-image__placeholder">
 					<span class="b-image__placeholder-icon" aria-hidden="true">

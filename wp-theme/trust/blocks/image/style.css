@@ -28,6 +28,46 @@
 	background: var(--c-lavender-2);
 }
 
+/* По клику — на весь экран (assets/js/lightbox.js) */
+.b-image__open {
+	position: relative;
+	display: block;
+	color: inherit;
+	cursor: zoom-in;
+}
+
+.b-image__open:focus-visible {
+	outline-offset: -4px;
+}
+
+.b-image__zoom {
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: var(--r-pill);
+	background: rgba(14, 11, 20, 0.62);
+	color: var(--c-white);
+	opacity: 0;
+	transition: opacity 0.2s;
+}
+
+.b-image__open:hover .b-image__zoom,
+.b-image__open:focus-visible .b-image__zoom {
+	opacity: 1;
+}
+
+/* На сенсорных экранах наведения нет — значок виден всегда */
+@media (hover: none) {
+	.b-image__zoom {
+		opacity: 1;
+	}
+}
+
 .b-image__img {
 	display: block;
 	width: 100%;

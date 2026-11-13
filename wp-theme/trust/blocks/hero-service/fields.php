@@ -21,10 +21,10 @@ return array(
 		'name'         => 'lead',
 		'label'        => __( 'Вводный текст', 'trust' ),
 		'type'         => 'textarea',
-		'rows'         => 3,
 		'new_lines'    => '',
-		'maxlength'    => 300,
-		'instructions' => __( 'Под заголовком: что получит клиент, 1–2 предложения (до 160 символов).', 'trust' ),
+		'rows'         => 5,
+		'maxlength'    => 1000,
+		'instructions' => __( 'Под заголовком: что получит клиент. До 1000 символов (правка заказчика); на первом экране лучше 1–3 предложения.', 'trust' ),
 	),
 	Trust\Blocks::buttons_field( 2 ),
 );

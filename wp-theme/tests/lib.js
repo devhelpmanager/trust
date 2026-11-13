@@ -231,7 +231,7 @@ const SECTION_SPACING_CSS = `
 	@media (max-width: 760px) {
 		[style*="padding: 96px clamp(20px, 4vw, 48px)"], [style*="padding: 88px clamp(20px, 4vw, 48px)"] { padding-top: 48px !important; padding-bottom: 48px !important; }
 	}
-	/* «Почему мы открыто пишем» (112 px) и «Картинка» (64 px) — отступ секции, как у всех блоков */
+	/* «Главная мысль» (112 px) и «Картинка» (64 px) — отступ секции, как у всех блоков */
 	[style*="padding: 112px clamp(20px, 4vw, 48px)"] { padding-top: 64px !important; padding-bottom: 64px !important; }
 	@media (max-width: 1100px) {
 		[style*="padding: 112px clamp(20px, 4vw, 48px)"] { padding-top: 56px !important; padding-bottom: 56px !important; }
@@ -293,9 +293,10 @@ const MOCKUP_CSS = {
 			}
 		}
 	`,
-	// «Блок с текстом»: колонка 960 px (правка заказчика, в макете 760).
+	// «Блок с текстом»: колонка 960 px (правка заказчика, в макете 760), строки заголовка заполняют колонку.
 	'seo-bloki/03-tekst.html': `
 		section > article { max-width: 960px !important; }
+		section > article > h2 { text-wrap: wrap !important; }
 	`,
 	'seo-bloki/10-vopros-otvet.html': `
 		section > div { flex-direction: column !important; flex-wrap: nowrap !important; align-items: stretch !important; gap: 40px !important; }

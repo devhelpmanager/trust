@@ -16,6 +16,7 @@
 		"jsx": true
 	},
 	"style": "file:./style.css",
+	"viewScript": "trust-lightbox",
 	"acf": {
 		"mode": "preview",
 		"renderTemplate": "render.php",

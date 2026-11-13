@@ -1,6 +1,6 @@
 <?php
 /**
- * Блок «Почему мы открыто пишем про всё» (макет holst-blokov/OpenApproach,
+ * Блок «Главная мысль» (макет holst-blokov/OpenApproach — «Почему мы открыто пишем про всё»,
  * seo-bloki/05-otkryto-pishem.html).
  *
  * Фиолетовая секция с точечным фоном: слева надзаголовок и H2, справа знак цитаты, цитата
@@ -37,7 +37,7 @@ if ( 'team' === $trust_source ) {
 			$trust_member,
 			'thumbnail',
 			array(
-				'class'   => 'b-open__photo',
+				'class'   => 'b-idea__photo',
 				'alt'     => '',
 				'loading' => 'lazy',
 			)
@@ -49,7 +49,7 @@ if ( 'team' === $trust_source ) {
 		(int) get_field( 'author_photo' ),
 		'thumbnail',
 		array(
-			'class'   => 'b-open__photo',
+			'class'   => 'b-idea__photo',
 			'loading' => 'lazy',
 		),
 		'',
@@ -57,29 +57,29 @@ if ( 'team' === $trust_source ) {
 	);
 }
 ?>
-<section class="b-open trust-bg-violet"<?php echo $trust_anchor ? ' id="' . esc_attr( $trust_anchor ) . '"' : ''; ?><?php echo $trust_title ? ' aria-labelledby="' . esc_attr( $trust_title_id ) . '"' : ''; ?>>
-	<div class="b-open__inner">
-		<div class="b-open__head">
+<section class="b-idea trust-bg-violet"<?php echo $trust_anchor ? ' id="' . esc_attr( $trust_anchor ) . '"' : ''; ?><?php echo $trust_title ? ' aria-labelledby="' . esc_attr( $trust_title_id ) . '"' : ''; ?>>
+	<div class="b-idea__inner">
+		<div class="b-idea__head">
 			<?php if ( $trust_eyebrow ) : ?>
 				<span class="eyebrow"><?php echo esc_html( $trust_eyebrow ); ?></span>
 			<?php endif; ?>
 			<?php if ( $trust_title ) : ?>
-				<h2 class="b-open__title" id="<?php echo esc_attr( $trust_title_id ); ?>"><?php echo esc_html( $trust_title ); ?></h2>
+				<h2 class="b-idea__title" id="<?php echo esc_attr( $trust_title_id ); ?>"><?php echo esc_html( $trust_title ); ?></h2>
 			<?php endif; ?>
 		</div>
 
 		<?php if ( '' !== $trust_quote ) : ?>
-			<figure class="b-open__figure">
-				<svg class="b-open__mark" width="52" height="40" viewBox="0 0 44 34" aria-hidden="true" focusable="false"><path d="M0 34V20.4C0 8.9 6.2 2.1 17.4 0l1.9 4.6C13 6.4 10.2 10 9.8 15.3H18V34H0zm25 0V20.4C25 8.9 31.2 2.1 42.4 0l1.6 4.6c-6.3 1.8-9.1 5.4-9.5 10.7H43V34H25z"/></svg>
-				<blockquote class="b-open__quote">
-					<p class="b-open__lead"><?php echo esc_html( $trust_quote ); ?></p>
+			<figure class="b-idea__figure">
+				<svg class="b-idea__mark" width="52" height="40" viewBox="0 0 44 34" aria-hidden="true" focusable="false"><path d="M0 34V20.4C0 8.9 6.2 2.1 17.4 0l1.9 4.6C13 6.4 10.2 10 9.8 15.3H18V34H0zm25 0V20.4C25 8.9 31.2 2.1 42.4 0l1.6 4.6c-6.3 1.8-9.1 5.4-9.5 10.7H43V34H25z"/></svg>
+				<blockquote class="b-idea__quote">
+					<p class="b-idea__lead"><?php echo esc_html( $trust_quote ); ?></p>
 					<?php if ( '' !== $trust_text ) : ?>
-						<p class="b-open__text"><?php echo esc_html( $trust_text ); ?></p>
+						<p class="b-idea__text"><?php echo esc_html( $trust_text ); ?></p>
 					<?php endif; ?>
 				</blockquote>
 				<?php if ( '' !== $trust_name || ( 'none' !== $trust_source && '' !== $trust_role ) ) : ?>
-					<figcaption class="b-open__author">
-						<span class="b-open__avatar" aria-hidden="true">
+					<figcaption class="b-idea__author">
+						<span class="b-idea__avatar" aria-hidden="true">
 							<?php
 							if ( '' !== $trust_photo ) {
 								echo $trust_photo; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image().
@@ -94,19 +94,19 @@ if ( 'team' === $trust_source ) {
 							}
 							?>
 						</span>
-						<span class="b-open__who">
+						<span class="b-idea__who">
 							<?php if ( '' !== $trust_name ) : ?>
-								<span class="b-open__name"><?php echo esc_html( $trust_name ); ?></span>
+								<span class="b-idea__name"><?php echo esc_html( $trust_name ); ?></span>
 							<?php endif; ?>
 							<?php if ( '' !== $trust_role ) : ?>
-								<span class="b-open__role"><?php echo esc_html( $trust_role ); ?></span>
+								<span class="b-idea__role"><?php echo esc_html( $trust_role ); ?></span>
 							<?php endif; ?>
 						</span>
 					</figcaption>
 				<?php endif; ?>
 			</figure>
 		<?php elseif ( $is_preview ) : ?>
-			<p class="b-open__empty"><?php esc_html_e( 'Добавьте цитату в настройках блока.', 'trust' ); ?></p>
+			<p class="b-idea__empty"><?php esc_html_e( 'Добавьте цитату в настройках блока.', 'trust' ); ?></p>
 		<?php endif; ?>
 	</div>
 </section>
