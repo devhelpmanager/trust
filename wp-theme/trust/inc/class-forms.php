@@ -27,7 +27,8 @@ final class Forms {
 	/**
 	 * Описания форм.
 	 *
-	 * Тип поля: text, textarea, tel, email, url, contact (телефон или email), choice, checkbox.
+	 * Тип поля: text, textarea, tel, email, url, contact (телефон или email), choice, checkbox,
+	 * choices (несколько вариантов: приходят подписи отмеченных, до 12; options — если список задан).
 	 * Правила: required, min, max (длина), options (для choice). error — сообщение, как в макетах.
 	 *
 	 * @return array<string, array{label: string, captcha: bool, fields: array, consents: array, name: string, contact: string[]}>
@@ -156,6 +157,66 @@ final class Forms {
 		echo '<div class="field">';
 		echo '<div class="form__captcha" data-trust-captcha aria-describedby="form-' . esc_attr( $type ) . '-captcha-error"></div>';
 		printf( '<span class="field__error" id="form-%s-captcha-error" hidden></span>', esc_attr( $type ) );
+		echo '</div>';
+	}
+
+	/**
+	 * Галочка согласия на обработку персональных данных (решение заказчика — вместо фразы
+	 * «Нажимая кнопку…» во всех формах): ссылка на страницу согласия из настроек.
+	 *
+	 * @param string $uid  Начало id элементов формы.
+	 * @param string $type Тип формы.
+	 */
+	public static function consent_check( string $uid, string $type ): void {
+		$form  = self::type( $type );
+		$url   = self::consent_url();
+		$error = $uid . '-consent-error';
+		echo '<div class="field form__consent"><label class="check">';
+		printf(
+			'<input class="check__input" type="checkbox" name="consent" value="1" required aria-describedby="%s" data-error="%s">',
+			esc_attr( $error ),
+			esc_attr( $form['consents']['consent']['error'] ?? '' )
+		);
+		echo '<span>';
+		if ( $url ) {
+			printf(
+				/* translators: %s: ссылка «согласие на обработку персональных данных». */
+				esc_html__( 'Я даю %s', 'trust' ),
+				'<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener">' . esc_html__( 'согласие на обработку персональных данных', 'trust' ) . '</a>'
+			);
+		} else {
+			esc_html_e( 'Я даю согласие на обработку персональных данных', 'trust' );
+		}
+		echo '</span></label>';
+		printf( '<span class="field__error field__error--check" id="%s" hidden></span>', esc_attr( $error ) );
+		echo '</div>';
+	}
+
+	/**
+	 * Экран «Заявка отправлена» формы без своего скрипта (forms.js показывает его вместо формы,
+	 * кнопка data-form-again возвращает форму).
+	 *
+	 * @param string $id    id экрана (data-success формы).
+	 * @param string $title Заголовок.
+	 * @param string $text  Текст.
+	 * @param string $again Кнопка «Отправить ещё».
+	 */
+	public static function sent_screen( string $id, string $title, string $text, string $again ): void {
+		printf( '<div class="form-sent" id="%s" role="status" tabindex="-1" hidden>', esc_attr( $id ) );
+		echo '<span class="form-success__icon" aria-hidden="true">';
+		Icons::render(
+			'check',
+			array(
+				'size'         => 28,
+				'stroke_width' => 2.4,
+			)
+		);
+		echo '</span>';
+		printf( '<p class="form-success__title">%s</p>', esc_html( $title ) );
+		if ( '' !== $text ) {
+			printf( '<p class="form-success__text">%s</p>', esc_html( $text ) );
+		}
+		printf( '<button type="button" class="form-sent__again" data-form-again>%s</button>', esc_html( $again ) );
 		echo '</div>';
 	}
 

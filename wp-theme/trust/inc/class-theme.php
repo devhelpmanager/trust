@@ -43,6 +43,7 @@ final class Theme {
 		Forms\Handler::register();
 		Forms\Leads::register();
 		Forms\Notifications::register();
+		Forms\Block_Forms::register();
 		Cookie::register();
 		Settings::register();
 		Blocks::register();

@@ -220,11 +220,16 @@ final class Handler {
 	 *
 	 * @param array $field Описание поля.
 	 * @param mixed $value Отправленное значение.
-	 * @return string|bool
+	 * @return string|bool|string[]
 	 */
 	private static function clean( array $field, $value ) {
 		if ( 'checkbox' === $field['type'] ) {
 			return ! empty( $value );
+		}
+		// Несколько вариантов: подписи отмеченных (до 12, без повторов).
+		if ( 'choices' === $field['type'] ) {
+			$items = array_map( static fn( $item ) => trim( sanitize_text_field( is_scalar( $item ) ? (string) $item : '' ) ), (array) $value );
+			return array_slice( array_values( array_unique( array_filter( $items, 'strlen' ) ) ), 0, 12 );
 		}
 		$raw   = is_scalar( $value ) ? (string) $value : '';
 		$value = 'textarea' === $field['type'] ? sanitize_textarea_field( $raw ) : sanitize_text_field( $raw );
@@ -239,12 +244,20 @@ final class Handler {
 	/**
 	 * Проверка значения по правилам поля.
 	 *
-	 * @param array       $field Описание поля.
-	 * @param string|bool $value Значение после очистки.
+	 * @param array                $field Описание поля.
+	 * @param string|bool|string[] $value Значение после очистки.
 	 */
 	private static function valid( array $field, $value ): bool {
 		if ( 'checkbox' === $field['type'] ) {
 			return empty( $field['required'] ) || true === $value;
+		}
+		if ( 'choices' === $field['type'] ) {
+			foreach ( $value as $item ) {
+				if ( mb_strlen( $item ) > ( $field['max'] ?? 100 ) || ( isset( $field['options'] ) && ! in_array( $item, $field['options'], true ) ) ) {
+					return false;
+				}
+			}
+			return empty( $field['required'] ) || (bool) $value;
 		}
 		if ( '' === $value ) {
 			return empty( $field['required'] );

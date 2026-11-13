@@ -94,8 +94,8 @@ async function compare( page, o ) {
 		// ===== Страница целиком =====
 		await page.goto( PAGE, { waitUntil: 'networkidle' } );
 		const order = await page.evaluate( () => [ ...document.querySelectorAll( '.page-entry__content > section' ) ].map( ( s ) => s.className.split( ' ' )[ 0 ] ) );
-		check( 'Страница /seo/: первый экран, тарифы, текст, картинка, «Главная мысль»',
-			JSON.stringify( order ) === JSON.stringify( [ 'b-hero-service', 'b-tariffs', 'b-text', 'b-image', 'b-idea' ] ), order.join( ', ' ) );
+		check( 'Страница /seo/: первый экран, тарифы, текст, картинка, «Проблемы», «Главная мысль», бриф',
+			JSON.stringify( order ) === JSON.stringify( [ 'b-hero-service', 'b-tariffs', 'b-text', 'b-image', 'b-problems', 'b-idea', 'b-brief' ] ), order.join( ', ' ) );
 
 		// ===== «Выбор тарифа» =====
 		const tar = page.locator( '.b-tariffs' );
@@ -234,7 +234,7 @@ async function compare( page, o ) {
 		check( 'Текст: маркированный и нумерованный списки по 4 пункта', 4 === text.ul && 4 === text.ol );
 		check( 'Текст: цитата «С автором» — имя и должность', '[Имя Фамилия] SEO-специалист' === text.author, text.author );
 		check( 'Текст: «Важно» — боковая плашка <aside> с подписью, не цитата', text.important.startsWith( 'Важно Одна строка в robots.txt' ) && 1 === text.quotes, text.important );
-		check( 'Текст: ссылки ведут на разделы страницы аудита', text.links.join() === [ '#faq', '#includes', '#includes', '#includes' ].map( ( h ) => `${ URL }/seo/audit/${ h }` ).join(), text.links.join( ' ' ) );
+		check( 'Текст: ссылки — на «С какими проблемами…» этой страницы и разделы страницы аудита', text.links.join() === [ '#problems', ...[ '#includes', '#includes', '#includes' ].map( ( h ) => `${ URL }/seo/audit/${ h }` ) ].join(), text.links.join( ' ' ) );
 		// Заголовок на телефоне — строки заполняют колонку (правка заказчика; было «узко» из-за balance).
 		await page.setViewportSize( { width: 390, height: 844 } );
 		await page.goto( PAGE, { waitUntil: 'networkidle' } );
@@ -499,13 +499,7 @@ async function compare( page, o ) {
 		// ===== Совпадение с макетами =====
 		for ( const width of [ 1280, 768, 390 ] ) {
 			await compare( page, { name: 'tariffs', width, theme: '.b-tariffs', mockup: 'seo-bloki/01-tarify.html', mock: 'section' } );
-			// В демо ссылка ведёт на «Частые вопросы» страницы аудита (на /seo/ раздела «С какими проблемами…» нет).
-			await compare( page, {
-				name: 'text', width, theme: '.b-text', mockup: 'seo-bloki/03-tekst.html', mock: 'section',
-				before: () => {
-					document.querySelector( '.b-text a' ).textContent = '«С какими проблемами вы можете столкнуться»';
-				},
-			} );
+			await compare( page, { name: 'text', width, theme: '.b-text', mockup: 'seo-bloki/03-tekst.html', mock: 'section' } );
 			// В макете — заглушка картинки: в неё подставляется картинка темы (на телефоне — вертикальная).
 			await compare( page, {
 				name: 'image', width, theme: '.b-image', mockup: 'seo-bloki/08-kartinka.html', mock: 'section',

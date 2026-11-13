@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/problems",
+	"title": "С какими проблемами вы можете столкнуться",
+	"description": "Признаки проблем сайта (иконка, заголовок, текст) и форма «Заявка на аудит»: адрес сайта, имя, телефон или email, капча, согласие. Заявки — в «Заявках».",
+	"category": "trust-forms",
+	"icon": "warning",
+	"keywords": [ "проблемы", "признаки", "аудит", "заявка", "форма" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

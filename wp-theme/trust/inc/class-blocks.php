@@ -340,6 +340,37 @@ final class Blocks {
 	}
 
 	/**
+	 * Текстовое поле блока с текстом по умолчанию (подписи форм, кнопок, сообщений).
+	 *
+	 * @param string $name  Имя поля.
+	 * @param string $label Подпись в редакторе.
+	 * @param string $value Текст по умолчанию.
+	 * @param int    $max   Длина.
+	 * @param string $help  Подсказка.
+	 */
+	public static function text_field( string $name, string $label, string $value, int $max = 80, string $help = '' ): array {
+		return array(
+			'name'          => $name,
+			'label'         => $label,
+			'type'          => 'text',
+			'default_value' => $value,
+			'maxlength'     => $max,
+			'instructions'  => $help,
+		);
+	}
+
+	/**
+	 * Текст из поля блока или текст по умолчанию, если поле пустое.
+	 *
+	 * @param string $name     Имя поля.
+	 * @param string $fallback Текст по умолчанию.
+	 */
+	public static function text( string $name, string $fallback ): string {
+		$value = get_field( $name );
+		return null === $value || '' === trim( (string) $value ) ? $fallback : trim( (string) $value );
+	}
+
+	/**
 	 * Поле «Кнопки» (до $max штук): текст и адрес — поле «Ссылка» WordPress; адрес может быть
 	 * якорем (#раздел), #callback-modal открывает окно «Заказать обратный звонок».
 	 * Первая кнопка — основная, остальные — второстепенные.

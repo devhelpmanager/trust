@@ -98,6 +98,8 @@ final class Leads {
 				$value = $value ? __( 'да', 'trust' ) : __( 'нет', 'trust' );
 			} elseif ( 'choice' === $field['type'] && '' !== $value ) {
 				$value = (string) $field['options'][ $value ];
+			} elseif ( is_array( $value ) ) {
+				$value = implode( ', ', $value );
 			}
 			$fields[ $name ] = array(
 				'label' => $field['label'],

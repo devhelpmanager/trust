@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/brief",
+	"title": "Бриф — полный",
+	"description": "Форма брифа: «Продвижение / Бесплатный аудит», адрес и тематика сайта, задача, варианты «что хотите получить» (можно несколько), имя и контакт. Заявки — в «Заявках».",
+	"category": "trust-forms",
+	"icon": "clipboard",
+	"keywords": [ "бриф", "заявка", "форма", "аудит", "продвижение" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}
