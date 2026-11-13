@@ -60,6 +60,72 @@
 	gap: 12px;
 }
 
+/* Правка заказчика: одна кнопка шире (в макете по тексту) */
+.b-hero-service__buttons .btn:only-child {
+	min-width: 280px;
+}
+
+/* Иконка справа над кнопками (правка заказчика): при длинном вводном тексте справа колонка
+   340 px — сверху рисунок (Trust\Hero_Art) по высоте оставшегося места, снизу кнопки во всю
+   ширину колонки. Высоту первого экрана задаёт текст, рисунок под неё подстраивается. */
+.b-hero-service__side {
+	display: flex;
+	flex: 0 0 340px;
+	flex-direction: column;
+	align-self: stretch;
+	justify-content: flex-end;
+	gap: 24px;
+	min-width: 0;
+}
+
+.b-hero-service__art {
+	display: flex;
+	flex: 1 1 0;
+	align-items: center;
+	justify-content: center;
+	min-height: 0;
+}
+
+.b-hero-service__art svg {
+	display: block;
+	width: 100%;
+	height: 100%;
+	max-height: 260px;
+}
+
+.b-hero-service__side .b-hero-service__buttons {
+	flex-direction: column;
+}
+
+.b-hero-service__side .btn {
+	width: 100%;
+	min-width: 0;
+}
+
+/* Планшеты и телефоны: текст во всю ширину, кнопки под ним, иконки нет */
+@media (max-width: 960px) {
+	.b-hero-service__side {
+		flex: 1 1 100%;
+		align-self: auto;
+	}
+
+	.b-hero-service__art {
+		display: none;
+	}
+
+	.b-hero-service__side .b-hero-service__buttons {
+		flex-direction: row;
+	}
+
+	.b-hero-service__side .btn {
+		width: auto;
+	}
+
+	.b-hero-service__side .btn:only-child {
+		min-width: 280px;
+	}
+}
+
 /* Как в макете: рамка контурной кнопки добавляется к высоте 56 px (59 px), основная
    кнопка в ряду тянется до той же высоты. */
 .b-hero-service__buttons .btn--outline {
@@ -91,11 +157,23 @@
 		gap: 8px;
 	}
 
-	.b-hero-service__buttons .btn {
+	/* Правка заказчика: кнопки во всю ширину экрана (одна — целиком, две — поровну по тексту) */
+	.b-hero-service__buttons {
+		width: 100%;
+	}
+
+	.b-hero-service__buttons .btn,
+	.b-hero-service__side .btn {
+		flex: 1 1 auto;
 		min-height: 48px;
 		padding: 0 14px;
 		font-size: 14px;
 		white-space: nowrap;
+	}
+
+	.b-hero-service__buttons .btn:only-child,
+	.b-hero-service__side .btn:only-child {
+		min-width: 0;
 	}
 
 	.b-hero-service__buttons .btn--outline {

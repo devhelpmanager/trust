@@ -416,6 +416,45 @@ async function compare( page, o ) {
 		const leadLen = await page.locator( '.b-hero-service__lead' ).evaluate( ( p ) => p.textContent.length );
 		check( 'Первый экран услуги: «Вводный текст» — до 1000 символов, выводится целиком', '1000' === leadMax && 1000 === leadLen, `${ leadMax } / ${ leadLen }` );
 
+		// Иконка справа над кнопкой и ширина кнопки (правка заказчика).
+		const arts = JSON.parse( wp( 'eval', 'echo wp_json_encode( array_map( static fn( $k ) => strlen( Trust\\Hero_Art::svg( $k ) ), array_keys( Trust\\Hero_Art::LIST ) ) );' ) );
+		check( 'Иконки первого экрана: 13 рисунков (аналитика … поисковый робот), все файлы на месте', 13 === arts.length && arts.every( ( n ) => n > 500 ), JSON.stringify( arts ) );
+		const button = "array( array( 'link' => array( 'title' => 'Оставить заявку', 'url' => '#callback-modal', 'target' => '' ) ) )";
+		const heroArt = createPage( 'иконка', `Trust\\Blocks::serialize( 'hero-service', array( 'lead' => '${ longLead }', 'art' => 'analytics', 'buttons' => ${ button } ) )` );
+		const heroShort = createPage( 'иконка, короткий текст', `Trust\\Blocks::serialize( 'hero-service', array( 'lead' => '${ longLead.slice( 0, 379 ) }', 'art' => 'analytics', 'buttons' => ${ button } ) )` );
+		created.push( heroArt, heroShort );
+		const heroState = () => page.evaluate( () => {
+			const box = ( el ) => el && el.getBoundingClientRect();
+			const art = document.querySelector( '.b-hero-service__art' );
+			const btn = box( document.querySelector( '.b-hero-service__buttons .btn' ) );
+			const lead = box( document.querySelector( '.b-hero-service__lead' ) );
+			const side = box( document.querySelector( '.b-hero-service__side' ) );
+			const svg = box( art && art.querySelector( 'svg' ) );
+			return {
+				art: !! art && 'none' !== getComputedStyle( art ).display,
+				svgH: svg ? Math.round( svg.height ) : 0,
+				above: svg && btn ? svg.bottom <= btn.top : false,
+				btnW: Math.round( btn.width ),
+				sideH: side ? Math.round( side.height ) : 0,
+				leadH: Math.round( lead.height ),
+				scroll: document.documentElement.scrollWidth > innerWidth,
+			};
+		} );
+		await page.goto( `${ URL }/?page_id=${ heroArt }`, { waitUntil: 'networkidle' } );
+		let hs = await heroState();
+		check( 'Иконка: при тексте от 380 символов на компьютере — справа над кнопкой, высота экрана — по тексту, кнопка во всю колонку (340 px)',
+			hs.art && hs.above && hs.svgH > 100 && hs.svgH <= 260 && Math.abs( hs.sideH - hs.leadH ) <= 1 && 340 === hs.btnW, JSON.stringify( hs ) );
+		await page.goto( `${ URL }/?page_id=${ heroShort }`, { waitUntil: 'networkidle' } );
+		hs = await heroState();
+		check( 'Иконка: при тексте короче 380 символов не выводится; одна кнопка — шире (от 280 px)', ! hs.art && hs.btnW >= 280, JSON.stringify( hs ) );
+		for ( const [ w, min ] of [ [ 768, 280 ], [ 390, 350 ] ] ) {
+			await page.setViewportSize( { width: w, height: 900 } );
+			await page.goto( `${ URL }/?page_id=${ heroArt }`, { waitUntil: 'networkidle' } );
+			hs = await heroState();
+			check( `Иконка: на ${ w } px скрыта, кнопка ${ 390 === w ? 'во всю ширину' : 'от 280 px' }, без прокрутки вбок`, ! hs.art && hs.btnW >= min && ! hs.scroll, JSON.stringify( hs ) );
+		}
+		await page.setViewportSize( { width: 1280, height: 900 } );
+
 		// ===== Отступы: у всех блоков одинаковые (правка заказчика) =====
 		for ( const w of [ 1280, 768, 390 ] ) {
 			const expected = { 1280: 64, 768: 56, 390: 48 }[ w ];
@@ -534,6 +573,16 @@ async function compare( page, o ) {
 			inner.can.join() === 'core/paragraph:true,core/heading:true,core/list:true,core/quote:true,core/table:true,core/image:true,core/columns:false,core/embed:false,trust/faq:false', inner.can.join() );
 		check( 'Редактор: заголовки только H2–H4, у цитаты стили «С автором» и «Важно»',
 			JSON.stringify( inner.levels ) === '[2,3,4]' && inner.styles.includes( 'author:С автором' ) && inner.styles.includes( 'important:Важно' ), JSON.stringify( inner ) );
+		// «Иконка справа» первого экрана — список с превью рисунков.
+		await editor.evaluate( () => {
+			const hero = wp.data.select( 'core/block-editor' ).getBlocks().find( ( b ) => 'trust/hero-service' === b.name );
+			wp.data.dispatch( 'core/block-editor' ).selectBlock( hero.clientId );
+		} );
+		await editor.waitForTimeout( 1500 );
+		await editor.locator( '.interface-complementary-area .trust-art-select .select2-selection' ).first().click();
+		const artOptions = await editor.evaluate( () => [ ...document.querySelectorAll( '.select2-results__option' ) ].map( ( o ) => ( o.querySelector( 'svg' ) ? 'svg ' : '' ) + ( o.querySelector( 'svg' ) ? o.lastChild.textContent : o.textContent ).trim() ) );
+		await editor.keyboard.press( 'Escape' );
+		check( 'Редактор: «Иконка справа» — «Без иконки» и 13 рисунков с превью', 14 === artOptions.length && 'Без иконки' === artOptions[ 0 ] && artOptions.slice( 1 ).every( ( t ) => t.startsWith( 'svg ' ) ) && artOptions.includes( 'svg Поисковый робот' ), JSON.stringify( artOptions.slice( 0, 3 ) ) );
 		await editor.screenshot( { path: path.join( OUT, 'content-blocks-editor.png' ) } );
 
 		// Картинка без описания — предупреждение в превью; номера — как на сайте.

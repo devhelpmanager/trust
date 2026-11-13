@@ -47,6 +47,7 @@ final class Theme {
 		Settings::register();
 		Blocks::register();
 		Icons::register();
+		Hero_Art::register();
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			\WP_CLI::add_command( 'trust demo', CLI\Demo_Command::class );

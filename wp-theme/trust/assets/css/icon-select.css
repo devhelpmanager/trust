@@ -12,3 +12,9 @@
 	flex: none;
 	color: #6D28D9;
 }
+
+/* «Иконка справа» первого экрана (Trust\Hero_Art): рисунок 240×200 — уменьшенный */
+.trust-art-option svg {
+	width: 48px;
+	height: 40px;
+}

@@ -13,6 +13,7 @@
 
 use Trust\Blocks;
 use Trust\Breadcrumbs;
+use Trust\Hero_Art;
 use Trust\Seo;
 
 defined( 'ABSPATH' ) || exit;
@@ -21,8 +22,10 @@ $trust_h1       = Seo::h1( (int) $post_id );
 $trust_lead     = trim( (string) get_field( 'lead' ) );
 $trust_buttons  = Blocks::buttons( get_field( 'buttons' ), array( 'btn', 'btn btn--outline' ) );
 $trust_title_id = Blocks::uid( $block, 'title' );
+// Иконка справа над кнопками — при длинном вводном тексте (Trust\Hero_Art::MIN_LEAD символов).
+$trust_art = Hero_Art::shown( (string) get_field( 'art' ), $trust_lead ) ? Hero_Art::svg( (string) get_field( 'art' ) ) : '';
 ?>
-<section class="b-hero-service trust-bg-white" aria-labelledby="<?php echo esc_attr( $trust_title_id ); ?>">
+<section class="b-hero-service trust-bg-white<?php echo '' !== $trust_art ? ' b-hero-service--art' : ''; ?>" aria-labelledby="<?php echo esc_attr( $trust_title_id ); ?>">
 	<div class="b-hero-service__inner">
 		<?php
 		if ( $is_preview ) {
@@ -36,9 +39,16 @@ $trust_title_id = Blocks::uid( $block, 'title' );
 			<?php if ( '' !== $trust_lead ) : ?>
 				<p class="b-hero-service__lead"><?php echo esc_html( $trust_lead ); ?></p>
 			<?php endif; ?>
+			<?php if ( '' !== $trust_art ) : ?>
+				<div class="b-hero-service__side">
+					<div class="b-hero-service__art" aria-hidden="true"><?php echo $trust_art; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG из файлов темы. ?></div>
+			<?php endif; ?>
 			<?php if ( '' !== $trust_buttons ) : ?>
 				<div class="b-hero-service__buttons">
 					<?php echo $trust_buttons; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- собрано Blocks::buttons() с экранированием. ?>
+				</div>
+			<?php endif; ?>
+			<?php if ( '' !== $trust_art ) : ?>
 				</div>
 			<?php endif; ?>
 		</div>
