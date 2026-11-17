@@ -17,33 +17,33 @@
 	margin: 0 auto;
 }
 
-/* Шапка по левому краю (правка заказчика: в макете по центру) */
+/* Шапка по левому краю во всю ширину блока, вводный текст — под H2 (правки заказчика: в макете
+   шапка по центру шириной 760 px, текст — над формой) */
 .b-problems__head {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
 	gap: 16px;
-	max-width: var(--text-col);
 }
 
-/* Слева — вводный текст и форма (колонка 280 px), справа — список проблем. На узких экранах
-   (правка заказчика) — по порядку: текст, список, форма. */
+.b-problems .section-title {
+	text-wrap: wrap;
+}
+
+/* Слева — форма (колонка 280 px), справа — список проблем. На узких экранах (правка заказчика) —
+   сначала список, потом форма. */
 .b-problems__body {
 	display: grid;
-	grid-template-areas:
-		"lead list"
-		"form list";
+	grid-template-areas: "form list";
 	grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
-	grid-template-rows: auto 1fr;
 	align-items: start;
 	gap: 24px 56px;
 }
 
 .b-problems__lead {
-	grid-area: lead;
 	margin: 0;
-	font-size: 16px;
-	line-height: 1.6;
+	font-size: 18px;
+	line-height: 1.55;
 	color: var(--c-muted);
 	text-wrap: pretty;
 }
@@ -166,11 +166,9 @@
 
 	.b-problems__body {
 		grid-template-areas:
-			"lead"
 			"list"
 			"form";
 		grid-template-columns: minmax(0, 1fr);
-		grid-template-rows: none;
 	}
 
 	.b-problems__card {

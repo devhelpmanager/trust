@@ -48,6 +48,21 @@ final class Block_Forms {
 	 */
 	public static function register(): void {
 		add_filter( 'trust_form_types', array( self::class, 'types' ) );
+		add_filter( 'acf/load_value/key=field_trust_block_brief_wants', array( self::class, 'default_wants' ), 20 );
+	}
+
+	/**
+	 * Варианты брифа по умолчанию в настройках блока: пока список пустой, в нём 8 вариантов из
+	 * макета — их можно переименовать, удалить или дополнить (правка заказчика).
+	 *
+	 * @param mixed $value Строки повторителя (по ключам подполей) или пусто.
+	 * @return mixed
+	 */
+	public static function default_wants( $value ) {
+		if ( ! empty( $value ) ) {
+			return $value;
+		}
+		return array_map( static fn( string $option ): array => array( 'field_trust_block_brief_wants_option' => $option ), self::WANTS );
 	}
 
 	/**

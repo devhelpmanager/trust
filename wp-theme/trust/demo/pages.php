@@ -325,6 +325,7 @@ return array(
 					'eyebrow' => 'Бриф',
 					'title'   => 'Заполните бриф',
 					'lead'    => 'На продвижение или бесплатный аудит. Расскажите о сайте и задаче — подготовим предложение под вашу ситуацию.',
+					'wants'   => array_map( static fn( string $option ): array => array( 'option' => $option ), Trust\Forms\Block_Forms::WANTS ),
 				),
 			),
 		),

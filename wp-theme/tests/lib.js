@@ -293,15 +293,18 @@ const MOCKUP_CSS = {
 			}
 		}
 	`,
-	// «С какими проблемами…»: шапка по левому краю (правка заказчика).
+	// «С какими проблемами…»: шапка по левому краю во всю ширину, строки заголовка заполняют ширину (правки заказчика).
 	'seo-bloki/07-problemy.html': `
-		section > div > header { align-items: flex-start !important; text-align: left !important; margin: 0 !important; }
+		section > div > header { align-items: flex-start !important; max-width: none !important; text-align: left !important; margin: 0 !important; }
+		section > div > header h2 { text-wrap: wrap !important; }
 	`,
-	// «Бриф — полный»: шапка по левому краю, от текста до формы 28 / 24 px, «таблетки» одной ширины
-	// в обоих состояниях (правки заказчика).
+	// «Бриф — полный»: шапка по левому краю во всю ширину, от текста до формы 28 / 24 px, «таблетки»
+	// одной ширины в обоих состояниях (правки заказчика).
 	'seo-bloki/11a-brif-polnyy.html': `
 		section > div { gap: 28px !important; }
 		section > div > header { align-items: flex-start !important; text-align: left !important; }
+		section > div > header h2 { text-wrap: wrap !important; }
+		section > div > header p { max-width: none !important; }
 		fieldset button[aria-pressed="false"] { padding: 0 28px !important; }
 		@media (max-width: 760px) {
 			section > div { gap: 24px !important; }

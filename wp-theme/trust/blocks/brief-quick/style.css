@@ -26,8 +26,12 @@
 	gap: 16px;
 }
 
+/* Заголовок и текст — во всю ширину блока (правка заказчика: в макете текст до 600 px) */
+.b-quick .section-title {
+	text-wrap: wrap;
+}
+
 .b-quick__lead {
-	max-width: 600px;
 	margin: 0;
 	font-size: 18px;
 	line-height: 1.55;

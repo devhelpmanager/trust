@@ -28,7 +28,7 @@ $trust_title_id = Blocks::uid( $block, 'title' );
 $trust_uid      = Blocks::uid( $block, 'brief' );
 $trust_type     = Block_Forms::BRIEF;
 $trust_form     = Forms::type( $trust_type );
-$trust_wants    = array_values( array_filter( array_map( static fn( $row ) => trim( (string) ( is_array( $row ) ? ( $row['label'] ?? '' ) : '' ) ), (array) get_field( 'wants' ) ) ) );
+$trust_wants    = array_values( array_filter( array_map( static fn( $row ) => trim( (string) ( is_array( $row ) ? ( $row['option'] ?? '' ) : '' ) ), (array) get_field( 'wants' ) ) ) );
 $trust_wants    = $trust_wants ? $trust_wants : Block_Forms::WANTS;
 
 /**

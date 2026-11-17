@@ -97,6 +97,11 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 			return getComputedStyle( head ).textAlign + ':' + Math.round( head.getBoundingClientRect().left - document.querySelector( `${ b } h2` ).closest( 'section' ).firstElementChild.getBoundingClientRect().left );
 		} ) );
 		check( 'Проблемы и бриф: заголовки по левому краю (правка заказчика)', heads.every( ( h ) => 'start:0' === h || 'left:0' === h ), JSON.stringify( heads ) );
+		const wide = await page.evaluate( () => [ '.b-problems', '.b-brief' ].map( ( b ) => {
+			const el = document.querySelector( b );
+			return [ getComputedStyle( el.querySelector( 'h2' ) ).textWrap, getComputedStyle( el.querySelector( 'p[class$="__lead"]' ) ).maxWidth ].join( ':' );
+		} ) );
+		check( 'Проблемы и бриф: заголовок и текст — во всю ширину блока, строки заголовка заполняют ширину (правка заказчика)', wide.every( ( w ) => 'wrap:none' === w ), JSON.stringify( wide ) );
 		const layout = async ( w ) => {
 			await page.setViewportSize( { width: w, height: 900 } );
 			await page.goto( SEO, { waitUntil: 'networkidle' } );
@@ -107,8 +112,8 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 		};
 		const desk = await layout( 1280 );
 		const phone = await layout( 390 );
-		check( 'Проблемы: на компьютере слева текст и форма, справа список', desk.leadX === desk.formX && desk.listX > desk.formX && desk.form > desk.lead, JSON.stringify( desk ) );
-		check( 'Проблемы: на телефоне — текст, список, потом форма (правка заказчика); от заголовка до текста 24 px', phone.lead < phone.list && phone.list < phone.form && 24 === phone.lead - phone.h2, JSON.stringify( phone ) );
+		check( 'Проблемы: текст — сразу под заголовком (правка заказчика); на компьютере слева форма, справа список', 16 === desk.lead - desk.h2 && desk.lead < desk.form && desk.lead < desk.list && desk.listX > desk.formX, JSON.stringify( desk ) );
+		check( 'Проблемы: на телефоне — заголовок, текст, список, потом форма (правка заказчика)', 16 === phone.lead - phone.h2 && phone.lead < phone.list && phone.list < phone.form, JSON.stringify( phone ) );
 		await page.setViewportSize( { width: 1280, height: 900 } );
 		await page.goto( SEO, { waitUntil: 'networkidle' } );
 		check( 'Проблемы: 6 пунктов H3 с красными иконками', 6 === pr.items.length && pr.items.every( ( i ) => i[ 1 ] && 'rgb(214, 58, 47)' === i[ 2 ] ) && 'Трафик из поиска не растёт' === pr.items[ 0 ][ 0 ], pr.items.map( ( i ) => i[ 0 ] ).join( ' | ' ) );
@@ -218,10 +223,11 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 			divider: /Также советуем/.test( el.textContent ),
 			order: [ ...el.querySelector( '.b-quick__card' ).children ].map( ( c ) => c.className.split( ' ' ).find( ( k ) => k.startsWith( 'b-quick__' ) || k.startsWith( 'form__' ) ) ),
 			left: getComputedStyle( el.querySelector( 'h2' ) ).textAlign,
+			wide: getComputedStyle( el.querySelector( 'h2' ) ).textWrap + ':' + getComputedStyle( el.querySelector( '.b-quick__lead' ) ).maxWidth,
 			gap: Math.round( el.querySelector( '.b-quick__card' ).getBoundingClientRect().top - el.querySelector( '.b-quick__lead' ).getBoundingClientRect().bottom ),
 		} ) );
-		check( 'Короткий бриф: якорь #free-audit, H2 по левому краю, поля адрес, имя, «Как с вами связаться?» (решение заказчика)',
-			'free-audit' === qf.id && 'Получите бесплатный аудит сайта' === qf.h2 && [ 'start', 'left' ].includes( qf.left ) && 'url:https://example.ru,name:Ваше имя,contact:Как с вами связаться?' === qf.inputs.join(), JSON.stringify( qf ) );
+		check( 'Короткий бриф: якорь #free-audit, H2 и текст по левому краю во всю ширину, поля адрес, имя, «Как с вами связаться?» (решение заказчика)',
+			'free-audit' === qf.id && 'Получите бесплатный аудит сайта' === qf.h2 && [ 'start', 'left' ].includes( qf.left ) && 'wrap:none' === qf.wide && 'url:https://example.ru,name:Ваше имя,contact:Как с вами связаться?' === qf.inputs.join(), JSON.stringify( qf ) );
 		check( 'Короткий бриф: «Расшарить доступ» внутри формы — под полями, над согласием и кнопкой; «Также советуем» нет; от текста до формы 24 px (правки заказчика)',
 			'b-quick__fields,b-quick__share,form__consent,form__submit' === qf.order.join() && ! qf.divider && 24 === qf.gap, JSON.stringify( qf ) );
 		await quick.locator( '.b-quick__share-label' ).click();
@@ -289,13 +295,19 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 					document.querySelector( 'form label:has(input[name=captcha])' ).style.display = 'none';
 					document.querySelector( 'form > p' ).style.display = 'none';
 					document.querySelector( 'header > span' ).textContent = 'Возможные проблемы';
+					// Вводный текст — под заголовком (18 px), форма без отступа сверху.
+					const header = document.querySelector( 'header' );
+					const body = header.nextElementSibling;
+					const aside = body.firstElementChild;
+					const lead = aside.querySelector( 'p' );
+					header.appendChild( lead );
+					lead.style.cssText += ';font-size: 18px; line-height: 1.55';
+					aside.querySelector( 'form' ).style.marginTop = '0';
 					if ( innerWidth <= 860 ) {
-						const body = document.querySelector( 'header' ).nextElementSibling;
-						const aside = body.firstElementChild;
-						body.prepend( aside.querySelector( 'p' ) );
 						body.insertBefore( body.querySelector( 'ul' ), aside );
 						aside.style.maxWidth = 'none';
-						body.style.cssText += ';display: grid; gap: 24px';
+						body.style.cssText += ';display: grid; gap: 32px';
+						aside.querySelector( 'form' ).style.marginTop = '0';
 						document.querySelector( 'section > div' ).style.gap = '24px';
 					}
 				},
@@ -363,6 +375,37 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 		await canvas.locator( '.b-brief' ).first().waitFor( { timeout: 30000 } );
 		check( 'Редактор: превью — 6 проблем с формой, бриф с 8 вариантами',
 			6 === await canvas.locator( '.b-problems__item' ).count() && 1 === await canvas.locator( '.b-problems form' ).count() && 8 === await canvas.locator( '.b-brief__chip' ).count() );
+
+		// Варианты брифа: у нового блока в настройках — 8 вариантов из макета (можно переименовать);
+		// добавленный вариант появляется на сайте (правка заказчика: раньше подпись варианта терялась —
+		// совпадали ключи полей «Подпись над вариантами» и «Вариант»).
+		const dup = wp( 'eval', "$keys = array(); $walk = function ( $fields ) use ( &$walk, &$keys ) { foreach ( $fields as $f ) { $keys[] = $f['key']; if ( ! empty( $f['sub_fields'] ) ) { $walk( $f['sub_fields'] ); } } }; foreach ( Trust\\Blocks::names() as $n ) { $walk( Trust\\Blocks::fields( $n ) ); } echo implode( ',', array_keys( array_filter( array_count_values( $keys ), fn( $c ) => $c > 1 ) ) );" );
+		check( 'Поля всех блоков: ключи не повторяются', '' === dup, dup );
+		const fresh = wp( 'eval', `echo wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'ТестБрифВарианты', 'post_content' => Trust\\Blocks::serialize( 'brief', array( 'title' => 'Бриф' ) ), 'meta_input' => array( '_wp_page_template' => 'templates/service.php' ) ) );` );
+		try {
+			await editor.goto( `${ URL }/wp-admin/post.php?post=${ fresh }&action=edit` );
+			await editor.waitForFunction( () => window.wp && wp.data && wp.data.select( 'core/block-editor' ), null, { timeout: 60000 } );
+			await editor.waitForTimeout( 2500 );
+			await editor.evaluate( () => wp.data.dispatch( 'core/block-editor' ).selectBlock( wp.data.select( 'core/block-editor' ).getBlocks().find( ( x ) => 'trust/brief' === x.name ).clientId ) );
+			await editor.waitForTimeout( 1500 );
+			const rows = editor.locator( '.interface-complementary-area [data-name="wants"] .acf-row:not(.acf-clone)' );
+			const before = await rows.count();
+			const first = await rows.first().locator( 'input[type=text]' ).inputValue();
+			await rows.first().locator( 'input[type=text]' ).fill( 'Свой первый вариант' );
+			await editor.locator( '.interface-complementary-area [data-name="wants"] a.acf-button[data-event="add-row"]' ).last().click();
+			await editor.waitForTimeout( 400 );
+			await rows.last().locator( 'input[type=text]' ).fill( 'Добавленный вариант' );
+			await editor.waitForTimeout( 2500 );
+			await editor.evaluate( () => wp.data.dispatch( 'core/editor' ).savePost() );
+			await editor.waitForFunction( () => ! wp.data.select( 'core/editor' ).isSavingPost(), null, { timeout: 30000 } );
+			await editor.waitForTimeout( 1000 );
+			await page.goto( `${ URL }/?page_id=${ fresh }`, { waitUntil: 'networkidle' } );
+			const chips = await page.$$eval( '.b-brief__chip', ( l ) => l.map( ( c ) => c.textContent.trim() ) );
+			check( 'Бриф: в настройках нового блока — 8 вариантов из макета; переименованный и добавленный варианты — на сайте',
+				8 === before && 'Вывести сайт в топ' === first && 9 === chips.length && 'Свой первый вариант' === chips[ 0 ] && 'Добавленный вариант' === chips[ 8 ], JSON.stringify( { before, first, chips } ) );
+		} finally {
+			wp( 'post', 'delete', fresh, '--force' );
+		}
 		await editor.screenshot( { path: path.join( OUT, 'form-blocks-editor.png' ) } );
 		check( 'Редактор без ошибок JavaScript', editorErrors.length === 0, editorErrors.slice( 0, 3 ).join( ' | ' ) );
 	} finally {

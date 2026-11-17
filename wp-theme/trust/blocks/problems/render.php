@@ -3,7 +3,7 @@
  * Блок «С какими проблемами вы можете столкнуться» (макет holst-blokov/Problems,
  * seo-bloki/07-problemy.html).
  *
- * Лавандовая секция: шапка по центру; слева вводный текст и форма «Заявка на аудит»
+ * Лавандовая секция: шапка слева во всю ширину (надзаголовок, H2, вводный текст); слева форма «Заявка на аудит»
  * (Trust\Forms\Block_Forms::AUDIT: адрес сайта, имя, телефон или email, капча — если включена,
  * галочка согласия вместо фразы «Нажимая кнопку…» — решение заказчика), справа список проблем.
  * После отправки — экран «Заявка отправлена» (assets/js/forms.js); без JavaScript — обычная
@@ -55,7 +55,7 @@ $trust_input = static function ( string $name, string $attrs, string $label, str
 ?>
 <section class="b-problems trust-bg-lavender"<?php echo $trust_anchor ? ' id="' . esc_attr( $trust_anchor ) . '"' : ''; ?><?php echo $trust_title ? ' aria-labelledby="' . esc_attr( $trust_title_id ) . '"' : ''; ?>>
 	<div class="b-problems__inner">
-		<?php if ( $trust_eyebrow || $trust_title ) : ?>
+		<?php if ( $trust_eyebrow || $trust_title || '' !== trim( $trust_lead ) ) : ?>
 			<div class="b-problems__head">
 				<?php if ( $trust_eyebrow ) : ?>
 					<span class="eyebrow"><?php echo esc_html( $trust_eyebrow ); ?></span>
@@ -63,13 +63,13 @@ $trust_input = static function ( string $name, string $attrs, string $label, str
 				<?php if ( $trust_title ) : ?>
 					<h2 class="section-title" id="<?php echo esc_attr( $trust_title_id ); ?>"><?php echo esc_html( $trust_title ); ?></h2>
 				<?php endif; ?>
+				<?php if ( '' !== trim( $trust_lead ) ) : ?>
+					<p class="b-problems__lead"><?php echo esc_html( $trust_lead ); ?></p>
+				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 
 		<div class="b-problems__body">
-			<?php if ( '' !== trim( $trust_lead ) ) : ?>
-				<p class="b-problems__lead"><?php echo esc_html( $trust_lead ); ?></p>
-			<?php endif; ?>
 
 			<?php if ( $trust_problems ) : ?>
 				<ul class="b-problems__list">

@@ -25,8 +25,12 @@
 	gap: 16px;
 }
 
+/* Заголовок и текст — во всю ширину блока (правка заказчика: в макете текст до 640 px) */
+.b-brief .section-title {
+	text-wrap: wrap;
+}
+
 .b-brief__lead {
-	max-width: 640px;
 	margin: 0;
 	font-size: 18px;
 	line-height: 1.55;
