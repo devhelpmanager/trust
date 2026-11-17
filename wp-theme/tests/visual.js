@@ -27,7 +27,8 @@ const FAQ = 'seo-bloki/10-vopros-otvet.html';
 const CASES = [
 	{ id: 'header', title: 'Шапка', theme: '/portfolio/', themeSel: '.site-header', mock: PORTFOLIO, mockSel: 'header', widths: [ 1280, 768, 390 ] },
 	{
-		id: 'header-menu', title: 'Мобильное меню, раскрыт раздел SEO', theme: '/portfolio/', themeSel: '.site-header', mock: PORTFOLIO, mockSel: 'header', widths: [ 768, 390 ],
+		// Экран высокий: шапка закреплена, и на обычном экране длинное меню прокручивается внутри (правка заказчика).
+		id: 'header-menu', title: 'Мобильное меню, раскрыт раздел SEO', theme: '/portfolio/', themeSel: '.site-header', mock: PORTFOLIO, mockSel: 'header', widths: [ 768, 390 ], height: 1600,
 		themeAct: async ( p ) => {
 			await p.click( '.header-burger' );
 			await p.locator( '.mobile-nav__toggle', { hasText: 'SEO' } ).click();
@@ -98,7 +99,7 @@ function composite( files, out ) {
 
 		for ( const c of CASES ) {
 			for ( const w of c.widths ) {
-				await page.setViewportSize( { width: w, height: 900 } );
+				await page.setViewportSize( { width: w, height: c.height || 900 } );
 				const base = path.join( DIR, `${ c.id }-${ w }` );
 				await shoot( page, URL + c.theme, c.themeSel, c.themeAct, `${ base }-theme.png` );
 				await shoot( page, mockupUrl( c.mock ), c.mockSel, c.mockAct, `${ base }-mockup.png` );

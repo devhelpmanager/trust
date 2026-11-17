@@ -206,9 +206,28 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 		check( 'Бриф: в «Заявках» — тип «Бесплатный аудит», сайт, тематика, задача, варианты списком, контакт — любой (Telegram, правка заказчика)',
 			1 === leads.length && 'brief' === leads[ 0 ].form && 'Бесплатный аудит' === bfFields[ 'Тип заявки' ] && 'https://shop.example.ru' === bfFields[ 'Адрес сайта' ] &&
 			'Интернет-магазин' === bfFields[ 'Тематика сайта' ] && 'Вывести сайт в топ, Упал трафик' === bfFields[ 'Что хотите получить' ] && 'Telegram @seo_client' === bfFields[ 'Как с вами связаться' ], JSON.stringify( leads ) );
+		const over = await page.locator( '.b-brief' ).evaluate( ( el ) => {
+			const card = el.querySelector( '.b-brief__card' ).getBoundingClientRect();
+			const sent = el.querySelector( '.form-sent' );
+			const s = sent.getBoundingClientRect();
+			const panel = sent.querySelector( '.form-sent__panel' ).getBoundingClientRect();
+			const form = el.querySelector( 'form' );
+			return {
+				formShown: ! form.hidden && form.offsetHeight > 500,
+				inert: form.inert,
+				kept: 'https://shop.example.ru' === form.querySelector( '[name=url]' ).value,
+				cover: Math.abs( s.top - card.top ) <= 1 && Math.abs( s.bottom - card.bottom ) <= 1 && Math.abs( s.width - card.width ) <= 2, // Внутри рамки карточки (1 px).
+				inView: panel.top >= 0 && panel.bottom <= innerHeight,
+				blur: getComputedStyle( sent ).backdropFilter,
+				title: sent.querySelector( '.form-success__title' ).textContent.trim(),
+				focus: document.activeElement.classList.contains( 'form-sent__again' ),
+			};
+		} );
+		check( 'Бриф: «Бриф отправлен» — поверх брифа, бриф остаётся на месте и недоступен, сообщение на экране, фокус на «Заполнить бриф ещё раз» (правка заказчика)',
+			over.formShown && over.inert && over.kept && over.cover && over.inView && /blur/.test( over.blur ) && 'Бриф отправлен' === over.title && over.focus, JSON.stringify( over ) );
 		await page.locator( '.b-brief .form-sent__again' ).click();
-		const reset = await brief.evaluate( ( f ) => ( { mode: f.querySelector( 'input[name=mode]:checked' ).value, chips: f.querySelectorAll( 'input[name="wants[]"]:checked' ).length } ) );
-		check( 'Бриф: «Заполнить бриф ещё раз» — форма сброшена («Продвижение», варианты не отмечены)', 'promo' === reset.mode && 0 === reset.chips, JSON.stringify( reset ) );
+		const reset = await brief.evaluate( ( f ) => ( { mode: f.querySelector( 'input[name=mode]:checked' ).value, chips: f.querySelectorAll( 'input[name="wants[]"]:checked' ).length, url: f.querySelector( '[name=url]' ).value, inert: f.inert, sent: document.querySelector( '.b-brief .form-sent' ).hidden, focus: document.activeElement.name } ) );
+		check( 'Бриф: «Заполнить бриф ещё раз» — слой убран, форма сброшена («Продвижение», варианты не отмечены), фокус на первом поле', 'promo' === reset.mode && 0 === reset.chips && '' === reset.url && ! reset.inert && reset.sent && 'url' === reset.focus, JSON.stringify( reset ) );
 
 		// ===== «Бриф — короткий» =====
 		await page.goto( QUICK, { waitUntil: 'networkidle' } );

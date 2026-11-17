@@ -9,12 +9,15 @@
  * - подсветку: текущий пункт, раздел текущей страницы, текущий пункт подменю;
  * - подменю: открытие наведением, клавиатурой, закрытие по Esc (фокус на пункт), клику вне, уходу мыши;
  * - раскладку на ширинах 1180/1179/760/520, отсутствие прокрутки вбок, зоны нажатия ≥ 44 px;
+ * - закреплённую шапку (правка заказчика): на десктопе при прокрутке вниз — полоса меню, вверх —
+ *   шапка целиком, после якоря — свёрнута; на телефоне — всегда целиком, меню прокручивается внутри;
+ *   под админ-панелью WordPress; полосу прокрутки страницы по нижнему краю шапки;
  * - совпадение с макетом на 1280 px (холст портфолио, до 2 % пикселей);
  * - axe-core без critical/serious, консоль и журнал ошибок.
  */
 
 const path = require( 'path' );
-const { launch, URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle } = require( './lib' );
+const { launch, URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle, login } = require( './lib' );
 
 const MENU = [ 'Дизайн', 'Создание сайтов', 'Поддержка сайтов', 'SEO', 'GEO', 'Контекстная реклама', 'AI', 'Портфолио', 'Блог', 'О нас' ];
 
@@ -136,6 +139,95 @@ const MENU = [ 'Дизайн', 'Создание сайтов', 'Поддерж�
 			await page.screenshot( { path: path.join( OUT, 'header-theme-390.png' ), clip: { x: 0, y: 0, width: 390, height: 100 } } );
 		}
 	}
+
+	// --- Закреплённая шапка и полоса прокрутки (правка заказчика) ---
+	await page.setViewportSize( { width: 1280, height: 800 } );
+	await page.goto( `${ URL }/seo/`, { waitUntil: 'networkidle' } );
+	await page.addStyleTag( { content: '.cookie-banner{display:none!important}' } );
+	const sticky = () => page.evaluate( () => {
+		const h = document.querySelector( '.site-header' );
+		const r = h.getBoundingClientRect();
+		const max = document.documentElement.scrollHeight - innerHeight;
+		return {
+			y: Math.round( scrollY ),
+			top: Math.round( r.top ),
+			bottom: Math.round( r.bottom ),
+			compact: h.classList.contains( 'is-compact' ),
+			nav: Math.round( h.querySelector( '.main-nav' ).getBoundingClientRect().top ),
+			bar: Math.round( h.querySelector( '.scroll-progress__bar' ).getBoundingClientRect().width ),
+			want: Math.round( innerWidth * Math.min( 1, scrollY / max ) ),
+			barH: h.querySelector( '.scroll-progress' ).getBoundingClientRect().height,
+			barBottom: Math.round( h.querySelector( '.scroll-progress' ).getBoundingClientRect().bottom ),
+		};
+	} );
+	let st = await sticky();
+	check( 'Шапка: position: sticky', 'sticky' === ( await page.evaluate( () => getComputedStyle( document.querySelector( '.site-header' ) ).position ) ) );
+	check( 'Шапка: вверху страницы — целиком, полоса прокрутки пустая', 0 === st.top && 133 === st.bottom && ! st.compact && 0 === st.bar && 3 === st.barH && st.barBottom === st.bottom, JSON.stringify( st ) );
+	await page.mouse.wheel( 0, 600 );
+	await page.waitForTimeout( 500 );
+	st = await sticky();
+	check( 'Десктоп: прокрутка вниз — верхняя строка уехала, меню вверху экрана', st.compact && -76 === st.top && 0 === st.nav && 57 === st.bottom, JSON.stringify( st ) );
+	check( 'Полоса прокрутки заполнена по доле прокрутки страницы', st.y > 0 && Math.abs( st.bar - st.want ) <= 2 && st.bar > 0, JSON.stringify( st ) );
+	await page.mouse.wheel( 0, -200 );
+	await page.waitForTimeout( 500 );
+	st = await sticky();
+	check( 'Десктоп: прокрутка вверх — шапка выезжает целиком', ! st.compact && 0 === st.top && 133 === st.bottom && st.y > 200, JSON.stringify( st ) );
+	await page.mouse.wheel( 0, 30000 );
+	await page.waitForTimeout( 800 );
+	st = await sticky();
+	check( 'Конец страницы: полоса заполнена целиком', 1280 === st.bar, JSON.stringify( st ) );
+	await page.locator( 'a[href="#problems"]' ).first().evaluate( ( a ) => a.click() );
+	await page.waitForTimeout( 1200 );
+	st = await sticky();
+	const target = await page.evaluate( () => Math.round( document.getElementById( 'problems' ).getBoundingClientRect().top ) );
+	check( 'Переход по якорю вверх: шапка свёрнута до меню, начало раздела не закрыто', st.compact && target >= st.bottom && target <= st.bottom + 16, `раздел ${ target }, ${ JSON.stringify( st ) }` );
+	const yBefore = st.y;
+	await page.locator( '.main-nav__link' ).first().focus();
+	await page.waitForTimeout( 400 );
+	st = await sticky();
+	check( 'Фокус на пункте меню в свёрнутой шапке — страница не прыгает', st.compact && Math.abs( st.y - yBefore ) <= 2, `было ${ yBefore }, ${ JSON.stringify( st ) }` );
+	await page.keyboard.press( 'Shift+Tab' );
+	await page.waitForTimeout( 400 );
+	st = await sticky();
+	check( 'Shift+Tab на кнопку звонка — шапка выезжает целиком, страница не прыгает', ! st.compact && 0 === st.top && Math.abs( st.y - yBefore ) <= 2 && await page.evaluate( () => document.activeElement.classList.contains( 'header-callback' ) ), `было ${ yBefore }, ${ JSON.stringify( st ) }` );
+
+	await page.setViewportSize( { width: 390, height: 844 } );
+	await page.goto( `${ URL }/seo/`, { waitUntil: 'networkidle' } );
+	await page.addStyleTag( { content: '.cookie-banner{display:none!important}' } );
+	await page.mouse.wheel( 0, 1500 );
+	await page.waitForTimeout( 500 );
+	await page.mouse.wheel( 0, -300 );
+	await page.waitForTimeout( 500 );
+	await page.mouse.wheel( 0, 600 );
+	await page.waitForTimeout( 500 );
+	st = await sticky();
+	check( 'Телефон: шапка всегда вверху экрана целиком', 0 === st.top && 76 === st.bottom && st.y > 1000 && st.bar > 0, JSON.stringify( st ) );
+	await page.locator( '.header-burger' ).click();
+	const menuBox = await page.evaluate( () => {
+		const n = document.querySelector( '.mobile-nav' );
+		n.querySelectorAll( '.mobile-nav__toggle' ).forEach( ( t ) => t.click() ); // Раскрыть разделы: меню длиннее экрана.
+		const r = n.getBoundingClientRect();
+		return { top: Math.round( r.top ), bottom: Math.round( r.bottom ), scroll: n.scrollHeight > n.clientHeight, overflow: getComputedStyle( n ).overflowY, vh: innerHeight };
+	} );
+	check( 'Телефон: открытое меню под шапкой, длинное — прокручивается внутри и не уходит за экран', 76 === menuBox.top && menuBox.bottom <= menuBox.vh && 'auto' === menuBox.overflow, JSON.stringify( menuBox ) );
+	check( 'Телефон: при открытом меню полосы прокрутки нет', 'none' === ( await page.evaluate( () => getComputedStyle( document.querySelector( '.scroll-progress' ) ).display ) ) );
+	await page.locator( '.header-burger' ).click();
+
+	// Админ-панель WordPress: шапка под ней; уже 600 px панель уезжает со страницей.
+	const adminCtx = await browser.newContext( { viewport: { width: 1280, height: 800 } } );
+	const admin = await adminCtx.newPage();
+	await login( admin );
+	for ( const [ w, want ] of [ [ 1280, 32 ], [ 700, 46 ], [ 390, 0 ] ] ) {
+		await admin.setViewportSize( { width: w, height: 800 } );
+		await admin.goto( `${ URL }/seo/`, { waitUntil: 'networkidle' } );
+		await admin.evaluate( () => window.scrollTo( 0, 1500 ) );
+		await admin.waitForTimeout( 300 );
+		await admin.evaluate( () => window.scrollBy( 0, -100 ) );
+		await admin.waitForTimeout( 500 );
+		const top = await admin.evaluate( () => Math.round( document.querySelector( '.site-header' ).getBoundingClientRect().top ) );
+		check( `Админ-панель, ${ w } px: шапка закреплена на ${ want } px от верха`, want === top, `${ top }` );
+	}
+	await adminCtx.close();
 
 	// --- Доступность ---
 	await page.setViewportSize( { width: 1280, height: 900 } );

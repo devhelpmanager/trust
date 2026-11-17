@@ -196,13 +196,21 @@ final class Forms {
 	 * Экран «Заявка отправлена» формы без своего скрипта (forms.js показывает его вместо формы,
 	 * кнопка data-form-again возвращает форму).
 	 *
-	 * @param string $id    id экрана (data-success формы).
-	 * @param string $title Заголовок.
-	 * @param string $text  Текст.
-	 * @param string $again Кнопка «Отправить ещё».
+	 * Вариант «поверх формы» ($overlay): форма остаётся на месте под полупрозрачным слоем и
+	 * недоступна (inert), сообщение — карточкой посередине экрана (правка заказчика для брифа:
+	 * блок не «схлопывается» после отправки). Родитель формы — position: relative.
+	 *
+	 * @param string $id      id экрана (data-success формы).
+	 * @param string $title   Заголовок.
+	 * @param string $text    Текст.
+	 * @param string $again   Кнопка «Отправить ещё».
+	 * @param bool   $overlay Показывать поверх формы.
 	 */
-	public static function sent_screen( string $id, string $title, string $text, string $again ): void {
-		printf( '<div class="form-sent" id="%s" role="status" tabindex="-1" hidden>', esc_attr( $id ) );
+	public static function sent_screen( string $id, string $title, string $text, string $again, bool $overlay = false ): void {
+		printf( '<div class="form-sent%s" id="%s" role="status" tabindex="-1" hidden>', $overlay ? ' form-sent--overlay' : '', esc_attr( $id ) );
+		if ( $overlay ) {
+			echo '<div class="form-sent__panel">';
+		}
 		echo '<span class="form-success__icon" aria-hidden="true">';
 		Icons::render(
 			'check',
@@ -217,7 +225,7 @@ final class Forms {
 			printf( '<p class="form-success__text">%s</p>', esc_html( $text ) );
 		}
 		printf( '<button type="button" class="form-sent__again" data-form-again>%s</button>', esc_html( $again ) );
-		echo '</div>';
+		echo $overlay ? '</div></div>' : '</div>';
 	}
 
 	/**

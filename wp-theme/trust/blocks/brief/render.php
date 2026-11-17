@@ -6,7 +6,8 @@
  * переключатель «Продвижение / Бесплатный аудит» (радиокнопки), адрес и тематика сайта, задача,
  * варианты «что хотите получить» — флажки-«таблетки» (можно несколько), имя и «Как с вами
  * связаться?» (решение заказчика: в макете полей для связи нет), галочка согласия вместо фразы
- * «Нажимая кнопку…». После отправки — экран «Бриф отправлен» (assets/js/forms.js).
+ * «Нажимая кнопку…». После отправки — экран «Бриф отправлен» поверх формы (правка заказчика:
+ * бриф остаётся на месте; assets/js/forms.js).
  *
  * Переменные SCF: $block (array), $is_preview (bool), $post_id (int|string).
  *
@@ -155,7 +156,7 @@ $trust_field = static function ( string $name, string $label, string $hint, stri
 				</div>
 				<?php Forms::status( $trust_type ); ?>
 			</form>
-			<?php Forms::sent_screen( $trust_uid . '-sent', Blocks::text( 'success_title', __( 'Бриф отправлен', 'trust' ) ), Blocks::text( 'success_text', __( 'Изучим сайт и задачу и свяжемся с вами в течение рабочего дня.', 'trust' ) ), Blocks::text( 'again', __( 'Заполнить бриф ещё раз', 'trust' ) ) ); ?>
+			<?php Forms::sent_screen( $trust_uid . '-sent', Blocks::text( 'success_title', __( 'Бриф отправлен', 'trust' ) ), Blocks::text( 'success_text', __( 'Изучим сайт и задачу и свяжемся с вами в течение рабочего дня.', 'trust' ) ), Blocks::text( 'again', __( 'Заполнить бриф ещё раз', 'trust' ) ), true ); ?>
 		</div>
 	</div>
 </section>

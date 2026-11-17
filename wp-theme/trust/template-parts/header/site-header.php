@@ -4,6 +4,8 @@
  *
  * Логотип и контакты — из «Настроек сайта», меню — из области «Шапка».
  * Уже 1180 px главное меню заменяется кнопкой-бургером и мобильным меню.
+ * Шапка закреплена вверху экрана; по её нижнему краю — полоса прокрутки страницы
+ * (правки заказчика, assets/js/header.js).
  *
  * @package Trust
  */
@@ -72,4 +74,5 @@ $trust_callback = Callback::text( 'button' );
 		<?php get_template_part( 'template-parts/header/main-nav' ); ?>
 		<?php get_template_part( 'template-parts/header/mobile-nav' ); ?>
 	</div>
+	<div class="scroll-progress" aria-hidden="true"><span class="scroll-progress__bar"></span></div>
 </header>

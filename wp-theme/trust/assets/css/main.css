@@ -78,6 +78,49 @@
 	--shadow-header: 0 6px 24px rgba(30, 27, 75, 0.18);
 }
 
+/*
+ * Закреплённая шапка (правка заказчика): сколько места сверху экрана она занимает при прокрутке.
+ * От 1180 px — полоса меню (вся шапка выезжает только при прокрутке вверх), уже — вся шапка.
+ * Админ-панель WordPress добавляет свою высоту; уже 600 px она уезжает со страницей.
+ */
+:root {
+	--admin-bar-h: var(--wp-admin--admin-bar--height, 0px);
+	--header-top-h: 76px;
+	--header-nav-h: 57px;
+	--sticky-top: calc(var(--admin-bar-h) + var(--header-nav-h));
+	/*
+	 * Не scroll-padding (его ставит и админ-панель WordPress): с ним браузер при фокусе на пункте
+	 * меню в закреплённой шапке прокручивает страницу. Отступ — у содержимого (ниже).
+	 */
+	scroll-padding-top: 0;
+}
+
+/* Якоря и фокус с клавиатуры не прячутся под закреплённую шапку. */
+.site-main,
+.site-main *,
+.site-footer * {
+	scroll-margin-top: calc(var(--sticky-top) + 8px);
+}
+
+@media (max-width: 1179px) {
+	:root {
+		--sticky-top: calc(var(--admin-bar-h) + var(--header-top-h));
+	}
+}
+
+/* Без JavaScript шапка не сворачивается до полосы меню. */
+@media (min-width: 1180px) {
+	html:not(.js) {
+		--sticky-top: calc(var(--admin-bar-h) + var(--header-top-h) + var(--header-nav-h));
+	}
+}
+
+@media (max-width: 600px) {
+	:root {
+		--admin-bar-h: 0px;
+	}
+}
+
 /* Правка заказчика: отступы секций меньше — 64 / 56 / 48 px (в макетах 96 px на всех ширинах) */
 @media (max-width: 1100px) {
 	:root {
@@ -443,13 +486,61 @@ textarea {
 
 /* ===== 6. Шапка (holst-portfolio/Header) ===== */
 
+/*
+ * Шапка закреплена вверху экрана (правка заказчика). От 1180 px при прокрутке вниз верхняя
+ * строка (логотип, контакты, кнопка звонка) уезжает вверх и остаётся полоса меню; при прокрутке
+ * вверх шапка выезжает целиком (класс is-compact ставит assets/js/header.js).
+ */
 .site-header {
-	position: relative;
+	position: sticky;
+	top: var(--admin-bar-h);
 	z-index: 30;
 	padding: 0 clamp(16px, 4vw, 48px);
 	background: var(--c-indigo);
 	color: var(--c-white);
 	box-shadow: var(--shadow-header);
+	transition: transform 0.25s ease;
+}
+
+@media (min-width: 1180px) {
+	.site-header.is-compact {
+		transform: translateY(calc(-1 * var(--header-top-h)));
+	}
+
+	/* Фокус с клавиатуры на логотипе, телефоне или кнопке звонка: шапка целиком и сразу, иначе браузер прокрутил бы страницу к скрытой ссылке. */
+	.site-header.is-compact:has(.site-header__top:focus-within) {
+		transform: none;
+		transition: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.site-header {
+		transition: none;
+	}
+}
+
+/* Полоса прокрутки страницы по нижнему краю шапки (правка заказчика) */
+.scroll-progress {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 3px;
+	pointer-events: none;
+}
+
+.scroll-progress__bar {
+	display: block;
+	height: 100%;
+	background: linear-gradient(90deg, var(--c-violet-bright), var(--c-decor));
+	transform: scaleX(var(--scroll-progress, 0));
+	transform-origin: left center;
+}
+
+html:not(.js) .scroll-progress,
+.site-header:has(.mobile-nav.is-open) .scroll-progress {
+	display: none; /* при открытом мобильном меню полоса оказалась бы под ним */
 }
 
 .site-header__inner {
@@ -462,7 +553,7 @@ textarea {
 	align-items: center;
 	justify-content: space-between;
 	gap: 20px;
-	min-height: 76px;
+	min-height: var(--header-top-h);
 }
 
 /* Логотип (шапка и подвал) */
@@ -776,8 +867,13 @@ html:not(.js) .main-nav__item:focus-within > .main-nav__dropdown {
 	border-top: 1px solid var(--c-indigo-hover);
 }
 
+/* Шапка закреплена: длинное меню прокручивается внутри, страница под ним стоит. */
 .mobile-nav.is-open {
 	display: block;
+	max-height: calc(100vh - var(--sticky-top));
+	max-height: calc(100dvh - var(--sticky-top));
+	overflow-y: auto;
+	overscroll-behavior: contain;
 }
 
 .mobile-nav__list {
@@ -1424,6 +1520,53 @@ textarea.field__input {
 
 .form-sent__again:hover {
 	color: var(--c-violet-deep);
+}
+
+/*
+ * Вариант «поверх формы» (бриф, правка заказчика): форма остаётся под матовым слоем,
+ * карточка с сообщением держится посередине экрана, пока виден блок (sticky), и не выходит
+ * за его границы. Отступ сверху — не меньше высоты закреплённой шапки.
+ */
+.form-sent--overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	display: block;
+	padding: 20px;
+	border-radius: inherit;
+	background: rgba(255, 255, 255, 0.74);
+	-webkit-backdrop-filter: blur(5px);
+	backdrop-filter: blur(5px);
+	animation: form-sent-in 0.25s ease-out;
+}
+
+.form-sent__panel {
+	position: sticky;
+	top: max(calc(var(--sticky-top, 0px) + 16px), calc(50vh - 140px));
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 14px;
+	max-width: 460px;
+	margin: 0 auto;
+	padding: 32px 24px 20px;
+	border: 1px solid var(--c-border);
+	border-radius: 20px;
+	background: var(--c-white);
+	box-shadow: 0 18px 48px rgba(30, 27, 75, 0.16);
+	text-align: center;
+}
+
+@keyframes form-sent-in {
+	from {
+		opacity: 0;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.form-sent--overlay {
+		animation: none;
+	}
 }
 
 /* ===== 9. Окно «Заказать обратный звонок» (макета нет — в стиле форм сайта) ===== */

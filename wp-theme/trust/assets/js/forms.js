@@ -305,14 +305,24 @@
 
 	// --- Формы без своего скрипта ---
 
+	/**
+	 * Заявка принята: экран «Заявка отправлена» (data-success) вместо формы или поверх неё
+	 * (.form-sent--overlay — форма остаётся на месте, недоступна и очищается кнопкой «ещё раз»).
+	 */
 	function done( form ) {
-		form.reset();
 		const success = form.dataset.success ? document.getElementById( form.dataset.success ) : null;
 		if ( ! success ) {
+			form.reset();
 			showStatus( form, messages.sent, true );
 			return;
 		}
-		form.hidden = true;
+		const overlay = success.classList.contains( 'form-sent--overlay' );
+		if ( overlay ) {
+			form.inert = true;
+		} else {
+			form.reset();
+			form.hidden = true;
+		}
 		success.hidden = false;
 		const again = success.querySelector( '[data-form-again]' );
 		if ( again ) {
@@ -320,7 +330,12 @@
 				'click',
 				() => {
 					success.hidden = true;
-					form.hidden = false;
+					if ( overlay ) {
+						form.reset();
+						form.inert = false;
+					} else {
+						form.hidden = false;
+					}
 					const first = form.querySelector( '[data-error]' );
 					if ( first ) {
 						first.focus();
