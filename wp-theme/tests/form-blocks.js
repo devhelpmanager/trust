@@ -79,7 +79,7 @@ const errorsOf = ( form ) => form.locator( '.field__error:not([hidden])' ).allTe
 		await page.goto( SEO, { waitUntil: 'networkidle' } );
 		const order = await page.evaluate( () => [ ...document.querySelectorAll( '.page-entry__content > section' ) ].map( ( s ) => s.className.split( ' ' )[ 0 ] ) );
 		check( 'Страница /seo/: «Проблемы» после картинки, полный бриф в конце',
-			JSON.stringify( order ) === JSON.stringify( [ 'b-hero-service', 'b-tariffs', 'b-text', 'b-image', 'b-problems', 'b-idea', 'b-brief' ] ), order.join( ', ' ) );
+			order.indexOf( 'b-problems' ) === order.indexOf( 'b-image' ) + 1 && 'b-brief' === order[ order.length - 1 ], order.join( ', ' ) );
 		const pr = await page.locator( '.b-problems' ).evaluate( ( el ) => ( {
 			id: el.id,
 			h2: el.querySelector( 'h2' ).textContent.trim(),

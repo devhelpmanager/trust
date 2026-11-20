@@ -94,8 +94,8 @@ async function compare( page, o ) {
 		// ===== Страница целиком =====
 		await page.goto( PAGE, { waitUntil: 'networkidle' } );
 		const order = await page.evaluate( () => [ ...document.querySelectorAll( '.page-entry__content > section' ) ].map( ( s ) => s.className.split( ' ' )[ 0 ] ) );
-		check( 'Страница /seo/: первый экран, тарифы, текст, картинка, «Проблемы», «Главная мысль», бриф',
-			JSON.stringify( order ) === JSON.stringify( [ 'b-hero-service', 'b-tariffs', 'b-text', 'b-image', 'b-problems', 'b-idea', 'b-brief' ] ), order.join( ', ' ) );
+		check( 'Страница /seo/: первый экран, тарифы, карусель кейсов, текст, картинка, «Проблемы», проекты в топе, отзывы, «Главная мысль», бриф',
+			JSON.stringify( order ) === JSON.stringify( [ 'b-hero-service', 'b-tariffs', 'b-carousel', 'b-text', 'b-image', 'b-problems', 'b-projects', 'b-reviews', 'b-idea', 'b-brief' ] ), order.join( ', ' ) );
 
 		// ===== «Выбор тарифа» =====
 		const tar = page.locator( '.b-tariffs' );

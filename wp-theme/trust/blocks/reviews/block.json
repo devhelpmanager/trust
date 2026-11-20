@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/reviews",
+	"title": "Отзывы клиентов",
+	"description": "Карточки текстовых отзывов: «3 карточки» с фото автора и ссылкой «Оригинал» или «2 карточки» коротко, как в портфолио. Отзывы — последние, по услуге или выбранные вручную; кнопка «Все отзывы».",
+	"category": "trust-lists",
+	"icon": "format-quote",
+	"keywords": [ "отзывы", "клиенты", "что говорят клиенты", "рекомендации", "цитаты" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "trust-lightbox",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

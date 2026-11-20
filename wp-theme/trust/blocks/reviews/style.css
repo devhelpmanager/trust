@@ -1,0 +1,218 @@
+/*
+ * Блок «Отзывы клиентов»: «3 карточки» (holst-blokov/Reviews, seo-bloki/15-otzyvy.html) и
+ * «2 карточки» («Что говорят клиенты» в portfolio-blog-404/portfolio.html).
+ * На белом фоне карточки лавандовые, на лавандовом — белые с рамкой.
+ */
+
+.b-reviews {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-reviews--lavender {
+	background: var(--c-lavender);
+}
+
+.b-reviews__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 48px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-reviews--two .b-reviews__inner {
+	gap: 32px;
+}
+
+/* Шапка и кнопка «Все отзывы» справа */
+.b-reviews__top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 20px;
+}
+
+.b-reviews__head {
+	min-width: 0;
+}
+
+.b-reviews__all {
+	display: inline-flex; /* 48 px вместе с рамкой, как в макете портфолио */
+	align-items: center;
+	gap: 8px;
+	min-height: 48px;
+	padding: 0 20px;
+	border: 1.5px solid var(--c-violet);
+	border-radius: var(--r-btn);
+	background: var(--c-white);
+	color: var(--c-violet-dark);
+	font-size: 15px;
+	font-weight: 600;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: background 0.2s;
+}
+
+.b-reviews__all:hover {
+	background: var(--c-lavender-2);
+	color: var(--c-violet-dark);
+}
+
+/* Сетка карточек: от 320 px (3 карточки) или 420 px (2 карточки) на колонку */
+.b-reviews__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+	gap: 24px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-reviews--two .b-reviews__list {
+	grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
+	gap: 20px;
+}
+
+.b-reviews__item {
+	display: flex;
+	min-width: 0;
+}
+
+.b-reviews__card {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	gap: 24px;
+	min-width: 0;
+	margin: 0;
+	padding: 28px;
+	border-radius: var(--r-card-lg);
+	background: var(--c-lavender);
+}
+
+.b-reviews--lavender .b-reviews__card {
+	border: 1px solid var(--c-border);
+	background: var(--c-white);
+}
+
+.b-reviews--two .b-reviews__card {
+	gap: 18px;
+	border-radius: 22px;
+}
+
+.b-reviews__mark {
+	flex: none;
+	width: 36px;
+	height: 28px;
+	fill: var(--c-violet);
+}
+
+.b-reviews--two .b-reviews__mark {
+	width: 32px;
+	height: 25px;
+	fill: #C9BCEB;
+}
+
+.b-reviews__quote {
+	flex: 1 1 auto;
+	margin: 0;
+	font-size: 17px;
+	line-height: 1.65;
+	color: var(--c-text-2);
+	text-wrap: pretty;
+	overflow-wrap: break-word;
+}
+
+.b-reviews--two .b-reviews__quote {
+	flex: 0 1 auto;
+	font-size: 16px;
+	text-wrap: wrap;
+}
+
+.b-reviews__quote p {
+	margin: 0;
+}
+
+.b-reviews__quote p + p {
+	margin-top: 12px;
+}
+
+/* Подпись: «3 карточки» — фото, имя, должность и «Оригинал» через черту; «2 карточки» — имя и строка */
+.b-reviews__author {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding-top: 20px;
+	border-top: 1px solid var(--c-border);
+}
+
+.b-reviews--two .b-reviews__author {
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 2px;
+	margin-top: auto;
+	padding-top: 0;
+	border-top: 0;
+}
+
+.b-reviews__avatar {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 56px;
+	height: 56px;
+	overflow: hidden;
+	border-radius: var(--r-pill);
+	background: var(--c-decor-2);
+	fill: var(--c-decor);
+}
+
+.b-reviews__photo {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.b-reviews__who {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+
+.b-reviews__name {
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.b-reviews__role {
+	font-size: 14px;
+	color: var(--c-muted);
+}
+
+/* «Оригинал»: зона нажатия выше строки за счёт отступов, вёрстку не сдвигает */
+.b-reviews__original {
+	flex: none;
+	margin: -12px 0;
+	padding: 12px 0;
+	color: var(--c-violet);
+	font-size: 13px;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.b-reviews__original:hover {
+	color: var(--c-violet-deep);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.b-reviews .trust-block-warning {
+	margin: 0;
+}

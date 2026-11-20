@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/projects-top",
+	"title": "Наши проекты в топе",
+	"description": "Карточки кейсов с позициями сайта в Яндексе и Google: скриншот, чем занимается клиент, название, таблица «запрос — позиция», регион и дата проверки. Кейсы — с заполненными позициями или выбранные вручную.",
+	"category": "trust-lists",
+	"icon": "chart-line",
+	"keywords": [ "кейсы", "позиции", "топ", "проекты", "яндекс", "google" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

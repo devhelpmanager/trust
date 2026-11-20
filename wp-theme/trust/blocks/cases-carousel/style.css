@@ -1,0 +1,212 @@
+/*
+ * Блок «Карусель кейсов» (holst-blokov/CasesCarousel, seo-bloki/14-karusel-keysov.html).
+ * Лента слайдов сдвигается на номер слайда × (ширина слайда + промежуток) — как в макете;
+ * соседние слайды выглядывают справа до края экрана (секция обрезает лишнее).
+ */
+
+.b-carousel {
+	padding: var(--section-y) var(--gutter);
+	overflow-x: clip;
+}
+
+.b-carousel__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-carousel__top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 24px;
+}
+
+.b-carousel__head {
+	flex: 1 1 480px;
+	min-width: 0;
+}
+
+/* Счётчик и стрелки */
+.b-carousel__nav {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.b-carousel__counter {
+	min-width: 72px;
+	font-family: var(--f-mono);
+	font-size: 14px;
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	color: var(--c-violet-light);
+	font-variant-numeric: tabular-nums;
+}
+
+.b-carousel__btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 52px;
+	height: 52px;
+	padding: 0;
+	border: 0;
+	border-radius: var(--r-pill);
+	cursor: pointer;
+	transition: background 0.2s, border-color 0.2s;
+}
+
+.b-carousel__btn--prev {
+	border: 1.5px solid #8F6BD8;
+	background: transparent;
+	color: var(--c-white);
+}
+
+.b-carousel__btn--next {
+	background: var(--c-white);
+	color: var(--c-violet-dark);
+}
+
+.b-carousel__btn--prev:hover {
+	border-color: var(--c-white);
+	background: rgba(255, 255, 255, 0.08);
+}
+
+.b-carousel__btn--next:hover {
+	background: var(--c-violet-light);
+}
+
+.b-carousel__btn:focus-visible,
+.b-carousel__link:focus-visible {
+	outline: 2px solid var(--c-white);
+	outline-offset: 3px;
+}
+
+/* Лента и слайды */
+.b-carousel__track {
+	--slide-w: 60%;
+	--slide-gap: 24px;
+	display: flex;
+	gap: var(--slide-gap);
+	transform: translateX(calc(var(--carousel-index, 0) * -1 * (var(--slide-w) + var(--slide-gap))));
+	transition: transform 0.5s ease;
+	touch-action: pan-y; /* горизонтальное движение пальцем листает слайды (view.js) */
+}
+
+.b-carousel__slide {
+	display: flex;
+	flex: 0 0 var(--slide-w);
+	flex-direction: column;
+	gap: 20px;
+	min-width: 0;
+}
+
+.b-carousel__img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 16 / 10;
+	object-fit: cover;
+	border-radius: var(--r-card-lg);
+	background: var(--c-violet-plate);
+	opacity: 0.45;
+	transition: opacity 0.4s;
+}
+
+.b-carousel__text {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	opacity: 0;
+	transform: translateY(12px);
+	transition: opacity 0.4s, transform 0.4s;
+}
+
+.b-carousel__slide.is-active .b-carousel__img,
+.b-carousel__slide.is-active .b-carousel__text {
+	opacity: 1;
+}
+
+.b-carousel__slide.is-active .b-carousel__text {
+	transform: none;
+}
+
+.b-carousel__niche {
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--c-violet-light);
+}
+
+.b-carousel__title {
+	margin: 0;
+	font-size: 22px;
+	font-weight: 600;
+	line-height: 1.3;
+	overflow-wrap: break-word;
+}
+
+.b-carousel__link,
+.b-carousel__link:hover {
+	color: inherit;
+	text-decoration: none;
+}
+
+.b-carousel__link:hover {
+	text-decoration: underline;
+	text-underline-offset: 4px;
+}
+
+.b-carousel__desc {
+	margin: 0;
+	font-size: 16px;
+	line-height: 1.55;
+	color: var(--c-on-violet);
+	text-wrap: pretty;
+}
+
+.b-carousel .trust-block-warning {
+	margin: 0;
+}
+
+@media (max-width: 640px) {
+	.b-carousel__track {
+		--slide-w: 86%;
+		--slide-gap: 16px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.b-carousel__track,
+	.b-carousel__img,
+	.b-carousel__text {
+		transition: none;
+	}
+}
+
+/* Без JavaScript: лента прокручивается вбок, все слайды видны целиком. */
+html:not(.js) .b-carousel__nav {
+	display: none;
+}
+
+html:not(.js) .b-carousel__track {
+	overflow-x: auto;
+	transform: none;
+	scroll-snap-type: x mandatory;
+}
+
+html:not(.js) .b-carousel__slide {
+	scroll-snap-align: start;
+}
+
+html:not(.js) .b-carousel__img,
+html:not(.js) .b-carousel__text {
+	opacity: 1;
+	transform: none;
+}

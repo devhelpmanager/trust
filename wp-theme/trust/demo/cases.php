@@ -6,7 +6,7 @@
  * клиент» — из «Проектов в топе» и карусели кейсов (seo-bloki/14-karusel-keysov.html).
  *
  * Поле terms — ключи демо-терминов из demo/terms.php; {post:review:ключ} — ID демо-отзыва.
- * Обложки и скриншоты добавятся вместе с картинками в демо-контенте (шаг 4.16);
+ * Скриншоты сайтов трёх кейсов с позициями — из seo-bloki/images (шаг 4.7), обложки — на шаге 4.16;
  * команда проекта — {post:team:ключ} из demo/team.php.
  *
  * @package Trust
@@ -93,6 +93,8 @@ return array(
 				)
 			),
 			'trust_positions_region' => '[Регион]',
+			'trust_positions_date'   => '20261101',
+			'trust_screenshot'       => '{image:project-repair.jpg|Главная страница сайта компании по ремонту квартир}',
 			'trust_team'             => array(
 				array(
 					'member' => '{post:team:seo-specialist}',
@@ -131,6 +133,9 @@ return array(
 				)
 			),
 			'trust_positions_region' => '[Регион]',
+			'trust_positions_date'   => '20261101',
+			'trust_screenshot'       => '{image:project-dental.jpg|Главная страница сайта стоматологической клиники}',
+			'trust_review'           => '{post:review:case-dental}',
 		),
 	),
 	array(
@@ -154,6 +159,8 @@ return array(
 				)
 			),
 			'trust_positions_region' => '[Регион]',
+			'trust_positions_date'   => '20261101',
+			'trust_screenshot'       => '{image:project-shop.jpg|Главная страница сайта интернет-магазина мебели}',
 		),
 	),
 	array(

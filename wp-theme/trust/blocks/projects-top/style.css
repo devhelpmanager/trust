@@ -1,0 +1,188 @@
+/*
+ * Блок «Наши проекты в топе» (holst-blokov/Projects, seo-bloki/12-proekty-v-tope.html).
+ * Фиолетовая секция, белые карточки по 3 в ряд (колонка от 320 px).
+ */
+
+.b-projects {
+	padding: var(--section-y) var(--gutter);
+}
+
+.b-projects__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 48px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-projects__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+	gap: 24px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-projects__card {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	overflow: hidden;
+	border-radius: var(--r-card-lg);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-projects__img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 16 / 10;
+	object-fit: cover;
+	object-position: top;
+	background: var(--c-lavender-2);
+}
+
+.b-projects__body {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	gap: 16px;
+	padding: 24px;
+}
+
+.b-projects__titles {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.b-projects__niche {
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--c-violet);
+}
+
+.b-projects__name {
+	margin: 0;
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 1.3;
+	overflow-wrap: break-word;
+}
+
+/* Таблица «Запрос — Позиция в Я — Позиция в G» */
+.b-projects__table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 15px;
+}
+
+.b-projects__table th {
+	padding: 0 0 8px 6px;
+	vertical-align: bottom;
+	font-family: var(--f-mono);
+	font-weight: 500;
+	text-transform: uppercase;
+	color: var(--c-muted-2);
+}
+
+.b-projects__table .b-projects__th-query {
+	padding: 0 8px 8px 0;
+	font-size: 11px;
+	letter-spacing: 0.08em;
+	text-align: left;
+}
+
+.b-projects__th-pos {
+	width: 70px; /* 64 px + отступ 6 px, как в макете */
+	text-align: center;
+}
+
+.b-projects__th-label {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+	font-size: 10px;
+	letter-spacing: 0.06em;
+	white-space: nowrap;
+}
+
+.b-projects__engine {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	border-radius: 6px;
+	color: var(--c-white);
+	font-family: var(--f-text);
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0;
+	text-transform: none;
+}
+
+.b-projects__engine--yandex {
+	background: var(--c-bad);
+}
+
+.b-projects__engine--google {
+	background: var(--c-google);
+}
+
+.b-projects__table tbody tr {
+	border-top: 1px solid var(--c-divider);
+}
+
+.b-projects__query {
+	padding: 10px 8px 10px 0;
+	line-height: 1.35;
+	overflow-wrap: anywhere;
+}
+
+.b-projects__pos {
+	padding: 10px 0 10px 6px;
+	text-align: center;
+}
+
+/* Позиция: 1–3 — фиолетовая плашка, дальше — светлая */
+.b-projects__badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 34px;
+	height: 30px;
+	padding: 0 6px;
+	border-radius: 9px;
+	background: var(--c-lavender-2);
+	color: var(--c-violet-dark);
+	font-family: var(--f-display);
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.b-projects__badge.is-top {
+	background: var(--c-violet);
+	color: var(--c-white);
+}
+
+.b-projects__none {
+	color: var(--c-muted-2);
+}
+
+.b-projects__meta {
+	margin-top: auto;
+	font-size: 12px;
+	line-height: 1.4;
+	color: var(--c-muted-2);
+}
+
+.b-projects .trust-block-warning {
+	margin: 0;
+}

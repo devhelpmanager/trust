@@ -1,6 +1,7 @@
 /**
  * Просмотр картинок на весь экран (правка заказчика): блок «Картинка» (ссылка
- * a[data-trust-lightbox] на оригинал) и картинки в тексте (.prose img без ссылки).
+ * a[data-trust-lightbox] на оригинал), скан письма в «Отзывах клиентов» и картинки в тексте
+ * (.prose img без ссылки).
  *
  * Окно — <dialog> поверх страницы: картинка целиком по размеру экрана, подпись, кнопка
  * «Закрыть». Закрывается кнопкой, Esc, нажатием мимо картинки; фокус возвращается на
@@ -55,8 +56,14 @@
 		return best;
 	}
 
-	/** Подпись картинки: «Рис. N» и описание у блока «Картинка», иначе — подпись figure. */
+	/**
+	 * Подпись картинки: data-lightbox-caption у ссылки (скан письма в «Отзывах клиентов»),
+	 * «Рис. N» и описание у блока «Картинка», иначе — подпись figure.
+	 */
 	function captionOf( el ) {
+		if ( el.dataset && el.dataset.lightboxCaption ) {
+			return { num: '', text: el.dataset.lightboxCaption };
+		}
 		const figure = el.closest( 'figure' );
 		const cap = figure && figure.querySelector( 'figcaption' );
 		if ( ! cap ) {

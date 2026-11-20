@@ -155,6 +155,34 @@ final class Page_Types {
 	}
 
 	/**
+	 * Адрес опубликованной страницы типа (первой по порядку) или '' — для ссылок «Все отзывы» и т. п.
+	 *
+	 * @param string $type Тип страницы.
+	 */
+	public static function url( string $type ): string {
+		$template = self::template( $type );
+		if ( '' === $template ) {
+			return '';
+		}
+		$pages = get_posts(
+			array(
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'posts_per_page' => 1,
+				'orderby'        => array(
+					'menu_order' => 'ASC',
+					'ID'         => 'ASC',
+				),
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+				'meta_key'       => '_wp_page_template', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- одна страница по шаблону.
+				'meta_value'     => $template, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- одна страница по шаблону.
+			)
+		);
+		return $pages ? (string) get_permalink( $pages[0] ) : '';
+	}
+
+	/**
 	 * Блоки только своего типа: блок => тип.
 	 */
 	public static function exclusive(): array {

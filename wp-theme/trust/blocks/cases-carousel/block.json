@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/cases-carousel",
+	"title": "Карусель кейсов",
+	"description": "Скриншоты результатов клиентов по одному: картинка, чем занимается клиент, заголовок и описание, ссылка на кейс. Счётчик «01 / 04», стрелки, листание пальцем.",
+	"category": "trust-lists",
+	"icon": "slides",
+	"keywords": [ "кейсы", "карусель", "слайдер", "результаты", "скриншоты" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

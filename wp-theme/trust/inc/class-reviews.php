@@ -171,6 +171,26 @@ final class Reviews {
 	}
 
 	/**
+	 * Кейс, к которому привязан отзыв (поле кейса «Отзыв клиента»); 0 — нет.
+	 *
+	 * @param int $post_id Отзыв.
+	 */
+	public static function case_of( int $post_id ): int {
+		$cases = get_posts(
+			array(
+				'post_type'      => 'case',
+				'post_status'    => 'publish',
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+				'meta_key'       => 'trust_review', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- кейс по связанному отзыву.
+				'meta_value'     => $post_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- кейс по связанному отзыву.
+			)
+		);
+		return $cases ? (int) $cases[0] : 0;
+	}
+
+	/**
 	 * Подсказка в поле заголовка отзыва.
 	 *
 	 * @param string   $text Подсказка.

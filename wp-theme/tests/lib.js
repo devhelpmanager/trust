@@ -247,8 +247,14 @@ const SECTION_SPACING_CSS = `
 		footer.dc-foot { padding-top: 32px !important; }
 	}
 `;
+// «Что говорят клиенты» в портфолио — блок «Отзывы клиентов» (2 карточки): заголовок секции и
+// шапка — как у всех блоков (в макете H2 26–40 px и 14 px от надзаголовка).
+const PORTFOLIO_REVIEWS_CSS = `
+	section[aria-labelledby="rev-title"] header { gap: 16px !important; }
+	#rev-title { font-size: clamp(28px, 3.4vw, 44px) !important; text-wrap: balance; }
+`;
 const MOCKUP_CSS = {
-	'portfolio-blog-404/portfolio.html': HERO_SECTION_CSS,
+	'portfolio-blog-404/portfolio.html': HERO_SECTION_CSS + PORTFOLIO_REVIEWS_CSS,
 	'o-nas/o-kompanii.html': HERO_SECTION_CSS,
 	'o-nas/komanda.html': HERO_SECTION_CSS,
 	'o-nas/karera.html': HERO_SECTION_CSS,

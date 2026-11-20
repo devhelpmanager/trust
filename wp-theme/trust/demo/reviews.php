@@ -1,7 +1,8 @@
 <?php
 /**
- * Демо-отзывы: заглушки из макетов o-nas/otzyvy.html (список «Что говорят клиенты»)
- * и portfolio-blog-404/keys.html (блок «Слово клиенту» кейса «Ремонт квартир»).
+ * Демо-отзывы: заглушки из макетов o-nas/otzyvy.html (список «Что говорят клиенты»),
+ * portfolio-blog-404/keys.html (блок «Слово клиенту» кейса «Ремонт квартир»), portfolio.html
+ * («Что говорят клиенты», 2 карточки) и seo-bloki/15-otzyvy.html (блок «Отзывы клиентов»).
  *
  * Ключ — постоянный идентификатор (по нему кейсы ссылаются на отзыв: {post:review:ключ}).
  * terms — ключи демо-терминов из demo/terms.php. Видеоотзывы и благодарственные письма
@@ -39,6 +40,43 @@ $trust_reviews = array(
 		),
 	),
 );
+
+// Отзыв к кейсу «Стоматология» — вторая карточка «Что говорят клиенты» в портфолио (вид «2 карточки»).
+$trust_reviews[] = array(
+	'key'    => 'case-dental',
+	'title'  => '[Имя Фамилия], [Компания] — стоматология',
+	'terms'  => array( 'service_type' => array( 'seo', 'geo' ) ),
+	'fields' => array(
+		'trust_kind'     => 'text',
+		'trust_name'     => '[Имя Фамилия]',
+		'trust_position' => '[Должность]',
+		'trust_company'  => '[Компания]',
+		'trust_text'     => '[Отзыв клиента о работе команды: сроки, отчёты, общение — 2–3 предложения.]',
+	),
+);
+
+// Блок «Отзывы клиентов», вид «3 карточки» (seo-bloki/15-otzyvy.html): ссылка «Оригинал» — заглушка.
+foreach (
+	array(
+		'result'  => array( 'о результате', '[Отзыв о результате: с какой задачей клиент пришёл и что изменилось в трафике и заявках после работы с вами.]' ),
+		'process' => array( 'о процессе', '[Отзыв о процессе: как проходило сотрудничество, насколько понятными были отчёты и соблюдались ли сроки.]' ),
+		'team'    => array( 'о команде', '[Отзыв о команде: кто вёл проект, как быстро отвечали на вопросы и решали возникающие задачи.]' ),
+	) as $trust_key => list( $trust_about, $trust_text )
+) {
+	$trust_reviews[] = array(
+		'key'    => 'block-' . $trust_key,
+		'title'  => '[Имя Фамилия], [Компания] — ' . $trust_about,
+		'terms'  => array( 'service_type' => array( 'seo' ) ),
+		'fields' => array(
+			'trust_kind'     => 'text',
+			'trust_name'     => '[Имя Фамилия]',
+			'trust_position' => '[Должность]',
+			'trust_company'  => '[Компания]',
+			'trust_text'     => $trust_text,
+			'trust_source'   => 'https://example.com/review-' . $trust_key,
+		),
+	);
+}
 
 // Список на странице «Отзывы о нас»: услуги в порядке макета.
 foreach ( array( 'seo', 'sites', 'ppc', 'seo', 'support', 'sites', 'seo', 'ppc' ) as $trust_i => $trust_service ) {

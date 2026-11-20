@@ -1,6 +1,6 @@
 <?php
 /**
- * Кейсы: колонка «Главный» в админке.
+ * Кейсы: колонка «Главный» в админке, данные кейса для карточек блоков.
  *
  * @package Trust
  */
@@ -54,6 +54,63 @@ final class Cases {
 		if ( 'trust_client' === $column ) {
 			echo esc_html( (string) get_post_meta( $post_id, 'trust_client', true ) );
 		}
+	}
+
+	/**
+	 * Чем занимается клиент: поле «Чем занимается клиент», иначе первая отрасль кейса.
+	 *
+	 * @param int $post_id Кейс.
+	 */
+	public static function niche( int $post_id ): string {
+		$niche = trim( (string) get_post_meta( $post_id, 'trust_niche', true ) );
+		if ( '' !== $niche ) {
+			return $niche;
+		}
+		$terms = get_the_terms( $post_id, 'industry' );
+		return is_array( $terms ) && $terms ? $terms[0]->name : '';
+	}
+
+	/**
+	 * Название проекта для карточек: клиент, иначе заголовок кейса.
+	 *
+	 * @param int $post_id Кейс.
+	 */
+	public static function name( int $post_id ): string {
+		$client = trim( (string) get_post_meta( $post_id, 'trust_client', true ) );
+		return '' !== $client ? $client : get_the_title( $post_id );
+	}
+
+	/**
+	 * Скриншот сайта: поле «Скриншот сайта», иначе «Изображение записи» (0 — нет).
+	 *
+	 * @param int $post_id Кейс.
+	 */
+	public static function screenshot( int $post_id ): int {
+		$id = (int) get_post_meta( $post_id, 'trust_screenshot', true );
+		return $id ? $id : (int) get_post_thumbnail_id( $post_id );
+	}
+
+	/**
+	 * Позиции в поиске: строки «запрос, Яндекс, Google» (позиция 0 — не указана).
+	 *
+	 * @param int $post_id Кейс.
+	 * @return array<int, array{query: string, yandex: int, google: int}>
+	 */
+	public static function positions( int $post_id ): array {
+		$rows       = array();
+		$rows_count = (int) get_post_meta( $post_id, 'trust_positions', true );
+		for ( $i = 0; $i < $rows_count; $i++ ) {
+			$query = trim( (string) get_post_meta( $post_id, "trust_positions_{$i}_query", true ) );
+			if ( '' === $query ) {
+				continue;
+			}
+			$rows[] = array(
+				'query'  => $query,
+				'yandex' => (int) get_post_meta( $post_id, "trust_positions_{$i}_yandex", true ),
+				'google' => (int) get_post_meta( $post_id, "trust_positions_{$i}_google", true ),
+			);
+		}
+		return $rows;
 	}
 
 	/**
