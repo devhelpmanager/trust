@@ -37,7 +37,7 @@
 	gap: 12px;
 }
 
-/* Счётчик крупнее, чем в макете (правка заказчика: 14 → 20 px, на телефоне 16) */
+/* Счётчик крупнее, чем в макете (правка заказчика: 14 → 20 px); на телефоне скрыт */
 .b-carousel__counter {
 	min-width: 96px;
 	font-family: var(--f-mono);
@@ -248,9 +248,18 @@
 		--slide-gap: 16px;
 	}
 
-	.b-carousel__counter {
-		min-width: 76px;
-		font-size: 16px;
+	/*
+	 * На телефоне счётчика и стрелок не видно (правка заказчика): листают пальцем, соседний слайд
+	 * выглядывает справа. Для скринридеров и клавиатуры они остаются: при фокусе на стрелке — видны.
+	 */
+	.js .b-carousel__nav:not(:focus-within) {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
 	}
 }
 

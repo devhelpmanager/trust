@@ -100,7 +100,10 @@
 				}
 				drag.active = true;
 				track.classList.add( 'is-dragging' );
-				if ( track.setPointerCapture ) {
+				// Мышь «привязываем» к ленте, чтобы отпускание за её пределами тоже засчиталось. Касание
+				// браузер уже привязал к элементу под пальцем (события и так доходят до ленты): перехват
+				// снял бы эту привязку, и жест оборвался бы.
+				if ( 'mouse' === event.pointerType && track.setPointerCapture ) {
 					try {
 						track.setPointerCapture( event.pointerId );
 					} catch ( e ) {}
@@ -112,7 +115,8 @@
 
 		track.addEventListener( 'pointerup', finish );
 		track.addEventListener( 'pointercancel', () => finish( null ) );
-		track.addEventListener( 'lostpointercapture', () => drag && drag.active && finish( null ) );
+		// Только сама лента: событие от картинки или ссылки внутри всплывает сюда же и не значит, что жест прерван.
+		track.addEventListener( 'lostpointercapture', ( event ) => event.target === track && drag && drag.active && finish( null ) );
 
 		// После перетаскивания не открывать скриншот и не переходить по ссылке.
 		track.addEventListener(

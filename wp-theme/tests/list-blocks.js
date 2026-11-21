@@ -8,7 +8,8 @@
  * кейсы вручную (по порядку, без позиций — пропуск) и автоматически (только с позициями,
  * количество), пустой блок на сайт не выводится.
  * «Карусель кейсов»: роли и подписи (карусель, слайды «1 из 4»), счётчик, стрелки по кругу,
- * клавиши ← →, листание пальцем, соседние слайды недоступны (inert), ссылка на кейс и строка
+ * клавиши ← →, листание мышью и пальцем (настоящие касания, эмуляция iPhone), на телефоне — без
+ * счётчика и стрелок, скриншот на весь экран, соседние слайды недоступны, ссылка на кейс и строка
  * «чем занимается клиент» из кейса, «Уменьшить движение», вид без JavaScript, один слайд — без стрелок.
  * «Отзывы клиентов»: «3 карточки» (фото или силуэт, имя, должность и компания, «Оригинал» — ссылка
  * в новой вкладке или скан письма на весь экран) и «2 карточки» (строка с отраслью кейса), фон
@@ -20,6 +21,7 @@
  */
 
 const path = require( 'path' );
+const { devices } = require( 'playwright' );
 const { launch, URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle, isolate, login, wp } = require( './lib' );
 
 const SEO = `${ URL }/seo/`;
@@ -202,28 +204,6 @@ const columns = ( page, sel ) => page.$$eval( sel, ( list ) => list.filter( ( el
 		await page.keyboard.press( 'ArrowLeft' );
 		st = await state();
 		check( 'Карусель: клавиша ← — назад', '01 / 04' === st.counter, JSON.stringify( st ) );
-		// Палец: события указателя с pointerType «touch» (вниз, движение по шагам, вверх).
-		const swipe = async ( dx, dy = 0 ) => car.locator( '[data-carousel-track]' ).evaluate( ( track, d ) => {
-			const r = track.getBoundingClientRect();
-			const x = r.left + 300;
-			const y = r.top + 100;
-			const ev = ( type, px, py ) => track.dispatchEvent( new PointerEvent( type, { bubbles: true, cancelable: true, pointerType: 'touch', pointerId: 7, isPrimary: true, clientX: px, clientY: py } ) );
-			ev( 'pointerdown', x, y );
-			for ( let i = 1; i <= 5; i++ ) {
-				ev( 'pointermove', x + ( d[ 0 ] * i ) / 5, y + ( d[ 1 ] * i ) / 5 );
-			}
-			ev( 'pointerup', x + d[ 0 ], y + d[ 1 ] );
-		}, [ dx, dy ] );
-		await swipe( -120 );
-		const afterLeft = ( await state() ).counter;
-		await swipe( 90 );
-		const afterRight = ( await state() ).counter;
-		await swipe( -30 );
-		await swipe( -50, 120 );
-		const afterSmall = ( await state() ).counter;
-		check( 'Карусель: пальцем влево — следующий, вправо — предыдущий; короткий и вертикальный жест не листает',
-			'02 / 04' === afterLeft && '01 / 04' === afterRight && '01 / 04' === afterSmall, JSON.stringify( [ afterLeft, afterRight, afterSmall ] ) );
-
 		// Мышь (правка заказчика): перетаскивание листает, лента идёт за указателем; после перетаскивания
 		// скриншот не открывается; короткое — возврат; с выглядывающего слайда — тоже листает.
 		await car.locator( '[data-carousel-track]' ).scrollIntoViewIfNeeded();
@@ -313,7 +293,12 @@ const columns = ( page, sel ) => page.$$eval( sel, ( list ) => list.filter( ( el
 		await page.setViewportSize( { width: 390, height: 900 } );
 		st = await state();
 		check( '390px: слайд карусели — 86 % ленты', Math.abs( st.slideW - st.trackW * 0.86 ) <= 1, JSON.stringify( st ) );
-		check( '390px: счётчик карусели — 16 px', '16px' === await page.locator( '.b-carousel__counter' ).evaluate( ( e ) => getComputedStyle( e ).fontSize ) );
+		const navHidden = await page.locator( '.b-carousel__nav' ).evaluate( ( n ) => [ Math.round( n.getBoundingClientRect().width ), getComputedStyle( n ).position, n.querySelectorAll( 'button' ).length ] );
+		await page.locator( '[data-carousel-next]' ).focus();
+		const navFocused = await page.locator( '.b-carousel__nav' ).evaluate( ( n ) => Math.round( n.getBoundingClientRect().width ) );
+		await page.locator( '[data-carousel-next]' ).blur();
+		check( '390px: счётчик и стрелки карусели скрыты (правка заказчика), для скринридеров остаются; при фокусе на стрелке — видны',
+			1 === navHidden[ 0 ] && 'absolute' === navHidden[ 1 ] && 2 === navHidden[ 2 ] && navFocused > 150, JSON.stringify( [ navHidden, navFocused ] ) );
 		for ( const w of [ 1440, 1024, 600, 360, 320, 280 ] ) {
 			await page.setViewportSize( { width: w, height: 900 } );
 			await page.waitForTimeout( 200 );
@@ -321,12 +306,12 @@ const columns = ( page, sel ) => page.$$eval( sel, ( list ) => list.filter( ( el
 			check( `${ w }px: без прокрутки вбок, содержимое блоков в экране`, ! over[ 0 ] && ! over[ 1 ].length, JSON.stringify( over ) );
 		}
 		await page.setViewportSize( { width: 390, height: 900 } );
-		const small = await page.evaluate( () => [ ...document.querySelectorAll( '.b-carousel__btn, .b-reviews__all, .b-reviews__original' ) ].map( ( el ) => {
+		const small = await page.evaluate( () => [ ...document.querySelectorAll( '.b-reviews__all, .b-reviews__original' ) ].map( ( el ) => {
 			const r = el.getBoundingClientRect();
 			const s = getComputedStyle( el );
 			return [ el.className, Math.round( r.width ), Math.round( r.height + parseFloat( s.marginTop ) * -2 ) ];
 		} ).filter( ( r ) => r[ 1 ] < 24 || r[ 2 ] < 24 ) );
-		check( '390px: зоны нажатия стрелок, «Все отзывы», «Оригинал» — не меньше 24 px', 0 === small.length, JSON.stringify( small ) );
+		check( '390px: зоны нажатия «Все отзывы» и «Оригинал» — не меньше 24 px (стрелок карусели на телефоне нет)', 0 === small.length, JSON.stringify( small ) );
 
 		// ===== «2 карточки» в портфолио =====
 		await page.setViewportSize( { width: 1280, height: 900 } );
@@ -417,6 +402,50 @@ const columns = ( page, sel ) => page.$$eval( sel, ( list ) => list.filter( ( el
 		const lb = await page.evaluate( () => [ document.querySelector( '.lightbox__img' ).getAttribute( 'src' ), document.querySelector( '.lightbox__caption' ).textContent.trim() ] );
 		check( 'Отзывы: скан письма открывается на весь экран с подписью «Благодарственное письмо — автор»', lb[ 0 ].includes( 'project-repair' ) && 'Благодарственное письмо — Автор Письма, ООО Тест' === lb[ 1 ], JSON.stringify( lb ) );
 		await page.keyboard.press( 'Escape' );
+
+		// ===== Телефон: настоящие касания (Chromium, эмуляция iPhone) =====
+		// Касание браузер сам привязывает к элементу под пальцем; раньше скрипт перехватывал его
+		// на ленту, привязка снималась — и свайп обрывался (ошибка после правки 4.7, исправлена).
+		const phone = await browser.newContext( { ...devices[ 'iPhone 13' ] } );
+		await routeMockupFonts( phone );
+		const mp = await phone.newPage();
+		await mp.goto( SEO, { waitUntil: 'networkidle' } );
+		const mcar = mp.locator( '.b-carousel' );
+		await mcar.locator( '.b-carousel__track' ).scrollIntoViewIfNeeded();
+		await mp.evaluate( () => window.scrollBy( 0, -120 ) );
+		const cdp = await phone.newCDPSession( mp );
+		const touchSwipe = async ( x, y, dx, dy = 0 ) => {
+			await cdp.send( 'Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [ { x, y } ] } );
+			for ( let i = 1; i <= 8; i++ ) {
+				await cdp.send( 'Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [ { x: x + ( dx * i ) / 8, y: y + ( dy * i ) / 8 } ] } );
+				await mp.waitForTimeout( 16 );
+			}
+			await cdp.send( 'Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] } );
+			await mp.waitForTimeout( 700 );
+		};
+		const mIndex = () => mcar.evaluate( ( el ) => [ ...el.querySelectorAll( '.b-carousel__slide' ) ].findIndex( ( sl ) => sl.classList.contains( 'is-active' ) ) );
+		const mBox = await mcar.locator( '.b-carousel__slide.is-active .b-carousel__img' ).boundingBox();
+		await touchSwipe( mBox.x + 250, mBox.y + 60, -150 );
+		const tLeft = await mIndex();
+		await touchSwipe( mBox.x + 80, mBox.y + 60, 150 );
+		const tRight = await mIndex();
+		await touchSwipe( mBox.x + 200, mBox.y + 60, -30 );
+		const tShort = await mIndex();
+		const y0 = await mp.evaluate( () => scrollY );
+		await touchSwipe( mBox.x + 200, mBox.y + 100, 10, -150 );
+		const tVert = [ await mIndex(), ( await mp.evaluate( () => scrollY ) ) - y0 ];
+		check( 'Телефон: свайп влево — следующий слайд, вправо — предыдущий; короткий — нет; вертикальный — прокрутка страницы',
+			1 === tLeft && 0 === tRight && 0 === tShort && 0 === tVert[ 0 ] && tVert[ 1 ] > 50, JSON.stringify( [ tLeft, tRight, tShort, tVert ] ) );
+		await mcar.locator( '.b-carousel__slide.is-active .b-carousel__img' ).scrollIntoViewIfNeeded();
+		await mp.evaluate( () => window.scrollBy( 0, -150 ) );
+		await mp.waitForTimeout( 300 );
+		const tapBox = await mcar.locator( '.b-carousel__slide.is-active .b-carousel__img' ).boundingBox();
+		await mp.touchscreen.tap( tapBox.x + 100, tapBox.y + 60 );
+		await mp.waitForTimeout( 500 );
+		const mNav = await mcar.locator( '.b-carousel__nav' ).evaluate( ( n ) => Math.round( n.getBoundingClientRect().width ) );
+		check( 'Телефон: касание скриншота открывает его на весь экран; счётчика и стрелок не видно',
+			1 === await mp.locator( 'dialog.lightbox[open]' ).count() && 1 === mNav, String( mNav ) );
+		await phone.close();
 
 		// ===== «Уменьшить движение» и вид без JavaScript =====
 		const reduced = await browser.newContext( { viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce' } );

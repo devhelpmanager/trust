@@ -321,11 +321,12 @@ const MOCKUP_CSS = {
 		section > div > header { max-width: none !important; }
 		section > div > header h2 { text-wrap: wrap !important; }
 	`,
-	// «Карусель кейсов»: счётчик крупнее — 20 px, на телефоне 16 (правка заказчика, в макете 14).
+	// «Карусель кейсов»: счётчик крупнее — 20 px (правка заказчика, в макете 14); на телефоне счётчика и стрелок нет.
 	'seo-bloki/14-karusel-keysov.html': `
 		span[aria-live] { min-width: 96px !important; font-size: 20px !important; }
+		/* На телефоне счётчика и стрелок нет (правка заказчика) */
 		@media (max-width: 640px) {
-			span[aria-live] { min-width: 76px !important; font-size: 16px !important; }
+			div:has(> span[aria-live]) { display: none !important; }
 		}
 	`,
 	// «Блок с текстом»: колонка 960 px (правка заказчика, в макете 760), строки заголовка заполняют колонку.
