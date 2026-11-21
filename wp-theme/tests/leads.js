@@ -298,7 +298,7 @@ const meta = ( id, key ) => {
 		await login( admin );
 		const counter = wp( 'eval', 'echo Trust\\Admin::counts()["lead"];' );
 		await admin.goto( `${ URL }/wp-admin/edit.php?post_type=lead` );
-		const menuCount = ( await admin.locator( '#menu-posts-lead .awaiting-mod .pending-count' ).textContent().catch( () => '' ) ).trim();
+		const menuCount = ( await admin.locator( '#menu-posts-lead .wp-menu-name .pending-count' ).textContent().catch( () => '' ) ).trim();
 		check( 'Меню: счётчик новых заявок', menuCount === counter && Number( counter ) >= 5, `${ menuCount } / ${ counter }` );
 		const heads = ( await admin.locator( '.wp-list-table thead th' ).allTextContents() ).map( ( s ) => s.trim().replace( /\s*Сортировать.*$/, '' ) ).filter( Boolean );
 		check( 'Колонки: Заявка, Форма, Имя, Контакт, Статус, Дата', JSON.stringify( heads.map( ( h ) => h.replace( /^Date/, 'Дата' ).replace( /^(Заявка|Форма|Имя|Контакт|Статус|Дата).*$/, '$1' ) ) ) === JSON.stringify( [ 'Заявка', 'Форма', 'Имя', 'Контакт', 'Статус', 'Дата' ] ), heads.join( ' | ' ) );
