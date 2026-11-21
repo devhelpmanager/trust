@@ -17,7 +17,6 @@ return array_merge(
 		)
 	),
 	array(
-		Trust\Blocks::head_art_field(),
 		array(
 			'name'          => 'badge_label',
 			'label'         => __( 'Плашка рекомендуемого тарифа', 'trust' ),

@@ -326,6 +326,11 @@ const MOCKUP_CSS = {
 		section > div > header { max-width: none !important; }
 		section > div > header h2 { text-wrap: wrap !important; }
 	`,
+	// «Выбор тарифа»: заголовок и вводный текст во всю ширину блока, без рисунка справа (правка заказчика).
+	'seo-bloki/01-tarify.html': `
+		section > div > header { max-width: none !important; }
+		section > div > header h2 { text-wrap: wrap !important; }
+	`,
 	// «Наши проекты в топе»: заголовок и вводный текст во всю ширину блока (правка заказчика).
 	'seo-bloki/12-proekty-v-tope.html': `
 		section > div > header { max-width: none !important; }

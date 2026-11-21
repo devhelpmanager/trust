@@ -17,12 +17,16 @@
 	margin: 0 auto;
 }
 
+/* Шапка — во всю ширину блока, без рисунка справа (правка заказчика: в макете до 760 px) */
 .b-tariffs__head {
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
-	max-width: var(--text-col);
 	min-width: 0;
+}
+
+.b-tariffs .section-title {
+	text-wrap: wrap;
 }
 
 .b-tariffs__list {

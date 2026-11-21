@@ -102,6 +102,12 @@ async function compare( page, o ) {
 		check( 'Тарифы: H2 «Выберите тариф SEO-продвижения», надзаголовок «Тарифы», якорь #tariffs',
 			( await tar.locator( 'h2' ).textContent() ).trim() === 'Выберите тариф SEO-продвижения' && ( await tar.locator( '.eyebrow' ).textContent() ).trim() === 'Тарифы' &&
 			( await tar.getAttribute( 'id' ) ) === 'tariffs' && ( await tar.getAttribute( 'aria-labelledby' ) ) === ( await tar.locator( 'h2' ).getAttribute( 'id' ) ) );
+		const tarHead = await tar.evaluate( ( el ) => ( {
+			art: el.querySelectorAll( '.section-art, .section-top' ).length,
+			head: Math.round( el.querySelector( '.b-tariffs__head' ).getBoundingClientRect().width ),
+			inner: Math.round( el.querySelector( '.b-tariffs__inner' ).getBoundingClientRect().width ),
+		} ) );
+		check( 'Тарифы: без рисунка справа; заголовок и вводный текст — во всю ширину блока (правка заказчика)', 0 === tarHead.art && tarHead.head === tarHead.inner && tarHead.head > 760, JSON.stringify( tarHead ) );
 		const cards = await tar.locator( '.b-tariffs__card' ).evaluateAll( ( list ) => list.map( ( c ) => ( {
 			name: c.querySelector( 'h3' ).textContent.trim(),
 			rec: c.classList.contains( 'b-tariffs__card--rec' ),
