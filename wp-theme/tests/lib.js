@@ -214,7 +214,7 @@ function comparePng( a, b, diffPath ) {
 // Все цены сайта — в долларах (решение заказчика): в макетах услуг, блоков и портфолио ₽ → $.
 const MOCKUP_TEXTS = [
 	[ 'Сопровождение сайтов', 'Поддержка сайтов' ],
-	[ '₽', '$', [ 'seo-bloki/', 'seo-stranitsa/', 'portfolio-blog-404/' ] ],
+	[ '₽', '$', [ 'seo-bloki/', 'seo-stranitsa/', 'portfolio-blog-404/', 'o-nas/' ] ],
 ];
 const HERO_SECTION_CSS = `
 	.dc-hero-box dl > div { justify-content: flex-end !important; }
@@ -255,8 +255,8 @@ const SECTION_SPACING_CSS = `
 // «Что говорят клиенты» в портфолио — блок «Отзывы клиентов» (2 карточки): заголовок секции и
 // шапка — как у всех блоков (в макете H2 26–40 px и 14 px от надзаголовка).
 const PORTFOLIO_REVIEWS_CSS = `
-	section[aria-labelledby="rev-title"] header { gap: 16px !important; }
-	#rev-title { font-size: clamp(28px, 3.4vw, 44px) !important; text-wrap: balance; }
+	section[aria-labelledby="rev-title"] header { gap: 16px !important; max-width: none !important; }
+	#rev-title { font-size: clamp(28px, 3.4vw, 44px) !important; text-wrap: wrap !important; }
 `;
 const MOCKUP_CSS = {
 	'portfolio-blog-404/portfolio.html': HERO_SECTION_CSS + PORTFOLIO_REVIEWS_CSS,
@@ -334,10 +334,18 @@ const MOCKUP_CSS = {
 	// «Карусель кейсов»: счётчик крупнее — 20 px (правка заказчика, в макете 14); на телефоне счётчика и стрелок нет.
 	'seo-bloki/14-karusel-keysov.html': `
 		span[aria-live] { min-width: 96px !important; font-size: 20px !important; }
+		/* Заголовок и вводный текст — во всю ширину блока, до счётчика и стрелок (правка заказчика) */
+		section header { max-width: none !important; }
+		section header h2 { text-wrap: wrap !important; }
 		/* На телефоне счётчика и стрелок нет (правка заказчика) */
 		@media (max-width: 640px) {
 			div:has(> span[aria-live]) { display: none !important; }
 		}
+	`,
+	// «Отзывы клиентов»: заголовок и вводный текст во всю ширину блока (правка заказчика).
+	'seo-bloki/15-otzyvy.html': `
+		section > div > header { max-width: none !important; }
+		section > div > header h2 { text-wrap: wrap !important; }
 	`,
 	// «Блок с текстом»: колонка 960 px (правка заказчика, в макете 760), строки заголовка заполняют колонку.
 	'seo-bloki/03-tekst.html': `

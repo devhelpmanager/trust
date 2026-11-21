@@ -39,6 +39,17 @@
 	min-width: 0;
 }
 
+/* Заголовок и вводный текст — во всю ширину блока, до кнопки «Все отзывы» (правка заказчика:
+   в макете до 760 px) */
+.b-reviews .b-reviews__head {
+	flex: 1 1 480px;
+	max-width: none;
+}
+
+.b-reviews .section-title {
+	text-wrap: wrap;
+}
+
 .b-reviews__all {
 	display: inline-flex; /* 48 px вместе с рамкой, как в макете портфолио */
 	align-items: center;

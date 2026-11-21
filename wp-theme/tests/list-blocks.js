@@ -468,6 +468,23 @@ const columns = ( page, sel ) => page.$$eval( sel, ( list ) => list.filter( ( el
 		check( 'Карусель без JavaScript: стрелок нет, лента прокручивается вбок, все тексты видны', 'none' === noScript.nav && 'auto' === noScript.scroll && '1,1,1,1' === noScript.texts, JSON.stringify( noScript ) );
 		await nojs.close();
 
+		// ===== Заголовки во всю ширину (правка заказчика) =====
+		await page.setViewportSize( { width: 1280, height: 900 } );
+		const wide = {};
+		for ( const [ url, sel, name ] of [ [ SEO, '.b-carousel', 'carousel' ], [ SEO, '.b-reviews', 'reviews' ], [ PORTFOLIO, '.b-reviews', 'reviewsTwo' ] ] ) {
+			await page.goto( url, { waitUntil: 'networkidle' } );
+			wide[ name ] = await page.locator( sel ).first().evaluate( ( el ) => {
+				const top = el.querySelector( '.b-carousel__top, .b-reviews__top' ).getBoundingClientRect();
+				const head = el.querySelector( '.section-head' ).getBoundingClientRect();
+				const side = el.querySelector( '.b-carousel__nav, .b-reviews__all' );
+				const s = side ? side.getBoundingClientRect() : null;
+				// Шапка занимает строку до счётчика / «Все отзывы» (между ними — только отступ) или всю строку.
+				return { head: Math.round( head.width ), top: Math.round( top.width ), gap: s ? Math.round( s.left - head.right ) : null, sameRow: s ? Math.abs( s.bottom - head.bottom ) < 2 : null };
+			} );
+		}
+		check( 'Карусель кейсов и отзывы: заголовок и вводный текст — во всю ширину блока, до счётчика / «Все отзывы» (правка заказчика)',
+			Object.values( wide ).every( ( w ) => w.head > 760 && ( null === w.gap ? w.head === w.top : w.gap >= 0 && w.gap <= 24 && w.sameRow ) ), JSON.stringify( wide ) );
+
 		// ===== Сверка с макетами =====
 		for ( const width of [ 1280, 768, 390 ] ) {
 			await compare( page, {

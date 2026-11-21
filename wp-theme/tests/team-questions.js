@@ -106,7 +106,7 @@ async function pick( page, field, search, option ) {
 		check( 'Новая вакансия: три раздела из макета уже добавлены', sections.join( ' / ' ) === 'Чем предстоит заниматься / Что ждём от кандидата / Что предлагаем', sections.join( ' / ' ) );
 		check( 'Новая вакансия: «Принимаем резюме» включено', await page.locator( '.acf-field[data-name="trust_open"] input[type="checkbox"]' ).isChecked() );
 		await page.fill( '#title', `${ MARK } Вакансия` );
-		await page.fill( '.acf-field[data-name="trust_salary"] input', 'от 100 000 ₽' );
+		await page.fill( '.acf-field[data-name="trust_salary"] input', 'от 2 000 $' );
 		const items = page.locator( '.acf-field[data-name="trust_sections"] .acf-row:not(.acf-clone) .acf-field[data-name="items"] textarea' );
 		for ( let i = 0; i < 3; i++ ) {
 			await items.nth( i ).fill( `Пункт ${ i + 1 }.1\nПункт ${ i + 1 }.2` );

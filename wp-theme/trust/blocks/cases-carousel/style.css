@@ -30,6 +30,16 @@
 	min-width: 0;
 }
 
+/* Заголовок и вводный текст — во всю ширину блока, до счётчика и стрелок (правка заказчика:
+   в макете до 760 px) */
+.b-carousel .b-carousel__head {
+	max-width: none;
+}
+
+.b-carousel .section-title {
+	text-wrap: wrap;
+}
+
 /* Счётчик и стрелки */
 .b-carousel__nav {
 	display: flex;
