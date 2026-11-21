@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/calculator",
+	"title": "Калькулятор стоимости",
+	"description": "Расчёт стоимости продвижения за 7 шагов: регион, запросы, контент, внешняя оптимизация, репутация, GEO, о сайте. Вкладки, шкала, «Назад / Далее», экран с ценой; по желанию — форма контактов, ответы уходят в заявку.",
+	"category": "trust-forms",
+	"icon": "calculator",
+	"keywords": [ "калькулятор", "стоимость", "цена", "расчёт", "рассчитать" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

@@ -73,13 +73,15 @@ const days = ( c ) => Math.round( ( c.expires * 1000 - Date.now() ) / 86400000 )
 		check( 'Фокус не уводится на плашку', await page.evaluate( () => document.activeElement === document.body ) );
 		check( 'До согласия код счётчиков не выполняется, пиксель не запрашивается', await page.evaluate( () => ! window.__analytics && ! window.__marketing && ! document.getElementById( 'analytics-marker' ) ) && pixelRequests.length === 0 );
 		check( 'Код лежит в <template> до согласия', ( await page.locator( 'template[data-trust-consent="analytics"]' ).count() ) === 1 && ( await page.locator( 'template[data-trust-consent="marketing"]' ).count() ) === 1 );
-		await page.keyboard.press( 'Tab' );
+		// Плашка — в конце страницы: с начала страницы Shift+Tab доходит до неё сразу (обычным Tab — через
+		// всё содержимое; их число зависит от блоков страницы, например калькулятора на /seo/audit/).
+		await page.keyboard.press( 'Shift+Tab' );
 		let tabs = 0;
-		while ( tabs < 80 && ! ( await page.evaluate( () => document.activeElement.closest( '.cookie-banner' ) !== null ) ) ) {
-			await page.keyboard.press( 'Tab' );
+		while ( tabs < 10 && ! ( await page.evaluate( () => document.activeElement.closest( '.cookie-banner' ) !== null ) ) ) {
+			await page.keyboard.press( 'Shift+Tab' );
 			tabs++;
 		}
-		check( 'Кнопки плашки доступны с клавиатуры (Tab)', tabs < 80 );
+		check( 'Кнопки плашки доступны с клавиатуры (Shift+Tab с начала страницы — последний элемент)', tabs < 10, String( tabs ) );
 		await page.screenshot( { path: path.join( OUT, 'cookie-banner-1280.png' ) } );
 
 		// --- «Принять» ---

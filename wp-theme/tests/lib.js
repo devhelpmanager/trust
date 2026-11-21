@@ -316,6 +316,11 @@ const MOCKUP_CSS = {
 			section > div { gap: 24px !important; }
 		}
 	`,
+	// «Калькулятор стоимости»: заголовок и вводный текст во всю ширину блока (как правки заказчика в других блоках).
+	'seo-bloki/13-kalkulyator.html': `
+		section > div > header { max-width: none !important; }
+		section > div > header h2 { text-wrap: wrap !important; }
+	`,
 	// «Наши проекты в топе»: заголовок и вводный текст во всю ширину блока (правка заказчика).
 	'seo-bloki/12-proekty-v-tope.html': `
 		section > div > header { max-width: none !important; }

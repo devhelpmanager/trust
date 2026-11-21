@@ -97,8 +97,8 @@ async function compare( page, o ) {
 		// ===== Страница целиком =====
 		await page.goto( PAGE, { waitUntil: 'networkidle' } );
 		const order = await page.evaluate( () => [ ...document.querySelectorAll( '.page-entry__content > section' ) ].map( ( s ) => s.className.split( ' ' )[ 0 ] ) );
-		check( 'Страница «Услуга» по макету: 7 блоков по порядку',
-			JSON.stringify( order ) === JSON.stringify( [ 'b-hero-service', 'b-includes', 'b-stages', 'b-advantages', 'b-faq', 'b-swipe', 'b-posts' ] ), order.join( ', ' ) );
+		check( 'Страница «Услуга» по макету: 7 блоков по порядку и калькулятор (шаг 4.8) перед «Вопрос-ответ»',
+			JSON.stringify( order ) === JSON.stringify( [ 'b-hero-service', 'b-includes', 'b-stages', 'b-advantages', 'b-calc', 'b-faq', 'b-swipe', 'b-posts' ] ), order.join( ', ' ) );
 
 		// ===== «Наши преимущества» =====
 		const adv = page.locator( '.b-advantages' );
