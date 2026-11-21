@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/office",
+	"title": "Где мы работаем",
+	"description": "Офис в фотографиях: текст со ссылкой на страницу контактов (адрес — из настроек, по флажку) и галерея — первое фото крупно, остальные плиткой, подписи на фото, по нажатию — на весь экран.",
+	"category": "trust-company",
+	"icon": "format-gallery",
+	"keywords": [ "офис", "где мы работаем", "фото", "галерея", "о компании" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "trust-lightbox",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

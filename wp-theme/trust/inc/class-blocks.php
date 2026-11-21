@@ -310,6 +310,43 @@ final class Blocks {
 	}
 
 	/**
+	 * Шапка секции: надзаголовок, H2 и вводный текст (пустые не выводятся; всё пусто — ничего).
+	 *
+	 * @param string $css_class Класс обёртки (кроме section-head).
+	 * @param string $title_id  id заголовка (для aria-labelledby секции).
+	 */
+	public static function section_head( string $css_class, string $title_id ): void {
+		$eyebrow = trim( (string) get_field( 'eyebrow' ) );
+		$title   = trim( (string) get_field( 'title' ) );
+		$lead    = trim( (string) get_field( 'lead' ) );
+		if ( '' === $eyebrow && '' === $title && '' === $lead ) {
+			return;
+		}
+		echo '<div class="section-head ' . esc_attr( $css_class ) . '">';
+		if ( '' !== $eyebrow ) {
+			echo '<span class="eyebrow">' . esc_html( $eyebrow ) . '</span>';
+		}
+		if ( '' !== $title ) {
+			echo '<h2 class="section-title" id="' . esc_attr( $title_id ) . '">' . esc_html( $title ) . '</h2>';
+		}
+		if ( '' !== $lead ) {
+			echo '<p class="section-lead">' . esc_html( $lead ) . '</p>';
+		}
+		echo '</div>';
+	}
+
+	/**
+	 * Атрибуты корневой секции блока: id из поля «Якорь» и aria-labelledby, если есть заголовок.
+	 *
+	 * @param string $title_id id заголовка.
+	 */
+	public static function section_attrs( string $title_id ): string {
+		$anchor = self::anchor( get_field( 'anchor' ) );
+		$title  = trim( (string) get_field( 'title' ) );
+		return ( $anchor ? ' id="' . esc_attr( $anchor ) . '"' : '' ) . ( '' !== $title ? ' aria-labelledby="' . esc_attr( $title_id ) . '"' : '' );
+	}
+
+	/**
 	 * Поле «Картинка справа от заголовка» (правка заказчика): рисунок по теме блока справа от
 	 * надзаголовка, заголовка и вводного текста — файл head-art.svg в папке блока.
 	 */
@@ -502,6 +539,18 @@ final class Blocks {
 			$attrs['alt'] = trim( $alt );
 		}
 		return (string) wp_get_attachment_image( $id, $size, false, $attrs );
+	}
+
+	/**
+	 * Описание картинки: своё (поле блока), иначе из медиатеки, иначе запасное (название, подпись).
+	 *
+	 * @param int    $id       ID картинки.
+	 * @param string $own      Поле «Alt» блока.
+	 * @param string $fallback Запасной текст.
+	 */
+	public static function alt_text( int $id, string $own, string $fallback ): string {
+		$library = $id ? trim( (string) get_post_meta( $id, '_wp_attachment_image_alt', true ) ) : '';
+		return '' !== trim( $own ) ? trim( $own ) : ( '' !== $library ? $library : trim( $fallback ) );
 	}
 
 	/**

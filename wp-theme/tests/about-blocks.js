@@ -1,0 +1,283 @@
+/**
+ * Тест блоков шага 4.10 — страница «О компании»: «Чем мы занимаемся», «Как мы работаем», «Как мы
+ * росли», «Слово руководителя», «Сертификаты и рейтинги», «Нам доверяют», «Где мы работаем».
+ *
+ * Запуск: node wp-theme/tests/about-blocks.js
+ *
+ * Демо на /o-kompanii/ (порядок блоков и тексты из макета o-nas/o-kompanii.html), ссылки
+ * направлений на страницы, номера принципов и значок вместо номера, годы и выделенное последнее
+ * событие, руководитель из «Сотрудников» (фото, имя, должность, mailto:, страница «Команда»),
+ * сертификаты (скан — на весь экран, PDF — в новой вкладке, без картинки — значок; на телефоне —
+ * строки), логотипы (картинка с alt или название, ссылка на сайт клиента, «Смотреть кейсы» →
+ * «Портфолио»), галерея офиса (первое фото крупно, подписи, на весь экран, адрес из настроек),
+ * пустые блоки, сверка с макетом на 1280 / 768 / 390 px, ширины 1440–280, axe-core, консоль,
+ * редактор — категория «Компания» и превью.
+ */
+
+const path = require( 'path' );
+const { launch, URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle, isolate, login, wp } = require( './lib' );
+
+const PAGE = `${ URL }/o-kompanii/`;
+const MOCKUP = 'o-nas/o-kompanii.html';
+const MARK = 'ТестОКомпании';
+
+/** PHP: блок по имени и полям (PHP-массив). */
+const block = ( name, fields ) => `Trust\\Blocks::serialize( '${ name }', ${ fields } )`;
+
+/**
+ * Опубликованная тестовая страница «О компании» с блоками.
+ *
+ * @param {string} title  Заголовок.
+ * @param {string} blocks PHP-выражение: разметка блоков.
+ * @return {string} ID.
+ */
+function createPage( title, blocks ) {
+	const content = wp( 'eval', `echo ${ blocks };` );
+	const id = wp( 'post', 'create', '--post_type=page', `--post_title=${ MARK } ${ title }`, '--post_status=publish', `--post_content=${ content }`, '--porcelain' );
+	wp( 'post', 'meta', 'update', id, '_wp_page_template', 'templates/about.php' );
+	return id;
+}
+
+/**
+ * Снимки блока темы и секции макета и их сравнение.
+ *
+ * @param {import('playwright').Page} page  Страница.
+ * @param {string}                    name  Имя снимка.
+ * @param {number}                    width Ширина окна.
+ * @param {string}                    theme Блок в теме.
+ * @param {string}                    mock  Секция в макете.
+ */
+async function compare( page, name, width, theme, mock ) {
+	const base = path.join( OUT, `about-${ name }-${ width }` );
+	await page.setViewportSize( { width, height: 900 } );
+	await page.goto( PAGE, { waitUntil: 'networkidle' } );
+	await settle( page );
+	await page.mouse.move( 0, 0 );
+	await isolate( page, theme );
+	await page.waitForTimeout( 300 );
+	await page.locator( theme ).first().screenshot( { path: `${ base }-theme.png` } );
+	await page.goto( mockupUrl( MOCKUP ), { waitUntil: 'networkidle' } );
+	await settle( page );
+	await page.mouse.move( 0, 0 );
+	await isolate( page, mock );
+	await page.waitForTimeout( 300 );
+	await page.locator( mock ).first().screenshot( { path: `${ base }-mockup.png` } );
+	const diff = comparePng( `${ base }-mockup.png`, `${ base }-theme.png`, `${ base }-diff.png` );
+	check( `Макет ${ MOCKUP }, ${ name }, ${ width }px: совпадение (≤ 2 %)`, diff <= 2, `${ diff.toFixed( 2 ) } %` );
+}
+
+( async () => {
+	clearLog();
+	const browser = await launch();
+	const context = await browser.newContext( { viewport: { width: 1280, height: 900 } } );
+	await routeMockupFonts( context );
+	const page = await context.newPage();
+	const errors = collectConsoleErrors( page );
+	const created = [];
+
+	try {
+		// ===== Демо на «О компании» =====
+		await page.goto( PAGE, { waitUntil: 'networkidle' } );
+		const order = await page.evaluate( () => [ ...document.querySelectorAll( '.page-entry__content > *' ) ].map( ( s ) => s.className.split( ' ' )[ 0 ] ) );
+		check( 'Порядок блоков как в макете: первый экран, направления, принципы, история, руководитель, сертификаты, клиенты, офис, «Обсудим ваш проект»',
+			JSON.stringify( order ) === JSON.stringify( [ 'b-hero-section', 'b-dirs', 'b-principles', 'b-history', 'b-leader', 'b-certs', 'b-clients', 'b-office', 'b-cta' ] ), order.join( ', ' ) );
+
+		const d = await page.locator( '.b-dirs' ).evaluate( ( el ) => ( {
+			labelled: el.getAttribute( 'aria-labelledby' ) === el.querySelector( 'h2' ).id,
+			head: [ el.querySelector( '.eyebrow' ).textContent, el.querySelector( 'h2' ).textContent ],
+			cards: [ ...el.querySelectorAll( '.b-dirs__card' ) ].map( ( c ) => [ c.tagName, c.querySelector( 'h3' ).textContent.trim(), c.tagName === 'A' ? new URL( c.href ).pathname : '', !! c.querySelector( '.b-dirs__icon svg' ), ( c.querySelector( '.b-dirs__more' ) || { textContent: '' } ).textContent.trim() ] ),
+		} ) );
+		check( '«Чем мы занимаемся»: надзаголовок «Направления», H2, 6 карточек со значком и «Подробнее»',
+			d.labelled && 'Направления|Чем мы занимаемся' === d.head.join( '|' ) && 6 === d.cards.length && d.cards.every( ( c ) => 'A' === c[ 0 ] && c[ 3 ] && 'Подробнее' === c[ 4 ] ), JSON.stringify( d ) );
+		check( '«Чем мы занимаемся»: карточка целиком ведёт на страницу направления (Поддержка сайтов → /site-support/)',
+			JSON.stringify( d.cards.map( ( c ) => c[ 2 ] ) ) === JSON.stringify( [ '/seo/', '/geo/', '/sozdanie-saytov/', '/site-support/', '/kontekstnaya-reklama/', '/ai/' ] ) && 'Поддержка сайтов' === d.cards[ 3 ][ 1 ], JSON.stringify( d.cards.map( ( c ) => c.slice( 1, 3 ) ) ) );
+		await page.locator( '.b-dirs__card' ).first().hover();
+		await page.waitForTimeout( 300 );
+		const hover = await page.locator( '.b-dirs__card' ).first().evaluate( ( el ) => [ getComputedStyle( el ).borderColor, getComputedStyle( el ).boxShadow !== 'none' ] );
+		check( 'Наведение на карточку направления: фиолетовая рамка и тень', 'rgb(185, 162, 255)' === hover[ 0 ] && hover[ 1 ], JSON.stringify( hover ) );
+
+		const p = await page.locator( '.b-principles' ).evaluate( ( el ) => ( {
+			bg: getComputedStyle( el ).backgroundColor,
+			ol: 'OL' === el.querySelector( '.b-principles__list' ).tagName,
+			nums: [ ...el.querySelectorAll( '.b-principles__num' ) ].map( ( n ) => n.textContent ),
+			titles: [ ...el.querySelectorAll( 'h3' ) ].map( ( h ) => h.textContent ),
+			line: getComputedStyle( el.querySelector( '.b-principles__list > li' ) ).borderTopColor,
+		} ) );
+		check( '«Как мы работаем»: фиолетовый фон, нумерованный список 01–06, заголовки H3, белая линия над пунктом',
+			'rgb(91, 33, 182)' === p.bg && p.ol && '01,02,03,04,05,06' === p.nums.join() && 'Прозрачный состав работ' === p.titles[ 0 ] && 6 === p.titles.length && 'rgb(255, 255, 255)' === p.line, JSON.stringify( p ) );
+
+		const h = await page.locator( '.b-history' ).evaluate( ( el ) => ( {
+			years: [ ...el.querySelectorAll( '.b-history__year' ) ].map( ( y ) => y.textContent ),
+			texts: el.querySelectorAll( '.b-history__text' ).length,
+			lines: [ ...el.querySelectorAll( '.b-history__list > li' ) ].map( ( li ) => getComputedStyle( li ).borderTopColor ),
+			dots: el.querySelectorAll( '.b-history__dot[aria-hidden="true"]' ).length,
+		} ) );
+		check( '«Как мы росли»: 5 событий с годом и текстом, точки на линии, у последнего линия фиолетовая',
+			5 === h.years.length && 5 === h.texts && 5 === h.dots && 'rgb(224, 215, 245)' === h.lines[ 0 ] && 'rgb(109, 40, 217)' === h.lines[ 4 ], JSON.stringify( h ) );
+
+		const l = await page.locator( '.b-leader' ).evaluate( ( el ) => ( {
+			bg: getComputedStyle( el ).backgroundColor,
+			h2: el.querySelector( 'h2' ).textContent + ' ' + ( el.getAttribute( 'aria-labelledby' ) === el.querySelector( 'h2' ).id ),
+			photo: [ el.querySelector( 'img.b-leader__photo' ).getAttribute( 'alt' ), el.querySelector( 'img.b-leader__photo' ).getAttribute( 'loading' ) ],
+			quote: el.querySelector( 'blockquote' ).textContent.trim(),
+			name: el.querySelector( '.b-leader__name' ).textContent,
+			role: el.querySelector( '.b-leader__role' ).textContent,
+			buttons: [ ...el.querySelectorAll( '.b-leader__btn' ) ].map( ( a ) => a.textContent.trim() + ' ' + a.getAttribute( 'href' ).replace( location.origin, '' ) ),
+		} ) );
+		check( '«Слово руководителя»: лавандовый фон, H2 «Слово руководителя», фото с alt, цитата',
+			'rgb(248, 245, 255)' === l.bg && 'Слово руководителя true' === l.h2 && '[Имя Фамилия], основатель агентства' === l.photo[ 0 ] && 'lazy' === l.photo[ 1 ] && l.quote.startsWith( '[Цитата руководителя:' ), JSON.stringify( l ) );
+		check( '«Слово руководителя»: имя и должность из карточки сотрудника, «Написать руководителю» → mailto:, «Познакомиться с командой» → /komanda/',
+			'[Имя Фамилия]' === l.name && 'Основатель и генеральный директор' === l.role && JSON.stringify( l.buttons ) === JSON.stringify( [ 'Написать руководителю mailto:ceo@example.ru', 'Познакомиться с командой /komanda/' ] ), JSON.stringify( l ) );
+
+		const c = await page.locator( '.b-certs' ).evaluate( ( el ) => ( {
+			lead: el.querySelector( '.section-lead' ).textContent,
+			cards: [ ...el.querySelectorAll( '.b-certs__card' ) ].map( ( a ) => [ a.querySelector( '.b-certs__title' ).textContent, a.querySelector( '.b-certs__meta' ).textContent, a.getAttribute( 'target' ), !! a.querySelector( '.b-certs__media--empty svg' ) ] ),
+		} ) );
+		check( '«Сертификаты и рейтинги»: вводный текст, 6 документов «[ГГГГ] · смотреть документ / диплом», без картинки — значок награды',
+			'Каждый документ можно открыть и проверить.' === c.lead && 6 === c.cards.length && '[ГГГГ] · смотреть документ' === c.cards[ 0 ][ 1 ] && '[ГГГГ] · смотреть диплом' === c.cards[ 3 ][ 1 ] && c.cards.every( ( x ) => x[ 3 ] && null === x[ 2 ] ), JSON.stringify( c ) );
+
+		const cl = await page.locator( '.b-clients' ).evaluate( ( el ) => ( {
+			list: el.querySelector( 'ul' ).getAttribute( 'aria-label' ),
+			tiles: el.querySelectorAll( '.b-clients__tile' ).length,
+			name: el.querySelector( '.b-clients__name' ).textContent,
+			more: el.querySelector( '.b-clients__more' ).textContent.trim() + ' ' + new URL( el.querySelector( '.b-clients__more' ).href ).pathname,
+		} ) );
+		check( '«Нам доверяют»: список «Логотипы клиентов», 12 плиток, без логотипа — название, «Смотреть кейсы» → /portfolio/',
+			'Логотипы клиентов' === cl.list && 12 === cl.tiles && '[Логотип]' === cl.name && 'Смотреть кейсы /portfolio/' === cl.more, JSON.stringify( cl ) );
+
+		const o = await page.locator( '.b-office' ).evaluate( ( el ) => {
+			const items = [ ...el.querySelectorAll( '.b-office__item' ) ];
+			const r = ( i ) => items[ i ].getBoundingClientRect();
+			return {
+				lead: el.querySelector( '.section-lead' ).textContent.replace( /\s+/g, ' ' ).trim(),
+				link: new URL( el.querySelector( '.section-lead a' ).href ).pathname,
+				captions: items.map( ( f ) => f.querySelector( 'figcaption' ).textContent ),
+				big: Math.round( r( 0 ).width ) === Math.round( r( 1 ).width * 2 + 16 ) && Math.round( r( 0 ).height ) === Math.round( r( 1 ).height * 2 + 16 ),
+			};
+		} );
+		check( '«Где мы работаем»: текст со ссылкой на контакты, 5 подписей, первое фото — 2 × 2',
+			'Приезжайте познакомиться — адрес и схема проезда на странице контактов.' === o.lead && '/kontakty/' === o.link && 5 === o.captions.length && '[Фото: команда в офисе]' === o.captions[ 0 ] && o.big, JSON.stringify( o ) );
+
+		// ===== Свои данные =====
+		const png = wp( 'eval', 'echo get_posts( array( "post_type" => "attachment", "post_status" => "any", "numberposts" => 1, "fields" => "ids", "meta_key" => "_trust_demo_id", "meta_value" => "attachment:leader-photo.jpg" ) )[0] ?? 0;' );
+		const pdf = wp( 'eval', `$f = wp_upload_bits( '${ MARK }.pdf', null, '%PDF-1.4' ); echo wp_insert_attachment( array( 'post_title' => '${ MARK } pdf', 'post_mime_type' => 'application/pdf', 'post_status' => 'inherit' ), $f['file'] );` );
+		created.push( pdf );
+		const own = createPage( 'Блоки', [
+			block( 'directions', "array( 'title' => 'Без ссылок', 'items' => array( array( 'icon' => 'bot', 'title' => 'Только текст', 'text' => 'Без страницы' ) ) )" ),
+			block( 'principles', "array( 'title' => 'Со значком', 'items' => array( array( 'icon' => 'shield', 'title' => 'Первый' ), array( 'title' => 'Второй' ) ) )" ),
+			block( 'history', "array( 'title' => 'С заголовком', 'items' => array( array( 'year' => '2020', 'title' => 'Старт', 'text' => 'Текст' ) ) )" ),
+			block( 'leader-word', "array( 'quote' => 'Без сотрудника', 'role' => 'Своя подпись', 'buttons' => array( 'write' ) )" ),
+			block( 'certificates', `array( 'title' => 'Документы', 'items' => array( array( 'title' => 'Скан', 'image' => ${ png }, 'file' => ${ png }, 'issuer' => 'Яндекс', 'year' => '2025' ), array( 'title' => 'PDF', 'file' => ${ pdf }, 'link_label' => 'смотреть диплом' ), array( 'title' => 'Без ссылки', 'year' => '2024' ) ) )` ),
+			block( 'clients', `array( 'title' => 'Логотипы', 'button' => 0, 'logos' => array( array( 'logo' => ${ png }, 'name' => 'Клиент', 'url' => 'https://example.com/' ) ) )` ),
+			block( 'office', `array( 'title' => 'Офис', 'address' => 1, 'photos' => array( array( 'image' => ${ png }, 'caption' => 'Фото' ), array( 'caption' => 'Заглушка' ) ) )` ),
+			block( 'directions', "array( 'title' => 'Пусто', 'items' => array() )" ),
+		].join( ' . ' ) );
+		created.push( own );
+		await page.goto( `${ URL }/?page_id=${ own }`, { waitUntil: 'networkidle' } );
+		const x = await page.evaluate( () => {
+			const q = ( s ) => document.querySelector( s );
+			return {
+				dirs: document.querySelectorAll( '.b-dirs' ).length + ':' + q( '.b-dirs__card' ).tagName + ':' + document.querySelectorAll( '.b-dirs__more' ).length,
+				principles: [ !! q( '.b-principles__icon svg' ), q( '.b-principles__num' ).textContent ],
+				history: q( '.b-history h3' ).textContent,
+				leader: [ !! q( '.b-leader__photo--empty' ), q( '.b-leader__role' ).textContent, document.querySelectorAll( '.b-leader__btn' ).length, !! q( '.b-leader__name' ) ],
+				certs: [ ...document.querySelectorAll( '.b-certs__card' ) ].map( ( a ) => [ a.tagName, a.hasAttribute( 'data-trust-lightbox' ), a.getAttribute( 'target' ), a.querySelector( '.b-certs__meta' ).textContent, a.querySelector( 'img' ) ? a.querySelector( 'img' ).alt : '' ] ),
+				clients: [ q( '.b-clients__logo' ).alt, q( '.b-clients__tile' ).getAttribute( 'href' ), q( '.b-clients__tile' ).target, !! q( '.b-clients__more' ) ],
+				office: [ q( '.b-office__address' ) ? q( '.b-office__address' ).textContent : '', !! q( '.b-office__open[data-trust-lightbox]' ), q( '.b-office__img' ).alt, document.querySelectorAll( '.b-office__placeholder' ).length ],
+			};
+		} );
+		check( '«Чем мы занимаемся» без страницы — карточка без ссылки и «Подробнее»; пустой блок на сайт не выводится', '1:DIV:0' === x.dirs, x.dirs );
+		check( '«Как мы работаем»: значок вместо номера, у следующего — номер 02', x.principles[ 0 ] && '02' === x.principles[ 1 ], JSON.stringify( x.principles ) );
+		check( '«Как мы росли»: заголовок события — H3', 'Старт' === x.history, x.history );
+		check( '«Слово руководителя» без сотрудника: силуэт, своя подпись, без имени и без «Написать» (нет email)', JSON.stringify( x.leader ) === JSON.stringify( [ true, 'Своя подпись', 0, false ] ), JSON.stringify( x.leader ) );
+		check( 'Сертификаты: скан — на весь экран, PDF — в новой вкладке, без документа — карточка без ссылки; «кто выдал · год · подпись»; alt — из медиатеки',
+			JSON.stringify( x.certs ) === JSON.stringify( [ [ 'A', true, null, 'Яндекс · 2025 · смотреть документ', '[Имя Фамилия], основатель агентства' ], [ 'A', false, '_blank', 'смотреть диплом', '' ], [ 'DIV', false, null, '2024', '' ] ] ), JSON.stringify( x.certs ) );
+		check( 'Логотип: alt — название, ссылка на сайт клиента в новой вкладке; кнопку можно выключить',
+			JSON.stringify( x.clients ) === JSON.stringify( [ 'Клиент', 'https://example.com/', '_blank', false ] ), JSON.stringify( x.clients ) );
+		check( 'Офис: адрес из настроек (флажок), фото открывается на весь экран, alt из медиатеки, заглушка только у первого',
+			'' !== x.office[ 0 ] && x.office[ 1 ] && '[Имя Фамилия], основатель агентства' === x.office[ 2 ] && 0 === x.office[ 3 ], JSON.stringify( x.office ) );
+		await page.locator( '.b-certs__card[data-trust-lightbox]' ).click();
+		const box = await page.locator( '.lightbox, [data-lightbox], dialog[open]' ).first().isVisible().catch( () => false );
+		await page.keyboard.press( 'Escape' );
+		check( 'Скан сертификата открывается на весь экран', box );
+
+		// ===== Телефон, ширины, доступность =====
+		await page.setViewportSize( { width: 390, height: 900 } );
+		await page.goto( PAGE, { waitUntil: 'networkidle' } );
+		const mob = await page.evaluate( () => {
+			const card = document.querySelector( '.b-certs__card' );
+			const media = card.querySelector( '.b-certs__media' ).getBoundingClientRect();
+			const title = card.querySelector( '.b-certs__title' ).getBoundingClientRect();
+			const tiles = [ ...document.querySelectorAll( '.b-clients__tile' ) ].slice( 0, 2 ).map( ( t ) => t.getBoundingClientRect() );
+			const g = [ ...document.querySelectorAll( '.b-office__item' ) ].slice( 0, 3 ).map( ( f ) => f.getBoundingClientRect() );
+			return {
+				certRow: Math.round( media.width ) === 76 && title.left > media.right,
+				logos: Math.round( tiles[ 0 ].height ) + ':' + ( Math.abs( tiles[ 0 ].top - tiles[ 1 ].top ) < 1 ),
+				gallery: Math.round( g[ 0 ].height ) + ':' + ( Math.abs( g[ 1 ].top - g[ 2 ].top ) < 1 && g[ 2 ].left > g[ 1 ].left ),
+			};
+		} );
+		check( 'Телефон 390: сертификаты — строки (картинка 76 px слева), логотипы по 2 в ряд высотой 74 px, галерея в 2 колонки',
+			mob.certRow && '74:true' === mob.logos && '252:true' === mob.gallery, JSON.stringify( mob ) );
+		const wide = [];
+		for ( const width of [ 1440, 1024, 768, 390, 320, 280 ] ) {
+			await page.setViewportSize( { width, height: 900 } );
+			await page.goto( PAGE, { waitUntil: 'domcontentloaded' } );
+			if ( await page.evaluate( () => document.documentElement.scrollWidth > innerWidth ) ) {
+				wide.push( width );
+			}
+		}
+		check( 'Ширины 1440–280: без прокрутки вбок', 0 === wide.length, wide.join( ', ' ) );
+		await page.setViewportSize( { width: 1280, height: 900 } );
+		await page.goto( PAGE, { waitUntil: 'networkidle' } );
+		await page.addScriptTag( { path: require.resolve( 'axe-core' ) } );
+		const axe = await page.evaluate( async () => {
+			const r = await window.axe.run( '.page-entry__content', { resultTypes: [ 'violations' ] } );
+			return r.violations.filter( ( v ) => [ 'critical', 'serious' ].includes( v.impact ) ).map( ( v ) => `${ v.id } (${ v.nodes.length })` );
+		} );
+		check( 'axe: нет нарушений critical/serious на странице «О компании»', 0 === axe.length, axe.join( ', ' ) );
+		check( 'Консоль браузера на сайте без ошибок', 0 === errors.length, errors.slice( 0, 3 ).join( ' | ' ) );
+
+		// ===== Сверка с макетом =====
+		const sections = [
+			[ 'directions', '.b-dirs', 'section[aria-labelledby="services-title"]' ],
+			[ 'principles', '.b-principles', 'section[aria-labelledby="principles-title"]' ],
+			[ 'history', '.b-history', 'section[aria-labelledby="history-title"]' ],
+			[ 'leader', '.b-leader', 'section[aria-labelledby="ceo-title"]' ],
+			[ 'certificates', '.b-certs', 'section[aria-labelledby="cert-title"]' ],
+			[ 'clients', '.b-clients', 'section[aria-labelledby="clients-title"]' ],
+			[ 'office', '.b-office', 'section[aria-labelledby="office-title"]' ],
+		];
+		for ( const width of [ 1280, 768, 390 ] ) {
+			for ( const [ name, theme, mock ] of sections ) {
+				await compare( page, name, width, theme, mock );
+			}
+		}
+
+		// ===== Редактор =====
+		const editor = await browser.newPage( { viewport: { width: 1400, height: 1000 } } );
+		const editorErrors = collectConsoleErrors( editor );
+		await login( editor );
+		await editor.goto( `${ URL }/wp-admin/post.php?post=${ own }&action=edit` );
+		await editor.waitForFunction( () => window.wp && wp.data && wp.data.select( 'core/block-editor' ), null, { timeout: 60000 } );
+		const reg = await editor.evaluate( () => [ 'trust/directions', 'trust/principles', 'trust/history', 'trust/leader-word', 'trust/certificates', 'trust/clients', 'trust/office' ].map( ( name ) => {
+			const type = wp.blocks.getBlockType( name );
+			return [ type && type.title, type && type.category, !! ( type && type.example ) ].join( ':' );
+		} ) );
+		check( 'Редактор: семь блоков в категории «Компания», у всех превью',
+			JSON.stringify( reg ) === JSON.stringify( [ 'Чем мы занимаемся', 'Как мы работаем', 'Как мы росли', 'Слово руководителя', 'Сертификаты и рейтинги', 'Нам доверяют', 'Где мы работаем' ].map( ( t ) => `${ t }:trust-company:true` ) ), JSON.stringify( reg ) );
+		const canvas = editor.frameLocator( 'iframe[name="editor-canvas"]' );
+		await canvas.locator( '.b-office' ).first().waitFor( { timeout: 30000 } );
+		check( 'Редактор: превью блоков на странице', 1 === await canvas.locator( '.b-leader' ).count() && 1 <= await canvas.locator( '.b-certs__card' ).count() );
+		check( 'Редактор без ошибок JavaScript', 0 === editorErrors.length, editorErrors.slice( 0, 3 ).join( ' | ' ) );
+		await editor.close();
+	} finally {
+		created.forEach( ( id ) => wp( 'post', 'delete', String( id ), '--force' ) );
+	}
+
+	await browser.close();
+	checkLog();
+	finish();
+} )().catch( ( e ) => {
+	console.error( e );
+	process.exit( 1 );
+} );

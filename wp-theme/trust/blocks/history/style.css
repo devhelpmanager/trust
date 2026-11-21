@@ -1,0 +1,74 @@
+/*
+ * Блок «Как мы росли» (o-nas/o-kompanii.html, «История»).
+ */
+
+.b-history {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-history__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-history__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+	gap: 28px 24px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-history__list > li {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	min-width: 0;
+	padding-top: 26px;
+	border-top: 2px solid var(--c-border);
+}
+
+.b-history__list > li:last-child {
+	border-top-color: var(--c-violet);
+}
+
+.b-history__dot {
+	position: absolute;
+	top: -8px;
+	left: 0;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background: var(--c-violet);
+	box-shadow: 0 0 0 4px var(--c-white);
+}
+
+.b-history__year {
+	font-family: var(--f-display);
+	font-size: 26px;
+	font-weight: 600;
+	color: var(--c-violet-dark);
+}
+
+.b-history__title {
+	margin: 0;
+	font-family: inherit;
+	font-size: 17px;
+	font-weight: 600;
+	line-height: 1.35;
+	letter-spacing: 0;
+}
+
+.b-history__text {
+	margin: 0;
+	font-size: 16px;
+	line-height: 1.5;
+	color: var(--c-text-2);
+}

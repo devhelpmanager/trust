@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/certificates",
+	"title": "Сертификаты и рейтинги",
+	"description": "Сертификаты, дипломы и места в рейтингах: картинка документа, название, кто выдал, год и ссылка «смотреть документ» — скан открывается на весь экран, PDF и ссылка — в новой вкладке. На телефоне — компактные строки.",
+	"category": "trust-company",
+	"icon": "awards",
+	"keywords": [ "сертификаты", "рейтинги", "дипломы", "награды", "о компании" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "trust-lightbox",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/leader-word",
+	"title": "Слово руководителя",
+	"description": "Фото руководителя и его цитата: сотрудник из раздела «Сотрудники» (фото, имя, должность, email), кнопки «Написать руководителю» и «Познакомиться с командой».",
+	"category": "trust-company",
+	"icon": "format-quote",
+	"keywords": [ "руководитель", "директор", "основатель", "цитата", "о компании" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

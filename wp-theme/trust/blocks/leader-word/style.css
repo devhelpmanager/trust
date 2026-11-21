@@ -1,0 +1,122 @@
+/*
+ * Блок «Слово руководителя» (o-nas/o-kompanii.html): фото слева, цитата справа, лавандовый фон.
+ */
+
+.b-leader {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-lavender);
+	color: var(--c-text);
+}
+
+.b-leader__inner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 40px 64px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-leader__photo {
+	flex: 0 1 340px;
+	width: 100%;
+	max-width: 380px;
+	min-width: 0;
+	height: auto;
+	aspect-ratio: 4 / 5;
+	object-fit: cover;
+	border-radius: 24px;
+	background: var(--c-lavender-3);
+}
+
+.b-leader__photo--empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--c-decor);
+}
+
+.b-leader__figure {
+	display: flex;
+	flex: 1 1 320px;
+	flex-direction: column;
+	gap: 22px;
+	min-width: 0;
+	margin: 0;
+}
+
+.b-leader__label {
+	margin: 0;
+	line-height: normal;
+}
+
+.b-leader__mark {
+	fill: var(--c-violet);
+}
+
+.b-leader__quote {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: clamp(20px, 2.3vw, 28px);
+	font-weight: 500;
+	line-height: 1.4;
+	letter-spacing: -0.01em;
+	text-wrap: pretty;
+}
+
+.b-leader__quote p {
+	margin: 0;
+}
+
+.b-leader__quote p + p {
+	margin-top: 0.6em;
+}
+
+.b-leader__who {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.b-leader__name {
+	font-size: 18px;
+	font-weight: 600;
+}
+
+.b-leader__role {
+	font-size: 15px;
+	color: var(--c-muted);
+}
+
+.b-leader__buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.b-leader__btn,
+.b-leader__btn:hover {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 48px;
+	padding: 0 18px;
+	box-sizing: border-box;
+	border: 1.5px solid var(--c-violet);
+	border-radius: 12px;
+	background: var(--c-white);
+	color: var(--c-violet-dark);
+	font-size: 15px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: background 0.2s;
+}
+
+.b-leader__btn:hover {
+	background: var(--c-lavender-2);
+}
+
+.b-leader__empty {
+	margin: 0;
+	color: var(--c-muted);
+}

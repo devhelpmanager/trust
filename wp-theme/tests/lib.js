@@ -290,7 +290,12 @@ const PORTFOLIO_REVIEWS_CSS = `
 `;
 const MOCKUP_CSS = {
 	'portfolio-blog-404/portfolio.html': HERO_SECTION_CSS + PORTFOLIO_REVIEWS_CSS,
-	'o-nas/o-kompanii.html': HERO_SECTION_CSS,
+	// Блоки «О компании» (шаг 4.10): шапка секции — как у всех блоков (H2 28–44 px, 16 px от
+	// надзаголовка; в макете 26–40 px и 14 px).
+	'o-nas/o-kompanii.html': HERO_SECTION_CSS + `
+		main section:not(.dc-hero-sec) header { gap: 16px !important; }
+		main section:not(.dc-hero-sec) header h2 { font-size: clamp(28px, 3.4vw, 44px) !important; }
+	`,
 	'o-nas/komanda.html': HERO_SECTION_CSS,
 	'o-nas/karera.html': HERO_SECTION_CSS,
 	'o-nas/kontakty.html': `

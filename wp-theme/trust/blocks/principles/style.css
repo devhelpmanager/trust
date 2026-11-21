@@ -1,0 +1,73 @@
+/*
+ * Блок «Как мы работаем» (o-nas/o-kompanii.html, «Принципы»): фиолетовый фон.
+ */
+
+.b-principles {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-violet-dark);
+	color: var(--c-white);
+}
+
+.b-principles__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 48px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-principles .eyebrow {
+	color: var(--c-violet-light);
+}
+
+.b-principles .section-lead {
+	color: var(--c-on-violet);
+}
+
+.b-principles__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+	gap: 40px 32px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-principles__list > li {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	min-width: 0;
+	padding-top: 22px;
+	border-top: 2px solid var(--c-white);
+}
+
+.b-principles__num {
+	font-family: var(--f-display);
+	font-size: 36px;
+	font-weight: 500;
+	line-height: 1;
+	color: var(--c-violet-light);
+}
+
+.b-principles__icon {
+	display: flex;
+	color: var(--c-violet-light);
+}
+
+.b-principles__title {
+	margin: 4px 0 0;
+	font-family: inherit;
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 1.3;
+	letter-spacing: 0;
+	color: var(--c-white);
+}
+
+.b-principles__text {
+	margin: 0;
+	font-size: 16px;
+	line-height: 1.55;
+	color: var(--c-on-violet);
+}

@@ -1,0 +1,122 @@
+/*
+ * Блок «Сертификаты и рейтинги» (o-nas/o-kompanii.html, «Подтверждения»).
+ */
+
+.b-certs {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-certs__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 36px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-certs__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+	gap: 20px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-certs__list > li {
+	min-width: 0;
+}
+
+.b-certs__card {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	height: 100%;
+	box-sizing: border-box;
+	padding: 14px 14px 18px;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-card-lg);
+	background: var(--c-white);
+	color: var(--c-text);
+	text-decoration: none;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+a.b-certs__card:hover {
+	border-color: var(--c-decor);
+	box-shadow: 0 14px 32px rgba(46, 16, 101, 0.1);
+	color: var(--c-text);
+}
+
+.b-certs__media {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+	aspect-ratio: 4 / 3;
+	border-radius: 12px;
+	background: var(--c-lavender-2);
+	color: var(--c-violet);
+}
+
+.b-certs__media--empty {
+	background-image: repeating-linear-gradient(135deg, var(--c-lavender-2) 0 16px, var(--c-lavender-3) 16px 32px);
+}
+
+.b-certs__img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+.b-certs__title {
+	padding: 0 4px;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.b-certs__meta {
+	padding: 0 4px;
+	font-size: 14px;
+	color: var(--c-muted);
+}
+
+/* Телефон: компактные строки — картинка слева, название и строка справа (как в макете) */
+@media (max-width: 560px) {
+	.b-certs__card {
+		display: grid;
+		grid-template-columns: 76px minmax(0, 1fr);
+		align-items: center;
+		gap: 4px 14px;
+		padding: 12px;
+	}
+
+	.b-certs__media {
+		grid-row: 1 / span 2;
+		aspect-ratio: 1 / 1;
+	}
+
+	.b-certs__media svg {
+		width: 28px;
+		height: 28px;
+	}
+
+	.b-certs__title {
+		align-self: end;
+		font-size: 15px;
+	}
+
+	.b-certs__meta {
+		align-self: start;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.b-certs__card {
+		transition: none;
+	}
+}

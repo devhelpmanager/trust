@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/history",
+	"title": "Как мы росли",
+	"description": "История компании по годам: линия с точками, год крупно, заголовок (необязательно) и текст. Последнее событие выделено.",
+	"category": "trust-company",
+	"icon": "backup",
+	"keywords": [ "история", "как мы росли", "годы", "о компании" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}
