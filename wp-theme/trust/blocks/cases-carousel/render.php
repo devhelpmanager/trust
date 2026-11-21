@@ -5,7 +5,8 @@
  * Фиолетовая секция: слева надзаголовок, H2 и вводный текст, справа счётчик «01 / 04» и стрелки.
  * Ниже лента слайдов шириной 60 % (на телефоне 86 %): скриншот 16:10, чем занимается клиент,
  * заголовок (ссылка на кейс, если он выбран) и описание. У соседних слайдов скриншот бледнее,
- * текст скрыт. Листается стрелками (по кругу) и пальцем (view.js). Без JavaScript — лента
+ * текст скрыт. Листается стрелками (по кругу), пальцем и мышью — перетаскиванием (view.js); скриншот
+ * текущего слайда открывается на весь экран (assets/js/lightbox.js). Без JavaScript — лента
  * прокручивается вбок, видны все тексты.
  *
  * Переменные SCF: $block (array), $is_preview (bool), $post_id (int|string).
@@ -107,14 +108,37 @@ $trust_pad      = static fn( int $n ): string => str_pad( (string) $n, 2, '0', S
 							$trust_slide['image'],
 							'large',
 							array(
-								'class'   => 'b-carousel__img',
-								'loading' => 'lazy',
+								'class'     => 'b-carousel__img',
+								'loading'   => 'lazy',
+								'draggable' => 'false', // Слайды перетаскивают мышью — картинка не должна «тянуться» сама.
 								// Слайд — 60 % ленты (до 720 px), на телефоне — 86 %.
-								'sizes'   => '(max-width: 640px) 86vw, (max-width: 1296px) 60vw, 720px',
+								'sizes'     => '(max-width: 640px) 86vw, (max-width: 1296px) 60vw, 720px',
 							),
 							$trust_slide['alt']
 						);
+						// Скриншот открывается на весь экран (правка заказчика): ссылка на оригинал,
+						// assets/js/lightbox.js; без JavaScript ссылка открывает файл картинки.
+						$trust_full = $is_preview ? '' : (string) wp_get_attachment_image_url( $trust_slide['image'], 'full' );
+						if ( '' !== $trust_full ) {
+							$trust_alt_text = '' !== $trust_slide['alt'] ? $trust_slide['alt'] : trim( (string) get_post_meta( $trust_slide['image'], '_wp_attachment_image_alt', true ) );
+							printf(
+								'<a class="b-carousel__open" href="%s" data-trust-lightbox data-lightbox-caption="%s" aria-label="%s" draggable="false">',
+								esc_url( $trust_full ),
+								esc_attr( $trust_slide['title'] ),
+								esc_attr(
+									'' !== $trust_alt_text
+										/* translators: %s: описание скриншота (alt). */
+										? sprintf( __( 'Открыть на весь экран: %s', 'trust' ), $trust_alt_text )
+										: __( 'Открыть скриншот на весь экран', 'trust' )
+								)
+							);
+						}
 						echo $trust_img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- разметка wp_get_attachment_image().
+						if ( '' !== $trust_full ) {
+							echo '<span class="b-carousel__zoom" aria-hidden="true">';
+							Icons::render( 'expand', array( 'size' => 20 ) );
+							echo '</span></a>';
+						}
 						if ( $is_preview && Blocks::image_alt_missing( $trust_slide['image'], $trust_slide['alt'] ) ) {
 							/* translators: %d: номер слайда. */
 							echo Blocks::editor_warning( sprintf( __( 'Слайд %d: нет описания картинки (alt). Заполните поле «Alt» или описание в медиатеке.', 'trust' ), $trust_i + 1 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- разметка экранирована в Blocks::editor_warning().

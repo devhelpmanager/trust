@@ -1,11 +1,15 @@
 /**
  * Блок «Карусель кейсов»: стрелки «Предыдущий / Следующий кейс» (по кругу, как в макете),
- * счётчик «01 / 04», листание пальцем (сдвиг больше 40 px по горизонтали) и клавишами ← →,
- * когда фокус на стрелках. Соседние слайды недоступны с клавиатуры и для скринридеров (inert):
- * ссылка на кейс есть только у текущего.
+ * счётчик «01 / 04», клавиши ← →, когда фокус на стрелках, перетаскивание пальцем и мышью
+ * (правка заказчика: на компьютере тоже листается «свайпом»). Пока тянут, лента идёт за
+ * указателем; отпустили дальше 60 px — следующий или предыдущий слайд, ближе — лента
+ * возвращается. После перетаскивания нажатие на скриншот не открывает его на весь экран.
+ * Соседние слайды скрыты от скринридеров, их ссылки недоступны с клавиатуры (inert); нажатие на
+ * выглядывающий соседний слайд переходит к нему.
  */
 ( () => {
-	const SWIPE = 40;
+	const START = 8; // Сдвиг, после которого жест считается перетаскиванием, а не нажатием.
+	const SWIPE = 60; // Сдвиг, после которого слайд меняется.
 
 	function init( root ) {
 		const track = root.querySelector( '[data-carousel-track]' );
@@ -26,7 +30,14 @@
 			slides.forEach( ( slide, i ) => {
 				const on = i === index;
 				slide.classList.toggle( 'is-active', on );
-				slide.inert = ! on;
+				// Соседний слайд скрыт от скринридеров, его ссылки недоступны (inert). Сам слайд не inert:
+				// иначе браузер не отдаёт нажатия на нём — его нельзя было бы потянуть или выбрать.
+				if ( on ) {
+					slide.removeAttribute( 'aria-hidden' );
+				} else {
+					slide.setAttribute( 'aria-hidden', 'true' );
+				}
+				slide.querySelectorAll( '.b-carousel__open, .b-carousel__text' ).forEach( ( part ) => ( part.inert = ! on ) );
 			} );
 			if ( current ) {
 				current.textContent = String( index + 1 ).padStart( 2, '0' );
@@ -45,25 +56,84 @@
 			} )
 		);
 
-		// Пальцем: вертикальная прокрутка страницы остаётся браузеру (touch-action: pan-y).
-		let start = null;
-		track.addEventListener( 'pointerdown', ( event ) => {
-			if ( 'mouse' !== event.pointerType ) {
-				start = { x: event.clientX, y: event.clientY };
-			}
-		} );
-		track.addEventListener( 'pointerup', ( event ) => {
-			if ( ! start ) {
+		// Перетаскивание. Вертикальная прокрутка страницы пальцем остаётся браузеру (touch-action: pan-y).
+		let drag = null;
+		let dragged = false;
+
+		function finish( event ) {
+			if ( ! drag ) {
 				return;
 			}
-			const dx = event.clientX - start.x;
-			const dy = event.clientY - start.y;
-			start = null;
-			if ( Math.abs( dx ) > SWIPE && Math.abs( dx ) > Math.abs( dy ) ) {
-				go( index + ( dx < 0 ? 1 : -1 ) );
+			const dx = drag.active && event ? event.clientX - drag.x : 0;
+			const active = drag.active;
+			drag = null;
+			track.classList.remove( 'is-dragging' );
+			track.style.setProperty( '--carousel-drag', '0px' );
+			if ( active ) {
+				dragged = true; // Нажатие после перетаскивания не считается (см. click ниже).
+				window.setTimeout( () => ( dragged = false ), 0 );
+				if ( Math.abs( dx ) > SWIPE ) {
+					go( index + ( dx < 0 ? 1 : -1 ) );
+				}
+			}
+		}
+
+		track.addEventListener( 'pointerdown', ( event ) => {
+			if ( ( 'mouse' === event.pointerType && 0 !== event.button ) || ! event.isPrimary ) {
+				return;
+			}
+			drag = { x: event.clientX, y: event.clientY, id: event.pointerId, active: false };
+		} );
+
+		track.addEventListener( 'pointermove', ( event ) => {
+			if ( ! drag || event.pointerId !== drag.id ) {
+				return;
+			}
+			const dx = event.clientX - drag.x;
+			const dy = event.clientY - drag.y;
+			if ( ! drag.active ) {
+				if ( Math.abs( dx ) < START || Math.abs( dx ) < Math.abs( dy ) ) {
+					if ( Math.abs( dy ) > START ) {
+						drag = null; // Вертикальный жест — это прокрутка страницы.
+					}
+					return;
+				}
+				drag.active = true;
+				track.classList.add( 'is-dragging' );
+				if ( track.setPointerCapture ) {
+					try {
+						track.setPointerCapture( event.pointerId );
+					} catch ( e ) {}
+				}
+			}
+			event.preventDefault();
+			track.style.setProperty( '--carousel-drag', `${ dx }px` );
+		} );
+
+		track.addEventListener( 'pointerup', finish );
+		track.addEventListener( 'pointercancel', () => finish( null ) );
+		track.addEventListener( 'lostpointercapture', () => drag && drag.active && finish( null ) );
+
+		// После перетаскивания не открывать скриншот и не переходить по ссылке.
+		track.addEventListener(
+			'click',
+			( event ) => {
+				if ( dragged ) {
+					event.preventDefault();
+					event.stopPropagation();
+				}
+			},
+			true
+		);
+		track.addEventListener( 'dragstart', ( event ) => event.preventDefault() );
+
+		// Нажатие на выглядывающий соседний слайд — переход к нему.
+		track.addEventListener( 'click', ( event ) => {
+			const slide = event.target.closest( '[data-carousel-slide]' );
+			if ( slide && ! slide.classList.contains( 'is-active' ) ) {
+				go( slides.indexOf( slide ) );
 			}
 		} );
-		track.addEventListener( 'pointercancel', () => ( start = null ) );
 
 		go( 0 );
 	}

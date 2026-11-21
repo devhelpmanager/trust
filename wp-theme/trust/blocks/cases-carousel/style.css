@@ -37,10 +37,11 @@
 	gap: 12px;
 }
 
+/* Счётчик крупнее, чем в макете (правка заказчика: 14 → 20 px, на телефоне 16) */
 .b-carousel__counter {
-	min-width: 72px;
+	min-width: 96px;
 	font-family: var(--f-mono);
-	font-size: 14px;
+	font-size: 20px;
 	font-weight: 500;
 	letter-spacing: 0.06em;
 	color: var(--c-violet-light);
@@ -92,9 +93,31 @@
 	--slide-gap: 24px;
 	display: flex;
 	gap: var(--slide-gap);
-	transform: translateX(calc(var(--carousel-index, 0) * -1 * (var(--slide-w) + var(--slide-gap))));
+	transform: translateX(calc(var(--carousel-index, 0) * -1 * (var(--slide-w) + var(--slide-gap)) + var(--carousel-drag, 0px)));
 	transition: transform 0.5s ease;
 	touch-action: pan-y; /* горизонтальное движение пальцем листает слайды (view.js) */
+}
+
+/* Перетаскивание мышью и пальцем (правка заказчика): лента идёт за указателем без анимации */
+.b-carousel__track.is-dragging {
+	transition: none;
+	user-select: none;
+}
+
+.b-carousel__track.is-dragging,
+.b-carousel__track.is-dragging * {
+	cursor: grabbing !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.js .b-carousel__track {
+		cursor: grab;
+	}
+
+	/* Выглядывающий соседний слайд — по нажатию к нему */
+	.js .b-carousel__slide:not(.is-active) {
+		cursor: pointer;
+	}
 }
 
 .b-carousel__slide {
@@ -115,6 +138,50 @@
 	background: var(--c-violet-plate);
 	opacity: 0.45;
 	transition: opacity 0.4s;
+}
+
+/* Скриншот открывается на весь экран (правка заказчика); значок — как у блока «Картинка» */
+.b-carousel__open {
+	position: relative;
+	display: block;
+	border-radius: var(--r-card-lg);
+	color: inherit;
+	cursor: zoom-in;
+	-webkit-user-drag: none;
+}
+
+.b-carousel__open:focus-visible {
+	outline: 2px solid var(--c-white);
+	outline-offset: 3px;
+}
+
+.b-carousel__zoom {
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: var(--r-pill);
+	background: rgba(14, 11, 20, 0.62);
+	color: var(--c-white);
+	opacity: 0;
+	transition: opacity 0.2s;
+	pointer-events: none;
+}
+
+.b-carousel__slide.is-active .b-carousel__open:hover .b-carousel__zoom,
+.b-carousel__slide.is-active .b-carousel__open:focus-visible .b-carousel__zoom {
+	opacity: 1;
+}
+
+/* На сенсорных экранах наведения нет — у текущего слайда значок виден всегда */
+@media (hover: none) {
+	.b-carousel__slide.is-active .b-carousel__zoom {
+		opacity: 1;
+	}
 }
 
 .b-carousel__text {
@@ -180,12 +247,18 @@
 		--slide-w: 86%;
 		--slide-gap: 16px;
 	}
+
+	.b-carousel__counter {
+		min-width: 76px;
+		font-size: 16px;
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {
 	.b-carousel__track,
 	.b-carousel__img,
-	.b-carousel__text {
+	.b-carousel__text,
+	.b-carousel__zoom {
 		transition: none;
 	}
 }

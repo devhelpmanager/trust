@@ -316,6 +316,18 @@ const MOCKUP_CSS = {
 			section > div { gap: 24px !important; }
 		}
 	`,
+	// «Наши проекты в топе»: заголовок и вводный текст во всю ширину блока (правка заказчика).
+	'seo-bloki/12-proekty-v-tope.html': `
+		section > div > header { max-width: none !important; }
+		section > div > header h2 { text-wrap: wrap !important; }
+	`,
+	// «Карусель кейсов»: счётчик крупнее — 20 px, на телефоне 16 (правка заказчика, в макете 14).
+	'seo-bloki/14-karusel-keysov.html': `
+		span[aria-live] { min-width: 96px !important; font-size: 20px !important; }
+		@media (max-width: 640px) {
+			span[aria-live] { min-width: 76px !important; font-size: 16px !important; }
+		}
+	`,
 	// «Блок с текстом»: колонка 960 px (правка заказчика, в макете 760), строки заголовка заполняют колонку.
 	'seo-bloki/03-tekst.html': `
 		section > article { max-width: 960px !important; }

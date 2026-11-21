@@ -15,7 +15,7 @@
 		"customClassName": false
 	},
 	"style": "file:./style.css",
-	"viewScript": "file:./view.js",
+	"viewScript": [ "file:./view.js", "trust-lightbox" ],
 	"acf": {
 		"mode": "preview",
 		"renderTemplate": "render.php",

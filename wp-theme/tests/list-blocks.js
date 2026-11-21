@@ -120,7 +120,9 @@ const columns = ( page, sel ) => page.$$eval( sel, ( list ) => list.filter( ( el
 				top: [ ...c.querySelectorAll( '.b-projects__badge' ) ].map( ( b ) => b.classList.contains( 'is-top' ) ? 1 : 0 ).join( '' ),
 				colors: [ ...c.querySelectorAll( '.b-projects__badge' ) ].slice( 0, 2 ).map( ( b ) => getComputedStyle( b ).backgroundColor ), // 1-я строка: Я и G
 				meta: c.querySelector( '.b-projects__meta' ).textContent.trim(),
+				href: c.querySelector( 'h3 a' ) ? c.querySelector( 'h3 a' ).getAttribute( 'href' ) : '',
 			} ) ),
+			headWide: Math.round( el.querySelector( '.b-projects__head' ).getBoundingClientRect().width ) === Math.round( el.querySelector( '.b-projects__inner' ).getBoundingClientRect().width ),
 		} ) );
 		check( 'Проекты в топе: якорь #projects, надзаголовок «Кейсы», H2, фиолетовый фон',
 			'projects' === pr.id && pr.labelled && 'Кейсы' === pr.eyebrow && 'Наши проекты в топе' === pr.h2 && 'rgb(91, 33, 182)' === pr.bg, JSON.stringify( pr ).slice( 0, 200 ) );
@@ -138,6 +140,15 @@ const columns = ( page, sel ) => page.$$eval( sel, ( list ) => list.filter( ( el
 			'11001100,10110100,11011000' === pr.cards.map( ( c ) => c.top ).join() && 'rgb(109, 40, 217)' === pr.cards[ 0 ].colors[ 0 ] && 'rgb(243, 238, 255)' === pr.cards[ 1 ].colors[ 1 ],
 			JSON.stringify( [ pr.cards.map( ( c ) => c.top ), pr.cards.map( ( c ) => c.colors ) ] ) );
 		check( 'Проекты в топе: «[Регион] · данные на 01.11.2026»', pr.cards.every( ( c ) => '[Регион] · данные на 01.11.2026' === c.meta ), pr.cards[ 0 ].meta );
+		check( 'Проекты в топе: заголовок и вводный текст — во всю ширину блока (правка заказчика)', pr.headWide );
+		check( 'Проекты в топе: название — ссылка на страницу кейса (правка заказчика)',
+			pr.cards.every( ( c ) => c.href.includes( '/portfolio/' ) ) && pr.cards[ 0 ].href.endsWith( '/internet-magazin-mebeli-s-nulya-i-zapusk-reklamy/' ), JSON.stringify( pr.cards.map( ( c ) => c.href ) ) );
+		const tableBox = await page.locator( '.b-projects__card' ).nth( 1 ).locator( 'table' ).boundingBox();
+		await page.locator( '.b-projects__card' ).nth( 1 ).scrollIntoViewIfNeeded();
+		const tb = await page.locator( '.b-projects__card' ).nth( 1 ).locator( 'table' ).boundingBox();
+		await Promise.all( [ page.waitForNavigation( { timeout: 10000 } ).catch( () => null ), page.mouse.click( tb.x + 40, tb.y + 60 ) ] );
+		check( 'Проекты в топе: нажатие в любом месте карточки (на таблице) — переход на страницу кейса', page.url().endsWith( '/lokalnoe-seo-i-karty-dlya-stomatologii/' ), `${ page.url() } ${ JSON.stringify( tableBox ) }` );
+		await page.goto( SEO, { waitUntil: 'networkidle' } );
 
 		// ===== «Карусель кейсов» =====
 		const car = page.locator( '.b-carousel' );
@@ -146,7 +157,7 @@ const columns = ( page, sel ) => page.$$eval( sel, ( list ) => list.filter( ( el
 			return {
 				counter: el.querySelector( '.b-carousel__counter' ).textContent.replace( /\s+/g, ' ' ).trim(),
 				active: [ ...el.querySelectorAll( '.b-carousel__slide' ) ].findIndex( ( s ) => s.classList.contains( 'is-active' ) ),
-				inert: [ ...el.querySelectorAll( '.b-carousel__slide' ) ].map( ( s ) => s.inert ? 1 : 0 ).join( '' ),
+				inert: [ ...el.querySelectorAll( '.b-carousel__slide' ) ].map( ( s ) => ( 'true' === s.getAttribute( 'aria-hidden' ) && s.querySelector( '.b-carousel__open' ).inert && s.querySelector( '.b-carousel__text' ).inert ? 1 : 0 ) ).join( '' ),
 				shift: Math.round( new DOMMatrix( getComputedStyle( track ).transform ).m41 ),
 				slideW: Math.round( el.querySelector( '.b-carousel__slide' ).getBoundingClientRect().width ),
 				trackW: Math.round( track.getBoundingClientRect().width ),
@@ -171,7 +182,7 @@ const columns = ( page, sel ) => page.$$eval( sel, ( list ) => list.filter( ( el
 			cr.alts.every( ( a ) => a && a.length > 20 ), JSON.stringify( [ cr.niches, cr.links ] ) );
 		let st = await state();
 		const hidden = await car.evaluate( ( el ) => [ getComputedStyle( el.querySelectorAll( '.b-carousel__text' )[ 1 ] ).opacity, getComputedStyle( el.querySelectorAll( '.b-carousel__img' )[ 1 ] ).opacity, getComputedStyle( el.querySelectorAll( '.b-carousel__text' )[ 0 ] ).opacity ] );
-		check( 'Карусель: сначала «01 / 04», первый слайд; у соседних скриншот бледнее, текст скрыт, они недоступны (inert)',
+		check( 'Карусель: сначала «01 / 04», первый слайд; у соседних скриншот бледнее, текст скрыт, они скрыты от скринридеров, ссылки недоступны (inert)',
 			'01 / 04' === st.counter && 0 === st.active && '0111' === st.inert && 0 === st.shift && '0,0.45,1' === hidden.join(), JSON.stringify( [ st, hidden ] ) );
 		check( 'Карусель: слайд — 60 % ленты', Math.abs( st.slideW - st.trackW * 0.6 ) <= 1, JSON.stringify( st ) );
 		await car.locator( '[data-carousel-next]' ).click();
@@ -191,22 +202,72 @@ const columns = ( page, sel ) => page.$$eval( sel, ( list ) => list.filter( ( el
 		await page.keyboard.press( 'ArrowLeft' );
 		st = await state();
 		check( 'Карусель: клавиша ← — назад', '01 / 04' === st.counter, JSON.stringify( st ) );
+		// Палец: события указателя с pointerType «touch» (вниз, движение по шагам, вверх).
 		const swipe = async ( dx, dy = 0 ) => car.locator( '[data-carousel-track]' ).evaluate( ( track, d ) => {
 			const r = track.getBoundingClientRect();
 			const x = r.left + 300;
 			const y = r.top + 100;
-			track.dispatchEvent( new PointerEvent( 'pointerdown', { bubbles: true, pointerType: 'touch', clientX: x, clientY: y } ) );
-			track.dispatchEvent( new PointerEvent( 'pointerup', { bubbles: true, pointerType: 'touch', clientX: x + d[ 0 ], clientY: y + d[ 1 ] } ) );
+			const ev = ( type, px, py ) => track.dispatchEvent( new PointerEvent( type, { bubbles: true, cancelable: true, pointerType: 'touch', pointerId: 7, isPrimary: true, clientX: px, clientY: py } ) );
+			ev( 'pointerdown', x, y );
+			for ( let i = 1; i <= 5; i++ ) {
+				ev( 'pointermove', x + ( d[ 0 ] * i ) / 5, y + ( d[ 1 ] * i ) / 5 );
+			}
+			ev( 'pointerup', x + d[ 0 ], y + d[ 1 ] );
 		}, [ dx, dy ] );
 		await swipe( -120 );
 		const afterLeft = ( await state() ).counter;
 		await swipe( 90 );
 		const afterRight = ( await state() ).counter;
-		await swipe( -20 );
+		await swipe( -30 );
 		await swipe( -50, 120 );
 		const afterSmall = ( await state() ).counter;
 		check( 'Карусель: пальцем влево — следующий, вправо — предыдущий; короткий и вертикальный жест не листает',
 			'02 / 04' === afterLeft && '01 / 04' === afterRight && '01 / 04' === afterSmall, JSON.stringify( [ afterLeft, afterRight, afterSmall ] ) );
+
+		// Мышь (правка заказчика): перетаскивание листает, лента идёт за указателем; после перетаскивания
+		// скриншот не открывается; короткое — возврат; с выглядывающего слайда — тоже листает.
+		await car.locator( '[data-carousel-track]' ).scrollIntoViewIfNeeded();
+		const dragMouse = async ( x, y, dx ) => {
+			await page.mouse.move( x, y );
+			await page.mouse.down();
+			for ( let i = 1; i <= 10; i++ ) {
+				await page.mouse.move( x + ( dx * i ) / 10, y );
+			}
+			const during = await car.locator( '[data-carousel-track]' ).evaluate( ( t ) => [ t.classList.contains( 'is-dragging' ), getComputedStyle( t ).getPropertyValue( '--carousel-drag' ).trim(), getComputedStyle( t ).transitionDuration ] );
+			await page.mouse.up();
+			await page.waitForTimeout( 700 );
+			return during;
+		};
+		let img = await car.locator( '.b-carousel__slide.is-active .b-carousel__img' ).boundingBox();
+		const during = await dragMouse( img.x + 400, img.y + 200, -200 );
+		const mouseLeft = [ ( await state() ).counter, await page.locator( 'dialog.lightbox[open]' ).count() ];
+		check( 'Карусель, мышь: перетаскивание влево — следующий слайд, лента идёт за указателем без анимации, скриншот не открылся',
+			'02 / 04' === mouseLeft[ 0 ] && 0 === mouseLeft[ 1 ] && true === during[ 0 ] && '-200px' === during[ 1 ] && '0s' === during[ 2 ], JSON.stringify( [ mouseLeft, during ] ) );
+		img = await car.locator( '.b-carousel__slide.is-active .b-carousel__img' ).boundingBox();
+		await dragMouse( img.x + 300, img.y + 200, -40 );
+		const snapBack = [ ( await state() ).counter, ( await state() ).shift ];
+		const peek = await car.locator( '.b-carousel__slide' ).nth( 2 ).boundingBox();
+		await dragMouse( peek.x + 60, peek.y + 200, 200 );
+		const fromPeek = ( await state() ).counter;
+		check( 'Карусель, мышь: короткое перетаскивание — лента возвращается; с выглядывающего слайда вправо — предыдущий',
+			'02 / 04' === snapBack[ 0 ] && Math.abs( snapBack[ 1 ] + 734 ) <= 2 && '01 / 04' === fromPeek, JSON.stringify( [ snapBack, fromPeek ] ) );
+		const peek2 = await car.locator( '.b-carousel__slide' ).nth( 1 ).boundingBox();
+		await page.mouse.click( Math.min( peek2.x + 80, 1270 ), peek2.y + 150 );
+		await page.waitForTimeout( 600 );
+		check( 'Карусель: нажатие на выглядывающий слайд — переход к нему', '02 / 04' === ( await state() ).counter, ( await state() ).counter );
+		await car.locator( '.b-carousel__slide.is-active .b-carousel__open' ).click();
+		await page.locator( 'dialog.lightbox[open]' ).waitFor( { timeout: 5000 } );
+		const shot = await page.evaluate( () => [ document.querySelector( '.lightbox__img' ).getAttribute( 'src' ), document.querySelector( '.lightbox__img' ).getAttribute( 'alt' ), document.querySelector( '.lightbox__caption' ).textContent.trim() ] );
+		check( 'Карусель: скриншот по нажатию открывается на весь экран — оригинал, alt, подпись — заголовок слайда (правка заказчика)',
+			shot[ 0 ].endsWith( '/case-positions.jpg' ) && shot[ 1 ].startsWith( 'Таблица позиций' ) && 'Ключевые запросы — в топ-10' === shot[ 2 ], JSON.stringify( shot ) );
+		await page.keyboard.press( 'Escape' );
+		await page.waitForTimeout( 300 );
+		const openLabel = await car.locator( '.b-carousel__slide.is-active .b-carousel__open' ).getAttribute( 'aria-label' );
+		check( 'Карусель: у ссылки на скриншот подпись «Открыть на весь экран: …»', /^Открыть на весь экран: Таблица позиций/.test( openLabel ), openLabel );
+		await car.locator( '[data-carousel-prev]' ).click();
+		await page.waitForTimeout( 600 );
+		const counterSize = await car.locator( '.b-carousel__counter' ).evaluate( ( e ) => getComputedStyle( e ).fontSize );
+		check( 'Карусель: счётчик крупнее — 20 px (правка заказчика, в макете 14)', '20px' === counterSize, counterSize );
 		const linkFocusable = await car.evaluate( ( el ) => {
 			const links = [ ...el.querySelectorAll( '.b-carousel__link' ) ];
 			links[ 1 ].focus();
@@ -252,6 +313,7 @@ const columns = ( page, sel ) => page.$$eval( sel, ( list ) => list.filter( ( el
 		await page.setViewportSize( { width: 390, height: 900 } );
 		st = await state();
 		check( '390px: слайд карусели — 86 % ленты', Math.abs( st.slideW - st.trackW * 0.86 ) <= 1, JSON.stringify( st ) );
+		check( '390px: счётчик карусели — 16 px', '16px' === await page.locator( '.b-carousel__counter' ).evaluate( ( e ) => getComputedStyle( e ).fontSize ) );
 		for ( const w of [ 1440, 1024, 600, 360, 320, 280 ] ) {
 			await page.setViewportSize( { width: w, height: 900 } );
 			await page.waitForTimeout( 200 );
