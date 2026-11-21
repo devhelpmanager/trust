@@ -1,0 +1,199 @@
+/*
+ * Тёмная карточка с кругами (макеты o-nas/blok-cta.html — «Обсудим ваш проект»,
+ * seo-vopros/blok-vopros*.html — «Хотите бесплатно задать вопрос SEO-специалисту?»).
+ * Секция светлого фона (лавандового, белого или фиолетового), внутри — индиго-карточка: слева
+ * иконка, заголовок, текст и строки под ним, справа — белая кнопка со стрелкой (или форма).
+ * Подключается только на страницах с этими блоками (стиль trust-dark-card, Trust\Blocks).
+ */
+
+.dark-card-sec {
+	padding: var(--section-y) var(--gutter); /* правка заказчика: отступы как у всех блоков (в макете 40–56 px) */
+	background: var(--c-lavender);
+	color: var(--c-text);
+}
+
+.dark-card-sec--white {
+	background: var(--c-white);
+}
+
+.dark-card-sec--violet {
+	background: var(--c-violet-dark);
+}
+
+.dark-card {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	max-width: var(--content);
+	margin: 0 auto;
+	border-radius: 24px;
+	background: var(--c-indigo);
+	color: var(--c-white);
+}
+
+.dark-card__circle {
+	position: absolute;
+	z-index: -1;
+	border-radius: 50%;
+}
+
+.dark-card__circle--top {
+	top: -150px;
+	right: -120px;
+	width: 340px;
+	height: 340px;
+	background: #25215C;
+}
+
+.dark-card__circle--bottom {
+	bottom: -100px;
+	left: -60px;
+	width: 180px;
+	height: 180px;
+	background: #23205A;
+}
+
+.dark-card__in {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 24px 48px;
+	padding: clamp(24px, 4vw, 40px) clamp(20px, 4vw, 44px);
+}
+
+.dark-card__in--top {
+	align-items: flex-start;
+}
+
+.dark-card__main {
+	display: flex;
+	flex: 1 1 480px;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 16px 20px;
+	min-width: 0;
+}
+
+.dark-card__icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 56px;
+	height: 56px;
+	border-radius: 16px;
+	background: var(--c-violet);
+	color: var(--c-white);
+}
+
+.dark-card__body {
+	display: flex;
+	flex: 1 1 260px;
+	flex-direction: column;
+	gap: 12px;
+	min-width: 0;
+}
+
+.dark-card__title {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: clamp(22px, 2.4vw, 30px);
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+	text-wrap: balance;
+	color: var(--c-white);
+}
+
+.dark-card__text {
+	max-width: 600px;
+	margin: 0;
+	font-size: 16px;
+	line-height: 1.55;
+	color: #D4D2F0;
+	text-wrap: pretty;
+}
+
+.dark-card__side {
+	display: flex;
+	flex: 1 1 280px;
+	flex-direction: column;
+	gap: 12px;
+	max-width: 340px;
+	min-width: 0;
+}
+
+/* Белая кнопка со стрелкой в фиолетовом квадрате */
+.dark-card__cta,
+.dark-card__cta:hover {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	min-height: 60px;
+	padding: 8px 8px 8px 22px;
+	box-sizing: border-box;
+	border-radius: 16px;
+	background: var(--c-white);
+	color: var(--c-text);
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.3;
+	text-decoration: none;
+	box-shadow: 0 12px 28px rgba(20, 8, 60, 0.32);
+}
+
+.dark-card__cta-text {
+	min-width: 0;
+}
+
+.dark-card__cta-arrow {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	background: var(--c-violet);
+	color: var(--c-white);
+	transition: background 0.2s, transform 0.2s;
+}
+
+.dark-card__cta:hover .dark-card__cta-arrow {
+	background: var(--c-violet-dark);
+	transform: translateX(2px);
+}
+
+.dark-card__cta:focus-visible {
+	outline: 3px solid var(--c-violet-light);
+	outline-offset: 3px;
+}
+
+/* Примечание со значком «i» */
+.dark-card__note {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	margin: 0;
+	font-size: 13px;
+	line-height: 1.45;
+	color: #C9C7EA;
+}
+
+.dark-card__note svg {
+	flex: none;
+	margin-top: 1px;
+	color: #C4B5FD;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.dark-card__cta-arrow {
+		transition: none;
+	}
+
+	.dark-card__cta:hover .dark-card__cta-arrow {
+		transform: none;
+	}
+}

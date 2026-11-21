@@ -25,8 +25,8 @@ defined( 'ABSPATH' ) || exit;
  * {страница}#breadcrumb, {страница}#service. Пустые поля в разметку не попадают.
  * Фильтр trust_schema_graph дополняет или отключает разметку (пустой массив — без вывода).
  *
- * Разметка статей, ответов, сотрудников, кейсов, списков и видео добавляется вместе с их
- * шаблонами и блоками (этапы 4–5).
+ * Видео — VideoObject из блоков «Видео» (Graph::video()). Разметка статей, ответов, сотрудников,
+ * кейсов и списков добавляется вместе с их шаблонами и блоками (этапы 4–5).
  */
 final class Graph {
 
@@ -81,6 +81,13 @@ final class Graph {
 	private static array $offers = array();
 
 	/**
+	 * Видео блоков «Видео» на странице: адрес видео => свойства VideoObject.
+	 *
+	 * @var array<string, array>
+	 */
+	private static array $videos = array();
+
+	/**
 	 * Регистрирует хуки.
 	 */
 	public static function register(): void {
@@ -112,6 +119,25 @@ final class Graph {
 		if ( '' !== $name && $price >= 0 && ! isset( self::$offers[ $name ] ) ) {
 			self::$offers[ $name ] = array( $price, self::text( $description ) );
 		}
+	}
+
+	/**
+	 * Блок «Видео» сообщает видео (вызывается из render.php на сайте): VideoObject с названием,
+	 * описанием, обложкой, датой загрузки, длительностью и адресом плеера или файла.
+	 *
+	 * @param array $video name, description, thumbnailUrl, uploadDate, duration, embedUrl, contentUrl.
+	 */
+	public static function video( array $video ): void {
+		$key = (string) ( $video['embedUrl'] ?? $video['contentUrl'] ?? '' );
+		if ( '' === $key || isset( self::$videos[ $key ] ) || empty( $video['name'] ) || empty( $video['thumbnailUrl'] ) ) {
+			return;
+		}
+		$video['name']        = self::text( (string) $video['name'] );
+		$video['description'] = self::text( (string) ( $video['description'] ?? '' ) );
+		if ( '' === $video['description'] ) {
+			$video['description'] = $video['name'];
+		}
+		self::$videos[ $key ] = $video;
 	}
 
 	/**
@@ -407,6 +433,19 @@ final class Graph {
 				'provider'    => array( '@id' => self::site() . '#organization' ),
 				'areaServed'  => trim( (string) Settings::get( 'seo_area_served', '' ) ),
 				'offers'      => self::offers( $url ),
+			);
+		}
+
+		// Видео блоков «Видео»: VideoObject, часть страницы.
+		$n = 0;
+		foreach ( self::$videos as $video ) {
+			$graph[] = array_merge(
+				array(
+					'@type'    => 'VideoObject',
+					'@id'      => $url . '#video-' . ( ++$n ),
+					'isPartOf' => array( '@id' => $url . '#webpage' ),
+				),
+				$video
 			);
 		}
 

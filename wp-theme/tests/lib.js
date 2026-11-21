@@ -248,6 +248,14 @@ const SECTION_SPACING_CSS = `
 		[style*="padding: 112px clamp(20px, 4vw, 48px)"] { padding-top: 48px !important; padding-bottom: 48px !important; }
 		[style*="padding: 64px clamp(20px, 4vw, 48px)"] { padding-top: 48px !important; padding-bottom: 48px !important; }
 	}
+	/* «Обсудим ваш проект» и «Задать вопрос» (в макетах 40–56 px) — тоже 64 / 56 / 48 */
+	[style*="padding: clamp(40px, 6vw, 56px) clamp(20px, 4vw, 48px)"] { padding-top: 64px !important; padding-bottom: 64px !important; }
+	@media (max-width: 1100px) {
+		[style*="padding: clamp(40px, 6vw, 56px) clamp(20px, 4vw, 48px)"] { padding-top: 56px !important; padding-bottom: 56px !important; }
+	}
+	@media (max-width: 760px) {
+		[style*="padding: clamp(40px, 6vw, 56px) clamp(20px, 4vw, 48px)"] { padding-top: 48px !important; padding-bottom: 48px !important; }
+	}
 	/* Подвал: сверху 40 px, на телефоне 32 (в макетах 72) */
 	footer.dc-foot { padding-top: 40px !important; }
 	@media (max-width: 760px) {

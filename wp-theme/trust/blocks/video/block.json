@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/video",
+	"title": "Видео",
+	"description": "Видео с обложкой: ссылка на YouTube, Rutube или VK Видео либо файл MP4. Плеер загружается только по нажатию на кнопку (обложка, кнопка воспроизведения, длительность), подпись под видео. Микроразметка VideoObject.",
+	"category": "trust-content",
+	"icon": "video-alt3",
+	"keywords": [ "видео", "youtube", "rutube", "vk", "ролик" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

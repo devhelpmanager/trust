@@ -129,6 +129,8 @@ final class Blocks {
 		}
 		// Общие стили тёмной карточки первых экранов: блоки указывают "trust-hero" в block.json.
 		wp_register_style( 'trust-hero', Assets::url( 'assets/css/hero.css' ), array(), Assets::version( 'assets/css/hero.css' ) );
+		// Тёмная карточка блоков «Обсудим ваш проект» и «Задать вопрос»: "trust-dark-card" в block.json.
+		wp_register_style( 'trust-dark-card', Assets::url( 'assets/css/dark-card.css' ), array(), Assets::version( 'assets/css/dark-card.css' ) );
 		// Просмотр картинок на весь экран: блоки «Картинка» и «Блок с текстом» указывают "trust-lightbox".
 		wp_register_script(
 			'trust-lightbox',

@@ -2,8 +2,9 @@
 /**
  * Настройки сайта → Блоки по умолчанию.
  *
- * Тексты общих компонентов. Сейчас — окно «Заказать обратный звонок» и согласие в формах;
- * тексты блоков «Обсудим ваш проект», «Задать вопрос» и оповещений добавятся на их шагах.
+ * Тексты общих компонентов: окно «Заказать обратный звонок», согласие в формах, блоки «Обсудим
+ * ваш проект», «Задать вопрос SEO-специалисту» и «Оповещение» (пустые поля блока берутся отсюда,
+ * Trust\Block_Texts), блог.
  *
  * @package Trust
  */
@@ -29,6 +30,41 @@ $trust_field = static fn( string $key, string $label, array $extra = array() ): 
 		'placeholder' => $trust_defaults[ $key ],
 	),
 	$extra
+);
+
+$trust_texts = Trust\Block_Texts::defaults();
+
+/**
+ * Текст блока по умолчанию: пустое поле — текст темы (серая подсказка).
+ *
+ * @param string $key   Имя поля (Trust\Block_Texts::defaults()).
+ * @param string $label Подпись поля.
+ * @param array  $extra Дополнительные параметры поля.
+ */
+$trust_text = static fn( string $key, string $label, array $extra = array() ): array => array_merge(
+	array(
+		'name'        => $key,
+		'label'       => $label,
+		'type'        => 'text',
+		'placeholder' => str_replace( '{brand}', '[Бренд]', $trust_texts[ $key ] ),
+	),
+	$extra
+);
+$trust_area = static fn( int $rows, int $max ): array => array(
+	'type'      => 'textarea',
+	'rows'      => $rows,
+	'new_lines' => '',
+	'maxlength' => $max,
+);
+$trust_page = static fn( string $name, string $label, string $note ): array => array(
+	'name'          => $name,
+	'label'         => $label,
+	'type'          => 'post_object',
+	'post_type'     => array( 'page' ),
+	'return_format' => 'id',
+	'allow_null'    => 1,
+	'ui'            => 1,
+	'instructions'  => $note,
 );
 
 return array(
@@ -86,6 +122,93 @@ return array(
 			'ui'            => 1,
 			'instructions'  => __( 'Ссылка из галочки согласия во всех формах сайта.', 'trust' ),
 		),
+		array(
+			'name'    => 'cta_heading',
+			'label'   => __( 'Блок «Обсудим ваш проект»', 'trust' ),
+			'type'    => 'message',
+			'message' => __( 'Тёмная карточка в конце страниц «О компании», «Команда», «Отзывы», «Портфолио» и кейсов. Пустые поля самого блока берутся отсюда, пустые здесь — тексты темы (серым). Телефон и Telegram — из вкладки «Контакты».', 'trust' ),
+		),
+		$trust_text( 'cta_title', __( 'Заголовок', 'trust' ), array( 'maxlength' => 80 ) ),
+		$trust_text( 'cta_text', __( 'Текст', 'trust' ), $trust_area( 2, 300 ) ),
+		$trust_text(
+			'cta_button',
+			__( 'Текст кнопки', 'trust' ),
+			array(
+				'maxlength' => 40,
+				'wrapper'   => array( 'width' => 50 ),
+			)
+		),
+		array_merge( $trust_page( 'cta_page', __( 'Страница кнопки', 'trust' ), __( 'Пусто — страница типа «Контакты»; нет её — окно «Заказать обратный звонок».', 'trust' ) ), array( 'wrapper' => array( 'width' => 50 ) ) ),
+
+		array(
+			'name'    => 'ask_heading',
+			'label'   => __( 'Блок «Задать вопрос SEO-специалисту»', 'trust' ),
+			'type'    => 'message',
+			'message' => __( 'Вид «Кнопка» ведёт на страницу вопросов, вид «Форма в блоке» отправляет вопрос сразу (как форма на странице «Вопросы SEO»).', 'trust' ),
+		),
+		$trust_text( 'ask_title', __( 'Заголовок', 'trust' ), array( 'maxlength' => 100 ) ),
+		$trust_text( 'ask_text', __( 'Текст', 'trust' ), $trust_area( 2, 300 ) ),
+		$trust_text(
+			'ask_points',
+			__( 'Пункты', 'trust' ),
+			array_merge(
+				$trust_area( 3, 200 ),
+				array(
+					'new_lines'    => '',
+					'instructions' => __( 'Каждый с новой строки, до 4 пунктов.', 'trust' ),
+				)
+			)
+		),
+		$trust_text(
+			'ask_button',
+			__( 'Текст кнопки (вид «Кнопка»)', 'trust' ),
+			array(
+				'maxlength' => 40,
+				'wrapper'   => array( 'width' => 50 ),
+			)
+		),
+		array_merge( $trust_page( 'ask_page', __( 'Страница кнопки', 'trust' ), __( 'Пусто — страница типа «Вопросы SEO».', 'trust' ) ), array( 'wrapper' => array( 'width' => 50 ) ) ),
+		$trust_text( 'ask_note', __( 'Примечание под кнопкой', 'trust' ), array( 'maxlength' => 160 ) ),
+		$trust_text( 'ask_form_note', __( 'Примечание в виде «Форма в блоке»', 'trust' ), $trust_area( 2, 200 ) ),
+		$trust_text( 'ask_submit', __( 'Кнопка отправки формы', 'trust' ), array( 'maxlength' => 40 ) ),
+		$trust_text( 'ask_success_title', __( 'Заголовок после отправки', 'trust' ), array( 'wrapper' => array( 'width' => 50 ) ) ),
+		$trust_text(
+			'ask_success_text',
+			__( 'Текст после отправки', 'trust' ),
+			array_merge(
+				$trust_area( 2, 300 ),
+				array(
+					'wrapper'      => array( 'width' => 50 ),
+					'instructions' => __( '{email} — адрес, который указал посетитель.', 'trust' ),
+				)
+			)
+		),
+
+		array(
+			'name'    => 'notice_heading',
+			'label'   => __( 'Блок «Оповещение»', 'trust' ),
+			'type'    => 'message',
+			'message' => __( 'Плашка «Ответ — личное мнение автора, а не аудит сайта» на странице вопросов и в ответах. {brand} — название бренда.', 'trust' ),
+		),
+		$trust_text( 'notice_title', __( 'Заголовок', 'trust' ), array( 'maxlength' => 120 ) ),
+		$trust_text( 'notice_text', __( 'Текст', 'trust' ), $trust_area( 3, 500 ) ),
+		$trust_text(
+			'notice_link_prefix',
+			__( 'Текст перед ссылкой', 'trust' ),
+			array(
+				'maxlength' => 100,
+				'wrapper'   => array( 'width' => 50 ),
+			)
+		),
+		array(
+			'name'          => 'notice_link',
+			'label'         => __( 'Ссылка', 'trust' ),
+			'type'          => 'link',
+			'return_format' => 'array',
+			'wrapper'       => array( 'width' => 50 ),
+			'instructions'  => __( 'Например, страница технического аудита. Без текста ссылки — «Закажите технический аудит». Пусто — строки со ссылкой нет.', 'trust' ),
+		),
+
 		array(
 			'name'    => 'blog_heading',
 			'label'   => __( 'Блог', 'trust' ),

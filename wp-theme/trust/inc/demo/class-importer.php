@@ -189,7 +189,8 @@ final class Importer {
 				'post_type'    => $type,
 				'post_title'   => $item['title'],
 				'post_excerpt' => $item['excerpt'] ?? '',
-				'post_content' => $item['content'] ?? '',
+				// Блоки темы после текста (blocks — как у страниц: картинки и ссылки-заглушки).
+				'post_content' => ( $item['content'] ?? '' ) . ( empty( $item['blocks'] ) ? '' : "\n\n" . self::blocks_content( $item['blocks'] ) ),
 				'menu_order'   => $item['menu_order'] ?? 0,
 			);
 			if ( isset( $item['date'] ) ) {

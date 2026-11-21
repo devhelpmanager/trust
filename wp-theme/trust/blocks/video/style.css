@@ -1,0 +1,120 @@
+/*
+ * Блок «Видео» («Видеоразбор» в seo-blog/statya.html): обложка 16:9, кнопка воспроизведения,
+ * длительность, подпись. Плеер появляется на месте обложки по нажатию (view.js).
+ */
+
+.b-video-sec {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-white);
+}
+
+.b-video {
+	max-width: 960px;
+	margin: 0 auto;
+}
+
+.b-video--wide {
+	max-width: var(--content);
+}
+
+/* В статье и ответе — по ширине текста, отступ снизу как в макете */
+.b-video--inline {
+	max-width: none;
+	margin: 0 0 18px;
+}
+
+.b-video__frame {
+	position: relative;
+	overflow: hidden;
+	aspect-ratio: 16 / 9;
+	border-radius: 18px;
+	background: var(--c-indigo);
+}
+
+.b-video__poster,
+.b-video__frame iframe,
+.b-video__frame video {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
+
+.b-video__poster {
+	object-fit: cover;
+}
+
+.b-video__frame video {
+	background: #000;
+}
+
+.b-video__play {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 84px;
+	height: 84px;
+	padding: 0;
+	border-radius: var(--r-pill);
+	background: var(--c-white);
+	color: var(--c-violet);
+	box-shadow: 0 12px 32px rgba(14, 11, 20, 0.35);
+	transform: translate(-50%, -50%);
+	transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.b-video__play svg {
+	margin-left: 4px;
+}
+
+.b-video__play:hover {
+	color: var(--c-violet);
+	box-shadow: 0 16px 40px rgba(14, 11, 20, 0.45);
+	transform: translate(-50%, -50%) scale(1.06);
+}
+
+.b-video__play:focus-visible {
+	outline: 3px solid var(--c-white);
+	outline-offset: 4px;
+}
+
+.b-video__duration {
+	position: absolute;
+	right: 14px;
+	bottom: 14px;
+	padding: 4px 10px;
+	border-radius: 8px;
+	background: rgba(14, 11, 20, 0.72);
+	color: var(--c-white);
+	font-family: var(--f-mono);
+	font-size: 13px;
+	line-height: 1.4;
+}
+
+/* Плеер запущен: обложки, кнопки и длительности нет */
+.b-video.is-playing .b-video__poster,
+.b-video.is-playing .b-video__play,
+.b-video.is-playing .b-video__duration {
+	display: none;
+}
+
+.b-video__caption {
+	margin-top: 12px;
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--c-muted-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.b-video__play {
+		transition: none;
+	}
+
+	.b-video__play:hover {
+		transform: translate(-50%, -50%);
+	}
+}

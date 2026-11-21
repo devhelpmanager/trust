@@ -1,0 +1,111 @@
+/*
+ * Блок «Оповещение» (seo-vopros/vopros-seo.html — секция «Важно знать», otvet.html — плашка в тексте).
+ */
+
+/* Секция на странице: сверху 32 px, снизу без отступа — следующий блок со своим отступом (как в макете) */
+.b-notice-sec {
+	padding: 32px var(--gutter) 0;
+}
+
+.b-notice {
+	display: flex;
+	align-items: flex-start;
+	gap: 20px;
+	max-width: var(--content);
+	margin: 0 auto;
+	padding: clamp(22px, 3vw, 32px);
+	box-sizing: border-box;
+	border: 1px solid var(--c-border);
+	border-radius: 22px;
+	background: var(--c-lavender);
+	color: var(--c-text);
+}
+
+.b-notice__icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	border-radius: 14px;
+	background: var(--c-lavender-3);
+	color: var(--c-violet);
+}
+
+.b-notice__body {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	gap: 10px;
+	min-width: 0;
+}
+
+.b-notice__title {
+	margin: 0;
+	font-family: inherit;
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 1.35;
+	letter-spacing: 0;
+	color: var(--c-text);
+}
+
+.b-notice__text {
+	max-width: 860px;
+	margin: 0;
+	font-size: 17px;
+	line-height: 1.65;
+	color: var(--c-text-2);
+	text-wrap: pretty;
+}
+
+.b-notice__more {
+	margin: 0;
+	font-size: 15px;
+	line-height: 1.6;
+	color: var(--c-muted);
+}
+
+.b-notice__more a {
+	font-weight: 600;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+/* В статье и ответе — плашка в тексте (otvet.html) */
+.b-notice--inline {
+	gap: 18px;
+	max-width: none;
+	margin: 40px 0;
+	padding: clamp(20px, 3vw, 28px);
+	border-radius: 20px;
+}
+
+.b-notice--inline .b-notice__icon {
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+}
+
+.b-notice--inline .b-notice__body {
+	gap: 6px;
+}
+
+.b-notice--inline .b-notice__title {
+	font-size: 17px;
+	line-height: 1.4;
+}
+
+.b-notice--inline .b-notice__text {
+	max-width: none;
+	font-size: 16px;
+	line-height: 1.6;
+}
+
+@media (max-width: 420px) {
+	.b-notice {
+		flex-direction: column;
+		gap: 14px;
+	}
+}

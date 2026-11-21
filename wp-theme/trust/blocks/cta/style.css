@@ -1,0 +1,32 @@
+/*
+ * Блок «Обсудим ваш проект» (o-nas/blok-cta.html). Карточка — общие стили trust-dark-card.
+ */
+
+.b-cta__contacts {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0 22px;
+	margin-top: 2px;
+}
+
+.b-cta__contact,
+.b-cta__contact:hover {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 44px;
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--c-white);
+	text-decoration: none;
+}
+
+.b-cta__contact svg {
+	flex: none;
+	color: #C4B5FD;
+}
+
+.b-cta__contact:hover {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}

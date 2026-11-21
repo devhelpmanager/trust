@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/ask",
+	"title": "Задать вопрос SEO-специалисту",
+	"description": "Тёмная карточка «Хотите бесплатно задать вопрос SEO-специалисту?»: вид «Кнопка» (ведёт на страницу вопросов) или «Форма в блоке» (имя, email, вопрос — создаёт вопрос «На утверждении» и заявку). Фон лавандовый, белый или фиолетовый. Пустые поля — из «Настроек сайта → Блоки по умолчанию».",
+	"category": "trust-forms",
+	"icon": "editor-help",
+	"keywords": [ "вопрос", "seo", "специалист", "форма", "спросить" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": [ "trust-dark-card", "file:./style.css" ],
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/notice",
+	"title": "Оповещение",
+	"description": "Лавандовая плашка со значком: заголовок, текст и ссылка («Нужна полная проверка сайта? Закажите технический аудит»). На странице — секция с заголовком H2, в статье и ответе — плашка в тексте. Пустые поля — из «Настроек сайта → Блоки по умолчанию».",
+	"category": "trust-content",
+	"icon": "info-outline",
+	"keywords": [ "оповещение", "важно", "примечание", "внимание", "плашка" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

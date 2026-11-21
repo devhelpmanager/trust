@@ -739,13 +739,15 @@ return array(
 		'path'   => 'seo/pochasovaya-oplata',
 		'title'  => 'SEO с почасовой оплатой',
 		'type'   => 'service',
-		'blocks' => array( $trust_service_hero() ),
+		// «Задать вопрос SEO-специалисту», вид «Кнопка» (шаг 4.9, макет seo-vopros/blok-vopros.html).
+		'blocks' => array( $trust_service_hero(), array( 'ask', array( 'view' => 'link' ) ) ),
 	),
 	array(
 		'path'   => 'seo/za-obem-raboty',
 		'title'  => 'SEO за объём работы',
 		'type'   => 'service',
-		'blocks' => array( $trust_service_hero() ),
+		// «Задать вопрос SEO-специалисту», вид «Форма в блоке» (шаг 4.9, seo-vopros/blok-vopros-forma.html).
+		'blocks' => array( $trust_service_hero(), array( 'ask', array( 'view' => 'form' ) ) ),
 	),
 	array(
 		'path'   => 'seo/voprosy',
@@ -781,6 +783,8 @@ return array(
 					),
 				),
 			),
+			// «Важно знать» (шаг 4.9): тексты и ссылка на аудит — из настроек.
+			array( 'notice', array( 'icon' => 'info' ) ),
 		),
 	),
 	array(
@@ -874,6 +878,7 @@ return array(
 					'more_label' => 'Все отзывы',
 				),
 			),
+			array( 'cta', array( 'background' => 'white' ) ),
 		),
 	),
 	array(
@@ -914,6 +919,8 @@ return array(
 					'средний срок работы с клиентом' => '[N] лет',
 				)
 			),
+			// «Обсудим ваш проект» (шаг 4.9): тексты, телефон и Telegram — из настроек.
+			array( 'cta', array( 'background' => 'lavender' ) ),
 		),
 	),
 	array(
@@ -934,6 +941,7 @@ return array(
 					'экспертных статей в блоге'      => '[N]',
 				)
 			),
+			array( 'cta', array( 'background' => 'lavender' ) ),
 		),
 	),
 	array(
@@ -977,6 +985,7 @@ return array(
 					),
 				),
 			),
+			array( 'cta', array( 'background' => 'white' ) ),
 		),
 	),
 	array(

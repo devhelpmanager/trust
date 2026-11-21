@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/cta",
+	"title": "Обсудим ваш проект",
+	"description": "Тёмная карточка-призыв в конце страницы: заголовок, текст, телефон и «Написать в Telegram» из настроек, кнопка «Оставить заявку» (по умолчанию — страница контактов). Пустые поля — из «Настроек сайта → Блоки по умолчанию».",
+	"category": "trust-forms",
+	"icon": "megaphone",
+	"keywords": [ "призыв", "cta", "заявка", "обсудим", "контакты" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": [ "trust-dark-card", "file:./style.css" ],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}
