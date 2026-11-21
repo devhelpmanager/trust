@@ -122,6 +122,14 @@
 .b-leader__btn {
 	flex: none;
 	margin-left: auto;
+	font-family: inherit;
+	line-height: 1.3;
+	cursor: pointer;
+}
+
+.b-leader__btn:focus-visible {
+	outline: 3px solid var(--c-violet-light);
+	outline-offset: 3px;
 }
 
 .b-leader__btn:hover {
@@ -130,5 +138,44 @@
 
 .b-leader__empty {
 	margin: 0;
+	color: var(--c-muted);
+}
+
+/* Окно «Написать руководителю» (стили окна — main.css, .callback-modal): кому — фото, имя, должность */
+.b-leader__to {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 0;
+	padding: 10px 14px;
+	border-radius: 14px;
+	background: var(--c-lavender);
+}
+
+.b-leader__to-photo {
+	flex: none;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	object-fit: cover;
+	background: var(--c-lavender-3);
+}
+
+.b-leader__to-who {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+
+.b-leader__to-name {
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.b-leader__to-role {
+	font-size: 13px;
+	line-height: 1.4;
 	color: var(--c-muted);
 }

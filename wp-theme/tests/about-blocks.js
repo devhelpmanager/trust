@@ -6,7 +6,8 @@
  *
  * Демо на /o-kompanii/ (порядок блоков и тексты из макета o-nas/o-kompanii.html), ссылки
  * направлений на страницы, номера принципов и значок вместо номера, годы и выделенное последнее
- * событие, руководитель из «Сотрудников» (фото, имя, должность, mailto:, страница «Команда»),
+ * событие, руководитель из «Сотрудников» (фото, имя, должность; кнопка «Написать руководителю»
+ * открывает окно с формой, сообщение — в «Заявки → Обращения к руководителю», не в «Все заявки»),
  * сертификаты (скан — на весь экран, PDF — в новой вкладке, без картинки — значок; на телефоне —
  * строки), логотипы (картинка с alt или название, ссылка на сайт клиента, «Смотреть кейсы» →
  * «Портфолио»), галерея офиса (первое фото крупно, подписи, на весь экран, адрес из настроек),
@@ -15,7 +16,7 @@
  */
 
 const path = require( 'path' );
-const { launch, URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle, isolate, login, wp } = require( './lib' );
+const { launch, URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle, isolate, login, wp, resetFormLimits } = require( './lib' );
 
 const PAGE = `${ URL }/o-kompanii/`;
 const MOCKUP = 'o-nas/o-kompanii.html';
@@ -129,12 +130,12 @@ async function compare( page, name, width, theme, mock ) {
 			quote: el.querySelector( 'blockquote' ).textContent.trim(),
 			name: el.querySelector( '.b-leader__name' ).textContent,
 			role: el.querySelector( '.b-leader__role' ).textContent,
-			buttons: [ ...el.querySelectorAll( '.b-leader__btn' ) ].map( ( a ) => a.textContent.trim() + ' ' + a.getAttribute( 'href' ).replace( location.origin, '' ) ),
+			buttons: [ ...el.querySelectorAll( '.b-leader__btn' ) ].map( ( b ) => [ b.tagName, b.textContent.trim(), b.getAttribute( 'aria-haspopup' ), !! el.querySelector( `dialog#${ b.dataset.trustModal }.b-leader__modal` ) ].join( ' ' ) ),
 		} ) );
 		check( '«Слово руководителя»: лавандовый фон, H2 «Слово руководителя», фото с alt, цитата',
 			'rgb(248, 245, 255)' === l.bg && 'Слово руководителя true' === l.h2 && '[Имя Фамилия], основатель агентства' === l.photo[ 0 ] && 'lazy' === l.photo[ 1 ] && l.quote.startsWith( '[Цитата руководителя:' ), JSON.stringify( l ) );
-		check( '«Слово руководителя»: имя и должность из карточки сотрудника, одна кнопка «Написать руководителю» → mailto: (без «Познакомиться с командой» — правка заказчика)',
-			'[Имя Фамилия]' === l.name && 'Основатель и генеральный директор' === l.role && JSON.stringify( l.buttons ) === JSON.stringify( [ 'Написать руководителю mailto:ceo@example.ru' ] ), JSON.stringify( l ) );
+		check( '«Слово руководителя»: имя и должность из карточки сотрудника, одна кнопка «Написать руководителю» — открывает окно (без «Познакомиться с командой» — правка заказчика)',
+			'[Имя Фамилия]' === l.name && 'Основатель и генеральный директор' === l.role && JSON.stringify( l.buttons ) === JSON.stringify( [ 'BUTTON Написать руководителю dialog true' ] ), JSON.stringify( l ) );
 		// Правка заказчика: подпись и кнопка — строкой под цитатой, кнопка у правого края цитаты;
 		// на телефоне кнопка под подписью, справа. figcaption — последний в figure (валидный HTML).
 		const leaderLayout = () => page.locator( '.b-leader' ).evaluate( ( el ) => {
@@ -157,6 +158,82 @@ async function compare( page, name, width, theme, mock ) {
 		check( '«Слово руководителя», 390px: кнопка под именем и должностью, у правого края блока',
 			0 === lm.right && 16 === lm.btnBelowWho && 0 === lm.whoLeft && 36 === lm.below, JSON.stringify( lm ) );
 		await page.setViewportSize( { width: 1280, height: 900 } );
+
+		// ===== Окно «Написать руководителю» (правка заказчика) =====
+		resetFormLimits();
+		const btn = page.locator( '.b-leader__btn' );
+		const modal = page.locator( 'dialog.b-leader__modal' );
+		await btn.click();
+		await page.waitForTimeout( 300 );
+		const m = await modal.evaluate( ( d ) => ( {
+			open: d.open,
+			focus: document.activeElement.name,
+			title: d.querySelector( 'h2' ).textContent,
+			labelled: d.getAttribute( 'aria-labelledby' ) === d.querySelector( 'h2' ).id,
+			to: d.querySelector( '.b-leader__to' ).textContent.replace( /\s+/g, ' ' ).trim(),
+			photo: d.querySelector( '.b-leader__to-photo' ).getAttribute( 'alt' ),
+			fields: [ ...d.querySelectorAll( 'form .field [name]' ) ].map( ( f ) => f.name ),
+			form: d.querySelector( 'form' ).dataset.trustForm,
+		} ) );
+		check( 'Окно «Написать руководителю»: открывается кнопкой, фокус на «Имени», кому — фото, имя и должность руководителя',
+			m.open && 'name' === m.focus && 'Написать руководителю' === m.title && m.labelled && '[Имя Фамилия] Основатель и генеральный директор' === m.to && '' === m.photo && 'leader' === m.form,
+			JSON.stringify( m ) );
+		check( 'Окно: поля «Имя», «Телефон или email», «Сообщение» и согласие', JSON.stringify( m.fields ) === JSON.stringify( [ 'name', 'contact', 'message', 'consent' ] ), JSON.stringify( m.fields ) );
+		await modal.locator( '[type="submit"]' ).click();
+		const errs = await modal.locator( '.field__error:not([hidden])' ).allTextContents();
+		check( 'Окно: пустая форма — 4 сообщения об ошибке', 4 === errs.length && errs[ 2 ].startsWith( 'Напишите сообщение' ), JSON.stringify( errs ) );
+		await modal.locator( '[name="name"]' ).fill( 'Тест Руководителю' );
+		await modal.locator( '[name="contact"]' ).fill( 'leader-test@example.com' );
+		await modal.locator( '[name="message"]' ).fill( 'Спасибо команде за работу над сайтом — всё сделали в срок.' );
+		await modal.locator( '[name="consent"]' ).check();
+		await modal.locator( '[type="submit"]' ).click();
+		const sent = await modal.locator( '.callback-modal__success' ).waitFor( { state: 'visible', timeout: 20000 } ).then( () => true ).catch( () => false );
+		check( 'Окно: после отправки — «Сообщение отправлено»', sent && 'Сообщение отправлено' === ( await modal.locator( '.form-success__title' ).textContent() ) );
+		const leadId = wp( 'eval', 'echo get_posts( array( "post_type" => "lead", "numberposts" => 1, "fields" => "ids", "meta_key" => "trust_contact", "meta_value" => "leader-test@example.com" ) )[0] ?? 0;' );
+		if ( '0' !== leadId ) {
+			created.push( leadId );
+		}
+		const lead = JSON.parse( wp( 'eval', `echo wp_json_encode( array( get_post_meta( ${ leadId }, 'trust_form', true ), get_post_meta( ${ leadId }, 'trust_name', true ), get_post_meta( ${ leadId }, 'trust_fields', true )['message']['value'] ?? '', wp_parse_url( get_post_meta( ${ leadId }, 'trust_page', true ), PHP_URL_PATH ) ), JSON_UNESCAPED_UNICODE );` ) );
+		check( 'Сообщение сохранено заявкой формы «Обращение к руководителю»: имя, текст, страница',
+			JSON.stringify( lead ) === JSON.stringify( [ 'leader', 'Тест Руководителю', 'Спасибо команде за работу над сайтом — всё сделали в срок.', '/o-kompanii/' ] ), JSON.stringify( lead ) );
+		await modal.locator( '.callback-modal__success [data-callback-close]' ).click();
+		const closed = await page.evaluate( () => [ document.querySelector( 'dialog.b-leader__modal' ).open, document.activeElement.classList.contains( 'b-leader__btn' ) ] );
+		await btn.click();
+		const again = await modal.evaluate( ( d ) => [ d.querySelector( 'form' ).closest( '[hidden]' ) === null, d.querySelector( '[name="message"]' ).value ] );
+		await page.keyboard.press( 'Escape' );
+		check( 'Окно: «Закрыть» возвращает фокус на кнопку, при новом открытии — пустая форма', ! closed[ 0 ] && closed[ 1 ] && again[ 0 ] && '' === again[ 1 ], JSON.stringify( [ closed, again ] ) );
+
+		// ===== Админка: «Заявки → Обращения к руководителю» =====
+		const adminContext = await browser.newContext( { viewport: { width: 1280, height: 900 } } );
+		const admin = await adminContext.newPage();
+		await login( admin );
+		await admin.goto( `${ URL }/wp-admin/edit.php?post_type=lead` );
+		const sub = await admin.locator( '#menu-posts-lead .wp-submenu li:not(.wp-submenu-head) a' ).evaluateAll( ( links ) => links.map( ( a ) => [ a.childNodes[ 0 ].textContent.trim(), a.querySelector( '.pending-count' )?.textContent || '' ] ) );
+		const allRows = await admin.locator( '#the-list tr' ).allInnerTexts();
+		const formOptions = await admin.locator( 'select[name="trust_form"] option' ).allTextContents();
+		check( 'Админка: подпункт «Обращения к руководителю» сразу после «Все заявки», с числом новых',
+			'Все заявки' === sub[ 0 ][ 0 ] && 'Обращения к руководителю' === sub[ 1 ][ 0 ] && Number( sub[ 1 ][ 1 ] ) >= 1, JSON.stringify( sub ) );
+		check( 'Админка: в «Все заявки» обращений нет, в фильтре форм — тоже',
+			! allRows.some( ( r ) => r.includes( 'Тест Руководителю' ) ) && ! formOptions.includes( 'Обращение к руководителю' ) && formOptions.includes( 'Обратный звонок' ), JSON.stringify( formOptions ) );
+		await admin.locator( '#menu-posts-lead .wp-submenu a', { hasText: 'Обращения к руководителю' } ).click();
+		await admin.waitForLoadState();
+		const list = await admin.evaluate( () => ( {
+			h1: document.querySelector( 'h1' ).textContent.trim(),
+			current: document.querySelector( '#menu-posts-lead .wp-submenu li.current a' )?.childNodes[ 0 ].textContent.trim(),
+			cols: [ ...document.querySelectorAll( '#posts-filter thead th' ) ].map( ( th ) => th.id ),
+			row: [ ...document.querySelectorAll( '#the-list tr' ) ].map( ( tr ) => tr.querySelector( '.column-trust_leader_message' )?.textContent.trim() ),
+			hidden: document.querySelector( '#posts-filter input[type="hidden"][name="trust_form"]' )?.value,
+			views: document.querySelector( '.subsubsub' ).textContent.replace( /\s+/g, ' ' ).trim(),
+		} ) );
+		check( 'Админка: экран «Обращения к руководителю» — заголовок, подсвечен подпункт, колонка «Сообщение» вместо «Формы»',
+			'Обращения к руководителю' === list.h1 && 'Обращения к руководителю' === list.current && list.cols.includes( 'trust_leader_message' ) && ! list.cols.includes( 'trust_form' ) && 'leader' === list.hidden,
+			JSON.stringify( list ) );
+		check( 'Админка: в списке обращений — отправленное сообщение, число в «Все (N)» — только обращения',
+			list.row.includes( 'Спасибо команде за работу над сайтом — всё сделали в срок.' ) && list.views.includes( `(${ list.row.length })` ), JSON.stringify( [ list.row, list.views ] ) );
+		await admin.goto( `${ URL }/wp-admin/post.php?post=${ leadId }&action=edit` );
+		const single = await admin.locator( '#menu-posts-lead .wp-submenu li.current a' ).evaluate( ( a ) => a.childNodes[ 0 ].textContent.trim() ).catch( () => '' );
+		check( 'Админка: на экране обращения подсвечен подпункт «Обращения к руководителю»', 'Обращения к руководителю' === single, single );
+		await adminContext.close();
 
 		const c = await page.locator( '.b-certs' ).evaluate( ( el ) => ( {
 			lead: el.querySelector( '.section-lead' ).textContent,
@@ -209,7 +286,7 @@ async function compare( page, name, width, theme, mock ) {
 				dirs: document.querySelectorAll( '.b-dirs' ).length + ':' + q( '.b-dirs__card' ).tagName + ':' + document.querySelectorAll( '.b-dirs__more' ).length,
 				principles: [ !! q( '.b-principles__icon svg' ), q( '.b-principles__num' ).textContent ],
 				history: q( '.b-history h3' ).textContent,
-				leader: [ !! q( '.b-leader__photo--empty' ), q( '.b-leader__role' ).textContent, document.querySelectorAll( '.b-leader__btn' ).length, !! q( '.b-leader__name' ) ],
+				leader: [ !! q( '.b-leader__photo--empty' ), q( '.b-leader__role' ).textContent, document.querySelectorAll( '.b-leader__btn' ).length, !! q( '.b-leader__name' ), !! q( 'dialog.b-leader__modal' ), !! q( '.b-leader__to' ) ],
 				certs: [ ...document.querySelectorAll( '.b-certs__card' ) ].map( ( a ) => [ a.tagName, a.hasAttribute( 'data-trust-lightbox' ), a.getAttribute( 'target' ), a.querySelector( '.b-certs__meta' ).textContent, a.querySelector( 'img' ) ? a.querySelector( 'img' ).alt : '' ] ),
 				clients: [ q( '.b-clients__logo' ).alt, q( '.b-clients__tile' ).getAttribute( 'href' ), q( '.b-clients__tile' ).target, !! q( '.b-clients__more' ) ],
 				office: [ q( '.b-office__address' ) ? q( '.b-office__address' ).textContent : '', !! q( '.b-office__open[data-trust-lightbox]' ), q( '.b-office__img' ).alt, document.querySelectorAll( '.b-office__placeholder' ).length ],
@@ -218,7 +295,7 @@ async function compare( page, name, width, theme, mock ) {
 		check( '«Чем мы занимаемся» без страницы — карточка без ссылки и «Подробнее»; пустой блок на сайт не выводится', '1:DIV:0' === x.dirs, x.dirs );
 		check( '«Как мы работаем»: значок вместо номера, у следующего — номер 02', x.principles[ 0 ] && '02' === x.principles[ 1 ], JSON.stringify( x.principles ) );
 		check( '«Как мы росли»: заголовок события — H3', 'Старт' === x.history, x.history );
-		check( '«Слово руководителя» без сотрудника: силуэт, своя подпись, без имени и без «Написать» (нет email)', JSON.stringify( x.leader ) === JSON.stringify( [ true, 'Своя подпись', 0, false ] ), JSON.stringify( x.leader ) );
+		check( '«Слово руководителя» без сотрудника: силуэт, своя подпись, без имени; кнопка и окно есть, в окне без строки «кому»', JSON.stringify( x.leader ) === JSON.stringify( [ true, 'Своя подпись', 1, false, true, false ] ), JSON.stringify( x.leader ) );
 		check( 'Сертификаты: скан — на весь экран, PDF — в новой вкладке, без документа — карточка без ссылки; «кто выдал · год · подпись»; alt — из медиатеки',
 			JSON.stringify( x.certs ) === JSON.stringify( [ [ 'A', true, null, 'Яндекс · 2025 · смотреть документ', '[Имя Фамилия], основатель агентства' ], [ 'A', false, '_blank', 'смотреть диплом', '' ], [ 'DIV', false, null, '2024', '' ] ] ), JSON.stringify( x.certs ) );
 		check( 'Логотип: alt — название, ссылка на сайт клиента в новой вкладке; кнопку можно выключить',

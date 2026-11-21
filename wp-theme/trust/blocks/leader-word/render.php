@@ -3,9 +3,12 @@
  * Блок «Слово руководителя» (макет o-nas/o-kompanii.html, секция «Слово руководителя»).
  *
  * Лавандовая секция: слева фото 4:5 со скруглением, справа надпись (H2 в виде надзаголовка),
- * кавычки, цитата крупным шрифтом, имя и должность, кнопка «Написать руководителю» (mailto: из
- * карточки сотрудника; без email кнопки нет). «Познакомиться с командой» из макета убрана по
- * просьбе заказчика. Без фото — силуэт.
+ * кавычки, цитата крупным шрифтом, имя и должность, кнопка «Написать руководителю».
+ * «Познакомиться с командой» из макета убрана по просьбе заказчика. Без фото — силуэт.
+ *
+ * Правка заказчика: кнопка открывает окно с формой (modal.php; открытие и отправка —
+ * assets/js/callback.js и forms.js), сообщения — в «Заявки → Обращения к руководителю»
+ * (Trust\Forms\Leader_Messages).
  *
  * Правка заказчика: имя с должностью и кнопка — строкой под цитатой с небольшим отступом,
  * подпись слева, кнопка у правого края; на узком экране кнопка под подписью, тоже справа.
@@ -40,8 +43,9 @@ $trust_photo    = Blocks::image(
 	),
 	$trust_alt
 );
-$trust_email    = false !== get_field( 'write' ) && $trust_member ? sanitize_email( (string) get_field( 'trust_email', $trust_member->ID ) ) : '';
+$trust_write    = false !== get_field( 'write' );
 $trust_title_id = Blocks::uid( $block, 'title' );
+$trust_modal_id = Blocks::uid( $block, 'write' );
 $trust_anchor   = Blocks::anchor( get_field( 'anchor' ) );
 
 if ( '' === $trust_quote && ! $is_preview ) {
@@ -73,7 +77,7 @@ if ( '' === $trust_quote && ! $is_preview ) {
 			<?php elseif ( $is_preview ) : ?>
 				<p class="b-leader__empty"><?php esc_html_e( 'Добавьте цитату в настройках блока.', 'trust' ); ?></p>
 			<?php endif; ?>
-			<?php if ( '' !== $trust_name || '' !== $trust_role || '' !== $trust_email ) : ?>
+			<?php if ( '' !== $trust_name || '' !== $trust_role || $trust_write ) : ?>
 				<figcaption class="b-leader__foot">
 					<?php if ( '' !== $trust_name || '' !== $trust_role ) : ?>
 						<span class="b-leader__who">
@@ -85,11 +89,16 @@ if ( '' === $trust_quote && ! $is_preview ) {
 							<?php endif; ?>
 						</span>
 					<?php endif; ?>
-					<?php if ( '' !== $trust_email ) : ?>
-						<a class="b-leader__btn" href="<?php echo esc_url( 'mailto:' . $trust_email ); ?>"><?php echo esc_html( Blocks::text( 'write_label', __( 'Написать руководителю', 'trust' ) ) ); ?></a>
+					<?php if ( $trust_write ) : ?>
+						<button type="button" class="b-leader__btn" data-trust-modal="<?php echo esc_attr( $trust_modal_id ); ?>" aria-haspopup="dialog" aria-controls="<?php echo esc_attr( $trust_modal_id ); ?>"><?php echo esc_html( Blocks::text( 'write_label', __( 'Написать руководителю', 'trust' ) ) ); ?></button>
 					<?php endif; ?>
 				</figcaption>
 			<?php endif; ?>
 		</figure>
 	</div>
+	<?php
+	if ( $trust_write && ! $is_preview ) {
+		require __DIR__ . '/modal.php';
+	}
+	?>
 </section>
