@@ -750,6 +750,43 @@ html:not(.js) .scroll-progress,
 	color: var(--c-white);
 }
 
+/* Пункт с подменю и своей страницей (правка заказчика): название — ссылка на страницу раздела,
+   стрелка — кнопка списка. Вместе выглядят как одна кнопка «название + стрелка» из макета. */
+.main-nav__split {
+	gap: 0;
+	padding: 0;
+	cursor: default;
+}
+
+.main-nav__split-link,
+.main-nav__split-toggle {
+	display: inline-flex;
+	align-items: center;
+	align-self: stretch;
+	min-height: 44px;
+	border: 0;
+	background: none;
+	color: inherit;
+	font: inherit;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.main-nav__split-link {
+	padding: 0 0 0 10px;
+	border-radius: 10px 0 0 10px;
+}
+
+.main-nav .main-nav__split-link:hover,
+.main-nav .main-nav__split-link:focus {
+	color: inherit; /* сильнее общего a:hover: цвет — от пункта меню */
+}
+
+.main-nav__split-toggle {
+	padding: 0 10px 0 4px;
+	border-radius: 0 10px 10px 0;
+}
+
 .main-nav__chevron {
 	transition: transform 0.2s;
 }
@@ -946,6 +983,18 @@ html:not(.js) .main-nav__item:focus-within > .main-nav__dropdown {
 .mobile-nav__sub-link[aria-current="page"] {
 	font-weight: 600;
 	color: var(--c-white);
+}
+
+/* Первым в подменю — ссылка на страницу раздела (правка заказчика) */
+.mobile-nav__sub-link--section,
+.mobile-nav__sub-link--section:hover {
+	gap: 8px;
+	font-weight: 500;
+	color: var(--c-white);
+}
+
+.mobile-nav__section-arrow {
+	flex: none;
 }
 
 .mobile-nav__contacts {

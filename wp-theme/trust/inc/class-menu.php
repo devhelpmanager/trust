@@ -60,6 +60,28 @@ final class Menu {
 	}
 
 	/**
+	 * Адрес страницы раздела у пункта с подменю: пусто, если пункт никуда не ведёт
+	 * («Произвольная ссылка» с адресом # — только заголовок списка).
+	 *
+	 * @param array $item Пункт из tree().
+	 */
+	public static function section_url( array $item ): string {
+		$url = trim( (string) ( $item['url'] ?? '' ) );
+		return '' === $url || str_starts_with( $url, '#' ) ? '' : $url;
+	}
+
+	/**
+	 * Подпись ссылки на страницу раздела первым пунктом подменю (мобильное меню): поле «Описание»
+	 * пункта-родителя, по умолчанию «Все услуги раздела».
+	 *
+	 * @param array $item Пункт из tree().
+	 */
+	public static function section_label( array $item ): string {
+		$label = trim( (string) ( $item['description'] ?? '' ) );
+		return '' !== $label ? $label : __( 'Все услуги раздела', 'trust' );
+	}
+
+	/**
 	 * Название меню, назначенного области (в подвале — заголовок колонки).
 	 *
 	 * @param string $location Область меню.

@@ -76,7 +76,10 @@ async function compareState( page, name, themeAction, mockAction ) {
 	const section = ( title ) => menu.locator( '.mobile-nav__item', { has: page.locator( '.mobile-nav__toggle', { hasText: title } ) } );
 	check( 'Подменю закрыты', ( await menu.locator( '.mobile-nav__sub:visible' ).count() ) === 0 );
 	await section( 'SEO' ).locator( '.mobile-nav__toggle' ).click();
-	check( 'SEO раскрывается: 4 пункта', ( await section( 'SEO' ).locator( '.mobile-nav__sub-link:visible' ).count() ) === 4 );
+	check( 'SEO раскрывается: 4 пункта', ( await section( 'SEO' ).locator( '.mobile-nav__sub-link:visible:not(.mobile-nav__sub-link--section)' ).count() ) === 4 );
+	const sectionLink = await section( 'SEO' ).locator( '.mobile-nav__sub-link:visible' ).first().evaluate( ( a ) => [ a.textContent.trim(), new URL( a.href ).pathname, a.classList.contains( 'mobile-nav__sub-link--section' ), !! a.querySelector( 'svg' ) ] );
+	check( 'SEO: первым — «Все услуги раздела →» на страницу /seo/ (правка заказчика)', JSON.stringify( [ 'Все услуги раздела', '/seo/', true, true ] ) === JSON.stringify( sectionLink ), JSON.stringify( sectionLink ) );
+	check( '«О нас» без своей страницы (#): ссылки на раздел нет', 0 === await section( 'О нас' ).locator( '.mobile-nav__sub-link--section' ).count() );
 	check( 'SEO: aria-expanded="true"', ( await section( 'SEO' ).locator( '.mobile-nav__toggle' ).getAttribute( 'aria-expanded' ) ) === 'true' );
 	await section( 'О нас' ).locator( '.mobile-nav__toggle' ).click();
 	check( 'Раскрыт один раздел за раз (SEO закрылся)', ! ( await section( 'SEO' ).locator( '.mobile-nav__sub' ).isVisible() ) && ( await section( 'О нас' ).locator( '.mobile-nav__sub' ).isVisible() ) );
@@ -157,6 +160,8 @@ async function compareState( page, name, themeAction, mockAction ) {
 		async () => {
 			await page.click( '.header-burger' );
 			await page.locator( '.mobile-nav__toggle', { hasText: 'SEO' } ).click();
+			// «Все услуги раздела» — правка заказчика, в макете этого пункта нет.
+			await page.evaluate( () => document.querySelectorAll( '.mobile-nav__sub-link--section' ).forEach( ( a ) => ( a.parentElement.style.display = 'none' ) ) );
 		},
 		async () => {
 			await page.click( '.dc-burger' );
@@ -172,7 +177,7 @@ async function compareState( page, name, themeAction, mockAction ) {
 	const noJs = await noJsBrowser.newPage( { viewport: { width: 390, height: 844 }, javaScriptEnabled: false } );
 	await noJs.goto( `${ URL }/kontakty/` );
 	check( 'Без JS: бургера нет', ! ( await noJs.locator( '.header-burger' ).isVisible() ) );
-	check( 'Без JS: меню показано целиком с подменю', ( await noJs.locator( '#mobile-menu' ).isVisible() ) && ( await noJs.locator( '.mobile-nav__sub-link:visible' ).count() ) === 14 );
+	check( 'Без JS: меню показано целиком с подменю', ( await noJs.locator( '#mobile-menu' ).isVisible() ) && ( await noJs.locator( '.mobile-nav__sub-link:visible' ).count() ) === 17 ); // 14 пунктов + 3 ссылки на страницы разделов
 	await noJs.setViewportSize( { width: 1280, height: 800 } );
 	check( 'Без JS на 1280 px мобильного меню нет', ! ( await noJs.locator( '#mobile-menu' ).isVisible() ) );
 	await noJsBrowser.close();

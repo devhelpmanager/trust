@@ -41,7 +41,8 @@
 		let openItem = null;
 		let hoverOpenedAt = 0;
 
-		const toggleOf = ( item ) => item.querySelector( ':scope > .main-nav__toggle' );
+		// Кнопка списка: сам пункт или стрелка рядом со ссылкой на страницу раздела.
+		const toggleOf = ( item ) => item.querySelector( ':scope > .main-nav__toggle, :scope > .main-nav__split > .main-nav__toggle' );
 
 		function close( item, returnFocus = false ) {
 			item.classList.remove( 'is-open' );

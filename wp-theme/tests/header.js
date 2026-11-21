@@ -46,6 +46,13 @@ const MENU = [ 'Дизайн', 'Создание сайтов', 'Поддерж�
 	const top = ( await page.locator( '.main-nav__list > .main-nav__item > .main-nav__link' ).allTextContents() ).map( ( t ) => t.trim() );
 	check( 'Пункты меню по порядку', JSON.stringify( top ) === JSON.stringify( MENU ), top.join( ' | ' ) );
 	check( '4 пункта с подменю — кнопки', ( await page.locator( 'button.main-nav__toggle[aria-expanded="false"]' ).count() ) === 4 );
+	const split = await page.evaluate( () => [ ...document.querySelectorAll( '.main-nav__item--parent' ) ].map( ( li ) => {
+		const link = li.querySelector( ':scope > .main-nav__split > a' );
+		const toggle = li.querySelector( '.main-nav__toggle' );
+		return [ li.firstElementChild.textContent.trim(), link ? new URL( link.href ).pathname : '-', toggle.getAttribute( 'aria-label' ) || '' ];
+	} ) );
+	check( 'Пункт с подменю и своей страницей: название — ссылка на неё, стрелка — кнопка «Подменю «…»»; «О нас» (#) — одна кнопка (правка заказчика)',
+		JSON.stringify( split ) === JSON.stringify( [ [ 'SEO', '/seo/', 'Подменю «SEO»' ], [ 'GEO', '/geo/', 'Подменю «GEO»' ], [ 'Контекстная реклама', '/kontekstnaya-reklama/', 'Подменю «Контекстная реклама»' ], [ 'О нас', '-', '' ] ] ), JSON.stringify( split ) );
 	check( 'Подменю закрыты', ( await page.locator( '.main-nav__dropdown:visible' ).count() ) === 0 );
 
 	const seoSub = page.locator( '.main-nav__item--parent', { hasText: 'SEO' } ).first();
@@ -61,7 +68,7 @@ const MENU = [ 'Дизайн', 'Создание сайтов', 'Поддерж�
 	check( 'Контакты: отмечен пункт подменю', ( await page.locator( '.main-nav__sub-link[aria-current="page"]' ).textContent() ).trim() === 'Контакты' );
 
 	await page.goto( `${ URL }/seo/voprosy/`, { waitUntil: 'networkidle' } );
-	check( 'Вопросы: подсвечен раздел «SEO»', ( await page.locator( '.main-nav__toggle.is-active' ).textContent() ).trim() === 'SEO' );
+	check( 'Вопросы: подсвечен раздел «SEO»', ( await page.locator( '.main-nav__item--parent > .is-active' ).textContent() ).trim() === 'SEO' );
 
 	await page.goto( `${ URL }/`, { waitUntil: 'networkidle' } );
 	check( 'Главная: ничего не подсвечено', ( await page.locator( '.main-nav .is-active, .main-nav [aria-current]' ).count() ) === 0 );
@@ -75,6 +82,14 @@ const MENU = [ 'Дизайн', 'Создание сайтов', 'Поддерж�
 	check( 'Клик сразу после наведения не закрывает подменю', await seo.locator( '.main-nav__dropdown' ).isVisible() );
 	await page.mouse.move( 640, 600 );
 	check( 'Уход мыши закрывает подменю', ! ( await seo.locator( '.main-nav__dropdown' ).isVisible() ) );
+	await seo.hover();
+	const seoColor = await seo.locator( '.main-nav__split-link' ).evaluate( ( a ) => getComputedStyle( a ).color );
+	check( 'Под мышью название «SEO» белое на подсветке (не цвет обычной ссылки)', 'rgb(255, 255, 255)' === seoColor, seoColor );
+	await seo.locator( '.main-nav__split-link' ).click();
+	await page.waitForURL( `${ URL }/seo/` );
+	check( 'Нажатие на «SEO» открывает страницу раздела /seo/ (правка заказчика)', page.url() === `${ URL }/seo/` );
+	check( 'На странице /seo/ пункт «SEO» отмечен как текущий', 'page' === await page.locator( '.main-nav__split-link', { hasText: 'SEO' } ).getAttribute( 'aria-current' ) );
+	await page.goto( `${ URL }/`, { waitUntil: 'networkidle' } );
 
 	// --- Подменю: клавиатура ---
 	const about = page.locator( '.main-nav__item--parent', { hasText: 'О нас' } ).first();

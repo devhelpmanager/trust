@@ -41,6 +41,26 @@ $trust_callback = Callback::text( 'button' );
 							?>
 						</button>
 						<ul class="mobile-nav__sub" id="<?php echo esc_attr( $trust_sub_id ); ?>">
+							<?php $trust_section = Menu::section_url( $trust_item ); ?>
+							<?php if ( $trust_section ) : ?>
+								<li>
+									<a class="mobile-nav__sub-link mobile-nav__sub-link--section" href="<?php echo esc_url( $trust_section ); ?>"
+										<?php echo $trust_item['current'] ? ' aria-current="page"' : ''; ?>
+										<?php echo $trust_item['target'] ? ' target="' . esc_attr( $trust_item['target'] ) . '"' : ''; ?>
+										<?php echo $trust_item['rel'] ? ' rel="' . esc_attr( $trust_item['rel'] ) . '"' : ''; ?>>
+										<?php echo esc_html( Menu::section_label( $trust_item ) ); ?>
+										<?php
+										Icons::render(
+											'arrow-right',
+											array(
+												'size'  => 16,
+												'class' => 'mobile-nav__section-arrow',
+											)
+										);
+										?>
+									</a>
+								</li>
+							<?php endif; ?>
 							<?php foreach ( $trust_item['children'] as $trust_child ) : ?>
 								<li>
 									<a class="mobile-nav__sub-link" href="<?php echo esc_url( $trust_child['url'] ); ?>"

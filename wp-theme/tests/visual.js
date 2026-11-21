@@ -32,6 +32,8 @@ const CASES = [
 		themeAct: async ( p ) => {
 			await p.click( '.header-burger' );
 			await p.locator( '.mobile-nav__toggle', { hasText: 'SEO' } ).click();
+			// «Все услуги раздела» — правка заказчика, в макете этого пункта нет.
+			await p.evaluate( () => document.querySelectorAll( '.mobile-nav__sub-link--section' ).forEach( ( a ) => ( a.parentElement.style.display = 'none' ) ) );
 		},
 		mockAct: async ( p ) => {
 			await p.click( '.dc-burger' );
