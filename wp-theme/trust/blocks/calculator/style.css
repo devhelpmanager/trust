@@ -384,6 +384,7 @@
 	gap: 16px 24px;
 	padding: 18px clamp(20px, 4vw, 36px);
 	border-top: 1px solid var(--c-divider);
+	container: calc-nav / inline-size;
 }
 
 .b-calc__nav[hidden] {
@@ -629,6 +630,59 @@ html:not(.js) .b-calc__panel + .b-calc__panel {
 		flex: 1 0 100%;
 		order: -1;
 		max-width: none;
+	}
+
+	/* «Назад» и «Далее» / «Рассчитать стоимость» — в одну строку (правка заказчика). */
+	.b-calc__nav {
+		column-gap: 12px;
+	}
+
+	.b-calc__back {
+		padding: 0 16px;
+	}
+
+	.b-calc__next {
+		padding: 0 20px;
+	}
+
+	.b-calc__back,
+	.b-calc__next {
+		flex: 0 0 auto;
+		white-space: nowrap;
+	}
+}
+
+/* Не хватает места — на кнопке только «Рассчитать» (полное название — в aria-label), на совсем
+   узком экране у «Назад» остаётся стрелка (текст — для скринридеров). Ширина — в em: при крупном
+   шрифте браузера текст прячется раньше, кнопки не переносятся. */
+@container calc-nav (max-width: 22em) {
+	.b-calc__go-more {
+		display: none;
+	}
+}
+
+@container calc-nav (max-width: 16.5em) {
+	.b-calc__back {
+		padding: 0 14px;
+	}
+
+	.b-calc__back-text {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+}
+
+@container calc-nav (max-width: 13em) {
+	.b-calc__back {
+		padding: 0 12px;
+	}
+
+	.b-calc__next {
+		padding: 0 14px;
 	}
 }
 

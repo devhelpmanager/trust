@@ -159,7 +159,9 @@ $trust_parts    = explode( ' / ', $trust_template, 2 );
 			data-query-price="<?php echo esc_attr( (string) $trust_num( 'query_price', 0 ) ); ?>"
 			data-other-coef="<?php echo esc_attr( (string) Calculator::coef( get_field( 'other_coef' ) ?? 1 ) ); ?>"
 			data-template="<?php echo esc_attr( $trust_template ); ?>"
-			data-progress="<?php echo esc_attr( Blocks::text( 'progress_label', __( 'Шаг {n} из {total} · {name}', 'trust' ) ) ); ?>">
+			data-progress="<?php echo esc_attr( Blocks::text( 'progress_label', __( 'Шаг {n} из {total} · {name}', 'trust' ) ) ); ?>"
+			data-estimate="<?php echo esc_url( rest_url( 'trust/v1/estimates' ) ); ?>"
+			data-token="<?php echo esc_url( rest_url( 'trust/v1/forms/token' ) ); ?>">
 
 			<div class="b-calc__tabs" role="tablist" aria-label="<?php esc_attr_e( 'Этапы расчёта', 'trust' ); ?>">
 				<?php foreach ( $trust_steps as $trust_n => $trust_step ) : ?>
@@ -279,7 +281,7 @@ $trust_parts    = explode( ' / ', $trust_template, 2 );
 							'stroke_width' => 2,
 						)
 					);
-					echo esc_html( Blocks::text( 'back_label', __( 'Назад', 'trust' ) ) );
+					echo '<span class="b-calc__back-text">' . esc_html( Blocks::text( 'back_label', __( 'Назад', 'trust' ) ) ) . '</span>';
 					?>
 				</button>
 				<div class="b-calc__progress">
@@ -311,9 +313,15 @@ $trust_parts    = explode( ' / ', $trust_template, 2 );
 					);
 					?>
 				</button>
-				<button type="button" class="b-calc__next" data-calc-go hidden>
+				<?php
+				// На узком экране кнопки остаются в одну строку: после первого слова («Рассчитать»)
+				// текст прячется, полное название — в aria-label.
+				$trust_go = Blocks::text( 'calc_label', __( 'Рассчитать стоимость', 'trust' ) );
+				$trust_go = explode( ' ', $trust_go, 2 );
+				?>
+				<button type="button" class="b-calc__next b-calc__go" data-calc-go hidden<?php echo isset( $trust_go[1] ) ? ' aria-label="' . esc_attr( implode( ' ', $trust_go ) ) . '"' : ''; ?>>
 					<?php
-					echo esc_html( Blocks::text( 'calc_label', __( 'Рассчитать стоимость', 'trust' ) ) );
+					echo '<span>' . esc_html( $trust_go[0] ) . ( isset( $trust_go[1] ) ? '<span class="b-calc__go-more"> ' . esc_html( $trust_go[1] ) . '</span>' : '' ) . '</span>';
 					Icons::render(
 						'arrow-right',
 						array(

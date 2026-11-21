@@ -116,6 +116,50 @@ final class Leads {
 			}
 		}
 
+		list( $page, $page_title, $source ) = self::context( $params );
+
+		$id = wp_insert_post(
+			array(
+				'post_type'   => 'lead',
+				'post_status' => 'publish',
+				'post_title'  => wp_slash( trim( $form['label'] . ': ' . ( '' !== $name ? $name : $contact ), ' :' ) ),
+			),
+			true
+		);
+		if ( is_wp_error( $id ) ) {
+			return $id;
+		}
+
+		$meta = array(
+			'trust_form'       => $type,
+			Admin::LEAD_STATUS => Admin::LEAD_NEW,
+			'trust_fields'     => $fields,
+			'trust_name'       => $name,
+			'trust_contact'    => $contact,
+			'trust_page'       => $page,
+			'trust_page_title' => $page_title,
+			'trust_source'     => $source,
+			'trust_consent'    => array(
+				'items'    => array_values( $consents ),
+				'at'       => current_time( 'mysql' ),
+				'document' => Forms::consent_url(),
+				'revision' => Forms::consent_revision(),
+			),
+		);
+		foreach ( array_filter( $meta, static fn( $value ): bool => '' !== $value && array() !== $value ) as $key => $value ) {
+			update_post_meta( $id, $key, wp_slash( $value ) );
+		}
+		return $id;
+	}
+
+	/**
+	 * Откуда отправлено: страница этого сайта (адрес и заголовок) и источник перехода (UTM,
+	 * откуда пришёл, первая страница визита). Общее для заявок и просчётов стоимости.
+	 *
+	 * @param array $params Отправленные поля: page, source (JSON); без source — cookie trust_source.
+	 * @return array{0: string, 1: string, 2: array} Адрес страницы, её заголовок, источник.
+	 */
+	public static function context( array $params ): array {
 		// Страница отправки — только адрес этого сайта.
 		$page      = self::url( $params['page'] ?? '' );
 		$page_host = wp_parse_url( $page, PHP_URL_HOST );
@@ -148,38 +192,7 @@ final class Leads {
 			}
 		}
 
-		$id = wp_insert_post(
-			array(
-				'post_type'   => 'lead',
-				'post_status' => 'publish',
-				'post_title'  => wp_slash( trim( $form['label'] . ': ' . ( '' !== $name ? $name : $contact ), ' :' ) ),
-			),
-			true
-		);
-		if ( is_wp_error( $id ) ) {
-			return $id;
-		}
-
-		$meta = array(
-			'trust_form'       => $type,
-			Admin::LEAD_STATUS => Admin::LEAD_NEW,
-			'trust_fields'     => $fields,
-			'trust_name'       => $name,
-			'trust_contact'    => $contact,
-			'trust_page'       => $page,
-			'trust_page_title' => $page_id ? get_the_title( $page_id ) : '',
-			'trust_source'     => $source,
-			'trust_consent'    => array(
-				'items'    => array_values( $consents ),
-				'at'       => current_time( 'mysql' ),
-				'document' => Forms::consent_url(),
-				'revision' => Forms::consent_revision(),
-			),
-		);
-		foreach ( array_filter( $meta, static fn( $value ): bool => '' !== $value && array() !== $value ) as $key => $value ) {
-			update_post_meta( $id, $key, wp_slash( $value ) );
-		}
-		return $id;
+		return array( $page, $page_id ? get_the_title( $page_id ) : '', $source );
 	}
 
 	/**
@@ -281,7 +294,7 @@ final class Leads {
 	 * @param string $key   Ключ (referrer, landing, at …).
 	 * @param string $value Значение.
 	 */
-	private static function readable( string $key, string $value ): string {
+	public static function readable( string $key, string $value ): string {
 		if ( in_array( $key, array( 'referrer', 'landing', 'page' ), true ) ) {
 			return rawurldecode( $value );
 		}
@@ -348,7 +361,7 @@ final class Leads {
 	 * Стили списка и экрана заявки: новые заявки выделены.
 	 */
 	public static function styles(): void {
-		if ( 'lead' !== get_current_screen()?->post_type ) {
+		if ( ! in_array( get_current_screen()?->post_type, array( 'lead', Estimates::TYPE ), true ) ) {
 			return;
 		}
 		echo '<style>.trust-lead-status{display:inline-block;padding:2px 8px;border-radius:10px;background:#f0f0f1}.trust-lead-status--new{background:#fcf0f1;color:#8a2424;font-weight:600}.trust-lead-status--closed{color:#646970}.trust-lead-table th{width:30%}.trust-lead-table td{word-break:break-word}.trust-notify--error{color:#b32d2e}.trust-notify--ok{color:#007017}</style>';
@@ -567,7 +580,8 @@ final class Leads {
 	}
 
 	/**
-	 * Удаляет заявки старше срока из «Настроек сайта → Формы» (пусто или 0 — не удалять).
+	 * Удаляет заявки и просчёты стоимости старше срока из «Настроек сайта → Формы» (пусто или 0 —
+	 * не удалять).
 	 *
 	 * @return int Сколько удалено.
 	 */
@@ -581,7 +595,7 @@ final class Leads {
 		for ( $batch = 0; $batch < 50; $batch++ ) {
 			$old = get_posts(
 				array(
-					'post_type'   => 'lead',
+					'post_type'   => array( 'lead', Estimates::TYPE ), // Просчёты калькулятора — по тому же сроку.
 					'post_status' => 'any',
 					'numberposts' => 100,
 					'fields'      => 'ids',

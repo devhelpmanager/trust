@@ -10,6 +10,9 @@
  * у всех вкладок галочки; «Изменить параметры» или вкладка возвращают к шагам.
  * Если в блоке есть форма контактов — перед показом результата скрытые поля формы получают
  * ответы и цену (уходят в заявку).
+ * Каждый расчёт сохраняется на сайте («Заявки → Просчёт стоимости работ»): ответы и цена уходят
+ * в REST trust/v1/estimates с токеном и nonce форм (свежие берутся при первом касании калькулятора:
+ * страница могла пролежать в кэше). Повтор того же расчёта не сохраняется второй раз.
  */
 ( () => {
 	const number = ( value ) => {
@@ -138,17 +141,73 @@
 			};
 		}
 
+		// --- Сохранение просчёта ---
+		let access = null;
+		let saved = '';
+		/**
+		 * Свежие токен и nonce (один раз; без связи — сохранение просто не случится). Сервер
+		 * принимает токен не раньше чем через 3 секунды — промис выполняется не раньше.
+		 */
+		function fetchAccess() {
+			if ( ! access && card.dataset.token ) {
+				const ready = new Promise( ( resolve ) => window.setTimeout( resolve, 3100 ) );
+				access = fetch( card.dataset.token, { cache: 'no-store', credentials: 'same-origin' } )
+					.then( ( response ) => ( response.ok ? response.json() : Promise.reject( new Error( 'token' ) ) ) )
+					.then( ( pass ) => ready.then( () => pass ) )
+					.catch( () => ( access = null ) );
+			}
+			return access || Promise.resolve( null );
+		}
+
+		/**
+		 * Отправляет просчёт. too_fast — подождать и ещё раз; stale — новые токен и nonce и ещё раз.
+		 *
+		 * @param {Object} data  Ответы calc_*.
+		 * @param {number} tries Осталось попыток.
+		 */
+		function save( data, tries = 2 ) {
+			const key = JSON.stringify( data );
+			if ( ! card.dataset.estimate || key === saved ) {
+				return;
+			}
+			fetchAccess().then( ( pass ) => {
+				if ( ! pass || ! pass.token ) {
+					return;
+				}
+				const body = new FormData();
+				Object.entries( data ).forEach( ( [ name, text ] ) => body.append( name, text ) );
+				body.append( '_trust_token', pass.token );
+				body.append( '_trust_nonce', pass.nonce );
+				body.append( 'page', window.location.href );
+				fetch( card.dataset.estimate, { method: 'POST', body, credentials: 'same-origin' } )
+					.then( ( response ) => response.json().catch( () => ( {} ) ) )
+					.then( ( reply ) => {
+						if ( reply.ok ) {
+							saved = key;
+						} else if ( tries > 0 && 'too_fast' === reply.code ) {
+							window.setTimeout( () => save( data, tries - 1 ), 3000 );
+						} else if ( tries > 0 && 'stale' === reply.code ) {
+							access = null;
+							save( data, tries - 1 );
+						}
+					} )
+					.catch( () => {} );
+			} );
+		}
+
 		function calculate() {
 			const template = card.dataset.template || '{price}';
 			const sum = money.format( price() );
 			const main = template.split( ' / ' )[ 0 ];
 			priceOut.textContent = main.replace( '{price}', sum );
-			Object.entries( answers( template.replace( '{price}', sum ) ) ).forEach( ( [ key, text ] ) => {
+			const data = answers( template.replace( '{price}', sum ) );
+			Object.entries( data ).forEach( ( [ key, text ] ) => {
 				const field = card.querySelector( `[data-calc-answer="${ key }"]` );
 				if ( field ) {
 					field.value = text;
 				}
 			} );
+			save( data );
 			tabs.forEach( ( tab, i ) => {
 				tab.classList.remove( 'is-active' );
 				tab.classList.add( 'is-done' );
@@ -161,6 +220,8 @@
 			result.focus();
 		}
 
+		// Токен и nonce — при первом касании калькулятора (к расчёту пройдёт больше 3 секунд).
+		[ 'pointerdown', 'focusin', 'keydown' ].forEach( ( type ) => card.addEventListener( type, fetchAccess, { once: true } ) );
 		tabs.forEach( ( tab, i ) => tab.addEventListener( 'click', () => show( i ) ) );
 		tablist.addEventListener( 'keydown', ( event ) => {
 			const current = tabs.indexOf( document.activeElement );

@@ -188,6 +188,27 @@ final class Content_Types {
 					'supports'          => array( 'title' ),
 				)
 			),
+			// Просчёты калькулятора стоимости (правка заказчика): пункт в меню «Заявки», только чтение.
+			'estimate' => array_merge(
+				$private,
+				array(
+					'labels'            => array_merge(
+						self::labels( __( 'Просчёт стоимости', 'trust' ), __( 'Просчёты стоимости', 'trust' ), __( 'просчёт стоимости', 'trust' ), __( 'просчётов стоимости', 'trust' ), false, __( 'Просчёт стоимости работ', 'trust' ) ),
+						array(
+							'all_items' => __( 'Просчёт стоимости работ', 'trust' ),
+							'not_found' => __( 'Просчётов пока нет: они появляются, когда посетитель нажимает «Рассчитать стоимость» в калькуляторе.', 'trust' ),
+						)
+					),
+					'description'       => __( 'Ответы и цена из калькулятора стоимости: каждый расчёт посетителя.', 'trust' ),
+					'show_in_menu'      => 'edit.php?post_type=lead',
+					'show_in_rest'      => false,
+					'show_in_admin_bar' => false,
+					'capability_type'   => 'post',
+					'capabilities'      => self::lead_capabilities(),
+					'map_meta_cap'      => true,
+					'supports'          => false,
+				)
+			),
 		);
 
 		foreach ( $types as $name => $args ) {

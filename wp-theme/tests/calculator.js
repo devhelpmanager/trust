@@ -18,7 +18,7 @@
  */
 
 const path = require( 'path' );
-const { launch, URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle, isolate, login, wp, resetFormLimits } = require( './lib' );
+const { launch, URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle, isolate, login, wp, resetFormLimits, formToken } = require( './lib' );
 
 const PAGE = `${ URL }/seo/audit/`;
 const MARK = 'ТестКалькулятора';
@@ -30,6 +30,24 @@ const plain = ( text ) => String( text ).replace( /[\s  ]+/g, ' ' ).trim();
 /** Заявки по имени: форма, поля (подпись => значение). */
 function leadsBy( name ) {
 	return JSON.parse( wp( 'eval', `echo wp_json_encode( array_map( static fn( $p ) => array( 'id' => $p->ID, 'form' => get_post_meta( $p->ID, 'trust_form', true ), 'fields' => array_column( (array) get_post_meta( $p->ID, 'trust_fields', true ), 'value', 'label' ) ), get_posts( array( 'post_type' => 'lead', 'post_status' => 'any', 'numberposts' => -1, 'meta_key' => 'trust_name', 'meta_value' => '${ name }' ) ) ) );` ) );
+}
+
+/** Просчёты стоимости новее ID: цена, регион, страница, поля (подпись => значение). */
+function estimatesAfter( id ) {
+	return JSON.parse( wp( 'eval', `echo wp_json_encode( array_map( static fn( $p ) => array( 'id' => $p->ID, 'title' => $p->post_title, 'price' => get_post_meta( $p->ID, 'trust_price', true ), 'region' => get_post_meta( $p->ID, 'trust_region', true ), 'page' => get_post_meta( $p->ID, 'trust_page_title', true ), 'source' => get_post_meta( $p->ID, 'trust_source', true ), 'fields' => array_column( (array) get_post_meta( $p->ID, 'trust_fields', true ), 'value', 'label' ) ), array_values( array_filter( get_posts( array( 'post_type' => 'estimate', 'post_status' => 'any', 'numberposts' => -1, 'orderby' => 'ID', 'order' => 'ASC' ) ), static fn( $p ) => $p->ID > ${ Number( id ) } ) ) ) );` ) )
+		.map( ( e ) => ( { ...e, title: plain( e.title ), price: plain( e.price ), region: plain( e.region ), fields: Object.fromEntries( Object.entries( e.fields ).map( ( [ k, v ] ) => [ k, plain( v ) ] ) ) } ) );
+}
+
+/** Ждёт, пока просчётов новее ID станет count (сохранение идёт в фоне, ≥ 3 с от первого касания). */
+async function waitEstimates( page, id, count ) {
+	for ( let i = 0; i < 40; i++ ) {
+		const list = estimatesAfter( id );
+		if ( list.length >= count ) {
+			return list;
+		}
+		await page.waitForTimeout( 300 );
+	}
+	return estimatesAfter( id );
 }
 
 /**
@@ -74,6 +92,7 @@ async function compare( page, o ) {
 	const page = await context.newPage();
 	const errors = collectConsoleErrors( page );
 	const created = [];
+	const lastEstimate = Number( wp( 'eval', "global $wpdb; echo (int) $wpdb->get_var( \"SELECT MAX(ID) FROM {$wpdb->posts}\" );" ) ) || 0;
 
 	const calc = page.locator( '.b-calc' ).first();
 	const state = () => calc.evaluate( ( el ) => ( {
@@ -196,6 +215,11 @@ async function compare( page, o ) {
 		check( 'Экран результата: у всех вкладок галочки, шагов и шкалы нет, фокус на результате',
 			st.result && -1 === st.panel && ! st.nav && 'D D D D D D D' === st.tabs && res[ 0 ] && 'Предварительный расчёт' === res[ 1 ], JSON.stringify( [ st, res ] ) );
 		check( 'Цена по умолчанию в долларах: (300 + 60 + 150 + 60 + 150 + 4 × 40) × 1,5 = 1 320 — «от 1 320 $ / месяц»', 'от 1 320 $ / месяц' === await price(), await price() );
+		let est = await waitEstimates( page, lastEstimate, 1 );
+		check( 'Просчёт сохранён: «Заявки → Просчёт стоимости работ» — цена, регион, страница, все ответы',
+			1 === est.length && 'от 1 320 $ / месяц' === est[ 0 ].price && 'Москва' === est[ 0 ].region && 'от 1 320 $ / месяц — Москва' === est[ 0 ].title &&
+			'Технический аудит сайта' === est[ 0 ].page && 'Специалист с биржи' === est[ 0 ].fields[ 'Контент' ] && 'Адаптируем под AI-системы: Claude, Gemini, ChatGPT, Алиса' === est[ 0 ].fields.GEO &&
+			! ( 'Имя' in est[ 0 ].fields ), JSON.stringify( est ) );
 		await calc.locator( '[data-calc-edit]' ).click();
 		st = await state();
 		check( '«Изменить параметры» — назад к шагу 7', 6 === st.panel && ! st.result, JSON.stringify( st ) );
@@ -204,6 +228,9 @@ async function compare( page, o ) {
 		check( 'С экрана результата вкладка открывает свой шаг', 2 === ( await state() ).panel );
 		await tab( 6 ).click();
 		await calc.locator( '[data-calc-go]' ).click();
+		await page.waitForTimeout( 1000 );
+		est = estimatesAfter( lastEstimate );
+		check( 'Тот же расчёт ещё раз («Изменить параметры» → «Рассчитать») — второй записи нет', 1 === est.length, String( est.length ) );
 		await calc.locator( '.b-calc__cta' ).click();
 		await page.locator( '#callback-modal[open]' ).waitFor( { timeout: 5000 } );
 		check( 'Кнопка «Получить точный расчёт» открывает окно «Заказать обратный звонок»', true );
@@ -285,6 +312,68 @@ async function compare( page, o ) {
 			'https://shop.example.ru' === f[ 'Адрес сайта' ] && 'Интернет-магазин' === f[ 'Тематика сайта' ] && '40' === f[ 'Количество продвигаемых страниц' ] &&
 			'100 заявок' === f[ 'Цель по трафику или заказам' ] && 'До 1 года' === f[ 'Возраст сайта' ] && 'Нет' === f[ 'Есть ли трафик или заказы' ] && f[ 'Телефон' ], JSON.stringify( leads ) );
 		leads.forEach( ( l ) => wp( 'post', 'delete', String( l.id ), '--force' ) );
+		est = await waitEstimates( page, lastEstimate, 6 );
+		const last = est.find( ( e ) => 'Итого 19 500 $ / в месяц' === e.price ) || { fields: {} };
+		check( 'Каждый новый расчёт — своя запись: 18 000, 36 500, 29 500, 15 000, 19 500; в последней — ответы шага «О сайте», без имени и телефона',
+			JSON.stringify( [ 'Итого 15 000 $ / в месяц', 'Итого 18 000 $ / в месяц', 'Итого 19 500 $ / в месяц', 'Итого 29 500 $ / в месяц', 'Итого 36 500 $ / в месяц' ] ) === JSON.stringify( est.slice( 1 ).map( ( e ) => e.price ).sort() ) &&
+			'Альфа, Тверь' === last.region && MARK === last.page && 'https://shop.example.ru' === last.fields[ 'Адрес сайта' ] && 'До 1 года' === last.fields[ 'Возраст сайта' ] && ! ( 'Телефон' in last.fields ),
+			JSON.stringify( est.map( ( e ) => [ e.price, e.region, e.page ] ) ) );
+
+		// ===== Просчёты: защита REST =====
+		const estPost = async ( fields ) => {
+			const data = new FormData();
+			Object.entries( fields ).forEach( ( [ k, v ] ) => data.append( k, v ) );
+			const res = await fetch( `${ URL }/wp-json/trust/v1/estimates`, { method: 'POST', body: data } );
+			return [ res.status, ( await res.json() ).code || 'ok' ];
+		};
+		const pass = await formToken();
+		const r1 = await estPost( { calc_price: 'от 1 $', page: PAGE } );
+		const r2 = await estPost( { calc_price: 'от 1 $', _trust_token: pass.token, _trust_nonce: pass.nonce } );
+		await page.waitForTimeout( 3100 );
+		const r3 = await estPost( { calc_region: 'Москва', _trust_token: pass.token, _trust_nonce: pass.nonce } );
+		wp( 'eval', "set_transient( 'trust_estimate_rate_' . md5( '127.0.0.1' ), array( 'count' => 30, 'start' => time() ), 600 );" );
+		const r4 = await estPost( { calc_price: 'от 1 $', _trust_token: pass.token, _trust_nonce: pass.nonce } );
+		resetFormLimits();
+		const r5 = await estPost( { calc_price: 'от 1 $', calc_region: '<b>Тест</b>', _trust_token: pass.token, _trust_nonce: pass.nonce, page: 'https://evil.example/' } );
+		est = estimatesAfter( lastEstimate );
+		const injected = est[ est.length - 1 ] || {};
+		check( 'REST просчётов: без токена — 403 stale, сразу после токена — too_fast, без цены — invalid, после 30 за 10 минут — 429',
+			'403 stale|400 too_fast|400 invalid|429 rate_limited' === [ r1, r2, r3, r4 ].map( ( r ) => r.join( ' ' ) ).join( '|' ), JSON.stringify( [ r1, r2, r3, r4 ] ) );
+		check( 'REST просчётов: теги вырезаются, чужой адрес страницы не сохраняется', 200 === r5[ 0 ] && 'Тест' === injected.region && '' === injected.page, JSON.stringify( [ r5, injected ] ) );
+
+		// ===== Просчёты в админке =====
+		const admin = await browser.newContext( { viewport: { width: 1280, height: 900 } } );
+		const ap = await admin.newPage();
+		const adminErrors = collectConsoleErrors( ap );
+		await login( ap );
+		await ap.goto( `${ URL }/wp-admin/edit.php?post_type=lead`, { waitUntil: 'domcontentloaded' } );
+		const menu = await ap.evaluate( () => [ ...document.querySelectorAll( '#menu-posts-lead .wp-submenu a' ) ].map( ( a ) => a.textContent.trim() + '=' + new URL( a.href ).search ) );
+		check( 'Админка: в меню «Заявки» — пункт «Просчёт стоимости работ»', menu.some( ( m ) => m.startsWith( 'Просчёт стоимости работ' ) && m.endsWith( '?post_type=estimate' ) ), menu.join( ' | ' ) );
+		await ap.goto( `${ URL }/wp-admin/edit.php?post_type=estimate`, { waitUntil: 'domcontentloaded' } );
+		const list = await ap.evaluate( ( id ) => ( {
+			h1: document.querySelector( '.wp-heading-inline' ).textContent.trim(),
+			add: !! document.querySelector( '.page-title-action' ),
+			cols: [ ...document.querySelectorAll( '.wp-list-table thead th' ) ].map( ( th ) => ( th.querySelector( 'a > span:first-child' ) || th ).textContent.trim() ).filter( Boolean ),
+			row: [ ...( document.querySelector( `#post-${ id }` )?.querySelectorAll( 'td' ) || [] ) ].map( ( td ) => td.textContent.replace( /[\s\u00a0\u202f]+/g, ' ' ).trim() ),
+			actions: [ ...( document.querySelector( `#post-${ id } .row-actions` )?.querySelectorAll( 'a' ) || [] ) ].map( ( a ) => a.textContent.trim() ),
+			bulk: [ ...document.querySelectorAll( '#bulk-action-selector-top option' ) ].map( ( o ) => o.textContent.trim() ),
+			current: document.querySelector( '#menu-posts-lead .wp-submenu .current' )?.textContent.trim(),
+		} ), last.id );
+		check( 'Админка: список просчётов — «Цена», «Регион», «Страница», «Дата», без «Добавить»',
+			'Просчёт стоимости работ' === list.h1 && ! list.add && JSON.stringify( [ 'Просчёт', 'Цена', 'Регион', 'Страница', 'Дата' ] ) === JSON.stringify( list.cols.slice( 0, 5 ) ) &&
+			String( list.row[ 0 ] ).includes( 'Итого 19 500 $ / в месяц — Альфа, Тверь' ) && 'Итого 19 500 $ / в месяц' === list.row[ 1 ] && 'Альфа, Тверь' === list.row[ 2 ] && MARK === list.row[ 3 ] && 'Просчёт стоимости работ' === list.current, JSON.stringify( list ) );
+		check( 'Админка: в строке — «Посмотреть», массовая «Выгрузить в CSV»', list.actions.includes( 'Посмотреть' ) && ! list.actions.some( ( a ) => /Свойства/.test( a ) ) && list.bulk.includes( 'Выгрузить в CSV' ), JSON.stringify( [ list.actions, list.bulk ] ) );
+		await ap.goto( `${ URL }/wp-admin/post.php?post=${ last.id }&action=edit`, { waitUntil: 'domcontentloaded' } );
+		const box = await ap.evaluate( () => Object.fromEntries( [ ...document.querySelectorAll( '#trust-estimate-box tr' ) ].map( ( tr ) => [ tr.querySelector( 'th' ).textContent.trim(), tr.querySelector( 'td' ).textContent.replace( /[\s\u00a0\u202f]+/g, ' ' ).trim() ] ) ) );
+		check( 'Админка: просмотр просчёта — таблица ответов, цена, страница', 'Итого 19 500 $ / в месяц' === box[ 'Предварительная стоимость' ] && 'Альфа, Тверь' === box[ 'Регион' ] && MARK === box[ 'Страница' ] && 'Интернет-магазин' === box[ 'Тематика сайта' ], JSON.stringify( box ) );
+		await ap.screenshot( { path: path.join( OUT, 'calculator-estimate-admin.png' ) } );
+		await ap.goto( `${ URL }/wp-admin/edit.php?post_type=estimate`, { waitUntil: 'domcontentloaded' } );
+		await ap.screenshot( { path: path.join( OUT, 'calculator-estimates-list.png' ) } );
+		const csv = JSON.parse( wp( 'eval', `echo wp_json_encode( Trust\\Forms\\Estimates::csv_rows( array( ${ last.id }, ${ injected.id || 0 } ) ) );` ) );
+		check( 'CSV просчётов: столбцы ответов, значения последнего расчёта',
+			'Предварительная стоимость' === csv[ 0 ][ 7 ] && 'Итого 19 500 $ / в месяц' === plain( csv[ 1 ][ 7 ] ) && 'Альфа, Тверь' === csv[ 1 ][ 8 ] && csv[ 0 ].length === csv[ 1 ].length && 3 === csv.length, JSON.stringify( csv.slice( 0, 2 ) ) );
+		check( 'Админка без ошибок JavaScript', 0 === adminErrors.length, adminErrors.slice( 0, 3 ).join( ' | ' ) );
+		await admin.close();
 
 		// ===== Телефон =====
 		await page.setViewportSize( { width: 390, height: 844 } );
@@ -309,6 +398,37 @@ async function compare( page, o ) {
 		check( '390px: после «Далее» вкладка текущего шага прокручена в полосу вкладок, начало карточки на экране', seen[ 0 ] && seen[ 1 ] > -1, JSON.stringify( seen ) );
 		const over = await page.evaluate( () => document.documentElement.scrollWidth > innerWidth );
 		check( '390px: без прокрутки страницы вбок', ! over );
+		await calc.locator( '[data-calc-next]' ).click();
+		await calc.locator( '[data-calc-next]' ).click();
+		const row = () => calc.evaluate( ( el ) => {
+			const back = el.querySelector( '[data-calc-prev]' );
+			const go = el.querySelector( '[data-calc-go]' );
+			const b = back.getBoundingClientRect();
+			const g = go.getBoundingClientRect();
+			const nav = el.querySelector( '[data-calc-nav]' ).getBoundingClientRect();
+			return {
+				line: Math.abs( b.top - g.top ) < 1 && b.right < g.left && g.right <= nav.right,
+				go: go.innerText.trim(),
+				back: back.querySelector( '.b-calc__back-text' ).getBoundingClientRect().width > 2 ? back.innerText.trim() : '',
+				name: go.getAttribute( 'aria-label' ),
+				over: document.documentElement.scrollWidth > innerWidth,
+			};
+		} );
+		const navRows = {};
+		for ( const width of [ 280, 320, 390, 480 ] ) {
+			await page.setViewportSize( { width, height: 844 } );
+			navRows[ width ] = await row();
+		}
+		await page.screenshot( { path: path.join( OUT, 'calculator-step7-480.png' ) } );
+		await page.setViewportSize( { width: 390, height: 844 } );
+		await calc.locator( '[data-calc-go]' ).scrollIntoViewIfNeeded();
+		await page.screenshot( { path: path.join( OUT, 'calculator-step7-390.png' ) } );
+		check( 'Шаг 7 на телефоне: «Назад» и «Рассчитать» в одну строку (280, 320, 390, 480 px), без прокрутки вбок',
+			Object.values( navRows ).every( ( r ) => r.line && ! r.over ), JSON.stringify( navRows ) );
+		check( 'Узкий экран: на кнопке «Рассчитать» (полное название «Рассчитать стоимость» — для скринридеров), на 480px — «Рассчитать стоимость»',
+			'Рассчитать' === navRows[ 390 ].go && 'Рассчитать стоимость' === navRows[ 390 ].name && 'Рассчитать стоимость' === navRows[ 480 ].go, JSON.stringify( navRows ) );
+		check( 'Совсем узкий экран (280, 320px): у «Назад» — стрелка, текст «Назад» для скринридеров; с 390px — «Назад»',
+			'' === navRows[ 280 ].back && '' === navRows[ 320 ].back && 'Назад' === navRows[ 390 ].back && 'Назад' === await calc.locator( '[data-calc-prev]' ).evaluate( ( b ) => b.textContent.trim() ), JSON.stringify( navRows ) );
 
 		// ===== Без JavaScript =====
 		const nojs = await browser.newContext( { viewport: { width: 1280, height: 900 }, javaScriptEnabled: false } );
@@ -395,6 +515,7 @@ async function compare( page, o ) {
 	} finally {
 		created.forEach( ( id ) => wp( 'post', 'delete', String( id ), '--force' ) );
 		leadsBy( 'Тест Калькулятор' ).forEach( ( l ) => wp( 'post', 'delete', String( l.id ), '--force' ) );
+		estimatesAfter( lastEstimate ).forEach( ( e ) => wp( 'post', 'delete', String( e.id ), '--force' ) );
 		resetFormLimits();
 	}
 

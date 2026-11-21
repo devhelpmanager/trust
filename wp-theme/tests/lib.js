@@ -477,10 +477,10 @@ async function publishPost( page ) {
 }
 
 /**
- * Сбрасывает лимит частоты отправки форм (все тесты идут с одного адреса 127.0.0.1).
+ * Сбрасывает лимиты частоты форм и просчётов стоимости (все тесты идут с одного адреса 127.0.0.1).
  */
 function resetFormLimits() {
-	wp( 'eval', "global $wpdb; foreach ( $wpdb->get_col( \"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '_transient_trust_form_rate_%'\" ) as $o ) { delete_transient( substr( $o, strlen( '_transient_' ) ) ); }" );
+	wp( 'eval', "global $wpdb; foreach ( $wpdb->get_col( \"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '_transient_trust_form_rate_%' OR option_name LIKE '_transient_trust_estimate_rate_%'\" ) as $o ) { delete_transient( substr( $o, strlen( '_transient_' ) ) ); }" );
 }
 
 /**
