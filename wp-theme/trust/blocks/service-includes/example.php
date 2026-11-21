@@ -18,7 +18,7 @@ return array(
 			'icon'        => 'robot',
 			'title'       => 'Проверка robots.txt',
 			'description' => 'Файл robots.txt подсказывает поисковым роботам, какие разделы сайта сканировать, а какие нет.',
-			'price'       => 'от X XXX ₽',
+			'price'       => 'от X XXX $',
 			'link'        => array(
 				'title'  => '',
 				'url'    => '#robots',
@@ -33,7 +33,7 @@ return array(
 			'icon'        => 'sitemap',
 			'title'       => 'Анализ карты сайта',
 			'description' => 'Карта сайта sitemap.xml помогает поисковым системам быстрее находить новые страницы.',
-			'price'       => 'от X XXX ₽',
+			'price'       => 'от X XXX $',
 			'checks'      => array(
 				array( 'text' => 'Наличие и доступность файла' ),
 			),

@@ -133,7 +133,7 @@ $trust_pills = static function ( string $name, string $legend, array $options ) 
 	echo '</div></div>';
 };
 
-$trust_template = Blocks::text( 'result_template', __( 'от {price} ₽ / месяц', 'trust' ) );
+$trust_template = Blocks::text( 'result_template', __( 'от {price} $ / месяц', 'trust' ) );
 $trust_parts    = explode( ' / ', $trust_template, 2 );
 ?>
 <section class="b-calc trust-bg-lavender"<?php echo $trust_anchor ? ' id="' . esc_attr( $trust_anchor ) . '"' : ''; ?><?php echo $trust_title ? ' aria-labelledby="' . esc_attr( $trust_title_id ) . '"' : ''; ?>>
@@ -153,9 +153,9 @@ $trust_parts    = explode( ' / ', $trust_template, 2 );
 		<?php endif; ?>
 
 		<div class="b-calc__card" id="<?php echo esc_attr( $trust_uid ); ?>" data-calc
-			data-base="<?php echo esc_attr( (string) $trust_num( 'base_price', 20000 ) ); ?>"
-			data-min="<?php echo esc_attr( (string) $trust_num( 'min_price', 25000 ) ); ?>"
-			data-round="<?php echo esc_attr( (string) max( 1, $trust_num( 'round_step', 1000 ) ) ); ?>"
+			data-base="<?php echo esc_attr( (string) $trust_num( 'base_price', 300 ) ); ?>"
+			data-min="<?php echo esc_attr( (string) $trust_num( 'min_price', 400 ) ); ?>"
+			data-round="<?php echo esc_attr( (string) max( 1, $trust_num( 'round_step', 10 ) ) ); ?>"
 			data-query-price="<?php echo esc_attr( (string) $trust_num( 'query_price', 0 ) ); ?>"
 			data-other-coef="<?php echo esc_attr( (string) Calculator::coef( get_field( 'other_coef' ) ?? 1 ) ); ?>"
 			data-template="<?php echo esc_attr( $trust_template ); ?>"
@@ -233,7 +233,7 @@ $trust_parts    = explode( ' / ', $trust_template, 2 );
 											'value'    => 'on',
 											'title'    => Blocks::text( 'geo_on_title', __( 'Адаптируем под AI-системы', 'trust' ) ),
 											'text'     => Blocks::text( 'geo_on_text', __( 'Выберите системы, под которые нужно адаптировать сайт.', 'trust' ) ),
-											'price'    => $trust_num( 'geo_on_price', 10000 ),
+											'price'    => $trust_num( 'geo_on_price', 150 ),
 											'selected' => $trust_geo_on,
 										),
 									)

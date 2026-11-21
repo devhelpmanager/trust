@@ -88,8 +88,8 @@ return array_merge(
 					'label'        => __( 'Цена', 'trust' ),
 					'type'         => 'text',
 					'maxlength'    => 40,
-					'placeholder'  => 'от 15 000 ₽',
-					'instructions' => __( 'Необязательно. Как показывать: «от 15 000 ₽».', 'trust' ),
+					'placeholder'  => 'от 200 $',
+					'instructions' => __( 'Необязательно. Как показывать: «от 200 $» (все цены сайта — в долларах).', 'trust' ),
 				),
 				array(
 					'name'          => 'link',

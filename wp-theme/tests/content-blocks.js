@@ -118,7 +118,7 @@ async function compare( page, o ) {
 		check( 'Тарифы: «Рекомендуем» — только у «Бизнеса», тёмная карточка', cards.map( ( c ) => c.rec + ':' + c.badge ).join() === 'false:,true:Рекомендуем,false:' &&
 			cards[ 1 ].bg === 'rgb(14, 11, 20)' && cards[ 0 ].bg === 'rgb(255, 255, 255)', cards.map( ( c ) => c.bg ).join( ' | ' ) );
 		check( 'Тарифы: старая цена зачёркнута (для скринридеров «Старая цена:»), скидка, цена и «/ месяц»',
-			cards.every( ( c ) => c.old === 'Старая цена: XX XXX ₽' && c.discount === '−XX%' && c.price === 'XX XXX ₽' && c.period === '/ месяц' ), JSON.stringify( cards[ 0 ] ).slice( 0, 200 ) );
+			cards.every( ( c ) => c.old === 'Старая цена: XX XXX $' && c.discount === '−XX%' && c.price === 'XX XXX $' && c.period === '/ месяц' ), JSON.stringify( cards[ 0 ] ).slice( 0, 200 ) );
 		const included = cards.map( ( c ) => c.items.filter( ( i ) => ! i[ 2 ] ).length );
 		check( 'Тарифы: по 8 работ, входит 5 / 7 / 8 (как в макете)', cards.every( ( c ) => JSON.stringify( c.items.map( ( i ) => i[ 0 ] ) ) === JSON.stringify( WORKS ) ) && included.join() === '5,7,8', included.join() );
 		check( 'Тарифы: значки «Включено» / «Не включено» подписаны для скринридеров',
@@ -188,29 +188,29 @@ async function compare( page, o ) {
 
 		let graph = await graphOf( page, PAGE );
 		let service = graph.find( ( n ) => 'Service' === n[ '@type' ] );
-		check( 'Микроразметка: у демо-тарифов цена «XX XXX ₽» без числа — offers нет', service && ! service.offers, JSON.stringify( service && service.offers ) );
+		check( 'Микроразметка: у демо-тарифов цена «XX XXX $» без числа — offers нет', service && ! service.offers, JSON.stringify( service && service.offers ) );
 
 		const prices = createPage( 'цены', block( 'tariffs', `array( 'title' => 'Тарифы', 'tariffs' => array(
-			array( 'name' => 'Старт', 'who' => 'Для небольших сайтов', 'price' => '15 000 ₽', 'price_value' => 15000, 'items' => array( array( 'text' => 'Аудит', 'included' => 1 ) ) ),
-			array( 'name' => 'Бизнес', 'recommended' => 1, 'price' => '30 000 ₽', 'price_value' => 30000 ),
-			array( 'name' => 'Максимум', 'price' => '60 000 ₽', 'price_value' => 60000, 'old_price' => '', 'discount' => '' ),
+			array( 'name' => 'Старт', 'who' => 'Для небольших сайтов', 'price' => '200 $', 'price_value' => 200, 'items' => array( array( 'text' => 'Аудит', 'included' => 1 ) ) ),
+			array( 'name' => 'Бизнес', 'recommended' => 1, 'price' => '400 $', 'price_value' => 400 ),
+			array( 'name' => 'Максимум', 'price' => '800 $', 'price_value' => 800, 'old_price' => '', 'discount' => '' ),
 			array( 'name' => 'По запросу', 'price' => 'по договорённости' ) ) )` ) );
 		created.push( prices );
 		graph = await graphOf( page, `${ URL }/?page_id=${ prices }` );
 		service = graph.find( ( n ) => 'Service' === n[ '@type' ] );
 		const agg = service && service.offers;
-		check( 'Микроразметка: несколько тарифов с «Ценой числом» — AggregateOffer 15000–60000 ₽, 3 предложения',
-			agg && 'AggregateOffer' === agg[ '@type' ] && 15000 === agg.lowPrice && 60000 === agg.highPrice && 3 === agg.offerCount && 'RUB' === agg.priceCurrency, JSON.stringify( agg ).slice( 0, 300 ) );
+		check( 'Микроразметка: несколько тарифов с «Ценой числом» — AggregateOffer 200–800 $ (USD — все цены сайта в долларах), 3 предложения',
+			agg && 'AggregateOffer' === agg[ '@type' ] && 200 === agg.lowPrice && 800 === agg.highPrice && 3 === agg.offerCount && 'USD' === agg.priceCurrency, JSON.stringify( agg ).slice( 0, 300 ) );
 		check( 'Микроразметка: у каждого Offer — название, цена, валюта, адрес страницы; описание — «кому подходит»',
-			agg && agg.offers.map( ( o ) => `${ o[ '@type' ] }:${ o.name }:${ o.price }:${ o.priceCurrency }` ).join() === 'Offer:Старт:15000:RUB,Offer:Бизнес:30000:RUB,Offer:Максимум:60000:RUB' &&
+			agg && agg.offers.map( ( o ) => `${ o[ '@type' ] }:${ o.name }:${ o.price }:${ o.priceCurrency }` ).join() === 'Offer:Старт:200:USD,Offer:Бизнес:400:USD,Offer:Максимум:800:USD' &&
 			agg.offers[ 0 ].description === 'Для небольших сайтов' && agg.offers.every( ( o ) => o.url === service.url ) && ! ( 'description' in agg.offers[ 1 ] ) );
 		const rows = await page.locator( '.b-tariffs__card' ).evaluateAll( ( list ) => list.map( ( c ) => [ !! c.querySelector( '.b-tariffs__old' ), c.querySelectorAll( '.b-tariffs__item' ).length, !! c.querySelector( '.b-tariffs__btn' ) ] ) );
 		check( 'Тарифы: без старой цены и скидки — строки нет, без состава — списка нет, без кнопки — кнопки нет', JSON.stringify( rows ) === JSON.stringify( [ [ false, 1, false ], [ false, 0, false ], [ false, 0, false ], [ false, 0, false ] ] ), JSON.stringify( rows ) );
-		const one = createPage( 'одна цена', block( 'tariffs', "array( 'title' => 'Тариф', 'tariffs' => array( array( 'name' => 'Поддержка', 'price' => '25 000 ₽', 'price_value' => 25000 ) ) )" ) );
+		const one = createPage( 'одна цена', block( 'tariffs', "array( 'title' => 'Тариф', 'tariffs' => array( array( 'name' => 'Поддержка', 'price' => '300 $', 'price_value' => 300 ) ) )" ) );
 		created.push( one );
 		graph = await graphOf( page, `${ URL }/?page_id=${ one }` );
 		service = graph.find( ( n ) => 'Service' === n[ '@type' ] );
-		check( 'Микроразметка: один тариф — Offer с ценой 25000 RUB', service && service.offers && 'Offer' === service.offers[ '@type' ] && 25000 === service.offers.price && 'RUB' === service.offers.priceCurrency, JSON.stringify( service && service.offers ) );
+		check( 'Микроразметка: один тариф — Offer с ценой 300 USD', service && service.offers && 'Offer' === service.offers[ '@type' ] && 300 === service.offers.price && 'USD' === service.offers.priceCurrency, JSON.stringify( service && service.offers ) );
 
 		// ===== «Блок с текстом» =====
 		await page.goto( PAGE, { waitUntil: 'networkidle' } );

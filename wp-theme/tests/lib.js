@@ -210,7 +210,12 @@ function comparePng( a, b, diffPath ) {
  *   H1 первых экранов — на всю ширину (у услуги и документа — отдельной строкой над текстом
  *   и кнопками, у вопросов — над текстом и формой).
  */
-const MOCKUP_TEXTS = [ [ 'Сопровождение сайтов', 'Поддержка сайтов' ] ];
+// Тексты, согласованные с заказчиком: [ было, стало, только в этих макетах (необязательно) ].
+// Все цены сайта — в долларах (решение заказчика): в макетах услуг, блоков и портфолио ₽ → $.
+const MOCKUP_TEXTS = [
+	[ 'Сопровождение сайтов', 'Поддержка сайтов' ],
+	[ '₽', '$', [ 'seo-bloki/', 'seo-stranitsa/', 'portfolio-blog-404/' ] ],
+];
 const HERO_SECTION_CSS = `
 	.dc-hero-box dl > div { justify-content: flex-end !important; }
 	.dc-hero-in > div:first-child { max-width: none !important; }
@@ -358,15 +363,18 @@ async function approveMockup( page ) {
 		return;
 	}
 	await page.evaluate( ( { texts, css, common } ) => {
+		const file = decodeURIComponent( location.pathname );
 		const walker = document.createTreeWalker( document.body, NodeFilter.SHOW_TEXT );
 		for ( let node = walker.nextNode(); node; node = walker.nextNode() ) {
-			for ( const [ from, to ] of texts ) {
+			for ( const [ from, to, only ] of texts ) {
+				if ( only && ! only.some( ( part ) => file.includes( part ) ) ) {
+					continue;
+				}
 				if ( node.nodeValue.includes( from ) ) {
 					node.nodeValue = node.nodeValue.split( from ).join( to );
 				}
 			}
 		}
-		const file = decodeURIComponent( location.pathname );
 		if ( ! document.getElementById( 'trust-approved-css' ) ) {
 			const style = document.createElement( 'style' );
 			style.id = 'trust-approved-css';

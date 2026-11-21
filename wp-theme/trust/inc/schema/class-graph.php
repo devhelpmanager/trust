@@ -104,7 +104,7 @@ final class Graph {
 	 * Блок «Выбор тарифа» сообщает тариф с числовой ценой (вызывается из render.php на сайте).
 	 *
 	 * @param string $name        Название тарифа.
-	 * @param float  $price       Цена, ₽.
+	 * @param float  $price       Цена, $ (все цены сайта — в долларах, решение заказчика).
 	 * @param string $description Кому подходит.
 	 */
 	public static function offer( string $name, float $price, string $description = '' ): void {
@@ -131,7 +131,7 @@ final class Graph {
 				'name'          => $name,
 				'description'   => $description,
 				'price'         => $price,
-				'priceCurrency' => 'RUB',
+				'priceCurrency' => 'USD',
 				'url'           => $url,
 			);
 		}
@@ -141,7 +141,7 @@ final class Graph {
 		$prices = array_column( $list, 'price' );
 		return array(
 			'@type'         => 'AggregateOffer',
-			'priceCurrency' => 'RUB',
+			'priceCurrency' => 'USD',
 			'lowPrice'      => min( $prices ),
 			'highPrice'     => max( $prices ),
 			'offerCount'    => count( $list ),

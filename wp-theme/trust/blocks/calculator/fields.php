@@ -25,7 +25,7 @@ $trust_section = static fn( string $name, string $label ): array => array(
 );
 
 /**
- * Число (цена в рублях, коэффициент).
+ * Число (цена в долларах, коэффициент).
  *
  * @param string $name    Имя.
  * @param string $label   Подпись.
@@ -88,10 +88,10 @@ $trust_options = static fn( string $name, string $label ): array => array(
 		),
 		array(
 			'name'          => 'extra',
-			'label'         => __( 'Надбавка, ₽ в месяц', 'trust' ),
+			'label'         => __( 'Надбавка, $ в месяц', 'trust' ),
 			'type'          => 'number',
 			'min'           => 0,
-			'step'          => 100,
+			'step'          => 10,
 			'default_value' => 0,
 			'wrapper'       => array( 'width' => 25 ),
 		),
@@ -129,12 +129,12 @@ return array_merge(
 		),
 
 		$trust_section( 'price_section', __( 'Цена и результат', 'trust' ) ),
-		$trust_number( 'base_price', __( 'Базовая цена, ₽ в месяц', 'trust' ), 20000, '', 100, array( 'wrapper' => array( 'width' => 33 ) ) ),
-		$trust_number( 'min_price', __( 'Минимальная цена, ₽', 'trust' ), 25000, '', 100, array( 'wrapper' => array( 'width' => 33 ) ) ),
+		$trust_number( 'base_price', __( 'Базовая цена, $ в месяц', 'trust' ), 300, '', 10, array( 'wrapper' => array( 'width' => 33 ) ) ),
+		$trust_number( 'min_price', __( 'Минимальная цена, $', 'trust' ), 400, '', 10, array( 'wrapper' => array( 'width' => 33 ) ) ),
 		$trust_number(
 			'round_step',
-			__( 'Округлять вверх до, ₽', 'trust' ),
-			1000,
+			__( 'Округлять вверх до, $', 'trust' ),
+			10,
 			'',
 			1,
 			array(
@@ -143,7 +143,7 @@ return array_merge(
 			)
 		),
 		Blocks::text_field( 'result_eyebrow', __( 'Надпись над ценой', 'trust' ), __( 'Предварительный расчёт', 'trust' ), 40 ),
-		Blocks::text_field( 'result_template', __( 'Текст цены', 'trust' ), __( 'от {price} ₽ / месяц', 'trust' ), 60, __( '{price} — рассчитанная сумма. Часть после « / » выводится мельче.', 'trust' ) ),
+		Blocks::text_field( 'result_template', __( 'Текст цены', 'trust' ), __( 'от {price} $ / месяц', 'trust' ), 60, __( '{price} — рассчитанная сумма. Часть после « / » выводится мельче.', 'trust' ) ),
 		array(
 			'name'          => 'result_note',
 			'label'         => __( 'Пояснение под ценой', 'trust' ),
@@ -263,7 +263,7 @@ return array_merge(
 			'maxlength'     => 300,
 			'default_value' => __( "Каждый запрос с новой строки, например:\nремонт квартир под ключ\nдизайн-проект квартиры", 'trust' ),
 		),
-		$trust_number( 'query_price', __( 'Цена за каждый запрос, ₽', 'trust' ), 0, __( 'Умножается на число строк в поле. 0 — запросы на цену не влияют.', 'trust' ), 10 ),
+		$trust_number( 'query_price', __( 'Цена за каждый запрос, $', 'trust' ), 0, __( 'Умножается на число строк в поле. 0 — запросы на цену не влияют.', 'trust' ), 1 ),
 
 		$trust_section( 'step3_section', __( 'Шаг 3. Контент', 'trust' ) ),
 	),
@@ -289,10 +289,10 @@ return array_merge(
 	array(
 		Blocks::text_field( 'geo_off_title', __( 'Вариант «Не адаптируем»', 'trust' ), __( 'Не адаптируем под AI-системы', 'trust' ), 60 ),
 		Blocks::text_field( 'geo_off_text', __( 'Описание', 'trust' ), __( 'Продвигаем сайт только в классическом поиске.', 'trust' ), 160 ),
-		$trust_number( 'geo_off_price', __( 'Надбавка, ₽ в месяц', 'trust' ), 0, '', 100 ),
+		$trust_number( 'geo_off_price', __( 'Надбавка, $ в месяц', 'trust' ), 0, '', 10 ),
 		Blocks::text_field( 'geo_on_title', __( 'Вариант «Адаптируем»', 'trust' ), __( 'Адаптируем под AI-системы', 'trust' ), 60 ),
 		Blocks::text_field( 'geo_on_text', __( 'Описание', 'trust' ), __( 'Выберите системы, под которые нужно адаптировать сайт.', 'trust' ), 160 ),
-		$trust_number( 'geo_on_price', __( 'Надбавка, ₽ в месяц', 'trust' ), 10000, __( 'Плюс надбавки отмеченных AI-систем.', 'trust' ), 100 ),
+		$trust_number( 'geo_on_price', __( 'Надбавка, $ в месяц', 'trust' ), 150, __( 'Плюс надбавки отмеченных AI-систем.', 'trust' ), 10 ),
 		array(
 			'name'          => 'geo_default',
 			'label'         => __( 'Выбран сразу', 'trust' ),
@@ -323,10 +323,10 @@ return array_merge(
 				),
 				array(
 					'name'          => 'extra',
-					'label'         => __( 'Надбавка, ₽ в месяц', 'trust' ),
+					'label'         => __( 'Надбавка, $ в месяц', 'trust' ),
 					'type'          => 'number',
 					'min'           => 0,
-					'step'          => 100,
+					'step'          => 10,
 					'default_value' => 0,
 				),
 			),

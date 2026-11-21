@@ -195,7 +195,7 @@ async function compare( page, o ) {
 		const res = await calc.evaluate( ( el ) => [ document.activeElement === el.querySelector( '[data-calc-result]' ), el.querySelector( '.b-calc__result-eyebrow' ).textContent.trim(), el.querySelector( '.b-calc__note' ).textContent.trim() ] );
 		check( 'Экран результата: у всех вкладок галочки, шагов и шкалы нет, фокус на результате',
 			st.result && -1 === st.panel && ! st.nav && 'D D D D D D D' === st.tabs && res[ 0 ] && 'Предварительный расчёт' === res[ 1 ], JSON.stringify( [ st, res ] ) );
-		check( 'Цена по умолчанию: (20 000 + 5 000 + 10 000 + 5 000 + 10 000 + 4 × 3 000) × 1,5 = 93 000 — «от 93 000 ₽ / месяц»', 'от 93 000 ₽ / месяц' === await price(), await price() );
+		check( 'Цена по умолчанию в долларах: (300 + 60 + 150 + 60 + 150 + 4 × 40) × 1,5 = 1 320 — «от 1 320 $ / месяц»', 'от 1 320 $ / месяц' === await price(), await price() );
 		await calc.locator( '[data-calc-edit]' ).click();
 		st = await state();
 		check( '«Изменить параметры» — назад к шагу 7', 6 === st.panel && ! st.result, JSON.stringify( st ) );
@@ -210,7 +210,7 @@ async function compare( page, o ) {
 		await page.keyboard.press( 'Escape' );
 
 		// ===== Формула на своей странице =====
-		const custom = wp( 'eval', `echo Trust\\Blocks::serialize( 'calculator', array( 'title' => 'Калькулятор теста', 'base_price' => 10000, 'min_price' => 15000, 'round_step' => 500, 'query_price' => 250, 'other_coef' => 1.6, 'result_template' => 'Итого {price} руб. / в месяц', 'contact_form' => 1, 'regions' => array( array( 'region' => 'Альфа', 'coef' => 1.2, 'selected' => 1 ), array( 'region' => 'Бета', 'coef' => 2, 'selected' => 0 ) ), 'content' => array( array( 'variant' => 'К1', 'about' => '', 'extra' => 0, 'selected' => 0 ), array( 'variant' => 'К2', 'about' => 'Второй', 'extra' => 3000, 'selected' => 1 ) ), 'external' => array( array( 'variant' => 'В1', 'about' => '', 'extra' => 2000, 'selected' => 0 ) ), 'reputation' => array( array( 'variant' => 'Р1', 'about' => '', 'extra' => 0, 'selected' => 0 ), array( 'variant' => 'Р2', 'about' => '', 'extra' => 1500, 'selected' => 0 ) ), 'geo_default' => 'off', 'geo_on_price' => 2000, 'ai' => array( array( 'system' => 'S1', 'extra' => 500 ), array( 'system' => 'S2', 'extra' => 700 ) ) ) );` );
+		const custom = wp( 'eval', `echo Trust\\Blocks::serialize( 'calculator', array( 'title' => 'Калькулятор теста', 'base_price' => 10000, 'min_price' => 15000, 'round_step' => 500, 'query_price' => 250, 'other_coef' => 1.6, 'result_template' => 'Итого {price} $ / в месяц', 'contact_form' => 1, 'regions' => array( array( 'region' => 'Альфа', 'coef' => 1.2, 'selected' => 1 ), array( 'region' => 'Бета', 'coef' => 2, 'selected' => 0 ) ), 'content' => array( array( 'variant' => 'К1', 'about' => '', 'extra' => 0, 'selected' => 0 ), array( 'variant' => 'К2', 'about' => 'Второй', 'extra' => 3000, 'selected' => 1 ) ), 'external' => array( array( 'variant' => 'В1', 'about' => '', 'extra' => 2000, 'selected' => 0 ) ), 'reputation' => array( array( 'variant' => 'Р1', 'about' => '', 'extra' => 0, 'selected' => 0 ), array( 'variant' => 'Р2', 'about' => '', 'extra' => 1500, 'selected' => 0 ) ), 'geo_default' => 'off', 'geo_on_price' => 2000, 'ai' => array( array( 'system' => 'S1', 'extra' => 500 ), array( 'system' => 'S2', 'extra' => 700 ) ) ) );` );
 		const pageId = wp( 'post', 'create', '--post_type=page', `--post_title=${ MARK }`, '--post_status=publish', `--post_content=${ custom }`, '--porcelain' );
 		created.push( pageId );
 		wp( 'post', 'meta', 'update', pageId, '_wp_page_template', 'templates/service.php' );
@@ -228,7 +228,7 @@ async function compare( page, o ) {
 			}
 		};
 		const p1 = await run();
-		check( 'Формула: база 10 000 + К2 3 000 + В1 2 000 (выбран первый) + Р1 0, GEO выкл. = 15 000 × 1,2 = 18 000; свой текст цены', 'Итого 18 000 руб. / в месяц' === p1, p1 );
+		check( 'Формула: база 10 000 + К2 3 000 + В1 2 000 (выбран первый) + Р1 0, GEO выкл. = 15 000 × 1,2 = 18 000; свой текст цены', 'Итого 18 000 $ / в месяц' === p1, p1 );
 		await setChip( 'Бета', true );
 		await tab( 1 ).click();
 		await calc.locator( 'textarea[name="step_queries"]' ).fill( 'запрос а\nзапрос б\n\nзапрос в' );
@@ -236,12 +236,12 @@ async function compare( page, o ) {
 		await calc.locator( 'label', { hasText: 'Адаптируем под AI-системы' } ).last().click();
 		await calc.locator( '.b-calc__check', { hasText: 'S2' } ).click();
 		const p2 = await run();
-		check( 'Формула: + 3 запроса × 250 + GEO 2 000 + S1 500 (S2 снята) = 18 250; регионы Альфа 1,2 и Бета 2 — × 2 = 36 500', 'Итого 36 500 руб. / в месяц' === p2, p2 );
+		check( 'Формула: + 3 запроса × 250 + GEO 2 000 + S1 500 (S2 снята) = 18 250; регионы Альфа 1,2 и Бета 2 — × 2 = 36 500', 'Итого 36 500 $ / в месяц' === p2, p2 );
 		await setChip( 'Альфа', false );
 		await setChip( 'Бета', false );
 		await calc.locator( 'input[name="step_region_other"]' ).fill( 'Тверь' );
 		const p3 = await run();
-		check( 'Формула: только свой регион — коэффициент «другого региона» 1,6: 18 250 × 1,6 = 29 200 → вверх до 500 = 29 500', 'Итого 29 500 руб. / в месяц' === p3, p3 );
+		check( 'Формула: только свой регион — коэффициент «другого региона» 1,6: 18 250 × 1,6 = 29 200 → вверх до 500 = 29 500', 'Итого 29 500 $ / в месяц' === p3, p3 );
 		await tab( 0 ).click();
 		await calc.locator( 'input[name="step_region_other"]' ).fill( '' );
 		await tab( 1 ).click();
@@ -251,7 +251,7 @@ async function compare( page, o ) {
 		await tab( 5 ).click();
 		await calc.locator( 'label', { hasText: 'Не адаптируем под AI-системы' } ).click();
 		const p4 = await run();
-		check( 'Формула: регион не выбран — коэффициент 1; 12 000 меньше минимальной цены — 15 000', 'Итого 15 000 руб. / в месяц' === p4, p4 );
+		check( 'Формула: регион не выбран — коэффициент 1; 12 000 меньше минимальной цены — 15 000', 'Итого 15 000 $ / в месяц' === p4, p4 );
 
 		// ===== Форма контактов и заявка =====
 		await tab( 0 ).click();
@@ -265,7 +265,7 @@ async function compare( page, o ) {
 		await calc.locator( '.b-calc__pill', { hasText: 'До 1 года' } ).click();
 		await calc.locator( '.b-calc__pill', { hasText: 'Нет' } ).click();
 		const p5 = await run();
-		check( 'Формула: Альфа 1,2 и свой регион 1,6 — наибольший: 12 000 × 1,6 = 19 200 → 19 500', 'Итого 19 500 руб. / в месяц' === p5, p5 );
+		check( 'Формула: Альфа 1,2 и свой регион 1,6 — наибольший: 12 000 × 1,6 = 19 200 → 19 500', 'Итого 19 500 $ / в месяц' === p5, p5 );
 		const form = calc.locator( 'form[data-trust-form="calculator"]' );
 		check( 'Форма контактов на экране результата: подпись, имя, телефон, галочка согласия',
 			await form.isVisible() && 2 === await form.locator( '.field__input' ).count() && 1 === await form.locator( 'input[name=consent][required]' ).count() );
@@ -280,7 +280,7 @@ async function compare( page, o ) {
 		const leads = leadsBy( 'Тест Калькулятор' );
 		const f = leads[ 0 ] ? Object.fromEntries( Object.entries( leads[ 0 ].fields ).map( ( [ k, v ] ) => [ k, plain( v ) ] ) ) : {};
 		check( 'Заявка «Калькулятор»: цена, регионы, запросы, варианты, GEO и ответы шага «О сайте»',
-			1 === leads.length && 'calculator' === leads[ 0 ].form && 'Итого 19 500 руб. / в месяц' === f[ 'Предварительная стоимость' ] && 'Альфа, Тверь' === f[ 'Регион' ] &&
+			1 === leads.length && 'calculator' === leads[ 0 ].form && 'Итого 19 500 $ / в месяц' === f[ 'Предварительная стоимость' ] && 'Альфа, Тверь' === f[ 'Регион' ] &&
 			'К1' === f[ 'Контент' ] && 'В1' === f[ 'Внешняя оптимизация' ] && 'Р1' === f[ 'Репутация' ] && 'Не адаптируем под AI-системы' === f.GEO &&
 			'https://shop.example.ru' === f[ 'Адрес сайта' ] && 'Интернет-магазин' === f[ 'Тематика сайта' ] && '40' === f[ 'Количество продвигаемых страниц' ] &&
 			'100 заявок' === f[ 'Цель по трафику или заказам' ] && 'До 1 года' === f[ 'Возраст сайта' ] && 'Нет' === f[ 'Есть ли трафик или заказы' ] && f[ 'Телефон' ], JSON.stringify( leads ) );
@@ -339,11 +339,11 @@ async function compare( page, o ) {
 		}
 		await compare( page, {
 			name: 'calc-result', label: 'результат', width: 1280,
-			// Цена в теме посчитана, в макете — заглушка «от XX XXX ₽».
+			// Цена в теме посчитана, в макете — заглушка «от XX XXX ₽» (в сверке ₽ → $).
 			before: async ( p ) => {
 				await p.locator( '.b-calc [role=tab]' ).nth( 6 ).click();
 				await p.locator( '.b-calc [data-calc-go]' ).click();
-				await p.evaluate( () => ( document.querySelector( '.b-calc [data-calc-price]' ).textContent = 'от XX XXX ₽' ) );
+				await p.evaluate( () => ( document.querySelector( '.b-calc [data-calc-price]' ).textContent = 'от XX XXX $' ) );
 			},
 			mockBefore: async ( p ) => {
 				await p.locator( '[role=tab]' ).nth( 6 ).click();

@@ -149,7 +149,7 @@ return array(
 		'fields'  => array(
 			'trust_client'           => '[Название проекта]',
 			'trust_niche'            => 'Интернет-магазин мебели',
-			'trust_results'          => $trust_results( '[N]', 'заказов в первый месяц', '[N] ₽', 'стоимость заказа' ),
+			'trust_results'          => $trust_results( '[N]', 'заказов в первый месяц', '[N] $', 'стоимость заказа' ),
 			'trust_positions'        => $trust_positions(
 				array(
 					array( 'купить диван-кровать', 2, 3 ),
@@ -202,7 +202,7 @@ return array(
 		'fields'  => array(
 			'trust_client'  => '[Название проекта]',
 			'trust_niche'   => 'Онлайн-школа английского',
-			'trust_results' => $trust_results( '[N]%', 'конверсия в заявку', '[N] ₽', 'цена заявки' ),
+			'trust_results' => $trust_results( '[N]%', 'конверсия в заявку', '[N] $', 'цена заявки' ),
 		),
 	),
 	array(

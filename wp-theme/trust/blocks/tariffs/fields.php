@@ -34,7 +34,7 @@ return array_merge(
 			'max'          => 4,
 			'button_label' => __( 'Добавить тариф', 'trust' ),
 			'collapsed'    => 'field_trust_block_tariffs_tariffs_name',
-			'instructions' => __( 'От 1 до 4 тарифов. Цены — текстом, как показывать («от 25 000 ₽»).', 'trust' ),
+			'instructions' => __( 'От 1 до 4 тарифов. Цены — текстом, как показывать («от 300 $»); все цены сайта — в долларах.', 'trust' ),
 			'sub_fields'   => array(
 				array(
 					'name'      => 'name',
@@ -88,7 +88,7 @@ return array_merge(
 				),
 				array(
 					'name'         => 'price_value',
-					'label'        => __( 'Цена числом, ₽ (для поисковиков)', 'trust' ),
+					'label'        => __( 'Цена числом, $ (для поисковиков)', 'trust' ),
 					'type'         => 'number',
 					'min'          => 0,
 					'instructions' => __( 'Необязательно. Попадает в микроразметку услуги (Offer); пусто — тариф в разметку не попадает.', 'trust' ),

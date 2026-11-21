@@ -48,7 +48,7 @@ $trust_service_hero = static fn( string $lead = '[Вводный текст: к�
 $trust_lines = static fn( string ...$lines ): array => array_map( static fn( $line ) => array( 'text' => $line ), $lines );
 
 /**
- * Тариф из макета seo-bloki/01-tarify.html: цены — заглушки «XX XXX ₽», состав — восемь работ
+ * Тариф из макета seo-bloki/01-tarify.html: цены — заглушки «XX XXX $» (в макете ₽; все цены сайта — в долларах), состав — восемь работ
  * (1 — входит, 0 — нет), кнопка открывает окно «Заказать обратный звонок».
  *
  * @param string $name        Название.
@@ -78,9 +78,9 @@ $trust_tariff = static function ( string $name, string $who, array $included, bo
 		'name'        => $name,
 		'recommended' => (int) $recommended,
 		'who'         => $who,
-		'old_price'   => 'XX XXX ₽',
+		'old_price'   => 'XX XXX $',
 		'discount'    => '−XX%',
-		'price'       => 'XX XXX ₽',
+		'price'       => 'XX XXX $',
 		'period'      => '/ месяц',
 		'items'       => $items,
 		'button'      => array(
@@ -436,7 +436,7 @@ return array(
 							'icon'        => 'robot',
 							'title'       => 'Проверка robots.txt',
 							'description' => 'Файл robots.txt подсказывает поисковым роботам, какие разделы сайта сканировать, а какие нет. Одна ошибка в нём может закрыть от индексации весь каталог или, наоборот, открыть служебные страницы.',
-							'price'       => 'от X XXX ₽',
+							'price'       => 'от X XXX $',
 							'link'        => array(
 								'title'  => '',
 								'url'    => '#robots',
@@ -453,7 +453,7 @@ return array(
 							'icon'        => 'sitemap',
 							'title'       => 'Анализ карты сайта',
 							'description' => 'Карта сайта sitemap.xml помогает поисковым системам быстрее находить новые и обновлённые страницы. Если в ней остались устаревшие или закрытые адреса, робот тратит время впустую.',
-							'price'       => 'от X XXX ₽',
+							'price'       => 'от X XXX $',
 							'link'        => array(
 								'title'  => '',
 								'url'    => '#sitemap',
@@ -470,7 +470,7 @@ return array(
 							'icon'        => 'server',
 							'title'       => 'Коды ответа сервера',
 							'description' => 'Каждая страница сообщает роботу код ответа: 200 — всё в порядке, 301 — страница переехала, 404 — не найдена. Неверные коды мешают индексации и расходуют время, которое робот тратит на обход сайта.',
-							'price'       => 'от X XXX ₽',
+							'price'       => 'от X XXX $',
 							'link'        => array(
 								'title'  => '',
 								'url'    => '#server-codes',
@@ -487,7 +487,7 @@ return array(
 							'icon'        => 'copy',
 							'title'       => 'Поиск дублей страниц',
 							'description' => 'Дубли — это одинаковые или почти одинаковые страницы по разным адресам. Поисковая система сама выбирает, какую из них показывать, и нередко выбирает не ту.',
-							'price'       => 'от X XXX ₽',
+							'price'       => 'от X XXX $',
 							'link'        => array(
 								'title'  => '',
 								'url'    => '#duplicates',
@@ -504,7 +504,7 @@ return array(
 							'icon'        => 'bolt',
 							'title'       => 'Скорость загрузки',
 							'description' => 'Скорость влияет и на позиции в поиске, и на поведение посетителей. Измеряем показатели Core Web Vitals и находим, что именно замедляет страницы.',
-							'price'       => 'от X XXX ₽',
+							'price'       => 'от X XXX $',
 							'link'        => array(
 								'title'  => '',
 								'url'    => '#speed',
@@ -521,7 +521,7 @@ return array(
 							'icon'        => 'mobile',
 							'title'       => 'Мобильная версия',
 							'description' => 'Поисковые системы оценивают сайт в первую очередь по мобильной версии. Проверяем, удобно ли пользоваться сайтом со смартфона и видит ли робот весь контент.',
-							'price'       => 'от X XXX ₽',
+							'price'       => 'от X XXX $',
 							'link'        => array(
 								'title'  => '',
 								'url'    => '#mobile',
@@ -538,7 +538,7 @@ return array(
 							'icon'        => 'database',
 							'title'       => 'Анализ индексации',
 							'description' => 'Сравниваем, сколько страниц есть на сайте и сколько из них знают Яндекс и Google. Расхождение в любую сторону указывает на проблему, которую нужно найти.',
-							'price'       => 'от X XXX ₽',
+							'price'       => 'от X XXX $',
 							'link'        => array(
 								'title'  => '',
 								'url'    => '#indexing',
@@ -555,7 +555,7 @@ return array(
 							'icon'        => 'code',
 							'title'       => 'Микроразметка',
 							'description' => 'Микроразметка помогает поисковым системам понять содержимое страницы и показать в выдаче расширенный сниппет: цену, рейтинг, хлебные крошки.',
-							'price'       => 'от X XXX ₽',
+							'price'       => 'от X XXX $',
 							'link'        => array(
 								'title'  => '',
 								'url'    => '#schema',

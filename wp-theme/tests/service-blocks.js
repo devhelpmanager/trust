@@ -152,8 +152,8 @@ function stagesPhp( n, extra = '' ) {
 			checks: [ ...el.querySelectorAll( '.b-includes__checks li' ) ].map( ( li ) => li.textContent.trim() ),
 		} ) );
 		check( 'Состав: нажатие раскрывает работу (aria-expanded, подробности видны)', first.expanded === 'true' && first.visible, JSON.stringify( first ).slice( 0, 80 ) );
-		check( 'Состав: описание, цена «от X XXX ₽», ссылка «Подробнее об услуге»',
-			first.desc.startsWith( 'Файл robots.txt подсказывает' ) && first.price === 'от X XXX ₽' && first.more === 'Подробнее об услуге' && first.href === '#robots', JSON.stringify( first ) );
+		check( 'Состав: описание, цена «от X XXX $», ссылка «Подробнее об услуге»',
+			first.desc.startsWith( 'Файл robots.txt подсказывает' ) && first.price === 'от X XXX $' && first.more === 'Подробнее об услуге' && first.href === '#robots', JSON.stringify( first ) );
 		check( 'Состав: «Что проверяем» — 4 строки', first.label === 'Что проверяем' && first.checks.length === 4 && first.checks[ 0 ] === 'Синтаксис и корректность директив', first.checks.join( ' | ' ) );
 		await page.waitForTimeout( 300 );
 		const arrow = await work( 0 ).locator( '.b-includes__arrow' ).evaluate( ( el ) => getComputedStyle( el ).backgroundColor + ' ' + getComputedStyle( el.querySelector( 'svg' ) ).transform );
@@ -357,7 +357,7 @@ function stagesPhp( n, extra = '' ) {
 			'eyebrow' => '', 'lead' => '', 'checks_label' => '', 'more_label' => 'Узнать больше', 'head_art' => 0,
 			'items' => array(
 				array( 'icon' => 'bolt', 'title' => 'Только описание', 'description' => 'Без цены, ссылки и списка.' ),
-				array( 'icon' => 'нет-такой', 'title' => 'Со ссылкой', 'description' => 'Ссылка со своим текстом.', 'price' => 'от 5 000 ₽',
+				array( 'icon' => 'нет-такой', 'title' => 'Со ссылкой', 'description' => 'Ссылка со своим текстом.', 'price' => 'от 50 $',
 					'link' => array( 'title' => '', 'url' => '/kontakty/', 'target' => '_blank' ), 'checks' => array( array( 'text' => 'Строка' ) ) ),
 				array( 'title' => 'Без описания — не выводится', 'description' => '' ),
 			),
