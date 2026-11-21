@@ -48,7 +48,7 @@ const DOCS = [ 'Публичная оферта', 'Политика конфид
 		check( 'Ссылка «Портфолио» ведёт на страницу', ( await cols.nth( 1 ).locator( 'a', { hasText: 'Портфолио' } ).getAttribute( 'href' ) ) === `${ URL }/portfolio/` );
 
 		check( 'Заголовок «Контакты» — ссылка на контакты', ( await footer.locator( '.site-footer__contacts a.site-footer__heading' ).getAttribute( 'href' ) ) === `${ URL }/kontakty/` );
-		check( 'Телефон', ( await footer.locator( '.site-footer__phone' ).getAttribute( 'href' ) ) === 'tel:+70000000000' );
+		check( 'Телефон', ( await footer.locator( '.site-footer__phone' ).getAttribute( 'href' ) ) === 'tel:+10000000000' );
 		check( 'Email', ( await footer.locator( '.site-footer__email' ).getAttribute( 'href' ) ) === 'mailto:hello@example.ru' );
 		const address = ( await footer.locator( '.site-footer__address' ).innerText() ).split( '\n' ).map( ( s ) => s.trim() );
 		check( 'Адрес и часы — двумя строками', address[ 0 ] === '[Город], [улица, дом], [этаж, офис]' && address[ 1 ] === '[Пн–Пт, 10:00–19:00]', address.join( ' / ' ) );

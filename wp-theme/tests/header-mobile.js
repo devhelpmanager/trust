@@ -68,7 +68,7 @@ async function compareState( page, name, themeAction, mockAction ) {
 
 	const items = ( await menu.locator( '.mobile-nav__list > .mobile-nav__item > .mobile-nav__link' ).allTextContents() ).map( ( t ) => t.trim() );
 	check( 'Пункты меню по порядку', JSON.stringify( items ) === JSON.stringify( MENU ), items.join( ' | ' ) );
-	check( 'Телефон в меню', ( await menu.locator( '.mobile-nav__phone' ).getAttribute( 'href' ) ) === 'tel:+70000000000' );
+	check( 'Телефон в меню', ( await menu.locator( '.mobile-nav__phone' ).getAttribute( 'href' ) ) === 'tel:+10000000000' );
 	check( 'Email в меню', ( await menu.locator( '.mobile-nav__email' ).getAttribute( 'href' ) ) === 'mailto:hello@example.ru' );
 	check( 'Кнопка звонка в меню', ( await menu.locator( '.mobile-nav__callback' ).textContent() ).trim() === 'Заказать обратный звонок' );
 

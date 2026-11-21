@@ -37,7 +37,7 @@ const MENU = [ 'Дизайн', 'Создание сайтов', 'Поддерж�
 	check( 'Логотип ведёт на главную', ( await page.getAttribute( '.site-header .brand', 'href' ) ) === `${ URL }/` );
 	check( 'Название бренда', ( await page.textContent( '.brand__name' ) ).trim() === '[Бренд]' );
 	check( 'Подпись под названием', ( await page.textContent( '.brand__tagline' ) ).trim() === 'SEO · сайты · реклама' );
-	check( 'Телефон: ссылка tel:', ( await page.getAttribute( '.header-phone', 'href' ) ) === 'tel:+70000000000' );
+	check( 'Телефон: ссылка tel:', ( await page.getAttribute( '.header-phone', 'href' ) ) === 'tel:+10000000000' );
 	check( 'Телефон: часы работы', ( await page.textContent( '.header-phone__hours' ) ).trim() === '[Пн–Пт, 10:00–19:00]' );
 	check( 'Email: ссылка mailto:', ( await page.getAttribute( '.header-email', 'href' ) ) === 'mailto:hello@example.ru' );
 	check( 'Кнопка «Заказать обратный звонок»', ( await page.textContent( '.header-callback' ) ).trim() === 'Заказать обратный звонок' );

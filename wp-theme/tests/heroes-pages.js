@@ -86,10 +86,10 @@ async function hideHeader( page ) {
 		} ) );
 		check( 'Контакты: крошки, плашка, один H1', contacts.crumbs === 'Главная / О нас / Контакты' && contacts.badge === 'О нас' && contacts.h1 === 'Контакты' && ( await page.locator( 'h1' ).count() ) === 1 && ( await page.locator( '.page-default' ).count() ) === 0 );
 		check( 'Контакты: 4 карточки из настроек — телефон с часами, email, Telegram и WhatsApp в новой вкладке', JSON.stringify( contacts.cards ) === JSON.stringify( [
-			{ label: 'Телефон', value: '+7 (000) 000-00-00', note: '[Пн–Пт, 10:00–19:00]', href: 'tel:+70000000000', blank: false },
+			{ label: 'Телефон', value: '+1 (000) 000-00-00', note: '[Пн–Пт, 10:00–19:00]', href: 'tel:+10000000000', blank: false },
 			{ label: 'Email', value: 'hello@example.ru', note: 'Для вопросов и заявок', href: 'mailto:hello@example.ru', blank: false },
 			{ label: 'Telegram', value: '@[brand]', note: 'Написать в Telegram', href: 'https://t.me/%5Bbrand%5D', blank: true },
-			{ label: 'WhatsApp', value: '+7 (000) 000-00-00', note: 'Написать в WhatsApp', href: 'https://wa.me/70000000000', blank: true },
+			{ label: 'WhatsApp', value: '+1 (000) 000-00-00', note: 'Написать в WhatsApp', href: 'https://wa.me/10000000000', blank: true },
 		] ), JSON.stringify( contacts.cards ) );
 		const own = testPage( 'контакты', 'hero-contacts', { badge: '', lead: '', channels: [ { channel: 'whatsapp', label: 'Ватсап', note: 'Ответим за 5 минут' }, { channel: 'telegram', label: '', note: '' }, { channel: 'email', label: '', note: '' } ] }, 'templates/contacts.php' );
 		setSettings( { telegram: '' } );

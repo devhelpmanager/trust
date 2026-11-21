@@ -215,6 +215,8 @@ function comparePng( a, b, diffPath ) {
 const MOCKUP_TEXTS = [
 	[ 'Сопровождение сайтов', 'Поддержка сайтов' ],
 	[ '₽', '$', [ 'seo-bloki/', 'seo-stranitsa/', 'portfolio-blog-404/', 'o-nas/' ] ],
+	// Демо-телефон и WhatsApp — с кодом +1 (правка заказчика).
+	[ '+7 (000) ', '+1 (000) ' ],
 ];
 const HERO_SECTION_CSS = `
 	.dc-hero-box dl > div { justify-content: flex-end !important; }

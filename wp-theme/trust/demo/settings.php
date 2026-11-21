@@ -20,7 +20,7 @@ return array(
 	// Контакты.
 	'phones'               => array(
 		array(
-			'number'  => '+7 (000) 000-00-00',
+			'number'  => '+1 (000) 000-00-00',
 			'label'   => '',
 			'is_main' => 1,
 		),
@@ -32,7 +32,7 @@ return array(
 		),
 	),
 	'telegram'             => '@[brand]',
-	'whatsapp'             => '+7 (000) 000-00-00',
+	'whatsapp'             => '+1 (000) 000-00-00',
 	'hours'                => '[Пн–Пт, 10:00–19:00]',
 	'address'              => array(
 		'city'        => '[Город]',
