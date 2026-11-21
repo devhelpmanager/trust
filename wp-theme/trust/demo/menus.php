@@ -3,7 +3,8 @@
  * Демо-контент: меню (ТЗ, Приложение Б).
  *
  * Ключ — область меню. Пункт: page — адрес демо-страницы из demo/pages.php или url — своя ссылка;
- * title — название пункта; description — вторая строка в выпадающем списке;
+ * title — название пункта; description — вторая строка в выпадающем списке (у пункта с подменю —
+ * подпись ссылки на страницу раздела первым пунктом мобильного меню);
  * classes — CSS-классы пункта (separator-before — разделитель над пунктом).
  *
  * @package Trust
@@ -28,9 +29,10 @@ return array(
 				'title' => 'Поддержка сайтов',
 			),
 			array(
-				'page'     => 'seo',
-				'title'    => 'SEO',
-				'children' => array(
+				'page'        => 'seo',
+				'title'       => 'SEO',
+				'description' => 'Комплексное SEO продвижение',
+				'children'    => array(
 					array(
 						'page'        => 'seo/audit',
 						'title'       => 'Аудит',
@@ -55,9 +57,10 @@ return array(
 				),
 			),
 			array(
-				'page'     => 'geo',
-				'title'    => 'GEO',
-				'children' => array(
+				'page'        => 'geo',
+				'title'       => 'GEO',
+				'description' => 'Комплексное GEO продвижение',
+				'children'    => array(
 					array(
 						'page'        => 'geo/prodvizhenie-v-ii',
 						'title'       => 'Продвижение в ИИ',
@@ -71,9 +74,10 @@ return array(
 				),
 			),
 			array(
-				'page'     => 'kontekstnaya-reklama',
-				'title'    => 'Контекстная реклама',
-				'children' => array(
+				'page'        => 'kontekstnaya-reklama',
+				'title'       => 'Контекстная реклама',
+				'description' => 'Контекстная реклама сайта',
+				'children'    => array(
 					array(
 						'page'        => 'kontekstnaya-reklama/yandeks-direkt',
 						'title'       => 'Яндекс Директ',

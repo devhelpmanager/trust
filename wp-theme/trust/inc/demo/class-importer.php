@@ -580,13 +580,17 @@ final class Importer {
 		$record    = (array) get_option( self::MENUS_RECORD, array() );
 		$locations = (array) get_theme_mod( 'nav_menu_locations', array() );
 		$result    = array(
-			'created' => array(),
-			'skipped' => array(),
+			'created'      => array(),
+			'skipped'      => array(),
+			'descriptions' => 0,
 		);
 
 		foreach ( $menus as $location => $menu ) {
 			$is_imported = ! empty( $record[ $location ] ) && is_nav_menu( $record[ $location ] );
 			$is_occupied = ! empty( $locations[ $location ] ) && is_nav_menu( $locations[ $location ] );
+			if ( $is_imported ) {
+				$result['descriptions'] += self::fill_menu_descriptions( (int) $record[ $location ], $menu['items'] );
+			}
 			if ( $is_imported || $is_occupied ) {
 				$result['skipped'][] = $location;
 				continue;
@@ -609,6 +613,38 @@ final class Importer {
 		set_theme_mod( 'nav_menu_locations', $locations );
 		update_option( self::MENUS_RECORD, $record, false );
 		return $result;
+	}
+
+	/**
+	 * Уже созданное демо-меню получает новые описания пунктов верхнего уровня из demo/menus.php
+	 * (подпись ссылки на страницу раздела в мобильном меню): только у пунктов, ведущих на ту же
+	 * демо-страницу, и только если описание пустое — своё описание владельца не меняется.
+	 *
+	 * @param int   $menu_id Демо-меню.
+	 * @param array $items   Пункты из demo/menus.php.
+	 * @return int Сколько описаний добавлено.
+	 */
+	private static function fill_menu_descriptions( int $menu_id, array $items ): int {
+		$filled = 0;
+		$menu   = (array) wp_get_nav_menu_items( $menu_id, array( 'update_post_term_cache' => false ) );
+		foreach ( $items as $item ) {
+			$page = empty( $item['page'] ) || empty( $item['description'] ) ? null : get_page_by_path( $item['page'] );
+			if ( ! $page ) {
+				continue;
+			}
+			foreach ( $menu as $menu_item ) {
+				if ( 0 === (int) $menu_item->menu_item_parent && 'page' === $menu_item->object && (int) $menu_item->object_id === $page->ID && '' === trim( (string) $menu_item->description ) ) {
+					wp_update_post(
+						array(
+							'ID'           => $menu_item->ID,
+							'post_content' => $item['description'],
+						)
+					);
+					++$filled;
+				}
+			}
+		}
+		return $filled;
 	}
 
 	/**

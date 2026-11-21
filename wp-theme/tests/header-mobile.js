@@ -78,7 +78,10 @@ async function compareState( page, name, themeAction, mockAction ) {
 	await section( 'SEO' ).locator( '.mobile-nav__toggle' ).click();
 	check( 'SEO раскрывается: 4 пункта', ( await section( 'SEO' ).locator( '.mobile-nav__sub-link:visible:not(.mobile-nav__sub-link--section)' ).count() ) === 4 );
 	const sectionLink = await section( 'SEO' ).locator( '.mobile-nav__sub-link:visible' ).first().evaluate( ( a ) => [ a.textContent.trim(), new URL( a.href ).pathname, a.classList.contains( 'mobile-nav__sub-link--section' ), !! a.querySelector( 'svg' ) ] );
-	check( 'SEO: первым — «Все услуги раздела →» на страницу /seo/ (правка заказчика)', JSON.stringify( [ 'Все услуги раздела', '/seo/', true, true ] ) === JSON.stringify( sectionLink ), JSON.stringify( sectionLink ) );
+	check( 'SEO: первым — «Комплексное SEO продвижение →» на страницу /seo/ (правка заказчика)', JSON.stringify( [ 'Комплексное SEO продвижение', '/seo/', true, true ] ) === JSON.stringify( sectionLink ), JSON.stringify( sectionLink ) );
+	const sectionLabels = await menu.locator( '.mobile-nav__sub-link--section' ).evaluateAll( ( list ) => list.map( ( a ) => a.textContent.trim() + ' ' + new URL( a.href ).pathname ) );
+	check( 'Подписи ссылок на разделы — из описания пункта меню: SEO, GEO, контекстная реклама',
+		JSON.stringify( sectionLabels ) === JSON.stringify( [ 'Комплексное SEO продвижение /seo/', 'Комплексное GEO продвижение /geo/', 'Контекстная реклама сайта /kontekstnaya-reklama/' ] ), JSON.stringify( sectionLabels ) );
 	check( '«О нас» без своей страницы (#): ссылки на раздел нет', 0 === await section( 'О нас' ).locator( '.mobile-nav__sub-link--section' ).count() );
 	check( 'SEO: aria-expanded="true"', ( await section( 'SEO' ).locator( '.mobile-nav__toggle' ).getAttribute( 'aria-expanded' ) ) === 'true' );
 	await section( 'О нас' ).locator( '.mobile-nav__toggle' ).click();

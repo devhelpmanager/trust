@@ -88,7 +88,7 @@ final class Demo_Command {
 			Importer::remove_menus();
 		}
 		$menus = Importer::import_menus();
-		WP_CLI::log( sprintf( 'Меню: создано %d.', count( $menus['created'] ) ) );
+		WP_CLI::log( sprintf( 'Меню: создано %d, добавлено описаний пунктов %d.', count( $menus['created'] ), $menus['descriptions'] ) );
 		self::log_list( 'Пропущены (уже импортированы или в области стоит своё меню)', $menus['skipped'] );
 
 		WP_CLI::log( 'Политика конфиденциальности: ' . Importer::import_privacy_page() . '.' );
