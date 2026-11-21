@@ -7,6 +7,9 @@
  * карточки сотрудника; без email кнопки нет). «Познакомиться с командой» из макета убрана по
  * просьбе заказчика. Без фото — силуэт.
  *
+ * Правка заказчика: имя с должностью и кнопка — строкой под цитатой с небольшим отступом,
+ * подпись слева, кнопка у правого края; на узком экране кнопка под подписью, тоже справа.
+ *
  * Переменные SCF: $block (array), $is_preview (bool), $post_id (int|string).
  *
  * @package Trust
@@ -70,20 +73,22 @@ if ( '' === $trust_quote && ! $is_preview ) {
 			<?php elseif ( $is_preview ) : ?>
 				<p class="b-leader__empty"><?php esc_html_e( 'Добавьте цитату в настройках блока.', 'trust' ); ?></p>
 			<?php endif; ?>
-			<?php if ( '' !== $trust_name || '' !== $trust_role ) : ?>
-				<figcaption class="b-leader__who">
-					<?php if ( '' !== $trust_name ) : ?>
-						<span class="b-leader__name"><?php echo esc_html( $trust_name ); ?></span>
+			<?php if ( '' !== $trust_name || '' !== $trust_role || '' !== $trust_email ) : ?>
+				<figcaption class="b-leader__foot">
+					<?php if ( '' !== $trust_name || '' !== $trust_role ) : ?>
+						<span class="b-leader__who">
+							<?php if ( '' !== $trust_name ) : ?>
+								<span class="b-leader__name"><?php echo esc_html( $trust_name ); ?></span>
+							<?php endif; ?>
+							<?php if ( '' !== $trust_role ) : ?>
+								<span class="b-leader__role"><?php echo esc_html( $trust_role ); ?></span>
+							<?php endif; ?>
+						</span>
 					<?php endif; ?>
-					<?php if ( '' !== $trust_role ) : ?>
-						<span class="b-leader__role"><?php echo esc_html( $trust_role ); ?></span>
+					<?php if ( '' !== $trust_email ) : ?>
+						<a class="b-leader__btn" href="<?php echo esc_url( 'mailto:' . $trust_email ); ?>"><?php echo esc_html( Blocks::text( 'write_label', __( 'Написать руководителю', 'trust' ) ) ); ?></a>
 					<?php endif; ?>
 				</figcaption>
-			<?php endif; ?>
-			<?php if ( '' !== $trust_email ) : ?>
-				<div class="b-leader__buttons">
-					<a class="b-leader__btn" href="<?php echo esc_url( 'mailto:' . $trust_email ); ?>"><?php echo esc_html( Blocks::text( 'write_label', __( 'Написать руководителю', 'trust' ) ) ); ?></a>
-				</div>
 			<?php endif; ?>
 		</figure>
 	</div>

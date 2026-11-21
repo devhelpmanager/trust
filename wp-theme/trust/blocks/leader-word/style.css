@@ -1,5 +1,7 @@
 /*
  * Блок «Слово руководителя» (o-nas/o-kompanii.html): фото слева, цитата справа, лавандовый фон.
+ * Правка заказчика: под цитатой (чуть ниже, чем в макете) строка «имя и должность — кнопка
+ * „Написать руководителю“»; кнопка у правого края, на узком экране — под подписью, справа.
  */
 
 .b-leader {
@@ -72,10 +74,21 @@
 	margin-top: 0.6em;
 }
 
+.b-leader__foot {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px 24px;
+	margin-top: 14px;
+}
+
 .b-leader__who {
 	display: flex;
+	flex: 1 1 auto;
 	flex-direction: column;
 	gap: 4px;
+	min-width: 0;
 }
 
 .b-leader__name {
@@ -86,12 +99,6 @@
 .b-leader__role {
 	font-size: 15px;
 	color: var(--c-muted);
-}
-
-.b-leader__buttons {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10px;
 }
 
 .b-leader__btn,
@@ -110,6 +117,11 @@
 	font-weight: 600;
 	text-decoration: none;
 	transition: background 0.2s;
+}
+
+.b-leader__btn {
+	flex: none;
+	margin-left: auto;
 }
 
 .b-leader__btn:hover {

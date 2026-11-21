@@ -135,6 +135,28 @@ async function compare( page, name, width, theme, mock ) {
 			'rgb(248, 245, 255)' === l.bg && 'Слово руководителя true' === l.h2 && '[Имя Фамилия], основатель агентства' === l.photo[ 0 ] && 'lazy' === l.photo[ 1 ] && l.quote.startsWith( '[Цитата руководителя:' ), JSON.stringify( l ) );
 		check( '«Слово руководителя»: имя и должность из карточки сотрудника, одна кнопка «Написать руководителю» → mailto: (без «Познакомиться с командой» — правка заказчика)',
 			'[Имя Фамилия]' === l.name && 'Основатель и генеральный директор' === l.role && JSON.stringify( l.buttons ) === JSON.stringify( [ 'Написать руководителю mailto:ceo@example.ru' ] ), JSON.stringify( l ) );
+		// Правка заказчика: подпись и кнопка — строкой под цитатой, кнопка у правого края цитаты;
+		// на телефоне кнопка под подписью, справа. figcaption — последний в figure (валидный HTML).
+		const leaderLayout = () => page.locator( '.b-leader' ).evaluate( ( el ) => {
+			const r = ( s ) => el.querySelector( s ).getBoundingClientRect();
+			const [ quote, who, btn, fig, foot ] = [ r( 'blockquote' ), r( '.b-leader__who' ), r( '.b-leader__btn' ), r( '.b-leader__figure' ), r( '.b-leader__foot' ) ];
+			return {
+				last: el.querySelector( 'figure' ).lastElementChild.tagName,
+				right: Math.round( fig.right - btn.right ),
+				below: Math.round( foot.top - quote.bottom ),
+				sameRow: btn.top < who.bottom && btn.bottom > who.top && Math.abs( ( btn.top + btn.bottom ) / 2 - ( who.top + who.bottom ) / 2 ) < 2,
+				whoLeft: Math.round( who.left - quote.left ),
+				btnBelowWho: Math.round( btn.top - who.bottom ),
+			};
+		} );
+		const ld = await leaderLayout();
+		check( '«Слово руководителя», 1280px: имя и должность слева, кнопка у правого края цитаты, в одной строке; строка ниже цитаты на 36 px',
+			'FIGCAPTION' === ld.last && 0 === ld.right && ld.sameRow && 0 === ld.whoLeft && 36 === ld.below, JSON.stringify( ld ) );
+		await page.setViewportSize( { width: 390, height: 900 } );
+		const lm = await leaderLayout();
+		check( '«Слово руководителя», 390px: кнопка под именем и должностью, у правого края блока',
+			0 === lm.right && 16 === lm.btnBelowWho && 0 === lm.whoLeft && 36 === lm.below, JSON.stringify( lm ) );
+		await page.setViewportSize( { width: 1280, height: 900 } );
 
 		const c = await page.locator( '.b-certs' ).evaluate( ( el ) => ( {
 			lead: el.querySelector( '.section-lead' ).textContent,
