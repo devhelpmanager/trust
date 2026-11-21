@@ -1,7 +1,8 @@
 <?php
 /**
  * Поля блока «Слово руководителя» (ТЗ, п. 8.3; макет o-nas/o-kompanii.html, секция ceo).
- * Кнопки «Написать руководителю» и «Познакомиться с командой» — по макету (в ТЗ их нет).
+ * Кнопка «Написать руководителю» — по макету (в ТЗ её нет); «Познакомиться с командой» из макета
+ * убрана по просьбе заказчика.
  *
  * @package Trust
  */
@@ -65,30 +66,20 @@ return array(
 		'wrapper'      => array( 'width' => 50 ),
 	),
 	array(
-		'name'          => 'buttons',
-		'label'         => __( 'Кнопки', 'trust' ),
-		'type'          => 'checkbox',
-		'choices'       => array(
-			'write' => __( '«Написать руководителю» (email из карточки сотрудника)', 'trust' ),
-			'team'  => __( '«Познакомиться с командой» (страница «Команда»)', 'trust' ),
-		),
-		'default_value' => array( 'write', 'team' ),
-		'layout'        => 'vertical',
+		'name'          => 'write',
+		'label'         => __( 'Кнопка «Написать руководителю»', 'trust' ),
+		'type'          => 'true_false',
+		'ui'            => 1,
+		'default_value' => 1,
+		'instructions'  => __( 'Письмо на email из карточки сотрудника; без email кнопки нет.', 'trust' ),
+		'wrapper'       => array( 'width' => 50 ),
 	),
 	array(
 		'name'        => 'write_label',
-		'label'       => __( 'Текст кнопки «Написать»', 'trust' ),
+		'label'       => __( 'Текст кнопки', 'trust' ),
 		'type'        => 'text',
 		'maxlength'   => 40,
 		'placeholder' => __( 'Написать руководителю', 'trust' ),
-		'wrapper'     => array( 'width' => 50 ),
-	),
-	array(
-		'name'        => 'team_label',
-		'label'       => __( 'Текст кнопки «Команда»', 'trust' ),
-		'type'        => 'text',
-		'maxlength'   => 40,
-		'placeholder' => __( 'Познакомиться с командой', 'trust' ),
 		'wrapper'     => array( 'width' => 50 ),
 	),
 );

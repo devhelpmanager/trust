@@ -3,9 +3,9 @@
  * Блок «Слово руководителя» (макет o-nas/o-kompanii.html, секция «Слово руководителя»).
  *
  * Лавандовая секция: слева фото 4:5 со скруглением, справа надпись (H2 в виде надзаголовка),
- * кавычки, цитата крупным шрифтом, имя и должность, кнопки «Написать руководителю» (mailto: из
- * карточки сотрудника) и «Познакомиться с командой» (страница типа «Команда»). Без email или
- * страницы кнопки нет. Без фото — силуэт.
+ * кавычки, цитата крупным шрифтом, имя и должность, кнопка «Написать руководителю» (mailto: из
+ * карточки сотрудника; без email кнопки нет). «Познакомиться с командой» из макета убрана по
+ * просьбе заказчика. Без фото — силуэт.
  *
  * Переменные SCF: $block (array), $is_preview (bool), $post_id (int|string).
  *
@@ -14,7 +14,6 @@
 
 use Trust\Blocks;
 use Trust\Icons;
-use Trust\Page_Types;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -38,9 +37,7 @@ $trust_photo    = Blocks::image(
 	),
 	$trust_alt
 );
-$trust_buttons  = (array) ( get_field( 'buttons' ) ?? array( 'write', 'team' ) );
-$trust_email    = $trust_member ? sanitize_email( (string) get_field( 'trust_email', $trust_member->ID ) ) : '';
-$trust_team_url = Page_Types::url( 'team' );
+$trust_email    = false !== get_field( 'write' ) && $trust_member ? sanitize_email( (string) get_field( 'trust_email', $trust_member->ID ) ) : '';
 $trust_title_id = Blocks::uid( $block, 'title' );
 $trust_anchor   = Blocks::anchor( get_field( 'anchor' ) );
 
@@ -83,33 +80,9 @@ if ( '' === $trust_quote && ! $is_preview ) {
 					<?php endif; ?>
 				</figcaption>
 			<?php endif; ?>
-			<?php
-			$trust_links = array();
-			if ( in_array( 'write', $trust_buttons, true ) && '' !== $trust_email ) {
-				$trust_links[] = array( 'mailto:' . $trust_email, Blocks::text( 'write_label', __( 'Написать руководителю', 'trust' ) ), false );
-			}
-			if ( in_array( 'team', $trust_buttons, true ) && '' !== $trust_team_url ) {
-				$trust_links[] = array( $trust_team_url, Blocks::text( 'team_label', __( 'Познакомиться с командой', 'trust' ) ), true );
-			}
-			?>
-			<?php if ( $trust_links ) : ?>
+			<?php if ( '' !== $trust_email ) : ?>
 				<div class="b-leader__buttons">
-					<?php foreach ( $trust_links as list( $trust_href, $trust_label, $trust_arrow ) ) : ?>
-						<a class="b-leader__btn" href="<?php echo esc_url( $trust_href ); ?>">
-							<?php echo esc_html( $trust_label ); ?>
-							<?php
-							if ( $trust_arrow ) {
-								Icons::render(
-									'arrow-right',
-									array(
-										'size'         => 16,
-										'stroke_width' => 2.2,
-									)
-								);
-							}
-							?>
-						</a>
-					<?php endforeach; ?>
+					<a class="b-leader__btn" href="<?php echo esc_url( 'mailto:' . $trust_email ); ?>"><?php echo esc_html( Blocks::text( 'write_label', __( 'Написать руководителю', 'trust' ) ) ); ?></a>
 				</div>
 			<?php endif; ?>
 		</figure>

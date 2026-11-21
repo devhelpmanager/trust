@@ -295,6 +295,8 @@ const MOCKUP_CSS = {
 	'o-nas/o-kompanii.html': HERO_SECTION_CSS + `
 		main section:not(.dc-hero-sec) header { gap: 16px !important; }
 		main section:not(.dc-hero-sec) header h2 { font-size: clamp(28px, 3.4vw, 44px) !important; }
+		/* «Слово руководителя»: без «Познакомиться с командой» (правка заказчика) */
+		section[aria-labelledby="ceo-title"] a[href="komanda.html"] { display: none !important; }
 		/* «Чем мы занимаемся»: значок и название в строку, текст и «Подробнее» под ними (правка заказчика) */
 		.dc-svc { display: grid !important; grid-template-columns: 48px minmax(0, 1fr); grid-template-rows: auto auto 1fr; align-items: center; column-gap: 16px; }
 		.dc-svc > h3 { margin: 0 !important; }

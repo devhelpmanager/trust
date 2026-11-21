@@ -133,8 +133,8 @@ async function compare( page, name, width, theme, mock ) {
 		} ) );
 		check( '«Слово руководителя»: лавандовый фон, H2 «Слово руководителя», фото с alt, цитата',
 			'rgb(248, 245, 255)' === l.bg && 'Слово руководителя true' === l.h2 && '[Имя Фамилия], основатель агентства' === l.photo[ 0 ] && 'lazy' === l.photo[ 1 ] && l.quote.startsWith( '[Цитата руководителя:' ), JSON.stringify( l ) );
-		check( '«Слово руководителя»: имя и должность из карточки сотрудника, «Написать руководителю» → mailto:, «Познакомиться с командой» → /komanda/',
-			'[Имя Фамилия]' === l.name && 'Основатель и генеральный директор' === l.role && JSON.stringify( l.buttons ) === JSON.stringify( [ 'Написать руководителю mailto:ceo@example.ru', 'Познакомиться с командой /komanda/' ] ), JSON.stringify( l ) );
+		check( '«Слово руководителя»: имя и должность из карточки сотрудника, одна кнопка «Написать руководителю» → mailto: (без «Познакомиться с командой» — правка заказчика)',
+			'[Имя Фамилия]' === l.name && 'Основатель и генеральный директор' === l.role && JSON.stringify( l.buttons ) === JSON.stringify( [ 'Написать руководителю mailto:ceo@example.ru' ] ), JSON.stringify( l ) );
 
 		const c = await page.locator( '.b-certs' ).evaluate( ( el ) => ( {
 			lead: el.querySelector( '.section-lead' ).textContent,
@@ -173,7 +173,7 @@ async function compare( page, name, width, theme, mock ) {
 			block( 'directions', "array( 'title' => 'Без ссылок', 'items' => array( array( 'icon' => 'bot', 'title' => 'Только текст', 'text' => 'Без страницы' ) ) )" ),
 			block( 'principles', "array( 'title' => 'Со значком', 'items' => array( array( 'icon' => 'shield', 'title' => 'Первый' ), array( 'title' => 'Второй' ) ) )" ),
 			block( 'history', "array( 'title' => 'С заголовком', 'items' => array( array( 'year' => '2020', 'title' => 'Старт', 'text' => 'Текст' ) ) )" ),
-			block( 'leader-word', "array( 'quote' => 'Без сотрудника', 'role' => 'Своя подпись', 'buttons' => array( 'write' ) )" ),
+			block( 'leader-word', "array( 'quote' => 'Без сотрудника', 'role' => 'Своя подпись' )" ),
 			block( 'certificates', `array( 'title' => 'Документы', 'items' => array( array( 'title' => 'Скан', 'image' => ${ png }, 'file' => ${ png }, 'issuer' => 'Яндекс', 'year' => '2025' ), array( 'title' => 'PDF', 'file' => ${ pdf }, 'link_label' => 'смотреть диплом' ), array( 'title' => 'Без ссылки', 'year' => '2024' ) ) )` ),
 			block( 'clients', `array( 'title' => 'Логотипы', 'button' => 0, 'logos' => array( array( 'logo' => ${ png }, 'name' => 'Клиент', 'url' => 'https://example.com/' ) ) )` ),
 			block( 'office', `array( 'title' => 'Офис', 'address' => 1, 'photos' => array( array( 'image' => ${ png }, 'caption' => 'Фото' ), array( 'caption' => 'Заглушка' ) ) )` ),
