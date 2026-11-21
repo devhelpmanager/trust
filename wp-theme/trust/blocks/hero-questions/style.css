@@ -40,7 +40,7 @@
 
 .b-hero-questions__lead {
 	grid-area: lead;
-	max-width: 520px;
+	max-width: none; /* правка заказчика: форма под текстом — текст во всю ширину карточки */
 	margin: 0;
 	font-size: 18px;
 	line-height: 1.6;
@@ -246,6 +246,10 @@
 }
 
 @media (min-width: 1000px) {
+	.b-hero-questions__lead {
+		max-width: 520px;
+	}
+
 	.b-hero-questions__in {
 		grid-template-areas: "badge badge" "title title" "lead form" "extra form";
 		grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);

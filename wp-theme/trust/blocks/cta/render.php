@@ -24,11 +24,10 @@ $trust_anchor   = Blocks::anchor( get_field( 'anchor' ) );
 $trust_title    = Block_Texts::field( 'title', 'cta_title' );
 $trust_text     = Block_Texts::field( 'text', 'cta_text' );
 $trust_title_id = Blocks::uid( $block, 'title' );
-$trust_button   = get_field( 'button' );
-$trust_label    = is_array( $trust_button ) && '' !== trim( (string) ( $trust_button['title'] ?? '' ) ) ? trim( $trust_button['title'] ) : Block_Texts::get( 'cta_button' );
-$trust_url      = is_array( $trust_button ) && ! empty( $trust_button['url'] ) ? (string) $trust_button['url'] : Block_Texts::page_url( 'cta_page', 'contacts' );
+$trust_label    = Block_Texts::field( 'button_label', 'cta_button' );
+$trust_url      = trim( (string) get_field( 'button_url' ) );
+$trust_url      = '' !== $trust_url ? $trust_url : Block_Texts::page_url( 'cta_page', 'contacts' );
 $trust_url      = '' !== $trust_url ? $trust_url : '#callback-modal';
-$trust_blank    = is_array( $trust_button ) && ! empty( $trust_button['target'] );
 $trust_contacts = false !== get_field( 'contacts' );
 $trust_phone    = $trust_contacts ? Contacts::main_phone() : null;
 $trust_telegram = $trust_contacts ? Contacts::telegram() : null;
@@ -64,7 +63,7 @@ $trust_telegram = $trust_contacts ? Contacts::telegram() : null;
 				</div>
 			</div>
 			<div class="dark-card__side">
-				<a class="dark-card__cta" href="<?php echo esc_url( $trust_url ); ?>"<?php echo $trust_blank ? ' target="_blank" rel="noopener"' : ''; ?>>
+				<a class="dark-card__cta" href="<?php echo esc_url( $trust_url ); ?>">
 					<span class="dark-card__cta-text"><?php echo esc_html( $trust_label ); ?></span>
 					<span class="dark-card__cta-arrow" aria-hidden="true">
 						<?php

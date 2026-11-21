@@ -144,7 +144,7 @@ return array(
 			'name'    => 'ask_heading',
 			'label'   => __( 'Блок «Задать вопрос SEO-специалисту»', 'trust' ),
 			'type'    => 'message',
-			'message' => __( 'Вид «Кнопка» ведёт на страницу вопросов, вид «Форма в блоке» отправляет вопрос сразу (как форма на странице «Вопросы SEO»).', 'trust' ),
+			'message' => __( 'Кнопка ведёт на страницу вопросов: задать вопрос можно только там.', 'trust' ),
 		),
 		$trust_text( 'ask_title', __( 'Заголовок', 'trust' ), array( 'maxlength' => 100 ) ),
 		$trust_text( 'ask_text', __( 'Текст', 'trust' ), $trust_area( 2, 300 ) ),
@@ -168,21 +168,7 @@ return array(
 			)
 		),
 		array_merge( $trust_page( 'ask_page', __( 'Страница кнопки', 'trust' ), __( 'Пусто — страница типа «Вопросы SEO».', 'trust' ) ), array( 'wrapper' => array( 'width' => 50 ) ) ),
-		$trust_text( 'ask_note', __( 'Примечание под кнопкой', 'trust' ), array( 'maxlength' => 160 ) ),
-		$trust_text( 'ask_form_note', __( 'Примечание в виде «Форма в блоке»', 'trust' ), $trust_area( 2, 200 ) ),
-		$trust_text( 'ask_submit', __( 'Кнопка отправки формы', 'trust' ), array( 'maxlength' => 40 ) ),
-		$trust_text( 'ask_success_title', __( 'Заголовок после отправки', 'trust' ), array( 'wrapper' => array( 'width' => 50 ) ) ),
-		$trust_text(
-			'ask_success_text',
-			__( 'Текст после отправки', 'trust' ),
-			array_merge(
-				$trust_area( 2, 300 ),
-				array(
-					'wrapper'      => array( 'width' => 50 ),
-					'instructions' => __( '{email} — адрес, который указал посетитель.', 'trust' ),
-				)
-			)
-		),
+		$trust_text( 'ask_note', __( 'Примечание у кнопки', 'trust' ), array( 'maxlength' => 160 ) ),
 
 		array(
 			'name'    => 'notice_heading',

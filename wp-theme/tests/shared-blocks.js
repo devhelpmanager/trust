@@ -6,9 +6,12 @@
  * «Обсудим ваш проект»: демо на «О компании», «Команде», «Отзывах», «Портфолио» (фон из макетов),
  * тексты по умолчанию, телефон и Telegram из настроек, кнопка на страницу контактов; тексты из
  * «Настроек сайта → Блоки по умолчанию» и свои поля блока сильнее настроек.
- * «Задать вопрос»: вид «Кнопка» (пункты, кнопка на страницу вопросов, примечание) и «Форма в блоке»
- * (ошибки пустой формы, счётчик, отправка — вопрос «На утверждении» и заявка, «Вопрос отправлен»
- * с адресом, «Задать ещё вопрос»), фиолетовый фон.
+ * «Задать вопрос»: пункты, кнопка на страницу вопросов, примечание (формы в блоке нет — задать
+ * вопрос можно только на странице вопросов, решение заказчика), фиолетовый фон.
+ * Раскладка карточек на планшете и телефоне (правки заказчика): иконка и заголовок в строку, текст
+ * и пункты во всю ширину, примечание слева от кнопки, на телефоне кнопка во всю ширину, на узком —
+ * у «Задать вопрос» без иконки. «Вопросы SEO»: текст первого экрана во всю ширину, когда форма под
+ * ним; «Оповещение» последним на странице — с отступом до подвала.
  * «Оповещение»: на странице «Вопросы SEO» — секция с H2 и ссылкой на аудит из настроек, {brand};
  * в статье — плашка в тексте без H2.
  * «Видео»: обложка, кнопка «Смотреть видео: …», длительность, подпись; до нажатия — ни одного
@@ -16,7 +19,7 @@
  * и фокусом, файл MP4 — <video>; неизвестная ссылка открывается в новой вкладке; VideoObject;
  * разбор ссылок и длительности.
  * Общее: сверка с макетами (o-nas/blok-cta.html, seo-vopros/blok-vopros.html,
- * blok-vopros-forma.html, «Важно знать» из vopros-seo.html, «Видеоразбор» из seo-blog/statya.html),
+ * «Важно знать» из vopros-seo.html, «Видеоразбор» из seo-blog/statya.html),
  * ширины 1440–280 без прокрутки вбок, axe-core, консоль, редактор — категории и превью.
  */
 
@@ -125,17 +128,17 @@ async function compare( page, o ) {
 			cta_button: 'Написать нам',
 		} );
 		const fromSettings = await cta( '/o-kompanii/' );
-		const ownId = createPost( 'page', 'CTA', block( 'cta', "array( 'title' => 'Свой заголовок', 'text' => 'Свой текст', 'contacts' => 0, 'button' => array( 'title' => 'Позвонить', 'url' => '#callback-modal', 'target' => '' ) )" ) );
+		const ownId = createPost( 'page', 'CTA', block( 'cta', "array( 'title' => 'Свой заголовок', 'text' => 'Свой текст', 'contacts' => 0, 'button_label' => 'Позвонить', 'button_url' => '#callback-modal' )" ) );
 		created.push( ownId );
 		await page.goto( `${ URL }/?page_id=${ ownId }`, { waitUntil: 'networkidle' } );
-		const own = await page.locator( '.b-cta' ).evaluate( ( el ) => [ el.querySelector( 'h2' ).textContent.trim(), el.querySelector( '.dark-card__text' ).textContent.trim(), el.querySelectorAll( '.b-cta__contact' ).length, el.querySelector( '.dark-card__cta' ).getAttribute( 'href' ) ] );
+		const own = await page.locator( '.b-cta' ).evaluate( ( el ) => [ el.querySelector( 'h2' ).textContent.trim(), el.querySelector( '.dark-card__text' ).textContent.trim(), el.querySelectorAll( '.b-cta__contact' ).length, el.querySelector( '.dark-card__cta' ).getAttribute( 'href' ), el.querySelector( '.dark-card__cta' ).textContent.trim() ] );
 		await page.locator( '.b-cta .dark-card__cta' ).click();
 		const modal = await page.locator( '#callback-modal[open]' ).isVisible().catch( () => false );
 		await page.keyboard.press( 'Escape' );
 		setSettings( saved );
 		check( 'Тексты «Настроек сайта → Блоки по умолчанию» вместо пустых полей блока', 'Расскажите о задаче' === fromSettings.h2 && fromSettings.button.startsWith( 'Написать нам ' ), JSON.stringify( fromSettings ) );
 		check( 'Свои поля блока сильнее настроек; без телефона и Telegram; кнопка #callback-modal открывает окно звонка',
-			JSON.stringify( own ) === JSON.stringify( [ 'Свой заголовок', 'Свой текст', 0, '#callback-modal' ] ) && modal, JSON.stringify( [ own, modal ] ) );
+			JSON.stringify( own ) === JSON.stringify( [ 'Свой заголовок', 'Свой текст', 0, '#callback-modal', 'Позвонить' ] ) && modal, JSON.stringify( [ own, modal ] ) );
 
 		// ===== «Задать вопрос SEO-специалисту» =====
 		await page.goto( `${ URL }/seo/pochasovaya-oplata/`, { waitUntil: 'networkidle' } );
@@ -154,48 +157,24 @@ async function compare( page, o ) {
 			'Бесплатно|Ответ на сайте|Отвечает практикующий специалист' === askLink.points.join( '|' ) && 'Условия' === askLink.pointsLabel &&
 			'Задать вопрос бесплатно /seo/voprosy/' === askLink.button && 'Ответ — личное мнение специалиста, а не аудит сайта.' === askLink.note && ! askLink.form && 'rgb(248, 245, 255)' === askLink.bg, JSON.stringify( askLink ) );
 
-		await page.goto( `${ URL }/seo/za-obem-raboty/`, { waitUntil: 'networkidle' } );
-		const ask = page.locator( '.b-ask' );
-		const form = ask.locator( 'form[data-trust-form="question"]' );
-		const askForm = await ask.evaluate( ( el ) => ( {
-			note: el.querySelector( '.b-ask__form-note' ).textContent.trim(),
-			labels: [ ...el.querySelectorAll( 'form .field__label' ) ].map( ( l ) => l.textContent.replace( /\s+/g, ' ' ).trim() + ( document.getElementById( l.htmlFor ) ? '' : '!' ) ),
-			consent: !! el.querySelector( 'input[name=consent][required]:not(:checked)' ),
-			submit: el.querySelector( 'button[type=submit]' ).textContent.trim(),
-			cta: !! el.querySelector( '.dark-card__cta' ),
-		} ) );
-		check( '«Задать вопрос», вид «Форма в блоке»: примечание под пунктами, поля «Имя», «Email — не публикуем», «Ваш вопрос», галочка согласия, «Получить ответ»',
-			'Ответ — личное мнение специалиста о том, как он решал бы вашу задачу. Это не аудит сайта.' === askForm.note && 'Имя|Email — не публикуем|Ваш вопрос' === askForm.labels.join( '|' ) && askForm.consent && 'Получить ответ' === askForm.submit && ! askForm.cta, JSON.stringify( askForm ) );
-		await form.locator( 'button[type=submit]' ).click();
-		const askErrs = await form.locator( '.field__error:visible' ).allTextContents();
-		check( 'Пустая форма: 4 ошибки (имя, email, вопрос, согласие)', 4 === askErrs.length && 'Укажите, как к вам обращаться' === askErrs[ 0 ], askErrs.join( ' | ' ) );
-		await form.locator( '[name=name]' ).fill( 'Ирина' );
-		await form.locator( '[name=email]' ).fill( 'irina@example.com' );
-		const question = `${ MARK }: как понять, почему сайт не растёт в Google, если в Яндексе всё хорошо?`;
-		await form.locator( 'textarea' ).fill( question );
-		check( 'Счётчик символов вопроса', `${ question.length } / 2000` === plain( await ask.locator( '.b-ask__count' ).textContent() ), plain( await ask.locator( '.b-ask__count' ).textContent() ) );
-		await form.locator( '[name=consent]' ).check();
-		await form.locator( 'button[type=submit]' ).click();
-		await ask.locator( '.b-ask__sent:not([hidden])' ).waitFor( { timeout: 15000 } );
-		const sent = await ask.locator( '.b-ask__sent' ).evaluate( ( el ) => ( { title: el.querySelector( 'h3' ).textContent.trim(), email: el.querySelector( '[data-trust-sent-email]' ).textContent, text: el.querySelector( '.b-ask__sent-text' ).textContent.replace( /\s+/g, ' ' ).trim() } ) );
-		check( '«Вопрос отправлен»: адрес посетителя в тексте, форма скрыта', 'Вопрос отправлен' === sent.title && 'irina@example.com' === sent.email && sent.text.includes( 'пришлём ссылку на irina@example.com' ) && await form.isHidden(), JSON.stringify( sent ) );
-		const qId = wp( 'post', 'list', '--post_type=question', '--post_status=pending', '--orderby=ID', '--order=DESC', '--posts_per_page=1', '--field=ID' );
-		const q = JSON.parse( wp( 'eval', `echo wp_json_encode( array( get_post_status( ${ qId } ), get_field( 'trust_asker', ${ qId } ), get_field( 'trust_asker_email', ${ qId } ), get_field( 'trust_question', ${ qId }, false ) ) );` ) );
-		const leadId = wp( 'post', 'list', '--post_type=lead', '--post_status=any', '--orderby=ID', '--order=DESC', '--posts_per_page=1', '--field=ID' );
-		check( 'Создан вопрос «На утверждении» (как с формы страницы «Вопросы SEO») и заявка',
-			! questionsBefore.includes( qId ) && JSON.stringify( q ) === JSON.stringify( [ 'pending', 'Ирина', 'irina@example.com', question ] ) &&
-			! leadsBefore.includes( leadId ) && 'question' === wp( 'post', 'meta', 'get', leadId, 'trust_form' ), JSON.stringify( q ) );
-		await ask.locator( '[data-form-again]' ).click();
-		check( '«Задать ещё вопрос»: пустая форма, счётчик 0', await form.isVisible() && '' === await form.locator( 'textarea' ).inputValue() && '0' === await ask.locator( '[data-trust-count]' ).textContent() );
+		const forms = JSON.parse( wp( 'eval', `echo wp_json_encode( array_values( array_filter( array_map( static fn( $p ) => str_contains( $p->post_content, 'wp:trust/ask' ) ? get_permalink( $p ) : null, get_posts( array( 'post_type' => array( 'page', 'post' ), 'numberposts' => -1 ) ) ) ) ) );` ) );
+		const askForms = [];
+		for ( const url of forms ) {
+			await page.goto( url, { waitUntil: 'domcontentloaded' } );
+			askForms.push( await page.locator( '.b-ask form, .b-ask input, .b-ask textarea' ).count() );
+		}
+		const fieldNames = JSON.parse( wp( 'eval', "echo wp_json_encode( array_column( include get_template_directory() . '/blocks/ask/fields.php', 'name' ) );" ) );
+		check( '«Задать вопрос» только ведёт на страницу вопросов: в блоке нет формы и полей вида «Форма»',
+			forms.length >= 1 && askForms.every( ( n ) => 0 === n ) && ! fieldNames.includes( 'view' ) && ! fieldNames.includes( 'submit' ), JSON.stringify( [ forms, askForms, fieldNames ] ) );
 
-		const violetId = createPost( 'page', 'Ask', block( 'ask', "array( 'view' => 'link', 'background' => 'violet', 'title' => 'Свой вопрос?', 'points' => \"Раз\\nДва\", 'note' => '' )" ) );
+		const violetId = createPost( 'page', 'Ask', block( 'ask', "array( 'background' => 'violet', 'title' => 'Свой вопрос?', 'points' => \"Раз\\nДва\", 'note' => '', 'button_label' => 'Спросить' )" ) );
 		created.push( violetId );
 		setSettings( { ask_title: 'Заголовок из настроек' } );
 		await page.goto( `${ URL }/?page_id=${ violetId }`, { waitUntil: 'networkidle' } );
-		const violet = await page.locator( '.b-ask' ).evaluate( ( el ) => [ getComputedStyle( el ).backgroundColor, el.querySelector( 'h2' ).textContent.trim(), el.querySelectorAll( '.b-ask__points li' ).length, el.querySelector( '.dark-card__note' ).textContent.trim() ] );
+		const violet = await page.locator( '.b-ask' ).evaluate( ( el ) => [ getComputedStyle( el ).backgroundColor, el.querySelector( 'h2' ).textContent.trim(), el.querySelectorAll( '.b-ask__points li' ).length, el.querySelector( '.dark-card__note' ).textContent.trim(), el.querySelector( '.dark-card__cta' ).textContent.trim() + ' ' + new URL( el.querySelector( '.dark-card__cta' ).href ).pathname ] );
 		setSettings( saved );
-		check( 'Фиолетовый фон; свой заголовок сильнее настроек; свои пункты; пустое примечание — из настроек',
-			JSON.stringify( violet ) === JSON.stringify( [ 'rgb(91, 33, 182)', 'Свой вопрос?', 2, 'Ответ — личное мнение специалиста, а не аудит сайта.' ] ), JSON.stringify( violet ) );
+		check( 'Фиолетовый фон; свой заголовок и текст кнопки сильнее настроек (адрес — страница вопросов); свои пункты; пустое примечание — из настроек',
+			JSON.stringify( violet ) === JSON.stringify( [ 'rgb(91, 33, 182)', 'Свой вопрос?', 2, 'Ответ — личное мнение специалиста, а не аудит сайта.', 'Спросить /seo/voprosy/' ] ), JSON.stringify( violet ) );
 
 		// ===== «Оповещение» =====
 		await page.goto( `${ URL }/seo/voprosy/`, { waitUntil: 'networkidle' } );
@@ -299,7 +278,7 @@ async function compare( page, o ) {
 		check( 'VideoObject: файл — contentUrl; чужая ссылка — без VideoObject (поиску нужен адрес плеера или файла)', JSON.stringify( ldPage ) === JSON.stringify( [ 'Файл:content:' ] ), JSON.stringify( ldPage ) );
 
 		// ===== Ширины и доступность =====
-		const pages = [ '/o-kompanii/', '/seo/pochasovaya-oplata/', '/seo/za-obem-raboty/', '/seo/voprosy/', '/blog/robots-txt-proverka/' ];
+		const pages = [ '/o-kompanii/', '/seo/pochasovaya-oplata/', '/seo/voprosy/', '/blog/robots-txt-proverka/' ];
 		const wide = [];
 		for ( const width of [ 1440, 1024, 768, 390, 320, 280 ] ) {
 			await page.setViewportSize( { width, height: 900 } );
@@ -311,17 +290,58 @@ async function compare( page, o ) {
 			}
 		}
 		check( 'Ширины 1440–280: без прокрутки вбок', 0 === wide.length, wide.join( ', ' ) );
-		await page.setViewportSize( { width: 390, height: 900 } );
-		await page.goto( `${ URL }/o-kompanii/`, { waitUntil: 'networkidle' } );
-		const mob = await page.locator( '.b-cta' ).evaluate( ( el ) => {
-			const r = ( s ) => el.querySelector( s ).getBoundingClientRect();
-			return [ r( '.dark-card__icon' ).bottom <= r( 'h2' ).top, r( '.dark-card__text' ).bottom <= r( '.dark-card__cta' ).top, Math.round( r( '.dark-card__cta' ).width ) ];
+		// Раскладка карточек (правки заказчика).
+		const geometry = ( sel ) => page.locator( sel ).evaluate( ( el ) => {
+			const r = ( s ) => {
+				const node = el.querySelector( s );
+				return node && 'none' !== getComputedStyle( node ).display ? node.getBoundingClientRect() : null;
+			};
+			const card = r( '.dark-card' );
+			const icon = r( '.dark-card__icon' );
+			const h2 = r( 'h2' );
+			const text = r( '.dark-card__text' );
+			const cta = r( '.dark-card__cta' );
+			const note = r( '.dark-card__note' );
+			return {
+				icon: !! icon,
+				titleBeside: !! icon && h2.left >= icon.right && h2.top < icon.bottom,
+				textFull: Math.abs( text.left - ( icon || h2 ).left ) < 1,
+				ctaFull: Math.abs( cta.left - text.left ) < 1 && Math.abs( text.right - cta.right ) < 1,
+				ctaCentered: Math.abs( ( cta.left - card.left ) - ( card.right - cta.right ) ) < 1,
+				ctaRight: Math.abs( card.right - cta.right - ( text.left - card.left ) ) < 1 && cta.left > card.left + card.width / 2,
+				noteLeft: note ? note.right <= cta.left && Math.abs( note.left - text.left ) < 1 : null,
+			};
 		} );
-		check( '390px: иконка над заголовком, кнопка под текстом во всю ширину карточки', mob[ 0 ] && mob[ 1 ] && mob[ 2 ] >= 300, JSON.stringify( mob ) );
+		const layouts = {};
+		for ( const [ url, sel, key ] of [ [ '/o-kompanii/', '.b-cta', 'cta' ], [ '/seo/pochasovaya-oplata/', '.b-ask', 'ask' ] ] ) {
+			for ( const width of [ 768, 440, 390 ] ) {
+				await page.setViewportSize( { width, height: 900 } );
+				await page.goto( URL + url, { waitUntil: 'networkidle' } );
+				layouts[ `${ key }${ width }` ] = await geometry( sel );
+			}
+		}
+		const L = layouts;
+		check( 'Телефон 390–440: «Обсудим ваш проект» — заголовок справа от иконки, текст во всю ширину, кнопка во всю ширину по центру',
+			[ L.cta390, L.cta440 ].every( ( g ) => g.icon && g.titleBeside && g.textFull && g.ctaFull && g.ctaCentered ), JSON.stringify( [ L.cta390, L.cta440 ] ) );
+		check( 'Телефон 440: «Задать вопрос» — заголовок справа от иконки, текст и пункты во всю ширину, кнопка по центру',
+			L.ask440.icon && L.ask440.titleBeside && L.ask440.textFull && L.ask440.ctaFull && L.ask440.ctaCentered, JSON.stringify( L.ask440 ) );
+		check( 'Телефон 390: «Задать вопрос» без иконки, заголовок и текст во всю ширину', ! L.ask390.icon && L.ask390.textFull && L.ask390.ctaCentered, JSON.stringify( L.ask390 ) );
+		check( 'Планшет 768: «Задать вопрос» — заголовок справа от иконки, текст во всю ширину, кнопка справа, примечание слева от неё',
+			L.ask768.titleBeside && L.ask768.textFull && L.ask768.ctaRight && L.ask768.noteLeft, JSON.stringify( L.ask768 ) );
+		check( 'Планшет 768: «Обсудим ваш проект» — заголовок справа от иконки, текст во всю ширину', L.cta768.titleBeside && L.cta768.textFull, JSON.stringify( L.cta768 ) );
+
+		await page.setViewportSize( { width: 990, height: 900 } );
+		await page.goto( `${ URL }/seo/voprosy/`, { waitUntil: 'networkidle' } );
+		const heroLead = await page.evaluate( () => [ Math.round( document.querySelector( '.b-hero-questions__lead' ).getBoundingClientRect().width ), Math.round( document.querySelector( '.b-hero-questions__card' ).getBoundingClientRect().width ) ] );
+		await page.setViewportSize( { width: 1280, height: 900 } );
+		await page.goto( `${ URL }/seo/voprosy/`, { waitUntil: 'networkidle' } );
+		const footerGap = await page.evaluate( () => Math.round( document.querySelector( '.site-footer' ).getBoundingClientRect().top - document.querySelector( '.b-notice' ).getBoundingClientRect().bottom ) );
+		check( '«Вопросы SEO», 990 px: форма под текстом — текст первого экрана во всю ширину карточки', heroLead[ 0 ] === heroLead[ 1 ], JSON.stringify( heroLead ) );
+		check( '«Оповещение» последним на странице — отступ до подвала 64 px', 64 === footerGap, String( footerGap ) );
 
 		await page.setViewportSize( { width: 1280, height: 900 } );
 		const axeIssues = [];
-		for ( const [ url, sel ] of [ [ '/o-kompanii/', '.b-cta' ], [ '/seo/pochasovaya-oplata/', '.b-ask' ], [ '/seo/za-obem-raboty/', '.b-ask' ], [ '/seo/voprosy/', '.b-notice-sec' ], [ '/blog/robots-txt-proverka/', '.b-video' ] ] ) {
+		for ( const [ url, sel ] of [ [ '/o-kompanii/', '.b-cta' ], [ '/seo/pochasovaya-oplata/', '.b-ask' ], [ '/seo/voprosy/', '.b-notice-sec' ], [ '/blog/robots-txt-proverka/', '.b-video' ] ] ) {
 			await page.goto( URL + url, { waitUntil: 'networkidle' } );
 			await page.addScriptTag( { path: require.resolve( 'axe-core' ) } );
 			const res = await page.evaluate( async ( s ) => {
@@ -337,16 +357,6 @@ async function compare( page, o ) {
 		for ( const width of [ 1280, 768, 390 ] ) {
 			await compare( page, { name: 'cta', width, url: `${ URL }/o-kompanii/`, theme: '.b-cta', mockup: 'o-nas/blok-cta.html', mock: 'section' } );
 			await compare( page, { name: 'ask-link', width, url: `${ URL }/seo/pochasovaya-oplata/`, theme: '.b-ask', mockup: 'seo-vopros/blok-vopros.html', mock: 'section' } );
-			await compare( page, {
-				name: 'ask-form', width, url: `${ URL }/seo/za-obem-raboty/`, theme: '.b-ask', mockup: 'seo-vopros/blok-vopros-forma.html', mock: 'section',
-				// Согласованные отличия формы: галочка согласия и строка о политике (в макете — «Нажимая
-				// кнопку…» и макетная капча) — скрываются с обеих сторон.
-				before: () => document.querySelectorAll( '.b-ask .form__consent, .b-ask .form__note' ).forEach( ( el ) => el.style.setProperty( 'display', 'none', 'important' ) ),
-				mockBefore: () => {
-					document.querySelector( 'label[for="askb-captcha"]' ).style.setProperty( 'display', 'none', 'important' );
-					document.querySelector( 'form > p:last-of-type' ).style.setProperty( 'display', 'none', 'important' );
-				},
-			} );
 			await compare( page, { name: 'notice', width, url: `${ URL }/seo/voprosy/`, theme: '.b-notice-sec', mockup: 'seo-vopros/vopros-seo.html', mock: 'section[aria-label="Важно знать"]' } );
 			// «Видеоразбор»: шаблон статьи — шаг 5.2, сверяется сам рисунок по ширине колонки макета.
 			await compare( page, {

@@ -8,6 +8,5 @@
 defined( 'ABSPATH' ) || exit;
 
 return array(
-	'view'       => 'link',
 	'background' => 'lavender',
 );

@@ -739,15 +739,14 @@ return array(
 		'path'   => 'seo/pochasovaya-oplata',
 		'title'  => 'SEO с почасовой оплатой',
 		'type'   => 'service',
-		// «Задать вопрос SEO-специалисту», вид «Кнопка» (шаг 4.9, макет seo-vopros/blok-vopros.html).
-		'blocks' => array( $trust_service_hero(), array( 'ask', array( 'view' => 'link' ) ) ),
+		// «Задать вопрос SEO-специалисту» (шаг 4.9, макет seo-vopros/blok-vopros.html): ведёт на страницу вопросов.
+		'blocks' => array( $trust_service_hero(), array( 'ask', array( 'background' => 'lavender' ) ) ),
 	),
 	array(
 		'path'   => 'seo/za-obem-raboty',
 		'title'  => 'SEO за объём работы',
 		'type'   => 'service',
-		// «Задать вопрос SEO-специалисту», вид «Форма в блоке» (шаг 4.9, seo-vopros/blok-vopros-forma.html).
-		'blocks' => array( $trust_service_hero(), array( 'ask', array( 'view' => 'form' ) ) ),
+		'blocks' => array( $trust_service_hero() ),
 	),
 	array(
 		'path'   => 'seo/voprosy',

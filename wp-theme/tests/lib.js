@@ -262,6 +262,26 @@ const SECTION_SPACING_CSS = `
 		footer.dc-foot { padding-top: 32px !important; }
 	}
 `;
+// «Обсудим ваш проект» и «Задать вопрос»: раскладка на планшете и телефоне (правки заказчика) — как
+// в dark-card.css: иконка и заголовок в строку, текст и пункты во всю ширину, примечание слева от кнопки;
+// уже 560 px — кнопка во всю ширину; уже 370 px у «Задать вопрос» нет иконки.
+const DARK_CARD_CSS = `
+	section > div { container: dark-card / inline-size; }
+	@container dark-card (max-width: 900px) {
+		section > div > div > div:first-child { display: grid !important; flex: 1 1 100% !important; grid-template-columns: auto minmax(0, 1fr); align-items: center !important; gap: 12px 16px !important; }
+		section > div > div > div:first-child > div { display: contents !important; }
+		section > div > div > div:first-child > div > :not(h2) { grid-column: 1 / -1; }
+		section > div > div > div:first-child p { max-width: none !important; }
+		section h2 { text-wrap: wrap !important; }
+		section > div > div > div:last-child { display: flex !important; flex: 1 1 100% !important; flex-direction: row !important; align-items: center !important; justify-content: space-between !important; gap: 12px 24px !important; max-width: none !important; }
+		section > div > div > div:last-child > a { flex: 0 1 340px !important; order: 2; }
+		section > div > div > div:last-child > p { flex: 1 1 auto !important; order: 1; max-width: 420px !important; }
+	}
+	@container dark-card (max-width: 560px) {
+		section > div > div > div:last-child { flex-direction: column !important; align-items: stretch !important; }
+		section > div > div > div:last-child > a, section > div > div > div:last-child > p { flex: none !important; order: 0; max-width: none !important; }
+	}
+`;
 // «Что говорят клиенты» в портфолио — блок «Отзывы клиентов» (2 карточки): заголовок секции и
 // шапка — как у всех блоков (в макете H2 26–40 px и 14 px от надзаголовка).
 const PORTFOLIO_REVIEWS_CSS = `
@@ -282,6 +302,10 @@ const MOCKUP_CSS = {
 	'o-nas/politika-cookie.html': HERO_DOCUMENT_CSS,
 	'o-nas/soglasie-pd.html': HERO_DOCUMENT_CSS,
 	'seo-vopros/vopros-seo.html': `
+		/* Форма под текстом (уже 1000 px) — текст во всю ширину карточки (правка заказчика) */
+		@media (max-width: 999px) {
+			.dc-ask-intro > p { max-width: none !important; }
+		}
 		.dc-ask-intro { display: contents !important; }
 		.dc-ask-intro > span { grid-area: badge; justify-self: start; margin-bottom: -6px !important; }
 		.dc-ask-intro > h1 { grid-area: title; margin-bottom: -6px !important; }
@@ -361,6 +385,13 @@ const MOCKUP_CSS = {
 	'seo-bloki/15-otzyvy.html': `
 		section > div > header { max-width: none !important; }
 		section > div > header h2 { text-wrap: wrap !important; }
+	`,
+	'o-nas/blok-cta.html': DARK_CARD_CSS,
+	'seo-vopros/blok-vopros.html': DARK_CARD_CSS + `
+		@container dark-card (max-width: 370px) {
+			section > div > div > div:first-child > span { display: none !important; }
+			section > div > div > div:first-child h2 { grid-column: 1 / -1; }
+		}
 	`,
 	// «Блок с текстом»: колонка 960 px (правка заказчика, в макете 760), строки заголовка заполняют колонку.
 	'seo-bloki/03-tekst.html': `
