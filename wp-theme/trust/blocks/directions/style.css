@@ -29,10 +29,13 @@
 	min-width: 0;
 }
 
+/* Значок и название — в строку, текст и «Подробнее» — под ними на всю ширину (правка заказчика) */
 .b-dirs__card {
-	display: flex;
-	flex-direction: column;
-	gap: 12px;
+	display: grid;
+	grid-template-columns: 48px minmax(0, 1fr);
+	grid-template-rows: auto auto 1fr;
+	align-items: center;
+	gap: 12px 16px;
 	height: 100%;
 	box-sizing: border-box;
 	padding: 26px;
@@ -52,6 +55,8 @@ a.b-dirs__card:hover {
 
 .b-dirs__icon {
 	display: flex;
+	grid-column: 1;
+	grid-row: 1;
 	align-items: center;
 	justify-content: center;
 	width: 48px;
@@ -62,7 +67,7 @@ a.b-dirs__card:hover {
 }
 
 .b-dirs__title {
-	margin: 6px 0 0;
+	margin: 0;
 	font-family: inherit;
 	font-size: 20px;
 	font-weight: 600;
@@ -71,6 +76,8 @@ a.b-dirs__card:hover {
 }
 
 .b-dirs__text {
+	grid-column: 1 / -1;
+	grid-row: 2;
 	margin: 0;
 	font-size: 15px;
 	line-height: 1.55;
@@ -79,9 +86,12 @@ a.b-dirs__card:hover {
 
 .b-dirs__more {
 	display: inline-flex;
+	grid-column: 1 / -1;
+	grid-row: 3;
+	align-self: end;
+	justify-self: start;
 	align-items: center;
 	gap: 6px;
-	margin-top: auto;
 	padding-top: 6px;
 	font-size: 15px;
 	font-weight: 600;
@@ -98,7 +108,7 @@ a.b-dirs__card:hover .b-dirs__more svg {
 
 @media (max-width: 560px) {
 	.b-dirs__card {
-		gap: 8px;
+		gap: 8px 14px;
 		padding: 20px;
 	}
 }

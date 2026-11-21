@@ -295,6 +295,14 @@ const MOCKUP_CSS = {
 	'o-nas/o-kompanii.html': HERO_SECTION_CSS + `
 		main section:not(.dc-hero-sec) header { gap: 16px !important; }
 		main section:not(.dc-hero-sec) header h2 { font-size: clamp(28px, 3.4vw, 44px) !important; }
+		/* «Чем мы занимаемся»: значок и название в строку, текст и «Подробнее» под ними (правка заказчика) */
+		.dc-svc { display: grid !important; grid-template-columns: 48px minmax(0, 1fr); grid-template-rows: auto auto 1fr; align-items: center; column-gap: 16px; }
+		.dc-svc > h3 { margin: 0 !important; }
+		.dc-svc > p { grid-column: 1 / -1; grid-row: 2; }
+		.dc-svc > .dc-more { grid-column: 1 / -1; grid-row: 3; align-self: end; justify-self: start; margin-top: 0 !important; }
+		@media (max-width: 560px) {
+			.dc-svc { column-gap: 14px !important; }
+		}
 	`,
 	'o-nas/komanda.html': HERO_SECTION_CSS,
 	'o-nas/karera.html': HERO_SECTION_CSS,

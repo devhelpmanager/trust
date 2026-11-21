@@ -91,6 +91,13 @@ async function compare( page, name, width, theme, mock ) {
 			d.labelled && 'Направления|Чем мы занимаемся' === d.head.join( '|' ) && 6 === d.cards.length && d.cards.every( ( c ) => 'A' === c[ 0 ] && c[ 3 ] && 'Подробнее' === c[ 4 ] ), JSON.stringify( d ) );
 		check( '«Чем мы занимаемся»: карточка целиком ведёт на страницу направления (Поддержка сайтов → /site-support/)',
 			JSON.stringify( d.cards.map( ( c ) => c[ 2 ] ) ) === JSON.stringify( [ '/seo/', '/geo/', '/sozdanie-saytov/', '/site-support/', '/kontekstnaya-reklama/', '/ai/' ] ) && 'Поддержка сайтов' === d.cards[ 3 ][ 1 ], JSON.stringify( d.cards.map( ( c ) => c.slice( 1, 3 ) ) ) );
+		const row = await page.locator( '.b-dirs__card' ).evaluateAll( ( cards ) => cards.every( ( c ) => {
+			const icon = c.querySelector( '.b-dirs__icon' ).getBoundingClientRect();
+			const title = c.querySelector( 'h3' ).getBoundingClientRect();
+			const text = c.querySelector( '.b-dirs__text' ).getBoundingClientRect();
+			return title.left >= icon.right + 12 && title.top < icon.bottom && title.bottom > icon.top && text.top >= icon.bottom && Math.abs( text.left - icon.left ) < 1;
+		} ) );
+		check( '«Чем мы занимаемся»: название справа от значка, текст под ними на всю ширину карточки (правка заказчика)', row );
 		await page.locator( '.b-dirs__card' ).first().hover();
 		await page.waitForTimeout( 300 );
 		const hover = await page.locator( '.b-dirs__card' ).first().evaluate( ( el ) => [ getComputedStyle( el ).borderColor, getComputedStyle( el ).boxShadow !== 'none' ] );
@@ -210,14 +217,17 @@ async function compare( page, name, width, theme, mock ) {
 			const title = card.querySelector( '.b-certs__title' ).getBoundingClientRect();
 			const tiles = [ ...document.querySelectorAll( '.b-clients__tile' ) ].slice( 0, 2 ).map( ( t ) => t.getBoundingClientRect() );
 			const g = [ ...document.querySelectorAll( '.b-office__item' ) ].slice( 0, 3 ).map( ( f ) => f.getBoundingClientRect() );
+			const dIcon = document.querySelector( '.b-dirs__icon' ).getBoundingClientRect();
+			const dTitle = document.querySelector( '.b-dirs__title' ).getBoundingClientRect();
 			return {
+				dirsRow: dTitle.left > dIcon.right && dTitle.top < dIcon.bottom,
 				certRow: Math.round( media.width ) === 76 && title.left > media.right,
 				logos: Math.round( tiles[ 0 ].height ) + ':' + ( Math.abs( tiles[ 0 ].top - tiles[ 1 ].top ) < 1 ),
 				gallery: Math.round( g[ 0 ].height ) + ':' + ( Math.abs( g[ 1 ].top - g[ 2 ].top ) < 1 && g[ 2 ].left > g[ 1 ].left ),
 			};
 		} );
-		check( 'Телефон 390: сертификаты — строки (картинка 76 px слева), логотипы по 2 в ряд высотой 74 px, галерея в 2 колонки',
-			mob.certRow && '74:true' === mob.logos && '252:true' === mob.gallery, JSON.stringify( mob ) );
+		check( 'Телефон 390: направления — название справа от значка; сертификаты — строки (картинка 76 px слева), логотипы по 2 в ряд высотой 74 px, галерея в 2 колонки',
+			mob.dirsRow && mob.certRow && '74:true' === mob.logos && '252:true' === mob.gallery, JSON.stringify( mob ) );
 		const wide = [];
 		for ( const width of [ 1440, 1024, 768, 390, 320, 280 ] ) {
 			await page.setViewportSize( { width, height: 900 } );
