@@ -17,6 +17,10 @@
 	margin: 0 auto;
 }
 
+.b-team .b-team__head {
+	max-width: none; /* правка заказчика: заголовок — во всю ширину блока */
+}
+
 .b-team__list {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr));

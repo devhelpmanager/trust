@@ -54,17 +54,14 @@
 	background: #25215C;
 }
 
-/* Значок и справа от него плашка и название (правка заказчика) */
+/* Сверху плашка «Ваш контакт», под ней значок и справа от него название (правка заказчика) */
 .b-roles__main-head {
 	display: flex;
 	align-items: center;
 	gap: 16px;
 }
 
-.b-roles__main-name {
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
+.b-roles__main-title {
 	min-width: 0;
 }
 

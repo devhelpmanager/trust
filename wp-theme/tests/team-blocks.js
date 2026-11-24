@@ -185,6 +185,8 @@ async function compare( page, name, width, theme, mock ) {
 				const jIn = document.querySelector( '.b-join__inner' ).getBoundingClientRect();
 				const rIn = document.querySelector( '.b-roles__inner' ).getBoundingClientRect();
 				const [ rH2, rLead ] = [ '.b-roles__head h2', '.b-roles__head .section-lead' ].map( ( s ) => document.querySelector( s ).getBoundingClientRect() );
+				const tIn = document.querySelector( '.b-team__inner' ).getBoundingClientRect();
+				const tH2 = document.querySelector( '.b-team__head h2' ).getBoundingClientRect();
 				const [ mIcon, mLabel, mTitle, mText ] = [ '.b-roles__main-icon', '.b-roles__label', '.b-roles__main-title', '.b-roles__main-text' ].map( ( s ) => document.querySelector( s ).getBoundingClientRect() );
 				return {
 					leaders: perRow( '.b-leaders__card' ),
@@ -195,8 +197,10 @@ async function compare( page, name, width, theme, mock ) {
 					// Правки заказчика: название роли справа от значка; кнопки «Хотите в команду?» — в одну строку.
 					roleRow: rTitle.left >= rIcon.right + 12 && rTitle.top < rIcon.bottom && rTitle.bottom > rIcon.top && rText.top >= rIcon.bottom && Math.abs( rText.left - rIcon.left ) < 1,
 					rolesHead: Math.abs( rH2.width - rIn.width ) < 1 && Math.abs( rLead.width - rIn.width ) < 1,
-					// Название может переноситься на две строки — тогда значок по центру по высоте.
-					mainRow: mLabel.left >= mIcon.right + 12 && mTitle.left >= mIcon.right + 12 && mLabel.top < mIcon.bottom && mTitle.top < Math.max( mIcon.bottom, mLabel.bottom + 12 ) && mText.top >= Math.max( mIcon.bottom, mTitle.bottom ) && Math.abs( mText.left - mIcon.left ) < 1,
+					// «Ваш контакт» сверху слева, под ним значок и справа от него название (оно может
+					// переноситься на две строки — тогда значок по центру по высоте), ниже текст.
+					mainRow: Math.abs( mLabel.left - mIcon.left ) < 1 && mLabel.bottom <= mIcon.top && mTitle.left >= mIcon.right + 12 && mTitle.top < mIcon.bottom && mTitle.bottom > mIcon.top && mText.top >= Math.max( mIcon.bottom, mTitle.bottom ) && Math.abs( mText.left - mIcon.left ) < 1,
+					teamHead: Math.abs( tH2.width - tIn.width ) < 1,
 					joinRow: Math.abs( jb[ 0 ].top - jb[ 1 ].top ) < 1 && jb[ 1 ].left > jb[ 0 ].right && jb[ 1 ].right <= jIn.right + 0.5,
 				};
 			} );
@@ -211,8 +215,10 @@ async function compare( page, name, width, theme, mock ) {
 			&& 'side' === lay[ 1280 ].roles && 'below' === lay[ 700 ].roles, JSON.stringify( lay ) );
 		check( '«Кто работает над проектом»: название роли справа от значка, текст под ними (1280 / 1000 / 700 / 390 / 320 px) — правка заказчика',
 			[ 1280, 1000, 700, 420, 390, 320 ].every( ( w ) => lay[ w ].roleRow ), JSON.stringify( Object.fromEntries( Object.entries( lay ).map( ( [ w, v ] ) => [ w, v.roleRow ] ) ) ) );
-		check( '«Кто работает над проектом»: заголовок и вводный текст во всю ширину; «Ваш контакт» и «Аккаунт-менеджер» справа от значка, текст под ними (1280–320 px) — правка заказчика',
+		check( '«Кто работает над проектом»: заголовок и вводный текст во всю ширину; «Ваш контакт» сверху слева, под ним значок и справа «Аккаунт-менеджер», текст ниже (1280–320 px) — правка заказчика',
 			[ 1280, 1000, 700, 420, 390, 320 ].every( ( w ) => lay[ w ].rolesHead && lay[ w ].mainRow ), JSON.stringify( Object.fromEntries( Object.entries( lay ).map( ( [ w, v ] ) => [ w, [ v.rolesHead, v.mainRow ] ] ) ) ) );
+		check( '«Команда по направлениям»: заголовок во всю ширину блока (1280–320 px) — правка заказчика',
+			[ 1280, 1000, 700, 420, 390, 320 ].every( ( w ) => lay[ w ].teamHead ), JSON.stringify( Object.fromEntries( Object.entries( lay ).map( ( [ w, v ] ) => [ w, v.teamHead ] ) ) ) );
 		check( '«Хотите в команду?»: обе кнопки в одну строку на всех ширинах, включая телефон 390 и 320 px — правка заказчика',
 			[ 1280, 1000, 700, 420, 390, 320 ].every( ( w ) => lay[ w ].joinRow ), JSON.stringify( Object.fromEntries( Object.entries( lay ).map( ( [ w, v ] ) => [ w, v.joinRow ] ) ) ) );
 		await page.setViewportSize( { width: 1280, height: 900 } );

@@ -3,9 +3,10 @@
  * Блок «Кто работает над вашим проектом» (макет o-nas/komanda.html, секция «Как устроена работа»).
  *
  * Белая секция, шапка с вводным текстом во всю ширину (правка заказчика); ниже слева — тёмная
- * карточка (значок и справа от него плашка «Ваш контакт» и H3 — правка заказчика; текст, пункты
- * с галочкой, круг в углу), справа — сетка ролей (колонки от 250 px): значок и справа от него
- * название (H3, правка заказчика), под ними текст. Уже ~880 px — карточка над ролями.
+ * карточка (правки заказчика: сверху плашка «Ваш контакт», под ней значок и справа от него H3;
+ * текст, пункты с галочкой, круг в углу), справа — сетка ролей (колонки от 250 px): значок и
+ * справа от него название (H3, правка заказчика), под ними текст. Уже ~880 px — карточка над
+ * ролями.
  *
  * Переменные SCF: $block (array), $is_preview (bool), $post_id (int|string).
  *
@@ -36,6 +37,7 @@ if ( ! $trust_items && ! $trust_main && ! $is_preview ) {
 			<?php if ( $trust_main ) : ?>
 				<div class="b-roles__main">
 					<span class="b-roles__circle" aria-hidden="true"></span>
+					<span class="b-roles__label"><?php echo esc_html( Blocks::text( 'main_label', __( 'Ваш контакт', 'trust' ) ) ); ?></span>
 					<div class="b-roles__main-head">
 						<span class="b-roles__main-icon" aria-hidden="true">
 							<?php
@@ -48,10 +50,7 @@ if ( ! $trust_items && ! $trust_main && ! $is_preview ) {
 							);
 							?>
 						</span>
-						<div class="b-roles__main-name">
-							<span class="b-roles__label"><?php echo esc_html( Blocks::text( 'main_label', __( 'Ваш контакт', 'trust' ) ) ); ?></span>
-							<h3 class="b-roles__main-title"><?php echo esc_html( Blocks::text( 'main_title', __( 'Аккаунт-менеджер', 'trust' ) ) ); ?></h3>
-						</div>
+						<h3 class="b-roles__main-title"><?php echo esc_html( Blocks::text( 'main_title', __( 'Аккаунт-менеджер', 'trust' ) ) ); ?></h3>
 					</div>
 					<?php if ( '' !== $trust_text ) : ?>
 						<p class="b-roles__main-text"><?php echo esc_html( $trust_text ); ?></p>
