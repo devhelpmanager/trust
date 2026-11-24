@@ -324,10 +324,19 @@ const MOCKUP_CSS = {
 		/* «Хотите в команду?» — отступы секции как у всех блоков (в макете 72 px) */
 		section[aria-labelledby="join-title"] { padding-top: 64px !important; padding-bottom: 64px !important; }
 		section[aria-labelledby="join-title"] > div > div:first-child { gap: 16px !important; }
+		/* «Кто работает над проектом»: шапка во всю ширину; в главной карточке плашка и название справа
+		   от значка (правки заказчика) */
+		section[aria-labelledby="roles-title"] header { max-width: none !important; }
+		section[aria-labelledby="roles-title"] > div > div > div:first-child { display: grid !important; grid-template-columns: 52px minmax(0, 1fr); align-content: start; align-items: center; column-gap: 16px; row-gap: 0 !important; }
+		section[aria-labelledby="roles-title"] > div > div > div:first-child > span:nth-child(2) { grid-row: 1 / span 2; }
+		section[aria-labelledby="roles-title"] > div > div > div:first-child > span:nth-child(3) { grid-column: 2; grid-row: 1; align-self: end; margin-bottom: 3px; }
+		section[aria-labelledby="roles-title"] > div > div > div:first-child > h3 { grid-column: 2; grid-row: 2; align-self: start; margin-top: 3px !important; }
+		section[aria-labelledby="roles-title"] > div > div > div:first-child > p { grid-column: 1 / -1; margin-top: 16px !important; }
+		section[aria-labelledby="roles-title"] > div > div > div:first-child > ul { grid-column: 1 / -1; margin-top: 20px !important; }
 		/* «Кто работает над проектом»: название роли справа от значка (правка заказчика) */
-		section[aria-labelledby="roles-title"] ul > li { display: grid !important; grid-template-columns: 44px minmax(0, 1fr); align-content: start; align-items: center; gap: 10px 14px !important; }
-		section[aria-labelledby="roles-title"] ul > li > h3 { margin: 0 !important; }
-		section[aria-labelledby="roles-title"] ul > li > p { grid-column: 1 / -1; }
+		section[aria-labelledby="roles-title"] > div > div > ul > li { display: grid !important; grid-template-columns: 44px minmax(0, 1fr); align-content: start; align-items: center; gap: 10px 14px !important; }
+		section[aria-labelledby="roles-title"] > div > div > ul > li > h3 { margin: 0 !important; }
+		section[aria-labelledby="roles-title"] > div > div > ul > li > p { grid-column: 1 / -1; }
 		/* «Хотите в команду?»: на телефоне кнопки в одну строку (правка заказчика) */
 		@media (max-width: 560px) {
 			section[aria-labelledby="join-title"] > div > div:last-child { flex: 1 1 100% !important; flex-wrap: nowrap !important; gap: 8px !important; }

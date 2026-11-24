@@ -2,10 +2,10 @@
 /**
  * Блок «Кто работает над вашим проектом» (макет o-nas/komanda.html, секция «Как устроена работа»).
  *
- * Белая секция, шапка с вводным текстом; ниже слева — тёмная карточка (значок, плашка «Ваш
- * контакт», H3, текст, пункты с галочкой, круг в углу), справа — сетка ролей (колонки от 250 px):
- * значок и справа от него название (H3, правка заказчика), под ними текст. Уже ~880 px — карточка
- * над ролями.
+ * Белая секция, шапка с вводным текстом во всю ширину (правка заказчика); ниже слева — тёмная
+ * карточка (значок и справа от него плашка «Ваш контакт» и H3 — правка заказчика; текст, пункты
+ * с галочкой, круг в углу), справа — сетка ролей (колонки от 250 px): значок и справа от него
+ * название (H3, правка заказчика), под ними текст. Уже ~880 px — карточка над ролями.
  *
  * Переменные SCF: $block (array), $is_preview (bool), $post_id (int|string).
  *
@@ -36,19 +36,23 @@ if ( ! $trust_items && ! $trust_main && ! $is_preview ) {
 			<?php if ( $trust_main ) : ?>
 				<div class="b-roles__main">
 					<span class="b-roles__circle" aria-hidden="true"></span>
-					<span class="b-roles__main-icon" aria-hidden="true">
-						<?php
-						Icons::render(
-							$trust_icon( get_field( 'main_icon' ), 'chat-dots' ),
-							array(
-								'size'         => 26,
-								'stroke_width' => 1.9,
-							)
-						);
-						?>
-					</span>
-					<span class="b-roles__label"><?php echo esc_html( Blocks::text( 'main_label', __( 'Ваш контакт', 'trust' ) ) ); ?></span>
-					<h3 class="b-roles__main-title"><?php echo esc_html( Blocks::text( 'main_title', __( 'Аккаунт-менеджер', 'trust' ) ) ); ?></h3>
+					<div class="b-roles__main-head">
+						<span class="b-roles__main-icon" aria-hidden="true">
+							<?php
+							Icons::render(
+								$trust_icon( get_field( 'main_icon' ), 'chat-dots' ),
+								array(
+									'size'         => 26,
+									'stroke_width' => 1.9,
+								)
+							);
+							?>
+						</span>
+						<div class="b-roles__main-name">
+							<span class="b-roles__label"><?php echo esc_html( Blocks::text( 'main_label', __( 'Ваш контакт', 'trust' ) ) ); ?></span>
+							<h3 class="b-roles__main-title"><?php echo esc_html( Blocks::text( 'main_title', __( 'Аккаунт-менеджер', 'trust' ) ) ); ?></h3>
+						</div>
+					</div>
 					<?php if ( '' !== $trust_text ) : ?>
 						<p class="b-roles__main-text"><?php echo esc_html( $trust_text ); ?></p>
 					<?php endif; ?>

@@ -16,6 +16,10 @@
 	margin: 0 auto;
 }
 
+.b-roles .b-roles__head {
+	max-width: none; /* правка заказчика: заголовок и вводный текст — во всю ширину */
+}
+
 .b-roles__body {
 	display: flex;
 	flex-wrap: wrap;
@@ -50,8 +54,23 @@
 	background: #25215C;
 }
 
+/* Значок и справа от него плашка и название (правка заказчика) */
+.b-roles__main-head {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.b-roles__main-name {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+}
+
 .b-roles__main-icon {
 	display: flex;
+	flex: none;
 	align-items: center;
 	justify-content: center;
 	width: 52px;
