@@ -371,6 +371,23 @@ async function compare( page, name, width, theme, mock ) {
 			JSON.stringify( played ) === JSON.stringify( [ true, true, true, true, true, true, 'visible' ] ), JSON.stringify( played ) );
 		check( 'Письма вручную — в выбранном порядке (Бета, Альфа)', JSON.stringify( ownData.letters ) === JSON.stringify( [ 'Бета', 'Альфа' ] ), JSON.stringify( ownData.letters ) );
 
+		// Плеер в узкой карточке (3 колонки на планшете): высота <iframe> по умолчанию (150 px) не растягивает карточку.
+		await page.setViewportSize( { width: 768, height: 900 } );
+		const ytRoute = /youtube(-nocookie)?\.com\/embed\//;
+		await page.route( ytRoute, ( route ) => route.fulfill( { contentType: 'text/html', body: '<!doctype html><title>player</title>' } ) );
+		await page.goto( PAGE, { waitUntil: 'domcontentloaded' } );
+		const embedCard = page.locator( '.b-vrev__card[data-video-embed]' ).first();
+		const cardBefore = await embedCard.evaluate( ( el ) => Math.round( el.getBoundingClientRect().height ) );
+		await embedCard.locator( '.b-vrev__play' ).click();
+		await embedCard.locator( 'iframe' ).waitFor();
+		const embedBox = await embedCard.evaluate( ( el ) => {
+			const r = el.querySelector( 'iframe' ).getBoundingClientRect();
+			return [ Math.round( r.width ), Math.round( r.height ), Math.round( el.getBoundingClientRect().height ) ];
+		} );
+		await page.unroute( ytRoute );
+		check( 'Планшет 768: запущенный плеер YouTube — в пропорции 16 : 9, карточка не меняет высоту',
+			Math.abs( embedBox[ 0 ] / embedBox[ 1 ] - 16 / 9 ) < 0.03 && Math.abs( embedBox[ 2 ] - cardBefore ) <= 1, JSON.stringify( [ embedBox, cardBefore ] ) );
+
 		// ===== Ширины и доступность =====
 		const wide = [];
 		for ( const width of [ 1440, 1024, 768, 390, 320, 280 ] ) {
