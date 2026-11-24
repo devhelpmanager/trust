@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/reviews-list",
+	"title": "Что говорят клиенты",
+	"description": "Все текстовые отзывы из раздела «Отзывы»: фильтр по услугам с числом отзывов, карточки (автор, оценка, услуга, текст, результаты, дата, «Оригинал письма», «Кейс проекта») и «Показать ещё» — догрузка без перезагрузки страницы.",
+	"category": "trust-company",
+	"icon": "format-quote",
+	"keywords": [ "отзывы", "клиенты", "список отзывов", "оценка" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": [ "trust-filter", "file:./style.css" ],
+	"viewScript": [ "file:./view.js", "trust-lightbox" ],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

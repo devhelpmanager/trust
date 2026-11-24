@@ -5,8 +5,10 @@
  * («Что говорят клиенты», 2 карточки) и seo-bloki/15-otzyvy.html (блок «Отзывы клиентов»).
  *
  * Ключ — постоянный идентификатор (по нему кейсы ссылаются на отзыв: {post:review:ключ}).
- * terms — ключи демо-терминов из demo/terms.php. Видеоотзывы и благодарственные письма
- * появятся вместе с картинками и видео в демо-контенте (шаг 4.12).
+ * terms — ключи демо-терминов из demo/terms.php. Шаг 4.12: в списке «Что говорят клиенты» —
+ * оценки, даты (8 отзывов списка — самые новые, как в макете), сканы писем у пяти отзывов
+ * («Оригинал письма»); 3 видеоотзыва (ссылка-заглушка, обложки нет — тёмная заглушка из макета)
+ * и 6 благодарственных писем (скан-заглушка demo/images/letter-scan.jpg).
  *
  * @package Trust
  */
@@ -26,9 +28,14 @@ $trust_results = array(
 	'support' => array( '[N задач закрыто]', '[Работаем N лет]' ),
 );
 
+$trust_day   = static fn( int $days ): string => wp_date( 'Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS );
+$trust_scan  = '{image:letter-scan.jpg|Благодарственное письмо — скан-заглушка}';
+$trust_older = 40; // Отзывы кейсов и блока «Отзывы клиентов» — старше отзывов списка.
+
 $trust_reviews = array(
 	array(
 		'key'    => 'case-repair',
+		'date'   => $trust_day( $trust_older ),
 		'title'  => '[Имя Фамилия], [Ремонт&Дизайн]',
 		'terms'  => array( 'service_type' => array( 'seo', 'sites' ) ),
 		'fields' => array(
@@ -44,6 +51,7 @@ $trust_reviews = array(
 // Отзыв к кейсу «Стоматология» — вторая карточка «Что говорят клиенты» в портфолио (вид «2 карточки»).
 $trust_reviews[] = array(
 	'key'    => 'case-dental',
+	'date'   => $trust_day( $trust_older + 1 ),
 	'title'  => '[Имя Фамилия], [Компания] — стоматология',
 	'terms'  => array( 'service_type' => array( 'seo', 'geo' ) ),
 	'fields' => array(
@@ -65,6 +73,7 @@ foreach (
 ) {
 	$trust_reviews[] = array(
 		'key'    => 'block-' . $trust_key,
+		'date'   => $trust_day( $trust_older + 2 ),
 		'title'  => '[Имя Фамилия], [Компания] — ' . $trust_about,
 		'terms'  => array( 'service_type' => array( 'seo' ) ),
 		'fields' => array(
@@ -78,19 +87,58 @@ foreach (
 	);
 }
 
-// Список на странице «Отзывы о нас»: услуги в порядке макета.
+// Список на странице «Отзывы о нас»: услуги и «Оригинал письма» в порядке макета; самые новые.
+$trust_letters = array( true, false, true, false, true, true, true, false );
 foreach ( array( 'seo', 'sites', 'ppc', 'seo', 'support', 'sites', 'seo', 'ppc' ) as $trust_i => $trust_service ) {
 	$trust_reviews[] = array(
 		'key'    => 'list-' . ( $trust_i + 1 ),
+		'date'   => $trust_day( $trust_i + 1 ),
 		'title'  => sprintf( '[Имя Фамилия], [Компания] — %d', $trust_i + 1 ),
 		'terms'  => array( 'service_type' => array( $trust_service ) ),
+		'fields' => array_filter(
+			array(
+				'trust_kind'     => 'text',
+				'trust_name'     => '[Имя Фамилия]',
+				'trust_position' => '[Должность]',
+				'trust_company'  => '[Компания]',
+				'trust_text'     => $trust_texts[ $trust_service ],
+				'trust_results'  => array_map( static fn( string $text ): array => array( 'text' => $text ), $trust_results[ $trust_service ] ),
+				'trust_rating'   => 5,
+				'trust_letter'   => $trust_letters[ $trust_i ] ? $trust_scan : '',
+			)
+		),
+	);
+}
+
+// Видеоотзывы (блок «Видеоотзывы»): ссылка — заглушка YouTube, обложки нет.
+for ( $trust_i = 1; $trust_i <= 3; $trust_i++ ) {
+	$trust_reviews[] = array(
+		'key'    => 'video-' . $trust_i,
+		'date'   => $trust_day( 10 + $trust_i ),
+		'title'  => sprintf( '[Имя Фамилия], [Компания] — видео %d', $trust_i ),
+		'terms'  => array( 'service_type' => array( 'seo' ) ),
 		'fields' => array(
-			'trust_kind'     => 'text',
-			'trust_name'     => '[Имя Фамилия]',
-			'trust_position' => '[Должность]',
-			'trust_company'  => '[Компания]',
-			'trust_text'     => $trust_texts[ $trust_service ],
-			'trust_results'  => array_map( static fn( string $text ): array => array( 'text' => $text ), $trust_results[ $trust_service ] ),
+			'trust_kind'           => 'video',
+			'trust_name'           => '[Имя Фамилия]',
+			'trust_position'       => '[Должность]',
+			'trust_company'        => '[Компания]',
+			'trust_video_url'      => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+			'trust_video_title'    => '[Название видео: о чём рассказывает клиент]',
+			'trust_video_duration' => '[м:сс]',
+		),
+	);
+}
+
+// Благодарственные письма (блок «Благодарственные письма»): скан-заглушка.
+for ( $trust_i = 1; $trust_i <= 6; $trust_i++ ) {
+	$trust_reviews[] = array(
+		'key'    => 'letter-' . $trust_i,
+		'date'   => $trust_day( 20 + $trust_i ),
+		'title'  => sprintf( '[Компания] — письмо %d', $trust_i ),
+		'fields' => array(
+			'trust_kind'    => 'letter',
+			'trust_company' => '[Компания]',
+			'trust_letter'  => $trust_scan,
 		),
 	);
 }

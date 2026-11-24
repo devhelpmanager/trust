@@ -219,6 +219,8 @@ const MOCKUP_TEXTS = [
 	[ '+7 (000) ', '+1 (000) ' ],
 	// Отдел «Менеджеры» в «Команде» — тот же термин «Менеджмент», что в «Карьере».
 	[ 'Менеджеры', 'Менеджмент', [ 'o-nas/komanda.html' ] ],
+	// Автор видеоотзыва: должность и компания — отдельные поля отзыва.
+	[ '[должность, компания]', '[Должность], [Компания]', [ 'o-nas/otzyvy.html' ] ],
 ];
 const HERO_SECTION_CSS = `
 	.dc-hero-box dl > div { justify-content: flex-end !important; }
@@ -355,7 +357,12 @@ const MOCKUP_CSS = {
 		.dc-hero-in > div:first-child { max-width: none !important; }
 		.dc-hero-in > div:first-child > p { max-width: 760px !important; }
 	`,
-	'o-nas/otzyvy.html': HERO_SECTION_CSS,
+	'o-nas/otzyvy.html': HERO_SECTION_CSS + `
+		main section:not(.dc-hero-sec) header { gap: 16px !important; }
+		main section:not(.dc-hero-sec) h2 { font-size: clamp(28px, 3.4vw, 44px) !important; }
+		/* «Кейс проекта» в макете у каждой карточки, в демо — только у отзывов, привязанных к кейсам */
+		section[aria-labelledby="list-title"] a[href="#portfolio"] { display: none !important; }
+	`,
 	'o-nas/oferta.html': HERO_DOCUMENT_CSS,
 	'o-nas/politika-cookie.html': HERO_DOCUMENT_CSS,
 	'o-nas/soglasie-pd.html': HERO_DOCUMENT_CSS,

@@ -1,0 +1,117 @@
+/*
+ * Блок «Благодарственные письма» (o-nas/otzyvy.html, «Документы»). Просмотр крупно —
+ * assets/js/lightbox.js.
+ */
+
+.b-letters {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-letters__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 36px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-letters__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(170px, 42%), 1fr));
+	gap: 16px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-letters__list > li {
+	min-width: 0;
+}
+
+.b-letters__card {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	height: 100%;
+	padding: 10px 10px 14px;
+	box-sizing: border-box;
+	border: 1px solid var(--c-border);
+	border-radius: 18px;
+	background: var(--c-white);
+	color: var(--c-text);
+	text-decoration: none;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+a.b-letters__card:hover {
+	border-color: var(--c-decor);
+	box-shadow: 0 14px 32px rgba(46, 16, 101, 0.1);
+	color: var(--c-text);
+}
+
+.b-letters__scan {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 3 / 4;
+	object-fit: cover;
+	box-sizing: border-box;
+	border: 1px solid var(--c-divider);
+	border-radius: 10px;
+	background: var(--c-white);
+}
+
+/* Без скана — рисунок листа из макета */
+.b-letters__scan--empty {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 16% 14%;
+}
+
+.b-letters__scan--empty span {
+	height: 5px;
+	border-radius: 3px;
+	background: var(--c-lavender-3);
+}
+
+.b-letters__scan--empty span:nth-child(1) {
+	width: 40%;
+	height: 10px;
+	background: #DDD3F7;
+}
+
+.b-letters__scan--empty span:nth-child(2) {
+	margin-top: 14%;
+}
+
+.b-letters__scan--empty span:nth-child(4) {
+	width: 80%;
+}
+
+.b-letters__scan--empty span:nth-child(6) {
+	width: 60%;
+}
+
+.b-letters__scan--empty span:nth-child(7) {
+	align-self: flex-end;
+	width: 34%;
+	height: 8px;
+	margin-top: auto;
+	background: #DDD3F7;
+}
+
+.b-letters__company {
+	padding: 0 4px;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.35;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.b-letters__card {
+		transition: none;
+	}
+}

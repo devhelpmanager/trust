@@ -190,7 +190,7 @@ async function publish( page ) {
 		check( 'Демо: у всех кейсов «Чем занимается клиент» и два результата для карточек', demo.withNiche === 9 && demo.twoResults === 9 );
 		check( 'Демо «Ремонт квартир»: 4 позиции, услуги SEO и Сайты, отрасль, отзыв клиента',
 			demo.positions === 4 && demo.services.join() === 'SEO,Сайты' && demo.industry.join() === 'Ремонт и строительство' && demo.review === '[Ремонт&Дизайн]', JSON.stringify( demo ) );
-		check( 'Демо: 13 отзывов (9 — шаг 2.3, 4 — блоки «Отзывы клиентов», шаг 4.7)', demo.reviews === 13, String( demo.reviews ) );
+		check( 'Демо: 22 отзыва (9 — шаг 2.3, 4 — блоки «Отзывы клиентов», шаг 4.7; 3 видео и 6 писем — шаг 4.12)', demo.reviews === 22, String( demo.reviews ) );
 		const res = await page.goto( `${ URL }/portfolio/novyy-sayt-i-seo-dlya-kompanii-po-remontu-kvartir/` );
 		check( 'Страница демо-кейса открывается', res.status() === 200 );
 	} finally {

@@ -171,6 +171,35 @@ final class Reviews {
 	}
 
 	/**
+	 * Опубликованные отзывы одного вида (видео, письма) — новые сначала или выбранные вручную
+	 * (в их порядке, другие виды пропускаются). Для блоков «Видеоотзывы» и «Благодарственные
+	 * письма».
+	 *
+	 * @param string $kind   Вид: video или letter.
+	 * @param int[]  $manual Выбранные вручную; пусто — последние.
+	 * @param int    $count  Сколько, не больше.
+	 * @return int[]
+	 */
+	public static function of_kind( string $kind, array $manual, int $count ): array {
+		$args   = array(
+			'post_type'      => 'review',
+			'post_status'    => 'publish',
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+			'posts_per_page' => max( 1, $count ),
+			'meta_key'       => 'trust_kind', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- отзывы одного вида.
+			'meta_value'     => $kind, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- см. выше.
+		);
+		$manual = array_values( array_filter( array_map( 'intval', $manual ) ) );
+		if ( $manual ) {
+			$args['post__in']       = $manual;
+			$args['orderby']        = 'post__in';
+			$args['posts_per_page'] = min( count( $manual ), max( 1, $count ) );
+		}
+		return array_map( 'intval', get_posts( $args ) );
+	}
+
+	/**
 	 * Кейс, к которому привязан отзыв (поле кейса «Отзыв клиента»); 0 — нет.
 	 *
 	 * @param int $post_id Отзыв.

@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/video-reviews",
+	"title": "Видеоотзывы",
+	"description": "Отзывы вида «Видео» карточками: обложка, длительность, о чём видео, автор. Плеер загружается только по нажатию; микроразметка VideoObject.",
+	"category": "trust-company",
+	"icon": "format-video",
+	"keywords": [ "видео", "отзывы", "видеоотзывы" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "trust-video-player",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

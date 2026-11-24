@@ -3,7 +3,7 @@
  * Блок «Видео» (ТЗ, п. 8.3; «Видеоразбор» в макете статьи seo-blog/statya.html).
  *
  * Обложка 16:9 со скруглением, по центру — белая круглая кнопка воспроизведения, справа внизу —
- * длительность, под видео — подпись. Плеер загружается только по нажатию (view.js): YouTube
+ * длительность, под видео — подпись. Плеер загружается только по нажатию (assets/js/video-player.js): YouTube
  * (youtube-nocookie.com), Rutube, VK Видео — встроенный плеер, MP4 — <video>. Без JavaScript
  * кнопка — ссылка на видео (или файл). Микроразметка VideoObject (Trust\Schema\Graph::video()).
  *
@@ -80,10 +80,10 @@ $trust_figure = static function () use ( $trust_inline, $trust_wide, $trust_embe
 	}
 	?>
 	<figure class="<?php echo esc_attr( $classes ); ?>"<?php echo $data; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- экранировано выше. ?> data-video-title="<?php echo esc_attr( $trust_title ); ?>">
-		<div class="b-video__frame">
+		<div class="b-video__frame" data-video-frame>
 			<?php echo $trust_img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image(). ?>
 			<?php if ( '' !== $trust_href ) : ?>
-				<a class="b-video__play" href="<?php echo esc_url( $trust_href ); ?>" target="_blank" rel="noopener" aria-label="<?php echo esc_attr( $trust_label ); ?>"<?php echo $is_preview ? ' tabindex="-1"' : ''; ?>>
+				<a class="b-video__play" href="<?php echo esc_url( $trust_href ); ?>" target="_blank" rel="noopener" data-video-play aria-label="<?php echo esc_attr( $trust_label ); ?>"<?php echo $is_preview ? ' tabindex="-1"' : ''; ?>>
 					<?php Icons::render( 'play', array( 'size' => 30 ) ); ?>
 				</a>
 			<?php else : ?>

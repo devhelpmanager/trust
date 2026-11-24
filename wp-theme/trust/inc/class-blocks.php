@@ -142,6 +142,17 @@ final class Blocks {
 				'in_footer' => true,
 			)
 		);
+		// Плеер видео по нажатию: блоки «Видео» и «Видеоотзывы» указывают "trust-video-player".
+		wp_register_script(
+			'trust-video-player',
+			Assets::url( 'assets/js/video-player.js' ),
+			array(),
+			Assets::version( 'assets/js/video-player.js' ),
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => true,
+			)
+		);
 		// Фильтр списка без перезагрузки («Команда по направлениям»): стиль и скрипт "trust-filter".
 		wp_register_style( 'trust-filter', Assets::url( 'assets/css/filter.css' ), array(), Assets::version( 'assets/css/filter.css' ) );
 		wp_register_script(

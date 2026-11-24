@@ -123,6 +123,16 @@ return array(
 			'instructions'  => __( 'Ссылка из галочки согласия во всех формах сайта.', 'trust' ),
 		),
 		array(
+			'name'          => 'publish_consent_page',
+			'label'         => __( 'Страница согласия на распространение персональных данных', 'trust' ),
+			'type'          => 'post_object',
+			'post_type'     => array( 'page' ),
+			'return_format' => 'id',
+			'allow_null'    => 1,
+			'ui'            => 1,
+			'instructions'  => __( 'Ссылка из второй галочки формы «Оставьте отзыв» (публикация отзыва с именем, компанией и должностью). Пусто — галочка без ссылки.', 'trust' ),
+		),
+		array(
 			'name'    => 'cta_heading',
 			'label'   => __( 'Блок «Обсудим ваш проект»', 'trust' ),
 			'type'    => 'message',

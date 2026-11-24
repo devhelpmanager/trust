@@ -29,6 +29,7 @@ final class Theme {
 		Blog::register();
 		Cases::register();
 		Reviews::register();
+		Reviews_List::register();
 		Team::register();
 		Vacancies::register();
 		Questions::register();
@@ -47,6 +48,7 @@ final class Theme {
 		Forms\Calculator::register();
 		Forms\Estimates::register();
 		Forms\Leader_Messages::register();
+		Forms\Review_Form::register();
 		Cookie::register();
 		Settings::register();
 		Blocks::register();

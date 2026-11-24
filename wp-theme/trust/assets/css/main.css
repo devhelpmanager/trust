@@ -1383,6 +1383,16 @@ html:not(.js) .main-nav__item:focus-within > .main-nav__dropdown {
 	transition: border-color 0.2s;
 }
 
+/* Список выбора: своя стрелка, как в макетах (o-nas/otzyvy.html) */
+select.field__input {
+	padding-right: 44px;
+	appearance: none;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235B21B6' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 14px center;
+	cursor: pointer;
+}
+
 textarea.field__input {
 	min-height: 120px;
 	padding: 14px 16px;

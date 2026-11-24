@@ -1241,6 +1241,56 @@ return array(
 					),
 				),
 			),
+			// Отзывы, видео и письма — демо-отзывы (demo/reviews.php); форма создаёт отзыв «На утверждении».
+			array(
+				'reviews-list',
+				array(
+					'eyebrow' => 'Отзывы клиентов',
+					'title'   => 'Что говорят клиенты',
+				),
+			),
+			array(
+				'video-reviews',
+				array(
+					'eyebrow' => 'Видео',
+					'title'   => 'Видеоотзывы',
+				),
+			),
+			array(
+				'letters',
+				array(
+					'eyebrow' => 'Документы',
+					'title'   => 'Благодарственные письма',
+					'lead'    => 'Сканы писем на бланках компаний — нажмите, чтобы открыть в полном размере.',
+				),
+			),
+			array(
+				'review-form',
+				array(
+					'anchor'    => 'leave-review',
+					'eyebrow'   => 'Обратная связь',
+					'title'     => 'Оставьте отзыв',
+					'lead'      => 'Работали с нами? Расскажите, как всё прошло — нам важна любая обратная связь, в том числе критика. Перед публикацией свяжемся с вами, чтобы подтвердить отзыв.',
+					'platforms' => array(
+						array(
+							'name' => 'Яндекс Карты',
+							'url'  => 'https://yandex.ru/maps/',
+						),
+						array(
+							'name' => '2ГИС',
+							'url'  => 'https://2gis.ru/',
+						),
+						array(
+							'name' => 'Google Карты',
+							'url'  => 'https://www.google.com/maps',
+						),
+						array(
+							'name' => 'Workspace',
+							'url'  => 'https://workspace.ru/',
+						),
+					),
+				),
+			),
 			array( 'cta', array( 'background' => 'white' ) ),
 		),
 	),
@@ -1312,6 +1362,18 @@ return array(
 	array(
 		'path'   => 'soglasie-na-obrabotku-dannyh',
 		'title'  => 'Согласие на обработку персональных данных',
+		'type'   => 'document',
+		'seo'    => array(
+			'trust_crumb_section' => $trust_about,
+		),
+		'blocks' => array(
+			$trust_document_hero(),
+		),
+	),
+	// Вторая галочка формы «Оставьте отзыв» (шаг 4.12): публикация отзыва с именем и компанией.
+	array(
+		'path'   => 'soglasie-na-rasprostranenie-dannyh',
+		'title'  => 'Согласие на распространение персональных данных',
 		'type'   => 'document',
 		'seo'    => array(
 			'trust_crumb_section' => $trust_about,

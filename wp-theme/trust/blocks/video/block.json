@@ -15,7 +15,7 @@
 		"customClassName": false
 	},
 	"style": "file:./style.css",
-	"viewScript": "file:./view.js",
+	"viewScript": "trust-video-player",
 	"acf": {
 		"mode": "preview",
 		"renderTemplate": "render.php",

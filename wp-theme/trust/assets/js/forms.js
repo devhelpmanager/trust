@@ -107,6 +107,10 @@
 		if ( 'checkbox' === input.type ) {
 			return ! input.required || input.checked;
 		}
+		// Группа переключателей (оценка): data-error и required — у первого, проверяется вся группа.
+		if ( 'radio' === input.type ) {
+			return ! input.required || !! ( input.form && input.form.querySelector( `input[type="radio"][name="${ input.name }"]:checked` ) );
+		}
 		const value = input.value.trim();
 		if ( ! value ) {
 			return ! input.required;

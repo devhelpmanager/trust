@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/letters",
+	"title": "Благодарственные письма",
+	"description": "Отзывы вида «Благодарственное письмо»: сканы с названием компании, по нажатию — скан крупно в окне просмотра.",
+	"category": "trust-company",
+	"icon": "media-document",
+	"keywords": [ "письма", "благодарности", "отзывы", "документы" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "trust-lightbox",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

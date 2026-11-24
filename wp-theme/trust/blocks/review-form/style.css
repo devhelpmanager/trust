@@ -1,0 +1,248 @@
+/*
+ * Блок «Оставьте отзыв» (o-nas/otzyvy.html, «Обратная связь»). Поля и галочки — общие стили
+ * форм (main.css), здесь — раскладка, площадки, звёзды оценки и экран «Спасибо за отзыв!».
+ */
+
+.b-rform {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-lavender);
+	color: var(--c-text);
+	scroll-margin-top: 16px;
+}
+
+.b-rform__inner {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 40px 56px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-rform__intro {
+	display: flex;
+	flex: 1 1 360px;
+	flex-direction: column;
+	gap: 18px;
+	min-width: 0;
+}
+
+.b-rform .b-rform__head {
+	gap: 18px;
+}
+
+.b-rform__platforms {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	margin-top: 8px;
+}
+
+.b-rform__platforms-label {
+	font-size: 15px;
+	font-weight: 600;
+	line-height: normal;
+	color: var(--c-text-2);
+}
+
+.b-rform__platform-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-rform__platform,
+.b-rform__platform:hover {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 48px;
+	padding: 0 16px;
+	box-sizing: border-box;
+	border: 1.5px solid var(--c-border-strong);
+	border-radius: 12px;
+	background: var(--c-white);
+	color: var(--c-text-2);
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.2;
+	text-decoration: none;
+	transition: background 0.2s;
+}
+
+.b-rform__platform:hover {
+	background: var(--c-lavender-2);
+}
+
+.b-rform__platform svg {
+	color: var(--c-violet);
+}
+
+/* Карточка формы */
+.b-rform__card {
+	flex: 1 1 480px;
+	min-width: 0;
+	padding: clamp(22px, 3vw, 32px);
+	box-sizing: border-box;
+	border: 1px solid var(--c-border);
+	border-radius: 22px;
+	background: var(--c-white);
+	box-shadow: 0 18px 40px rgba(46, 16, 101, 0.08);
+}
+
+.b-rform__row {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+	gap: 18px 16px;
+}
+
+.b-rform .field__optional {
+	font-weight: 400;
+	color: var(--c-muted);
+}
+
+.b-rform .field__note {
+	font-size: 13px;
+	font-weight: 500;
+	line-height: normal;
+	color: var(--c-muted);
+}
+
+/* Ошибка заменяет подсказку под полем */
+.b-rform .field__error:not([hidden]) + .field__note {
+	display: none;
+}
+
+/* Оценка: 5 звёзд-переключателей, закрашены до выбранной */
+.b-rform__rating {
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.b-rform__rating legend {
+	margin-bottom: 8px;
+	padding: 0;
+}
+
+.b-rform__rating-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px 12px;
+}
+
+.b-rform__stars {
+	display: flex;
+}
+
+.b-rform__star {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	cursor: pointer;
+}
+
+.b-rform__star input {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.b-rform__star svg {
+	fill: var(--c-white);
+	stroke: #C9BCEB;
+	stroke-width: 1.5;
+	stroke-linejoin: round;
+}
+
+.b-rform__star input:focus-visible + svg {
+	outline: 3px solid var(--c-focus);
+	outline-offset: 2px;
+	border-radius: 6px;
+}
+
+.b-rform__stars:has(input[value="1"]:checked) .b-rform__star:nth-child(-n+1) svg,
+.b-rform__stars:has(input[value="2"]:checked) .b-rform__star:nth-child(-n+2) svg,
+.b-rform__stars:has(input[value="3"]:checked) .b-rform__star:nth-child(-n+3) svg,
+.b-rform__stars:has(input[value="4"]:checked) .b-rform__star:nth-child(-n+4) svg,
+.b-rform__stars:has(input[value="5"]:checked) .b-rform__star:nth-child(-n+5) svg {
+	fill: #F5B301;
+	stroke: #F5B301;
+}
+
+.b-rform__stars:has(input[aria-invalid="true"]) .b-rform__star svg {
+	stroke: var(--c-error);
+}
+
+.b-rform__rating-word {
+	font-size: 14px;
+	line-height: normal;
+	color: var(--c-muted);
+}
+
+.b-rform__rating .field__error:not([hidden]) {
+	display: block;
+	margin-top: 4px;
+}
+
+.b-rform .b-rform__note {
+	margin: -4px 0 0;
+}
+
+/* «Спасибо за отзыв!» — слева, как в макете */
+.b-rform .form-sent {
+	align-items: flex-start;
+	gap: 16px;
+	padding: 8px 0;
+	text-align: left;
+}
+
+.b-rform .form-success__title {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.b-rform .form-success__text {
+	color: var(--c-text-2);
+}
+
+.b-rform .form-sent__again,
+.b-rform .form-sent__again:hover {
+	min-height: 48px;
+	padding: 0 20px;
+	border: 1.5px solid var(--c-border-strong);
+	border-radius: 12px;
+	background: var(--c-white);
+	color: var(--c-violet-dark);
+	text-decoration: none;
+}
+
+.b-rform .form-sent__again:hover {
+	background: var(--c-lavender-2);
+}
+
+@media (max-width: 640px) {
+	.b-rform__card {
+		padding: 22px 16px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.b-rform__platform {
+		transition: none;
+	}
+}

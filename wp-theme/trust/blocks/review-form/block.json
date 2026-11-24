@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/review-form",
+	"title": "Оставьте отзыв",
+	"description": "Форма отзыва: имя, компания и должность, услуга, телефон или email, оценка звёздами, отзыв, два согласия. Отзыв сохраняется «На утверждении», приходит заявка. Слева — текст и ссылки на площадки отзывов.",
+	"category": "trust-forms",
+	"icon": "star-filled",
+	"keywords": [ "отзыв", "форма", "оценка", "обратная связь" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}
