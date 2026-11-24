@@ -80,8 +80,9 @@
 	color: var(--c-violet);
 }
 
-/* Карточка формы */
+/* Карточка формы (экран «Спасибо за отзыв!» — поверх неё) */
 .b-rform__card {
+	position: relative;
 	flex: 1 1 480px;
 	min-width: 0;
 	padding: clamp(22px, 3vw, 32px);
@@ -200,12 +201,24 @@
 	margin: -4px 0 0;
 }
 
-/* «Спасибо за отзыв!» — слева, как в макете */
-.b-rform .form-sent {
-	align-items: flex-start;
+/*
+ * «Спасибо за отзыв!» — поверх формы (правка заказчика, как «Бриф отправлен»): значок слева,
+ * заголовок справа (не хватает места — «Спасибо / за отзыв!»), текст и кнопка — под ними.
+ */
+.b-rform .form-sent__panel {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	align-items: center;
 	gap: 16px;
-	padding: 8px 0;
 	text-align: left;
+}
+
+.b-rform .form-sent__panel > :not(.form-success__icon, .form-success__title) {
+	grid-column: 1 / -1;
+}
+
+.b-rform .form-sent__panel > .form-sent__again {
+	justify-self: start;
 }
 
 .b-rform .form-success__title {
@@ -214,6 +227,7 @@
 	font-size: 24px;
 	font-weight: 600;
 	line-height: 1.2;
+	text-wrap: balance;
 }
 
 .b-rform .form-success__text {

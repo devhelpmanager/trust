@@ -241,9 +241,58 @@ async function compare( page, name, width, theme, mock ) {
 		await form.locator( '[name="text"]' ).fill( 'Отличная команда: сайт сделали в срок, реклама окупилась за первый месяц.' );
 		await form.locator( '[name="consent"]' ).check();
 		await form.locator( '[name="publish"]' ).check();
+		const formTop = () => page.evaluate( () => Math.round( document.querySelector( '.b-rform__form' ).getBoundingClientRect().top + scrollY ) );
+		const topBefore = await formTop();
 		await form.locator( '[type="submit"]' ).click();
 		const sent = await page.locator( '.b-rform .form-sent' ).waitFor( { state: 'visible', timeout: 20000 } ).then( () => true ).catch( () => false );
-		check( 'После отправки — «Спасибо за отзыв!» и «Написать ещё один отзыв»', sent && 'Спасибо за отзыв!' === ( await page.locator( '.b-rform .form-success__title' ).textContent() ) && 'Написать ещё один отзыв' === ( await page.locator( '.b-rform .form-sent__again' ).textContent() ).trim() );
+		check( 'После отправки — «Спасибо за отзыв!» и «Написать ещё один отзыв»', sent && 'Спасибо за отзыв!' === ( await page.locator( '.b-rform .form-success__title' ).textContent() ).replace( /\u00a0/g, ' ' ) && 'Написать ещё один отзыв' === ( await page.locator( '.b-rform .form-sent__again' ).textContent() ).trim() );
+		// Строки заголовка: буквы, сгруппированные по вертикали.
+		const titleLines = () => page.evaluate( () => {
+			const node = document.querySelector( '.b-rform .form-success__title' ).firstChild;
+			const range = document.createRange();
+			const lines = [];
+			let top = null;
+			for ( let i = 0; i < node.length; i++ ) {
+				range.setStart( node, i );
+				range.setEnd( node, i + 1 );
+				const r = range.getClientRects()[ 0 ];
+				if ( ! r ) {
+					continue;
+				}
+				if ( null === top || r.top - top > 4 ) {
+					lines.push( '' );
+					top = r.top;
+				}
+				lines[ lines.length - 1 ] += node.data[ i ];
+			}
+			return lines.map( ( l ) => l.replace( /\u00a0/g, ' ' ).trim() );
+		} );
+		const overlay = await page.evaluate( () => {
+			const card = document.querySelector( '.b-rform__card' ).getBoundingClientRect();
+			const sentBox = document.querySelector( '.b-rform .form-sent' ).getBoundingClientRect();
+			const icon = document.querySelector( '.b-rform .form-success__icon' ).getBoundingClientRect();
+			const title = document.querySelector( '.b-rform .form-success__title' ).getBoundingClientRect();
+			const formEl = document.querySelector( '.b-rform__form' );
+			return {
+				form: [ formEl.hidden, formEl.inert ],
+				cover: [ sentBox.left - card.left, sentBox.top - card.top, sentBox.width - card.width, sentBox.height - card.height ].map( Math.round ),
+				row: title.left > icon.right && Math.abs( ( title.top + title.bottom ) / 2 - ( icon.top + icon.bottom ) / 2 ) < 2,
+			};
+		} );
+		const topAfter = await formTop();
+		const oneLine = await titleLines();
+		check( 'Экран «Спасибо» — поверх формы: форма на месте (не скрыта, недоступна), слой закрывает всю карточку (внутри рамки 1 px), блок не сдвигается',
+			JSON.stringify( overlay.form ) === JSON.stringify( [ false, true ] ) && overlay.cover.every( ( v ) => Math.abs( v ) <= 2 ) && topBefore === topAfter, JSON.stringify( [ overlay, topBefore, topAfter ] ) );
+		await page.setViewportSize( { width: 390, height: 900 } );
+		const narrow = await titleLines();
+		const narrowRow = await page.evaluate( () => {
+			const icon = document.querySelector( '.b-rform .form-success__icon' ).getBoundingClientRect();
+			const title = document.querySelector( '.b-rform .form-success__title' ).getBoundingClientRect();
+			return title.left > icon.right && title.top < icon.bottom && title.bottom > icon.top;
+		} );
+		await page.setViewportSize( { width: 1280, height: 900 } );
+		check( 'Заголовок справа от значка: 1280 px — в одну строку, 390 px — «Спасибо» / «за отзыв!»',
+			overlay.row && narrowRow && JSON.stringify( oneLine ) === JSON.stringify( [ 'Спасибо за отзыв!' ] ) && JSON.stringify( narrow ) === JSON.stringify( [ 'Спасибо', 'за отзыв!' ] ), JSON.stringify( [ overlay.row, narrowRow, oneLine, narrow ] ) );
 		const saved = JSON.parse( wp( 'eval', `$r = get_posts( array( 'post_type' => 'review', 'post_status' => 'pending', 'numberposts' => 1, 'meta_key' => 'trust_name', 'meta_value' => '${ MARK } Анна' ) ); $id = $r ? $r[0]->ID : 0; $l = get_posts( array( 'post_type' => 'lead', 'numberposts' => 1, 'fields' => 'ids', 'meta_key' => 'trust_related', 'meta_value' => $id ) ); echo wp_json_encode( array( $id, $id ? array( get_post_status( $id ), get_post_meta( $id, 'trust_kind', true ), get_post_meta( $id, 'trust_company', true ), get_post_meta( $id, 'trust_rating', true ), get_post_meta( $id, 'trust_email', true ), get_post_meta( $id, 'trust_phone', true ), (bool) get_post_meta( $id, 'trust_consent_at', true ), (bool) get_post_meta( $id, 'trust_publish_consent_at', true ), wp_get_post_terms( $id, 'service_type', array( 'fields' => 'slugs' ) ), get_the_title( $id ) ) : null, $l ? array( (int) $l[0], get_post_meta( $l[0], 'trust_form', true ), count( get_post_meta( $l[0], 'trust_consent', true )['items'] ?? array() ) ) : null ) );` ) );
 		if ( saved[ 0 ] ) {
 			created.push( String( saved[ 0 ] ) );
@@ -255,8 +304,10 @@ async function compare( page, name, width, theme, mock ) {
 			JSON.stringify( saved[ 1 ] ) === JSON.stringify( [ 'pending', 'text', 'ООО Пример, директор', '4', 'anna-review@example.com', '', true, true, [ ppcSlug ], `${ MARK } Анна, ООО Пример, директор` ] ), JSON.stringify( saved[ 1 ] ) );
 		check( 'Заявка «Отзыв с сайта» связана с отзывом, в ней два согласия', saved[ 2 ] && 'review' === saved[ 2 ][ 1 ] && 2 === saved[ 2 ][ 2 ], JSON.stringify( saved[ 2 ] ) );
 		await page.locator( '.b-rform .form-sent__again' ).click();
-		const reset = await page.evaluate( () => [ document.querySelector( '.b-rform__form' ).hidden, document.querySelector( '[name="name"]' ).value, document.querySelector( '[data-rating-word]' ).textContent, document.activeElement.name ] );
-		check( '«Написать ещё один отзыв» — снова пустая форма, оценка сброшена', JSON.stringify( reset ) === JSON.stringify( [ false, '', 'Выберите от 1 до 5', 'name' ] ), JSON.stringify( reset ) );
+		// Подпись оценки обновляется после события reset (setTimeout в view.js).
+		await page.waitForFunction( () => ! document.querySelector( 'input[name="rating"]:checked' ) && 'Выберите от 1 до 5' === document.querySelector( '[data-rating-word]' ).textContent, null, { timeout: 2000 } ).catch( () => {} );
+		const reset = await page.evaluate( () => [ document.querySelector( '.b-rform__form' ).hidden, document.querySelector( '.b-rform__form' ).inert, document.querySelector( '.b-rform .form-sent' ).hidden, document.querySelector( '[name="name"]' ).value, document.querySelector( '[data-rating-word]' ).textContent, document.activeElement.name ] );
+		check( '«Написать ещё один отзыв» — слой убран, снова пустая форма, оценка сброшена', JSON.stringify( reset ) === JSON.stringify( [ false, false, true, '', 'Выберите от 1 до 5', 'name' ] ), JSON.stringify( reset ) );
 
 		// ===== Без JavaScript =====
 		const noJs = await browser.newContext( { javaScriptEnabled: false, viewport: { width: 1280, height: 900 } } );
