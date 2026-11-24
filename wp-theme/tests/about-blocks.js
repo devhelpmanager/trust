@@ -189,6 +189,19 @@ async function compare( page, name, width, theme, mock ) {
 		await modal.locator( '[type="submit"]' ).click();
 		const sent = await modal.locator( '.callback-modal__success' ).waitFor( { state: 'visible', timeout: 20000 } ).then( () => true ).catch( () => false );
 		check( 'Окно: после отправки — «Сообщение отправлено»', sent && 'Сообщение отправлено' === ( await modal.locator( '.form-success__title' ).textContent() ) );
+		// Правка заказчика: «Сообщение отправлено» справа от значка, текст и «Закрыть» — под ними.
+		const sentLayout = () => modal.locator( '.callback-modal__success' ).evaluate( ( el ) => {
+			const r = ( s ) => el.querySelector( s ).getBoundingClientRect();
+			const [ icon, title, text, close ] = [ r( '.form-success__icon' ), r( '.form-success__title' ), r( '.form-success__text' ), r( 'button' ) ];
+			const x = r( '.form-success__icon' ).left;
+			return [ title.left - icon.right >= 12, Math.abs( ( title.top + title.bottom ) / 2 - ( icon.top + icon.bottom ) / 2 ) < 2, text.top >= Math.max( icon.bottom, title.bottom ), Math.round( text.left - x ), Math.round( close.left - x ), close.top > text.bottom ];
+		} );
+		const sentDesktop = await sentLayout();
+		await page.setViewportSize( { width: 390, height: 900 } );
+		const sentMobile = await sentLayout();
+		await page.setViewportSize( { width: 1280, height: 900 } );
+		const sentOk = ( v ) => JSON.stringify( v ) === JSON.stringify( [ true, true, true, 0, 0, true ] );
+		check( '«Сообщение отправлено» справа от значка, текст и «Закрыть» — под ними (1280 и 390 px)', sentOk( sentDesktop ) && sentOk( sentMobile ), JSON.stringify( [ sentDesktop, sentMobile ] ) );
 		const leadId = wp( 'eval', 'echo get_posts( array( "post_type" => "lead", "numberposts" => 1, "fields" => "ids", "meta_key" => "trust_contact", "meta_value" => "leader-test@example.com" ) )[0] ?? 0;' );
 		if ( '0' !== leadId ) {
 			created.push( leadId );
