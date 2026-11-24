@@ -324,6 +324,15 @@ const MOCKUP_CSS = {
 		/* «Хотите в команду?» — отступы секции как у всех блоков (в макете 72 px) */
 		section[aria-labelledby="join-title"] { padding-top: 64px !important; padding-bottom: 64px !important; }
 		section[aria-labelledby="join-title"] > div > div:first-child { gap: 16px !important; }
+		/* «Кто работает над проектом»: название роли справа от значка (правка заказчика) */
+		section[aria-labelledby="roles-title"] ul > li { display: grid !important; grid-template-columns: 44px minmax(0, 1fr); align-content: start; align-items: center; gap: 10px 14px !important; }
+		section[aria-labelledby="roles-title"] ul > li > h3 { margin: 0 !important; }
+		section[aria-labelledby="roles-title"] ul > li > p { grid-column: 1 / -1; }
+		/* «Хотите в команду?»: на телефоне кнопки в одну строку (правка заказчика) */
+		@media (max-width: 560px) {
+			section[aria-labelledby="join-title"] > div > div:last-child { flex: 1 1 100% !important; flex-wrap: nowrap !important; gap: 8px !important; }
+			section[aria-labelledby="join-title"] > div > div:last-child > a { flex: 1 1 auto; gap: 6px !important; min-width: 0; padding: 0 12px !important; font-size: 14px !important; justify-content: center; }
+		}
 		@media (max-width: 1100px) {
 			section[aria-labelledby="join-title"] { padding-top: 56px !important; padding-bottom: 56px !important; }
 		}

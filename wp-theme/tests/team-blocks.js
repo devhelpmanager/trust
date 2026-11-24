@@ -179,23 +179,34 @@ async function compare( page, name, width, theme, mock ) {
 				const mBody = mem.querySelector( '.b-team__body' ).getBoundingClientRect();
 				const main = document.querySelector( '.b-roles__main' ).getBoundingClientRect();
 				const role = document.querySelector( '.b-roles__item' ).getBoundingClientRect();
+				const rItem = document.querySelector( '.b-roles__item' );
+				const [ rIcon, rTitle, rText ] = [ '.b-roles__icon', '.b-roles__title', '.b-roles__text' ].map( ( s ) => rItem.querySelector( s ).getBoundingClientRect() );
+				const jb = [ ...document.querySelectorAll( '.b-join__btn' ) ].map( ( a ) => a.getBoundingClientRect() );
+				const jIn = document.querySelector( '.b-join__inner' ).getBoundingClientRect();
 				return {
 					leaders: perRow( '.b-leaders__card' ),
 					leaderPhoto: body.left > photo.right ? 'left:' + Math.round( photo.width ) : 'top:' + ( Math.round( photo.width / photo.height * 100 ) / 100 ),
 					team: perRow( '.b-team__card' ),
 					memberPhoto: mBody.left > mPhoto.right ? 'left:' + Math.round( mPhoto.width ) : 'top',
 					roles: role.left > main.right ? 'side' : 'below',
+					// Правки заказчика: название роли справа от значка; кнопки «Хотите в команду?» — в одну строку.
+					roleRow: rTitle.left >= rIcon.right + 12 && rTitle.top < rIcon.bottom && rTitle.bottom > rIcon.top && rText.top >= rIcon.bottom && Math.abs( rText.left - rIcon.left ) < 1,
+					joinRow: Math.abs( jb[ 0 ].top - jb[ 1 ].top ) < 1 && jb[ 1 ].left > jb[ 0 ].right && jb[ 1 ].right <= jIn.right + 0.5,
 				};
 			} );
 		};
 		const lay = {};
-		for ( const width of [ 1280, 1000, 700, 420, 390 ] ) {
+		for ( const width of [ 1280, 1000, 700, 420, 390, 320 ] ) {
 			lay[ width ] = await layout( width );
 		}
 		check( 'Раскладки: руководство 3 → 1 колонка (фото 150 px слева) → фото сверху 4:3; специалисты 4 / 3 / 2 / 1 (фото 84 px слева); роли — справа от карточки, уже — под ней',
 			'3:top' === lay[ 1280 ].leaders + ':' + lay[ 1280 ].leaderPhoto.split( ':' )[ 0 ] && '1:left:150' === lay[ 700 ].leaders + ':' + lay[ 700 ].leaderPhoto && 'top:1.33' === lay[ 420 ].leaderPhoto
 			&& '4,3,2,1,1' === [ 1280, 1000, 700, 420, 390 ].map( ( w ) => lay[ w ].team ).join() && 'left:84' === lay[ 390 ].memberPhoto && 'top' === lay[ 700 ].memberPhoto
 			&& 'side' === lay[ 1280 ].roles && 'below' === lay[ 700 ].roles, JSON.stringify( lay ) );
+		check( '«Кто работает над проектом»: название роли справа от значка, текст под ними (1280 / 1000 / 700 / 390 / 320 px) — правка заказчика',
+			[ 1280, 1000, 700, 420, 390, 320 ].every( ( w ) => lay[ w ].roleRow ), JSON.stringify( Object.fromEntries( Object.entries( lay ).map( ( [ w, v ] ) => [ w, v.roleRow ] ) ) ) );
+		check( '«Хотите в команду?»: обе кнопки в одну строку на всех ширинах, включая телефон 390 и 320 px — правка заказчика',
+			[ 1280, 1000, 700, 420, 390, 320 ].every( ( w ) => lay[ w ].joinRow ), JSON.stringify( Object.fromEntries( Object.entries( lay ).map( ( [ w, v ] ) => [ w, v.joinRow ] ) ) ) );
 		await page.setViewportSize( { width: 1280, height: 900 } );
 
 		// ===== Без JavaScript =====

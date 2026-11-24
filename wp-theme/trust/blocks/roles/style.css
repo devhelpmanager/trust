@@ -123,9 +123,11 @@
 }
 
 .b-roles__item {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+	display: grid;
+	grid-template-columns: 44px minmax(0, 1fr); /* правка заказчика: название справа от значка */
+	align-content: start;
+	align-items: center;
+	gap: 10px 14px;
 	min-width: 0;
 	padding: 22px;
 	border: 1px solid var(--c-border);
@@ -145,7 +147,7 @@
 }
 
 .b-roles__title {
-	margin: 4px 0 0;
+	margin: 0;
 	font-family: inherit;
 	font-size: 18px;
 	font-weight: 600;
@@ -154,6 +156,7 @@
 }
 
 .b-roles__text {
+	grid-column: 1 / -1;
 	margin: 0;
 	font-size: 15px;
 	line-height: 1.55;
