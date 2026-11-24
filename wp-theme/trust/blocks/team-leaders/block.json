@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/team-leaders",
+	"title": "Руководство",
+	"description": "Крупные карточки руководителей: фото, имя, должность, описание, ссылки «Статьи в блоге», «Ответы на вопросы» и email. Сотрудники с флажком «Руководство» или выбранные вручную.",
+	"category": "trust-company",
+	"icon": "businessperson",
+	"keywords": [ "руководство", "руководители", "команда", "сотрудники" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

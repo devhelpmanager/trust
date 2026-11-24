@@ -142,6 +142,18 @@ final class Blocks {
 				'in_footer' => true,
 			)
 		);
+		// Фильтр списка без перезагрузки («Команда по направлениям»): стиль и скрипт "trust-filter".
+		wp_register_style( 'trust-filter', Assets::url( 'assets/css/filter.css' ), array(), Assets::version( 'assets/css/filter.css' ) );
+		wp_register_script(
+			'trust-filter',
+			Assets::url( 'assets/js/filter.js' ),
+			array(),
+			Assets::version( 'assets/js/filter.js' ),
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => true,
+			)
+		);
 		foreach ( self::names() as $name ) {
 			register_block_type( TRUST_DIR . '/blocks/' . $name );
 		}

@@ -47,6 +47,62 @@ final class Team {
 	}
 
 	/**
+	 * Пишет ли сотрудник статьи: связан с пользователем WordPress, у которого есть
+	 * опубликованные статьи (тогда его страница — страница автора со статьями).
+	 *
+	 * @param int $post_id Сотрудник.
+	 */
+	public static function is_author( int $post_id ): bool {
+		$user = (int) get_post_meta( $post_id, 'trust_user', true );
+		return $user > 0 && (int) count_user_posts( $user, 'post', true ) > 0;
+	}
+
+	/**
+	 * Число опубликованных ответов на вопросы SEO, где сотрудник — «Отвечает».
+	 *
+	 * @param int $post_id Сотрудник.
+	 */
+	public static function answers_count( int $post_id ): int {
+		$query = new \WP_Query(
+			array(
+				'post_type'      => 'question',
+				'post_status'    => 'publish',
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+				'no_found_rows'  => false,
+				'meta_key'       => 'trust_expert', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- по индексу meta_key, результат небольшой.
+				'meta_value'     => $post_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- см. выше.
+			)
+		);
+		return (int) $query->found_posts;
+	}
+
+	/**
+	 * Alt фото сотрудника: «Имя, должность» (должность с маленькой буквы, как в макете) — фото
+	 * одного человека, поэтому подпись из карточки точнее общей подписи в медиатеке.
+	 *
+	 * @param int $post_id Сотрудник.
+	 */
+	public static function photo_alt( int $post_id ): string {
+		$role = trim( (string) get_post_meta( $post_id, 'trust_position', true ) );
+		if ( '' !== $role && ! preg_match( '/^\p{Lu}{2}/u', $role ) ) {
+			$role = mb_strtolower( mb_substr( $role, 0, 1 ) ) . mb_substr( $role, 1 );
+		}
+		return implode( ', ', array_filter( array( get_the_title( $post_id ), $role ) ) );
+	}
+
+	/**
+	 * «Опыт: 11 лет» для карточки; пустая строка, если год не указан.
+	 *
+	 * @param int $post_id Сотрудник.
+	 */
+	public static function experience_short( int $post_id ): string {
+		$years = self::experience_years( $post_id );
+		/* translators: 1: число лет, 2: «год», «года» или «лет». */
+		return null === $years ? '' : sprintf( __( 'Опыт: %1$d %2$s', 'trust' ), $years, self::years_word( $years ) );
+	}
+
+	/**
 	 * Стаж в годах по году начала работы в профессии; null — год не указан.
 	 *
 	 * @param int $post_id Сотрудник.

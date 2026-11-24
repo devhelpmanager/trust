@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/roles",
+	"title": "Кто работает над вашим проектом",
+	"description": "Как устроена работа: тёмная главная карточка («Ваш контакт — Аккаунт-менеджер»: текст и пункты) и роли команды — значок, название, текст.",
+	"category": "trust-company",
+	"icon": "networking",
+	"keywords": [ "роли", "команда проекта", "аккаунт-менеджер", "как устроена работа" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

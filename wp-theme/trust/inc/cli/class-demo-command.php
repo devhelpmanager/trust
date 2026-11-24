@@ -102,6 +102,11 @@ final class Demo_Command {
 			WP_CLI::log( 'Пример WordPress «Hello world!» перенесён в корзину (его заменяют демо-статьи).' );
 		}
 
+		// Демо-авторы — раньше сотрудников и статей: те ссылаются на них.
+		$users = Importer::import_users();
+		WP_CLI::log( sprintf( 'Демо-авторы (пользователи с ролью «Автор»): создано %d.', count( $users['created'] ) ) );
+		self::log_list( 'Пропущены (логин занят)', $users['skipped'] );
+
 		// Сотрудники и отзывы раньше кейсов и вопросов: те ссылаются на них.
 		foreach ( self::POSTS as $type => list( $file, $label ) ) {
 			$posts = Importer::import_posts( $type, $file, $force );
@@ -141,6 +146,10 @@ final class Demo_Command {
 			WP_CLI::log( sprintf( '%s: удалено %d.', $label, count( $posts['removed'] ) ) );
 			self::log_list( 'Оставлены (изменены вручную)', $posts['kept'] );
 		}
+
+		$users = Importer::remove_users();
+		WP_CLI::log( sprintf( 'Демо-авторы: удалено %d.', count( $users['removed'] ) ) );
+		self::log_list( 'Оставлены (у них остались записи)', $users['kept'] );
 
 		WP_CLI::log( sprintf( 'Картинки демо-контента: удалено %d.', Importer::remove_images() ) );
 

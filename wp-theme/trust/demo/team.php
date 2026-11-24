@@ -5,9 +5,10 @@
  * заданы по должности (slug). Текст «Об авторе» и «Пишет о» у старшего SEO-специалиста — из
  * макета страницы автора seo-blog/avtor.html.
  *
- * Год начала работы — условный (в макете «[N] лет»). Фото — вместе с картинками в демо-контенте
- * (шаг 4.11). Поле terms — ключи демо-терминов (demo/terms.php); {term_id:таксономия:ключ} —
- * ID демо-термина (теги «Пишет о»).
+ * Год начала работы — условный (в макете «[N] лет»). Фото — силуэт-заглушка из макета (шаг 4.11).
+ * Авторы статей (в макете — «Статьи в блоге» / «Статьи автора») связаны с демо-авторами
+ * (demo/users.php, {user:ключ}). Поле terms — ключи демо-терминов (demo/terms.php);
+ * {term_id:таксономия:ключ} — ID демо-термина (теги «Пишет о»).
  *
  * @package Trust
  */
@@ -101,9 +102,14 @@ $trust_team = array(
 	$trust_member( 'pm', 'Проджект-менеджер', 'pm', 2017 ),
 );
 
-// Порядок вывода — как в макете.
+// Порядок вывода — как в макете; фото — заглушка; авторы статей — связь с демо-автором.
+$trust_authors = (array) require __DIR__ . '/users.php';
 foreach ( $trust_team as $trust_i => $trust_item ) {
 	$trust_team[ $trust_i ]['menu_order'] = $trust_i + 1;
+	$trust_team[ $trust_i ]['thumbnail']  = 'leader-photo.jpg';
+	if ( in_array( $trust_item['key'], $trust_authors, true ) ) {
+		$trust_team[ $trust_i ]['fields']['trust_user'] = '{user:' . $trust_item['key'] . '}';
+	}
 }
 
 return $trust_team;

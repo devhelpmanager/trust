@@ -217,6 +217,8 @@ const MOCKUP_TEXTS = [
 	[ '₽', '$', [ 'seo-bloki/', 'seo-stranitsa/', 'portfolio-blog-404/', 'o-nas/' ] ],
 	// Демо-телефон и WhatsApp — с кодом +1 (правка заказчика).
 	[ '+7 (000) ', '+1 (000) ' ],
+	// Отдел «Менеджеры» в «Команде» — тот же термин «Менеджмент», что в «Карьере».
+	[ 'Менеджеры', 'Менеджмент', [ 'o-nas/komanda.html' ] ],
 ];
 const HERO_SECTION_CSS = `
 	.dc-hero-box dl > div { justify-content: flex-end !important; }
@@ -316,7 +318,19 @@ const MOCKUP_CSS = {
 			.dc-svc { column-gap: 14px !important; }
 		}
 	`,
-	'o-nas/komanda.html': HERO_SECTION_CSS,
+	'o-nas/komanda.html': HERO_SECTION_CSS + `
+		main section:not(.dc-hero-sec) header { gap: 16px !important; }
+		main section:not(.dc-hero-sec) header h2, #join-title { font-size: clamp(28px, 3.4vw, 44px) !important; }
+		/* «Хотите в команду?» — отступы секции как у всех блоков (в макете 72 px) */
+		section[aria-labelledby="join-title"] { padding-top: 64px !important; padding-bottom: 64px !important; }
+		section[aria-labelledby="join-title"] > div > div:first-child { gap: 16px !important; }
+		@media (max-width: 1100px) {
+			section[aria-labelledby="join-title"] { padding-top: 56px !important; padding-bottom: 56px !important; }
+		}
+		@media (max-width: 760px) {
+			section[aria-labelledby="join-title"] { padding-top: 48px !important; padding-bottom: 48px !important; }
+		}
+	`,
 	'o-nas/karera.html': HERO_SECTION_CSS,
 	'o-nas/kontakty.html': `
 		.dc-hero-in > div:first-child { max-width: none !important; }

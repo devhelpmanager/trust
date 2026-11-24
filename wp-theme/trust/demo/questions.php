@@ -404,7 +404,7 @@ $trust_questions = array(
 			'trust_asker'       => 'Константин',
 			'trust_asked_at'    => '20260919',
 			'trust_answered_at' => '20260922',
-			'trust_expert'      => '{post:team:seo-senior}',
+			'trust_expert'      => '{post:team:seo-lead}', // Ответы руководителя SEO-отдела — ссылка «Ответы на вопросы» в блоке «Руководство».
 		),
 	),
 	array(

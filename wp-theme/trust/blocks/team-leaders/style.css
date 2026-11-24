@@ -1,0 +1,160 @@
+/*
+ * Блок «Руководство» (o-nas/komanda.html, «Кто отвечает за результат»).
+ */
+
+.b-leaders {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-leaders__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 36px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-leaders__list {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 24px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-leaders__card {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	min-width: 0;
+	padding: 14px 14px 24px;
+	box-sizing: border-box;
+	border: 1px solid var(--c-border);
+	border-radius: 24px;
+	background: var(--c-white);
+}
+
+.b-leaders__photo {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 4 / 5;
+	object-fit: cover;
+	border-radius: 16px;
+	background: var(--c-lavender-3);
+}
+
+.b-leaders__photo--empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--c-decor);
+}
+
+.b-leaders__body {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	min-width: 0;
+	padding: 0 10px;
+}
+
+.b-leaders__name {
+	margin: 0;
+	font-family: inherit;
+	font-size: 22px;
+	font-weight: 600;
+	line-height: 1.25;
+	letter-spacing: 0;
+}
+
+.b-leaders__role {
+	font-size: 15px;
+	font-weight: 600;
+	line-height: normal;
+	color: var(--c-violet-dark);
+}
+
+.b-leaders__text {
+	margin: 0;
+	font-size: 15px;
+	line-height: 1.55;
+	color: var(--c-muted);
+}
+
+.b-leaders__links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0 18px;
+	margin-top: 2px;
+}
+
+.b-leaders__link {
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	font-size: 15px;
+	line-height: normal;
+	color: var(--c-muted);
+	overflow-wrap: anywhere;
+}
+
+.b-leaders__link:hover {
+	color: var(--c-violet-deep);
+}
+
+.b-leaders__link--more,
+.b-leaders__link--more:hover {
+	gap: 6px;
+	font-weight: 600;
+	color: var(--c-violet-dark);
+	text-decoration: none;
+}
+
+.b-leaders__link--more svg {
+	transition: transform 0.2s;
+}
+
+.b-leaders__link--more:hover svg {
+	transform: translateX(2px);
+}
+
+/* Планшет и телефон — одна колонка, фото 150 px слева */
+@media (max-width: 720px) {
+	.b-leaders__list {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 16px;
+	}
+
+	.b-leaders__card {
+		flex-direction: row;
+		align-items: flex-start;
+		padding: 14px;
+	}
+
+	.b-leaders__photo {
+		flex: none;
+		width: 150px;
+	}
+}
+
+/* Узкий телефон — фото сверху 4:3 */
+@media (max-width: 440px) {
+	.b-leaders__card {
+		flex-direction: column;
+	}
+
+	.b-leaders__photo {
+		width: 100%;
+		aspect-ratio: 4 / 3;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.b-leaders__link--more svg {
+		transition: none;
+	}
+}

@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/join",
+	"title": "Хотите в команду?",
+	"description": "Приглашение в команду на фиолетовом фоне: надзаголовок, заголовок, текст и две кнопки — по умолчанию «Открытые вакансии» и «Отправить резюме» на странице «Карьера».",
+	"category": "trust-company",
+	"icon": "megaphone",
+	"keywords": [ "карьера", "вакансии", "в команду", "резюме" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

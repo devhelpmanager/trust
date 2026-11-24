@@ -1,0 +1,70 @@
+/*
+ * Фильтр списка — кнопки-«таблетки» с числом и строка «Показано: N из M» (макет
+ * o-nas/komanda.html, «Команда по направлениям»). Подключается блоками, указавшими стиль
+ * trust-filter; поведение — assets/js/filter.js (скрипт trust-filter).
+ */
+
+.filter-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+/* Без JavaScript кнопки не работают — их не видно, список показан целиком */
+html:not(.js) .filter-chips {
+	display: none;
+}
+
+.filter-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 44px;
+	padding: 0 16px;
+	box-sizing: border-box;
+	border: 1.5px solid var(--c-border-strong);
+	border-radius: 999px;
+	background: var(--c-white);
+	color: var(--c-text-2);
+	font-family: inherit;
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.2;
+	cursor: pointer;
+	transition: background 0.2s, border-color 0.2s;
+}
+
+.filter-chip:hover {
+	border-color: var(--c-violet);
+}
+
+.filter-chip[aria-pressed="true"] {
+	border-color: var(--c-violet);
+	background: var(--c-violet);
+	color: var(--c-white);
+}
+
+.filter-chip:focus-visible {
+	outline: 3px solid var(--c-focus);
+	outline-offset: 2px;
+}
+
+.filter-chip__count {
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	opacity: 0.75;
+}
+
+.filter-status {
+	margin: -8px 0 0;
+	font-size: 14px;
+	line-height: normal;
+	color: var(--c-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.filter-chip {
+		transition: none;
+	}
+}

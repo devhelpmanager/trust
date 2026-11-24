@@ -3,7 +3,8 @@
  * Импорт и удаление демо-контента.
  *
  * Данные лежат в папке demo/. Демо-контент пополняется на каждом шаге разработки:
- * сейчас — «Настройки сайта», страницы, меню, политика конфиденциальности, термины.
+ * сейчас — «Настройки сайта», страницы, меню, политика конфиденциальности, термины, записи,
+ * демо-авторы (пользователи WordPress).
  *
  * @package Trust
  */
@@ -197,6 +198,13 @@ final class Importer {
 				$data['post_date']     = $item['date'];
 				$data['post_date_gmt'] = get_gmt_from_date( $item['date'] );
 			}
+			// Автор — демо-автор ({user:ключ}, demo/users.php).
+			if ( isset( $item['author'] ) ) {
+				$author = (int) self::resolve_links( $item['author'] );
+				if ( $author ) {
+					$data['post_author'] = $author;
+				}
+			}
 
 			if ( $demo ) {
 				$data['ID'] = $demo->ID;
@@ -318,6 +326,106 @@ final class Importer {
 			return false;
 		}
 		return (bool) wp_trash_post( $post->ID );
+	}
+
+	/**
+	 * Префикс логина демо-автора.
+	 */
+	private const USER_PREFIX = 'trust-demo-';
+
+	/**
+	 * Демо-автор по ключу (метаполе _trust_demo_id = user:ключ).
+	 *
+	 * @param string $key Ключ.
+	 */
+	private static function find_demo_user( string $key ): ?\WP_User {
+		$users = get_users(
+			array(
+				'meta_key'   => self::META_ID, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- разовая команда WP-CLI.
+				'meta_value' => 'user:' . $key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- см. выше.
+				'number'     => 1,
+			)
+		);
+		return $users[0] ?? null;
+	}
+
+	/**
+	 * Создаёт демо-авторов (demo/users.php): роль «Автор», случайный пароль, email в зоне .invalid.
+	 * Уже созданные не меняются; занятый чужим пользователем логин пропускается.
+	 *
+	 * @return array{created: string[], skipped: string[]}
+	 */
+	public static function import_users(): array {
+		$result = array(
+			'created' => array(),
+			'skipped' => array(),
+		);
+		foreach ( (array) require TRUST_DIR . '/demo/users.php' as $key ) {
+			if ( self::find_demo_user( $key ) ) {
+				continue;
+			}
+			$login = self::USER_PREFIX . $key;
+			if ( username_exists( $login ) || email_exists( $login . '@example.invalid' ) ) {
+				$result['skipped'][] = $key;
+				continue;
+			}
+			$id = wp_insert_user(
+				array(
+					'user_login'           => $login,
+					'user_pass'            => wp_generate_password( 40, true, true ),
+					'user_email'           => $login . '@example.invalid',
+					'display_name'         => '[Имя Фамилия]',
+					'nickname'             => '[Имя Фамилия]',
+					'role'                 => 'author',
+					'show_admin_bar_front' => 'false',
+				)
+			);
+			if ( is_wp_error( $id ) ) {
+				$result['skipped'][] = $key;
+				continue;
+			}
+			update_user_meta( $id, self::META_ID, 'user:' . $key );
+			$result['created'][] = $key;
+		}
+		return $result;
+	}
+
+	/**
+	 * Удаляет демо-авторов, у которых не осталось записей (демо-записи удаляются раньше;
+	 * оставленные изменённые вручную записи сохраняют автора).
+	 *
+	 * @return array{removed: string[], kept: string[]}
+	 */
+	public static function remove_users(): array {
+		require_once ABSPATH . 'wp-admin/includes/user.php';
+		$result = array(
+			'removed' => array(),
+			'kept'    => array(),
+		);
+		$users  = get_users(
+			array(
+				'meta_key' => self::META_ID, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- разовая команда WP-CLI.
+			)
+		);
+		foreach ( $users as $user ) {
+			$id    = (string) get_user_meta( $user->ID, self::META_ID, true );
+			$posts = get_posts(
+				array(
+					'author'      => $user->ID,
+					'post_type'   => 'any',
+					'post_status' => 'any',
+					'numberposts' => 1,
+					'fields'      => 'ids',
+				)
+			);
+			if ( $posts ) {
+				$result['kept'][] = $id;
+				continue;
+			}
+			wp_delete_user( $user->ID );
+			$result['removed'][] = $id;
+		}
+		return $result;
 	}
 
 	/**
@@ -889,6 +997,10 @@ final class Importer {
 		if ( preg_match( '~^\{post:([a-z_]+):([a-z0-9-]+)\}$~', $value, $m ) ) {
 			$post = self::find_demo_post( $m[1], $m[2] );
 			return $post ? $post->ID : 0;
+		}
+		if ( preg_match( '~^\{user:([a-z0-9-]+)\}$~', $value, $m ) ) {
+			$user = self::find_demo_user( $m[1] );
+			return $user ? $user->ID : 0;
 		}
 		if ( preg_match( '~^\{term_id:([a-z_]+):([a-z0-9-]+)\}$~', $value, $m ) ) {
 			$term = self::find_demo_term( $m[1], $m[1] . ':' . $m[2] );

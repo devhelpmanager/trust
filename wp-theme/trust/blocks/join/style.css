@@ -1,0 +1,51 @@
+/*
+ * Блок «Хотите в команду?» (o-nas/komanda.html, «Карьера»): фиолетовая секция, текст слева,
+ * кнопки справа (уже — под текстом).
+ */
+
+.b-join {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-violet-dark);
+	color: var(--c-white);
+}
+
+.b-join__inner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 28px 48px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-join__head {
+	flex: 1 1 520px;
+	min-width: 0;
+}
+
+.b-join__head .section-title {
+	color: var(--c-white);
+}
+
+.b-join__head .section-lead {
+	max-width: 620px;
+}
+
+.b-join__buttons {
+	display: flex;
+	flex: 0 1 auto;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.b-join .b-join__btn {
+	gap: 10px;
+	min-height: 52px;
+	padding: 0 22px;
+	border-radius: 14px;
+}
+
+.b-join .btn--ghost {
+	border-color: rgba(255, 255, 255, 0.6);
+}

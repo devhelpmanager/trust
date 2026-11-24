@@ -1,0 +1,161 @@
+/*
+ * Блок «Кто работает над вашим проектом» (o-nas/komanda.html, «Как устроена работа»).
+ */
+
+.b-roles {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-roles__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 36px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-roles__body {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+}
+
+/* Главная карточка: индиго, круг в правом нижнем углу */
+.b-roles__main {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	display: flex;
+	flex: 1 1 340px;
+	flex-direction: column;
+	gap: 16px;
+	min-width: 0;
+	padding: clamp(24px, 3vw, 34px);
+	box-sizing: border-box;
+	border-radius: 24px;
+	background: var(--c-indigo);
+	color: var(--c-white);
+}
+
+.b-roles__circle {
+	position: absolute;
+	z-index: -1;
+	right: -70px;
+	bottom: -90px;
+	width: 220px;
+	height: 220px;
+	border-radius: 50%;
+	background: #25215C;
+}
+
+.b-roles__main-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 52px;
+	height: 52px;
+	border-radius: 16px;
+	background: var(--c-violet);
+	color: var(--c-white);
+}
+
+.b-roles__label {
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: normal;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: #C4B5FD;
+}
+
+.b-roles__main-title {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 1.25;
+	color: var(--c-white);
+}
+
+.b-roles__main-text {
+	margin: 0;
+	font-size: 16px;
+	line-height: 1.6;
+	color: #D4D2F0;
+}
+
+.b-roles__points {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin: 4px 0 0;
+	padding: 0;
+	list-style: none;
+	font-size: 15px;
+	line-height: 1.45;
+	color: var(--c-violet-light);
+}
+
+.b-roles__points li {
+	display: flex;
+	gap: 10px;
+}
+
+.b-roles__points svg {
+	flex: none;
+	margin-top: 2px;
+	color: #C4B5FD;
+}
+
+/* Роли */
+.b-roles__list {
+	display: grid;
+	flex: 2 1 520px;
+	grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+	gap: 20px;
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-roles__item {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	min-width: 0;
+	padding: 22px;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-card-lg);
+	background: var(--c-white);
+}
+
+.b-roles__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	background: var(--c-lavender-2);
+	color: var(--c-violet);
+}
+
+.b-roles__title {
+	margin: 4px 0 0;
+	font-family: inherit;
+	font-size: 18px;
+	font-weight: 600;
+	line-height: normal;
+	letter-spacing: 0;
+}
+
+.b-roles__text {
+	margin: 0;
+	font-size: 15px;
+	line-height: 1.55;
+	color: var(--c-muted);
+}
