@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/internship",
+	"title": "Стажировка",
+	"description": "Фиолетовая плашка о стажировке: метка, заголовок, текст и кнопка «Подать заявку» — она ведёт к форме резюме и выбирает в ней стажировку.",
+	"category": "trust-company",
+	"icon": "welcome-learn-more",
+	"keywords": [ "карьера", "стажировка", "стажёр", "без опыта", "обучение" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

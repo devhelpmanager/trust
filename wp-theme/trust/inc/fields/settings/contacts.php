@@ -81,6 +81,22 @@ return array(
 			'instructions' => __( 'Номер в международном формате или ссылка https://wa.me/….', 'trust' ),
 		),
 		array(
+			'name'         => 'hr_email',
+			'label'        => __( 'Email для резюме', 'trust' ),
+			'type'         => 'email',
+			'placeholder'  => 'hr@example.ru',
+			'wrapper'      => array( 'width' => 50 ),
+			'instructions' => __( 'Для соискателей: на странице «Карьера» (вакансии и форма резюме). Пусто — основной email.', 'trust' ),
+		),
+		array(
+			'name'         => 'hr_telegram',
+			'label'        => __( 'Telegram для резюме', 'trust' ),
+			'type'         => 'text',
+			'placeholder'  => '@name_hr',
+			'wrapper'      => array( 'width' => 50 ),
+			'instructions' => __( 'Для соискателей, рядом с формой резюме. Пусто — не показывается.', 'trust' ),
+		),
+		array(
 			'name'         => 'hours',
 			'label'        => __( 'Часы работы', 'trust' ),
 			'type'         => 'text',

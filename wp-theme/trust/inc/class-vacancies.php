@@ -20,6 +20,17 @@ final class Vacancies {
 	public const DEFAULT_SECTIONS = array( 'Чем предстоит заниматься', 'Что ждём от кандидата', 'Что предлагаем' );
 
 	/**
+	 * Пункт «Стажировка» в списке вакансий формы резюме (кнопка блока «Стажировка» без выбранной
+	 * вакансии выбирает его).
+	 */
+	public const INTERN = 'intern';
+
+	/**
+	 * Якорь формы резюме на странице «Карьера» (блок trust/resume-form).
+	 */
+	public const FORM_ANCHOR = 'resume';
+
+	/**
 	 * Регистрирует хуки.
 	 */
 	public static function register(): void {
@@ -54,6 +65,54 @@ final class Vacancies {
 			)
 		);
 		return count( array_filter( $ids, static fn( $id ): bool => self::is_open( (int) $id ) ) );
+	}
+
+	/**
+	 * Открытые вакансии в порядке поля «Порядок», затем по названию.
+	 *
+	 * @return \WP_Post[]
+	 */
+	public static function open_posts(): array {
+		$posts = get_posts(
+			array(
+				'post_type'     => 'vacancy',
+				'post_status'   => 'publish',
+				'numberposts'   => 100,
+				'no_found_rows' => true,
+				'orderby'       => array(
+					'menu_order' => 'ASC',
+					'title'      => 'ASC',
+				),
+			)
+		);
+		return array_values( array_filter( $posts, static fn( \WP_Post $post ): bool => self::is_open( $post->ID ) ) );
+	}
+
+	/**
+	 * Значение вакансии в форме резюме — адрес записи (slug): как в макете («seo-senior»).
+	 *
+	 * @param \WP_Post $post Вакансия.
+	 */
+	public static function form_value( \WP_Post $post ): string {
+		return '' !== $post->post_name ? $post->post_name : 'v' . $post->ID;
+	}
+
+	/**
+	 * Адрес кнопок «Откликнуться» и «Подать заявку»: форма резюме на этой же странице (#resume)
+	 * или на странице типа «Карьера» (?vacancy=…#resume — скрипт формы выберет вакансию).
+	 *
+	 * @param string $value Значение вакансии в форме (form_value() или INTERN), пусто — без выбора.
+	 */
+	public static function apply_url( string $value = '' ): string {
+		$hash = '#' . self::FORM_ANCHOR;
+		if ( ( is_singular() && 'career' === Page_Types::of( get_queried_object_id() ) ) || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+			return $hash;
+		}
+		$url = Page_Types::url( 'career' );
+		if ( '' === $url ) {
+			return $hash;
+		}
+		return ( '' !== $value ? add_query_arg( 'vacancy', rawurlencode( $value ), $url ) : $url ) . $hash;
 	}
 
 	/**

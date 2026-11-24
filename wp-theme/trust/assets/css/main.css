@@ -1616,6 +1616,43 @@ textarea.field__input {
 	text-align: center;
 }
 
+/*
+ * Вариант «в строку» (правка заказчика к «Спасибо за отзыв!»; отзыв и резюме): значок слева,
+ * заголовок справа (не хватает места — в две строки), текст и контурная кнопка «ещё раз» — под
+ * ними, по левому краю.
+ */
+.form-sent--row .form-sent__panel {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	align-items: center;
+	gap: 16px;
+	text-align: left;
+}
+
+.form-sent--row .form-sent__panel > :not(.form-success__icon, .form-success__title) {
+	grid-column: 1 / -1;
+}
+
+.form-sent--row .form-success__title {
+	text-wrap: balance;
+}
+
+.form-sent--row .form-sent__again,
+.form-sent--row .form-sent__again:hover {
+	justify-self: start;
+	min-height: 48px;
+	padding: 0 20px;
+	border: 1.5px solid var(--c-border-strong);
+	border-radius: 12px;
+	background: var(--c-white);
+	color: var(--c-violet-dark);
+	text-decoration: none;
+}
+
+.form-sent--row .form-sent__again:hover {
+	background: var(--c-lavender-2);
+}
+
 @keyframes form-sent-in {
 	from {
 		opacity: 0;

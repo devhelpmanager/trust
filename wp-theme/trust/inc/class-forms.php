@@ -102,9 +102,10 @@ final class Forms {
 		echo '<input type="hidden" name="action" value="trust_form">';
 		printf( '<input type="hidden" name="_trust_token" value="%s">', esc_attr( Protection::token() ) );
 		printf( '<input type="hidden" name="_trust_nonce" value="%s">', esc_attr( wp_create_nonce( Protection::NONCE ) ) );
-		// Ловушка: люди поле не видят и не заполняют, боты — заполняют.
+		// Ловушка: люди поле не видят и не заполняют, боты — заполняют. Без value="": в превью
+		// редактора (React) поле с value без обработчика даёт предупреждение в консоли.
 		printf(
-			'<div class="form__hp" aria-hidden="true"><label>%s <input type="text" name="%s" value="" tabindex="-1" autocomplete="off"></label></div>',
+			'<div class="form__hp" aria-hidden="true"><label>%s <input type="text" name="%s" tabindex="-1" autocomplete="off"></label></div>',
 			esc_html__( 'Не заполняйте это поле', 'trust' ),
 			esc_attr( Protection::HONEYPOT )
 		);
@@ -205,9 +206,10 @@ final class Forms {
 	 * @param string $text    Текст.
 	 * @param string $again   Кнопка «Отправить ещё».
 	 * @param bool   $overlay Показывать поверх формы.
+	 * @param bool   $row     Значок слева, заголовок справа (отзыв, резюме).
 	 */
-	public static function sent_screen( string $id, string $title, string $text, string $again, bool $overlay = false ): void {
-		printf( '<div class="form-sent%s" id="%s" role="status" tabindex="-1" hidden>', $overlay ? ' form-sent--overlay' : '', esc_attr( $id ) );
+	public static function sent_screen( string $id, string $title, string $text, string $again, bool $overlay = false, bool $row = false ): void {
+		printf( '<div class="form-sent%s%s" id="%s" role="status" tabindex="-1" hidden>', $overlay ? ' form-sent--overlay' : '', $row ? ' form-sent--row' : '', esc_attr( $id ) );
 		if ( $overlay ) {
 			echo '<div class="form-sent__panel">';
 		}

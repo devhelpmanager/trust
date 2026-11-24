@@ -1,0 +1,77 @@
+/*
+ * Блок «Как проходит отбор» (o-nas/karera.html, «Отбор»).
+ */
+
+.b-hiring {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-hiring__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-hiring__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+	gap: 28px 24px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-hiring__step {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	min-width: 0;
+	padding-top: 26px;
+	border-top: 2px solid var(--c-border);
+}
+
+.b-hiring__num {
+	position: absolute;
+	top: -17px;
+	left: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: var(--c-indigo);
+	box-shadow: 0 0 0 5px var(--c-white);
+	font-family: var(--f-mono);
+	font-size: 13px;
+	line-height: 1;
+	color: var(--c-white);
+}
+
+.b-hiring__step.is-final {
+	border-top-color: var(--c-violet);
+}
+
+.b-hiring__step.is-final .b-hiring__num {
+	background: var(--c-violet);
+}
+
+.b-hiring__title {
+	margin: 8px 0 0;
+	font-family: inherit;
+	font-size: 19px;
+	font-weight: 600;
+	line-height: normal;
+}
+
+.b-hiring__text {
+	margin: 0;
+	font-size: 15px;
+	line-height: 1.55;
+	color: var(--c-muted);
+}

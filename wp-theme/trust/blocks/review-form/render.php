@@ -177,6 +177,7 @@ $trust_stars     = '<svg width="32" height="32" viewBox="0 0 24 24" aria-hidden=
 				Blocks::nbsp( Blocks::text( 'success_title', __( 'Спасибо за отзыв!', 'trust' ) ) ),
 				Blocks::text( 'success_text', __( 'Перед публикацией мы свяжемся с вами, чтобы подтвердить отзыв. Контакты на сайте не публикуются.', 'trust' ) ),
 				Blocks::text( 'again', __( 'Написать ещё один отзыв', 'trust' ) ),
+				true,
 				true
 			);
 			?>

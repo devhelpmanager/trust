@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/resume-form",
+	"title": "Отправить резюме",
+	"description": "Форма резюме: имя и фамилия, телефон или email, вакансия (открытые вакансии, стажировка, без вакансии), ссылка на резюме, о себе, согласие. Приходит заявка «Резюме». Слева — текст и контакты HR.",
+	"category": "trust-forms",
+	"icon": "id-alt",
+	"keywords": [ "резюме", "вакансия", "карьера", "отклик", "форма" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

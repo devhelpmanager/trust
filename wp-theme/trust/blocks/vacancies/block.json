@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/vacancies",
+	"title": "Открытые вакансии",
+	"description": "Вакансии из раздела «Вакансии» с отметкой «Принимаем резюме»: фильтр по отделам с числом, раскрытие по одной, кнопка «Откликнуться» выбирает вакансию в форме резюме.",
+	"category": "trust-company",
+	"icon": "businessperson",
+	"keywords": [ "карьера", "вакансии", "работа", "отклик", "резюме" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": [ "trust-filter", "file:./style.css" ],
+	"viewScript": [ "trust-filter", "file:./view.js" ],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

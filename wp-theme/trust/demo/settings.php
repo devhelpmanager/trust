@@ -32,6 +32,8 @@ return array(
 		),
 	),
 	'telegram'             => '@[brand]',
+	'hr_email'             => 'hr@example.ru',
+	'hr_telegram'          => '@[brand]_hr',
 	'whatsapp'             => '+1 (000) 000-00-00',
 	'hours'                => '[Пн–Пт, 10:00–19:00]',
 	'address'              => array(

@@ -49,6 +49,7 @@ final class Theme {
 		Forms\Estimates::register();
 		Forms\Leader_Messages::register();
 		Forms\Review_Form::register();
+		Forms\Resume_Form::register();
 		Cookie::register();
 		Settings::register();
 		Blocks::register();

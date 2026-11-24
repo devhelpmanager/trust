@@ -352,7 +352,20 @@ const MOCKUP_CSS = {
 			section[aria-labelledby="join-title"] { padding-top: 48px !important; padding-bottom: 48px !important; }
 		}
 	`,
-	'o-nas/karera.html': HERO_SECTION_CSS,
+	// Блоки «Карьеры» (шаг 4.13): шапка секции — как у всех блоков (H2 28–44 px, 16 px от
+	// надзаголовка; в макете 26–40 px и 14 px); у «Стажировки» отступы — как у всех секций (в
+	// макете сверху 0: она идёт за белой секцией «Отбор»; при сверке блок снимается отдельно).
+	'o-nas/karera.html': HERO_SECTION_CSS + `
+		main section:not(.dc-hero-sec) header { gap: 16px !important; }
+		main section:not(.dc-hero-sec) header h2, #resume-title { font-size: clamp(28px, 3.4vw, 44px) !important; }
+		section[aria-labelledby="intern-title"] { padding-top: 64px !important; padding-bottom: 64px !important; }
+		@media (max-width: 1100px) {
+			section[aria-labelledby="intern-title"] { padding-top: 56px !important; padding-bottom: 56px !important; }
+		}
+		@media (max-width: 760px) {
+			section[aria-labelledby="intern-title"] { padding-top: 48px !important; padding-bottom: 48px !important; }
+		}
+	`,
 	'o-nas/kontakty.html': `
 		.dc-hero-in > div:first-child { max-width: none !important; }
 		.dc-hero-in > div:first-child > p { max-width: 760px !important; }

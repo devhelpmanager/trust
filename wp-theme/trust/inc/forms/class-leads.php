@@ -104,6 +104,7 @@ final class Leads {
 			$fields[ $name ] = array(
 				'label' => $field['label'],
 				'value' => $value,
+				'type'  => $field['type'],
 			);
 		}
 
@@ -241,7 +242,14 @@ final class Leads {
 			array( __( 'Дата', 'trust' ), esc_html( get_the_date( 'd.m.Y H:i', $post ) ) ),
 		);
 		foreach ( $fields as $field ) {
-			$rows[] = array( (string) ( $field['label'] ?? '' ), nl2br( esc_html( (string) ( $field['value'] ?? '' ) ) ) );
+			$value = (string) ( $field['value'] ?? '' );
+			if ( 'url' === ( $field['type'] ?? '' ) && '' !== $value ) {
+				// Адрес (сайт, резюме) — ссылкой; без протокола — https://.
+				$href   = preg_match( '#^https?://#i', $value ) ? $value : 'https://' . $value;
+				$rows[] = array( (string) ( $field['label'] ?? '' ), '<a href="' . esc_url( $href ) . '" target="_blank" rel="noopener noreferrer nofollow">' . esc_html( $value ) . '</a>' );
+				continue;
+			}
+			$rows[] = array( (string) ( $field['label'] ?? '' ), nl2br( esc_html( $value ) ) );
 		}
 		if ( $page ) {
 			$rows[] = array( __( 'Страница', 'trust' ), '<a href="' . esc_url( $page ) . '" target="_blank" rel="noopener">' . esc_html( $title ? $title : $page ) . '</a>' );

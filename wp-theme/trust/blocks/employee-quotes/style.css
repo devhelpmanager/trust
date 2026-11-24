@@ -1,0 +1,122 @@
+/*
+ * Блок «Сотрудники о работе у нас» (o-nas/karera.html, «Изнутри»).
+ */
+
+.b-voices {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-lavender);
+	color: var(--c-text);
+}
+
+.b-voices__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 36px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+/* Шапка слева, кнопка «Вся команда» справа (на узком экране — под шапкой) */
+.b-voices__top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 20px;
+}
+
+.b-voices__head {
+	min-width: 0;
+}
+
+.b-voices .b-voices__more {
+	white-space: nowrap;
+}
+
+.b-voices__list {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 20px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-voices__list > li {
+	min-width: 0;
+}
+
+.b-voices__card {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	height: 100%;
+	margin: 0;
+	padding: 26px;
+	box-sizing: border-box;
+	border: 1px solid var(--c-border);
+	border-radius: 22px;
+	background: var(--c-white);
+}
+
+.b-voices__mark {
+	flex: none;
+	fill: #C9BCEB;
+}
+
+.b-voices__text {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 16px;
+	line-height: 1.65;
+	color: var(--c-text-2);
+}
+
+.b-voices__who {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	margin-top: auto;
+}
+
+.b-voices__photo {
+	flex: none;
+	width: 52px;
+	height: 52px;
+	border-radius: 50%;
+	background: var(--c-lavender-3);
+	object-fit: cover;
+}
+
+.b-voices__photo--empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--c-decor);
+}
+
+.b-voices__person {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+
+.b-voices__name {
+	font-size: 16px;
+	font-weight: 600;
+	line-height: normal;
+}
+
+.b-voices__role {
+	font-size: 14px;
+	line-height: normal;
+	color: var(--c-muted);
+}
+
+@media (max-width: 700px) {
+	.b-voices__list {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}

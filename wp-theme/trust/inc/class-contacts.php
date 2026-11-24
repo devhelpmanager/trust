@@ -84,6 +84,32 @@ final class Contacts {
 	}
 
 	/**
+	 * Email для резюме («Настройки сайта → Контакты»); пусто — основной email.
+	 *
+	 * @return array{email: string, label: string, href: string}|null
+	 */
+	public static function hr_email(): ?array {
+		$email = sanitize_email( (string) Settings::get( 'hr_email', '' ) );
+		if ( '' === $email ) {
+			return self::main_email();
+		}
+		return array(
+			'email' => $email,
+			'label' => '',
+			'href'  => 'mailto:' . $email,
+		);
+	}
+
+	/**
+	 * Telegram для резюме или null.
+	 *
+	 * @return array{handle: string, url: string}|null
+	 */
+	public static function hr_telegram(): ?array {
+		return self::parse_telegram( (string) Settings::get( 'hr_telegram', '' ) );
+	}
+
+	/**
 	 * Telegram: имя для показа (@name) и ссылка https://t.me/name.
 	 *
 	 * @return array{handle: string, url: string}|null

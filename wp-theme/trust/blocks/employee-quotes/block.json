@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/employee-quotes",
+	"title": "Сотрудники о работе у нас",
+	"description": "Цитаты сотрудников карточками: текст, фото, имя и подпись («должность · в команде с 2021»). Сотрудник выбирается из раздела «Сотрудники».",
+	"category": "trust-company",
+	"icon": "format-quote",
+	"keywords": [ "карьера", "сотрудники", "цитаты", "отзывы сотрудников", "команда" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

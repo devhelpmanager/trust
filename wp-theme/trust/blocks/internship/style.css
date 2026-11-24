@@ -1,0 +1,123 @@
+/*
+ * Блок «Стажировка» (o-nas/karera.html, «Стажировка в SEO-отделе»): фиолетовая плашка на белом.
+ */
+
+.b-intern {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-intern__card {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 28px 48px;
+	max-width: var(--content);
+	margin: 0 auto;
+	padding: clamp(28px, 4vw, 48px);
+	box-sizing: border-box;
+	border-radius: 24px;
+	background: var(--c-violet-dark);
+	color: var(--c-white);
+}
+
+/* Круг-украшение в правом верхнем углу */
+.b-intern__card::before {
+	content: "";
+	position: absolute;
+	z-index: -1;
+	top: -120px;
+	right: -90px;
+	width: 300px;
+	height: 300px;
+	border-radius: 50%;
+	background: #6A2FC4;
+}
+
+.b-intern__body {
+	display: flex;
+	flex: 1 1 520px;
+	flex-direction: column;
+	gap: 14px;
+	min-width: 0;
+}
+
+.b-intern__badge {
+	align-self: flex-start;
+	padding: 6px 12px;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.14);
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: normal;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.b-intern__title {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: clamp(24px, 2.8vw, 34px);
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+	text-wrap: balance;
+}
+
+.b-intern__text {
+	max-width: 640px;
+	margin: 0;
+	font-size: 17px;
+	line-height: 1.6;
+	color: #EDE6FC;
+}
+
+.b-intern__items {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin: 4px 0 0;
+	padding: 0;
+	list-style: none;
+	font-size: 16px;
+	line-height: 1.5;
+	color: #EDE6FC;
+}
+
+.b-intern__items li {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+}
+
+.b-intern__items svg {
+	flex: none;
+	margin-top: 3px;
+	color: var(--c-violet-light);
+}
+
+/* Кнопка как в макете: 52 px, скругление 14 */
+.b-intern .b-intern__btn {
+	flex: none;
+	gap: 10px;
+	min-height: 52px;
+	padding: 0 22px;
+	border-radius: 14px;
+}
+
+.b-intern .b-intern__btn:focus-visible {
+	outline: 3px solid var(--c-white);
+	outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+	.b-intern__card {
+		padding: 26px 20px;
+	}
+}

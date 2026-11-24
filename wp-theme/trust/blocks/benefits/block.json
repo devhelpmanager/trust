@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/benefits",
+	"title": "Почему у нас интересно работать",
+	"description": "Условия работы карточками: значок, заголовок и текст (обычно 6 пунктов).",
+	"category": "trust-company",
+	"icon": "heart",
+	"keywords": [ "карьера", "условия", "почему мы", "работа", "преимущества" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

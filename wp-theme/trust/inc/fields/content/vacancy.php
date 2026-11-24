@@ -52,7 +52,7 @@ return array(
 			'label'        => __( 'Город', 'trust' ),
 			'type'         => 'text',
 			'maxlength'    => 40,
-			'instructions' => __( 'Пусто — город из «Настроек сайта → Контакты».', 'trust' ),
+			'instructions' => __( 'Показывается меткой рядом с форматом работы. Пусто — не показывается.', 'trust' ),
 			'wrapper'      => array( 'width' => 50 ),
 		),
 		array(
