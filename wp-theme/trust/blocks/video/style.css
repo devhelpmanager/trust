@@ -49,6 +49,17 @@
 	background: #000;
 }
 
+/* Плеер запущен: без обрезки рамкой, скругление у самого плеера (касания в Safari на iPhone) */
+.b-video.is-playing .b-video__frame {
+	overflow: visible;
+}
+
+.b-video.is-playing .b-video__frame iframe,
+.b-video.is-playing .b-video__frame video {
+	z-index: 2;
+	border-radius: 18px;
+}
+
 .b-video__play {
 	position: absolute;
 	top: 50%;

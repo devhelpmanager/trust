@@ -312,10 +312,12 @@ async function compare( page, name, width, theme, mock ) {
 		await page.locator( '.b-vrev__card' ).click();
 		const played = await page.locator( '.b-vrev__card' ).evaluate( ( el ) => {
 			const video = el.querySelector( 'video' );
-			return video ? [ el.classList.contains( 'is-playing' ), video.controls, video.autoplay, document.activeElement === video, getComputedStyle( el.querySelector( '.b-vrev__play' ) ).display ] : null;
+			const r = video ? video.getBoundingClientRect() : null;
+			const top = r ? document.elementFromPoint( r.left + r.width / 2, r.top + r.height / 2 ) : null;
+			return video ? [ el.classList.contains( 'is-playing' ), video.controls, video.autoplay, document.activeElement === video, ! el.querySelector( '.b-vrev__play' ), top === video, getComputedStyle( el.querySelector( '.b-vrev__media' ) ).overflow ] : null;
 		} );
-		check( 'Нажатие в любом месте карточки запускает плеер: <video controls autoplay>, фокус на плеере, кнопка скрыта',
-			JSON.stringify( played ) === JSON.stringify( [ true, true, true, true, 'none' ] ), JSON.stringify( played ) );
+		check( 'Нажатие в любом месте карточки запускает плеер: <video controls autoplay>, фокус на плеере; кнопка удалена, сверху — сам плеер, рамка его не обрезает (касания в Safari на iPhone)',
+			JSON.stringify( played ) === JSON.stringify( [ true, true, true, true, true, true, 'visible' ] ), JSON.stringify( played ) );
 		check( 'Письма вручную — в выбранном порядке (Бета, Альфа)', JSON.stringify( ownData.letters ) === JSON.stringify( [ 'Бета', 'Альфа' ] ), JSON.stringify( ownData.letters ) );
 
 		// ===== Ширины и доступность =====

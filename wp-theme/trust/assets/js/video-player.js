@@ -6,6 +6,11 @@
  * Разметка: обёртка с data-video-embed (адрес плеера) или data-video-file (файл) и
  * data-video-title; внутри — ссылка [data-video-play] и место для плеера [data-video-frame].
  * Обёртка получает класс is-playing. Без data-атрибутов ссылка просто открывает видео.
+ *
+ * После запуска ссылка-кнопка удаляется со страницы (её растянутая на карточку область не должна
+ * перехватывать нажатия), а плеер — без обрезки родителем: скругление у самого плеера (в Safari на
+ * iPhone плеер внутри скруглённой рамки с overflow: hidden может не получать касания — паузу нельзя
+ * было поставить).
  */
 ( () => {
 	document.querySelectorAll( '[data-video-embed], [data-video-file]' ).forEach( ( box ) => {
@@ -36,8 +41,10 @@
 				}
 			}
 			player.tabIndex = 0;
+			player.className = 'video-player';
 			frame.appendChild( player );
 			box.classList.add( 'is-playing' );
+			play.remove();
 			player.focus();
 		} );
 	} );
