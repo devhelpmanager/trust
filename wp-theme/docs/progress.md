@@ -54,7 +54,7 @@
 
 Тесты (`wp-theme/tests/`, все сразу — `npm test`): smoke, settings, header, header-mobile, footer,
 callback, faq, content-types, blog-fields, cases-reviews, team-questions, page-types, seo,
-breadcrumbs, sitemap, schema, leads, notifications, cookie, heroes, heroes-pages, service-blocks, service-page, content-blocks, form-blocks, list-blocks, calculator, shared-blocks, about-blocks, team-blocks, reviews-blocks, visual — 1425 проверок, все проходят. Часть тестов: `node run-all.js smoke header faq`.
+breadcrumbs, sitemap, schema, leads, notifications, cookie, heroes, heroes-pages, service-blocks, service-page, content-blocks, form-blocks, list-blocks, calculator, shared-blocks, about-blocks, team-blocks, reviews-blocks, career-blocks, visual — 1480 проверок, все проходят. Часть тестов: `node run-all.js smoke header faq`.
 Тесты, кроме cookie, запускают браузер с уже сделанным выбором cookie (`launch()` в `lib.js`). Тесты в начале убирают остатки
 прерванного прогона; `fetch` в тестах всегда дочитывает ответ (иначе Node 22 иногда падает).
 
