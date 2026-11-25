@@ -1,0 +1,85 @@
+/*
+ * Блок «Другие документы» (макеты документов).
+ */
+
+.b-docs {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	padding-top: 32px;
+	border-top: 1px solid var(--c-border);
+}
+
+.b-docs .b-docs__title {
+	margin: 0;
+	font-family: var(--f-text);
+	font-size: 20px;
+	font-weight: 600;
+	line-height: normal;
+	color: var(--c-text);
+}
+
+.b-docs__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+	gap: 14px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-docs__list > li {
+	min-width: 0;
+}
+
+.b-docs__card {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	height: 100%;
+	box-sizing: border-box;
+	padding: 16px 18px;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-card);
+	background: var(--c-white);
+	color: var(--c-text);
+	text-decoration: none;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.b-docs__card:hover {
+	border-color: var(--c-decor);
+	box-shadow: var(--shadow-card);
+	color: var(--c-text);
+}
+
+.b-docs__icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 42px;
+	height: 42px;
+	border-radius: 12px;
+	background: var(--c-lavender-2);
+	color: var(--c-violet);
+}
+
+.b-docs__text {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+
+.b-docs__name {
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.35;
+}
+
+.b-docs__note {
+	font-size: 13px;
+	line-height: normal;
+	color: var(--c-muted);
+}

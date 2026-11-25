@@ -1,0 +1,89 @@
+/*
+ * Блок «Список определений» (макеты документов: «Термины», «Оператор», «Контакты»).
+ */
+
+.b-defs {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+}
+
+.b-defs__row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 20px;
+	padding: 14px 0;
+	border-bottom: 1px solid var(--c-divider);
+}
+
+.b-defs dd {
+	flex: 1 1 280px;
+	margin: 0;
+	min-width: 0;
+	font-size: 16px;
+	line-height: 1.6;
+	color: var(--c-text-2);
+	overflow-wrap: anywhere;
+}
+
+.b-defs dd a {
+	color: var(--c-violet);
+}
+
+/* Email и адреса в карточке — зона нажатия выше строки (как в макете) */
+.b-defs--card dd a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 32px;
+}
+
+/* Линии: название жирным */
+.b-defs--lines {
+	border-top: 1px solid var(--c-divider);
+}
+
+.b-defs--lines dt {
+	flex: 0 0 170px;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: normal;
+	color: var(--c-text);
+}
+
+/* Карточка: в рамке, название серым, значение жирным */
+.b-defs--card {
+	box-sizing: border-box;
+	padding: 6px 24px;
+	border: 1px solid var(--c-border);
+	border-radius: 18px;
+	background: var(--c-white);
+}
+
+.b-defs--card .b-defs__row {
+	gap: 4px 16px;
+	padding: 13px 0;
+}
+
+.b-defs--card .b-defs__row:last-child {
+	border-bottom: 0;
+}
+
+.b-defs--card dt {
+	flex: 0 0 200px;
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--c-muted);
+}
+
+.b-defs--card dd {
+	flex-basis: 200px;
+	font-weight: 600;
+	line-height: 1.5;
+	color: var(--c-text);
+}
+
+@media (max-width: 640px) {
+	.b-defs--card {
+		padding: 6px 16px;
+	}
+}

@@ -158,6 +158,34 @@ $trust_section_hero = static function ( string $badge, string $lead, array $stat
  *
  * @param bool $cookie Кнопка «Настроить cookie».
  */
+// Текст документов из макетов (шаг 4.15) — demo/documents.php.
+$trust_documents = require __DIR__ . '/documents.php';
+
+// «Другие документы» вручную — как в макетах оферты и политики cookie.
+$trust_documents_manual = static fn( array $paths ): array => array(
+	'documents-list',
+	array(
+		'mode'  => 'manual',
+		'pages' => array_map( static fn( string $path ): string => '{page_id:' . $path . '}', $paths ),
+	),
+);
+
+// Текст документа: последний блок («Другие документы») можно заменить.
+$trust_document_text = static function ( string $path, ?array $docs_block = null ) use ( $trust_documents ): array {
+	$blocks = $trust_documents[ $path ];
+	if ( null !== $docs_block ) {
+		$blocks[ count( $blocks ) - 1 ] = $docs_block;
+	}
+	return $blocks;
+};
+
+// Абзацы-пункты «Пункты документа» (заглушки документов без макета).
+$trust_clauses = static fn( array $items ): string => '<!-- wp:list {"ordered":true,"className":"is-style-clauses"} -->' . "\n" . '<ol class="wp-block-list is-style-clauses">' . implode(
+	"\n\n",
+	array_map( static fn( string $item ): string => "<!-- wp:list-item -->\n<li>" . $item . "</li>\n<!-- /wp:list-item -->", $items )
+) . "</ol>\n<!-- /wp:list -->";
+$trust_h2      = static fn( string $title ): string => "<!-- wp:heading -->\n<h2 class=\"wp-block-heading\">" . $title . "</h2>\n<!-- /wp:heading -->";
+
 $trust_document_hero = static fn( bool $cookie = false ): array => array(
 	'hero-document',
 	array(
@@ -1522,64 +1550,244 @@ return array(
 		),
 	),
 	array(
-		'path'   => 'oferta',
-		'title'  => 'Публичная оферта',
-		'type'   => 'document',
-		'seo'    => array(
+		'path'       => 'oferta',
+		'title'      => 'Публичная оферта',
+		'type'       => 'document',
+		'menu_order' => 5,
+		'seo'        => array(
 			'trust_seo_h1'        => 'Публичная оферта на оказание услуг',
 			'trust_crumb_section' => $trust_about,
 		),
-		'blocks' => array(
-			$trust_document_hero(),
+		'fields'     => array(
+			'document' => array(
+				'trust_doc_numbering' => 1,
+				'trust_doc_icon'      => 'document',
+			),
+		),
+		'blocks'     => array_merge(
+			array( $trust_document_hero() ),
+			$trust_document_text( 'oferta', $trust_documents_manual( array( 'politika-konfidencialnosti', 'soglasie-na-obrabotku-dannyh', 'politika-cookie' ) ) )
 		),
 	),
 
 	// Документы (меню «Подвал: документы»).
 	array(
-		'path'   => 'politika-konfidencialnosti',
-		'title'  => 'Политика конфиденциальности',
-		'type'   => 'document',
-		'seo'    => array(
+		'path'       => 'politika-konfidencialnosti',
+		'title'      => 'Политика конфиденциальности',
+		'type'       => 'document',
+		'menu_order' => 1,
+		'seo'        => array(
 			'trust_crumb_section' => $trust_about,
 		),
-		'blocks' => array(
+		'fields'     => array(
+			'document' => array(
+				'trust_doc_numbering' => 1,
+				'trust_doc_icon'      => 'shield-outline',
+			),
+		),
+		// Макета нет — заглушка: текст готовит юрист.
+		'blocks'     => array(
 			$trust_document_hero(),
+			array(
+				'summary',
+				array(
+					'title' => 'Коротко о главном',
+					'items' => array(
+						array(
+							'icon' => 'check',
+							'text' => 'Политика описывает, какие персональные данные собирает сайт [домен], зачем и как мы их защищаем.',
+						),
+						array(
+							'icon' => 'check',
+							'text' => 'Данные из форм используем только для ответа на заявку и храним в России.',
+						),
+						array(
+							'icon' => 'check',
+							'text' => 'Цели и сроки по каждой форме — в <a href="{page:soglasie-na-obrabotku-dannyh}">согласии на обработку персональных данных</a>.',
+						),
+					),
+					'note'  => 'Краткое изложение для удобства. Полный текст политики — ниже.',
+				),
+			),
+			$trust_h2( 'Общие положения' ),
+			$trust_clauses(
+				array(
+					'Политика определяет порядок обработки и меры по защите персональных данных, которые [ООО «Название»] (далее — Оператор) получает через сайт [домен] (далее — Сайт).',
+					'Политика разработана в соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных».',
+					'[Текст политики готовит юрист с учётом того, какие данные и сервисы реально использует Сайт.]',
+				)
+			),
+			$trust_h2( 'Какие данные мы обрабатываем' ),
+			$trust_clauses(
+				array(
+					'Данные, которые вы указываете в формах: имя, телефон, email или аккаунт в мессенджере, описание задачи. Цели и сроки по каждой форме — в <a href="{page:soglasie-na-obrabotku-dannyh}">Согласии на обработку персональных данных</a>.',
+					'Сведения о посещении Сайта (cookie) — по правилам <a href="{page:politika-cookie}">Политики cookie</a>.',
+				)
+			),
+			$trust_h2( 'Как мы защищаем данные' ),
+			$trust_clauses(
+				array(
+					'[Перечислите организационные и технические меры: доступ сотрудников, шифрование, резервное копирование.]',
+					'Данные хранятся в базах данных на территории России.',
+				)
+			),
+			$trust_h2( 'Ваши права' ),
+			$trust_clauses(
+				array(
+					'Получать сведения об обработке своих данных, требовать уточнить, заблокировать или уничтожить их, отозвать согласие.',
+					'Обжаловать действия Оператора в Роскомнадзоре или в суде.',
+				)
+			),
+			$trust_h2( 'Контакты' ),
+			array(
+				'definitions',
+				array(
+					'view'  => 'card',
+					'items' => array(
+						array(
+							'term'  => 'Вопросы о персональных данных',
+							'value' => 'privacy@example.ru',
+						),
+						array(
+							'term'  => 'Ответственный за обработку персональных данных',
+							'value' => '[Имя Фамилия]',
+						),
+						array(
+							'term'  => 'Почтовый адрес',
+							'value' => '[Индекс, город, улица, дом, офис]',
+						),
+					),
+				),
+			),
+			array( 'documents-list', array( 'mode' => 'auto' ) ),
 		),
 	),
 	array(
-		'path'   => 'soglasie-na-obrabotku-dannyh',
-		'title'  => 'Согласие на обработку персональных данных',
-		'type'   => 'document',
-		'seo'    => array(
+		'path'       => 'soglasie-na-obrabotku-dannyh',
+		'title'      => 'Согласие на обработку персональных данных',
+		'type'       => 'document',
+		'menu_order' => 2,
+		'seo'        => array(
 			'trust_crumb_section' => $trust_about,
 		),
-		'blocks' => array(
-			$trust_document_hero(),
+		'fields'     => array(
+			'document' => array(
+				'trust_doc_numbering' => 1,
+				'trust_doc_icon'      => 'document-check',
+			),
+		),
+		'blocks'     => array_merge(
+			array( $trust_document_hero() ),
+			$trust_document_text( 'soglasie-na-obrabotku-dannyh' )
 		),
 	),
 	// Вторая галочка формы «Оставьте отзыв» (шаг 4.12): публикация отзыва с именем и компанией.
 	array(
-		'path'   => 'soglasie-na-rasprostranenie-dannyh',
-		'title'  => 'Согласие на распространение персональных данных',
-		'type'   => 'document',
-		'seo'    => array(
+		'path'       => 'soglasie-na-rasprostranenie-dannyh',
+		'title'      => 'Согласие на распространение персональных данных',
+		'type'       => 'document',
+		'menu_order' => 3,
+		'seo'        => array(
 			'trust_crumb_section' => $trust_about,
 		),
-		'blocks' => array(
+		'fields'     => array(
+			'document' => array(
+				'trust_doc_numbering' => 1,
+				'trust_doc_icon'      => 'globe-half',
+				'trust_doc_short'     => 'Согласие на распространение данных',
+				'trust_doc_note'      => 'для публикации отзывов и вопросов',
+			),
+		),
+		// Макета нет — заглушка: текст готовит юрист.
+		'blocks'     => array(
 			$trust_document_hero(),
+			array(
+				'summary',
+				array(
+					'title' => 'Коротко о главном',
+					'items' => array(
+						array(
+							'icon' => 'check',
+							'text' => 'Нужно, чтобы опубликовать на сайте ваш отзыв или вопрос с именем, компанией и должностью.',
+						),
+						array(
+							'icon' => 'check',
+							'text' => 'Даётся отдельной галочкой в форме отзыва — не вместе с согласием на обработку данных.',
+						),
+						array(
+							'icon' => 'check',
+							'text' => 'Отозвать можно в любой момент — запись снимем с публикации.',
+						),
+					),
+					'note'  => 'Краткое изложение для удобства. Полный текст согласия — ниже.',
+				),
+			),
+			'<!-- wp:paragraph {"className":"is-style-doc-intro"} -->' . "\n" . '<p class="is-style-doc-intro">Отмечая в форме на сайте [домен] поле о согласии на публикацию, я даю [ООО «Название»] (далее — Оператор) согласие на распространение моих персональных данных на условиях ниже (ст. 10.1 Федерального закона от 27.07.2006 № 152-ФЗ «О персональных данных»).</p>' . "\n" . '<!-- /wp:paragraph -->',
+			$trust_h2( 'Оператор' ),
+			array(
+				'definitions',
+				array(
+					'view'  => 'card',
+					'items' => array(
+						array(
+							'term'  => 'Наименование',
+							'value' => '[ООО «Название»]',
+						),
+						array(
+							'term'  => 'ИНН / ОГРН',
+							'value' => '[0000000000] / [0000000000000]',
+						),
+						array(
+							'term'  => 'Сайт',
+							'value' => '[домен]',
+						),
+					),
+				),
+			),
+			$trust_h2( 'Какие данные публикуются' ),
+			$trust_clauses(
+				array(
+					'Имя и фамилия, название компании и должность, текст отзыва или вопроса, оценка.',
+					'Телефон и email не публикуются.',
+				)
+			),
+			$trust_h2( 'Где публикуются' ),
+			$trust_clauses(
+				array(
+					'Только на страницах сайта [домен]: «Отзывы о нас», «Вопросы SEO» и в блоках отзывов на других страницах.',
+					'Условия и запреты на обработку данных неограниченным кругом лиц: [перечислите или укажите «не устанавливаются»].',
+				)
+			),
+			$trust_h2( 'Срок действия и отзыв' ),
+			$trust_clauses(
+				array(
+					'Согласие действует до его отзыва.',
+					'Отозвать согласие можно письмом на privacy@example.ru — публикацию снимем в течение 3 рабочих дней (ч. 14 ст. 10.1 Закона № 152-ФЗ).',
+				)
+			),
+			array( 'documents-list', array( 'mode' => 'auto' ) ),
 		),
 	),
 	array(
-		'path'   => 'politika-cookie',
-		'title'  => 'Политика использования файлов cookie',
-		'type'   => 'document',
-		'seo'    => array(
+		'path'       => 'politika-cookie',
+		'title'      => 'Политика использования файлов cookie',
+		'type'       => 'document',
+		'menu_order' => 4,
+		'seo'        => array(
 			'trust_seo_title'     => 'Политика cookie {sep} {site}',
 			'trust_crumb_title'   => 'Политика cookie',
 			'trust_crumb_section' => $trust_about,
 		),
-		'blocks' => array(
-			$trust_document_hero( true ),
+		'fields'     => array(
+			'document' => array(
+				'trust_doc_numbering' => 1,
+				'trust_doc_icon'      => 'cookie-dots',
+				'trust_doc_short'     => 'Политика cookie',
+			),
+		),
+		'blocks'     => array_merge(
+			array( $trust_document_hero( true ) ),
+			$trust_document_text( 'politika-cookie', $trust_documents_manual( array( 'politika-konfidencialnosti', 'soglasie-na-obrabotku-dannyh', 'oferta' ) ) )
 		),
 	),
 );

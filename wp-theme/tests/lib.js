@@ -223,6 +223,8 @@ const MOCKUP_TEXTS = [
 	[ 'Заказать обратный звонок', 'Связаться с нами' ],
 	// Автор видеоотзыва: должность и компания — отдельные поля отзыва.
 	[ '[должность, компания]', '[Должность], [Компания]', [ 'o-nas/otzyvy.html' ] ],
+	// Cookie согласия в теме называется trust_consent (assets/js/cookie.js).
+	[ 'cookie_consent', 'trust_consent', [ 'o-nas/politika-cookie.html' ] ],
 ];
 const HERO_SECTION_CSS = `
 	.dc-hero-box dl > div { justify-content: flex-end !important; }
@@ -234,6 +236,18 @@ const HERO_DOCUMENT_CSS = `
 	.dc-hero-in > div:first-child > span { flex: 0 0 100% !important; max-width: max-content !important; margin-bottom: -12px !important; }
 	.dc-hero-in > div:first-child > h1 { flex: 0 0 100% !important; margin-bottom: -12px !important; }
 	.dc-hero-in > div:first-child > p { flex: 1 1 520px !important; min-width: 0 !important; }
+	/* Доступность (шаг 4.15): номера содержания и подпись поля в примере согласия темнее — в макете
+	   контраст 3,6 и 3,5 : 1 при норме 4,5 */
+	.dc-toc a > span:first-child { color: #6E6499 !important; }
+	figure.dc-noprint span[style*="#8A85A0"] { color: #6B6677 !important; }
+`;
+// Таблицы документов — блок «Таблица» WordPress: ширины колонок по тексту (заданных в макете
+// процентов у блока нет), имя cookie не переносится на широком экране.
+const DOC_TABLE_CSS = `
+	.dc-table thead th { width: auto !important; }
+	@container (min-width: 641px) {
+		.dc-table code { white-space: nowrap; overflow-wrap: normal !important; }
+	}
 `;
 // Правка заказчика для всех макетов: отступы секций 64 / 56 / 48 px вместо 96 (--section-y в main.css).
 const SECTION_SPACING_CSS = `
@@ -447,8 +461,24 @@ const MOCKUP_CSS = {
 		section[aria-labelledby="list-title"] a[href="#portfolio"] { display: none !important; }
 	`,
 	'o-nas/oferta.html': HERO_DOCUMENT_CSS,
-	'o-nas/politika-cookie.html': HERO_DOCUMENT_CSS,
-	'o-nas/soglasie-pd.html': HERO_DOCUMENT_CSS,
+	// Таблицы документов в теме одинаковые: отступы ячеек и вид карточек — как в макете согласия.
+	'o-nas/politika-cookie.html': HERO_DOCUMENT_CSS + DOC_TABLE_CSS + `
+		.dc-table th, .dc-table td { padding: 14px 16px !important; }
+		.dc-table tr.dc-tgroup th { padding: 14px 16px 10px !important; }
+		@container (max-width: 640px) {
+			.dc-table tr:not(.dc-tgroup) { margin-bottom: 12px !important; padding: 6px 0 10px !important; }
+			.dc-table tr.dc-tgroup th { padding: 0 !important; }
+			.dc-table td { grid-template-columns: 110px minmax(0, 1fr) !important; padding: 6px 16px !important; }
+		}
+		/* «Контакты» — «Список определений» карточкой: на телефоне поля 16 px, как у остальных карточек */
+		@media (max-width: 640px) {
+			section:has(#ck-s7) dl { padding: 6px 16px !important; }
+		}
+	`,
+	// Списки определений-карточки в теме одинаковые: подписи 200 px (как «Контакты» в макете).
+	'o-nas/soglasie-pd.html': HERO_DOCUMENT_CSS + DOC_TABLE_CSS + `
+		.dc-req dt { flex-basis: 200px !important; }
+	`,
 	'seo-vopros/vopros-seo.html': `
 		/* Форма под текстом (уже 1000 px) — текст во всю ширину карточки (правка заказчика) */
 		@media (max-width: 999px) {

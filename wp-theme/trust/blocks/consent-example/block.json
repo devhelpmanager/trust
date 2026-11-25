@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/consent-example",
+	"title": "Пример галочки согласия",
+	"description": "Иллюстрация «Как выглядит согласие в форме»: поле, отмеченная галочка, кнопка и пояснение.",
+	"category": "trust-content",
+	"icon": "yes",
+	"keywords": [ "документ", "согласие", "галочка", "персональные данные" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false,
+		"multiple": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

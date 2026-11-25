@@ -7,6 +7,8 @@
  * файл загружен). Ниже — карточка-таблица <dl> в две колонки (на узком экране — в одну). На
  * телефоне кнопки — под таблицей, в одну строку (правки заказчика; в макете «Скопировать
  * реквизиты» и «Карточка компании, PDF» под заголовком). Данные — «Настройки сайта → Реквизиты».
+ * Вид «В тексте документа» — только таблица в рамке (как «Реквизиты исполнителя» оферты) и ссылка
+ * на «Контакты».
  *
  * Переменные SCF: $block (array), $is_preview (bool), $post_id (int|string).
  *
@@ -15,6 +17,7 @@
 
 use Trust\Blocks;
 use Trust\Icons;
+use Trust\Page_Types;
 use Trust\Requisites;
 
 defined( 'ABSPATH' ) || exit;
@@ -25,6 +28,51 @@ $trust_title_id = Blocks::uid( $block, 'title' );
 $trust_copy     = Blocks::text( 'copy_label', __( 'Скопировать', 'trust' ) );
 
 if ( ! $trust_rows && ! $is_preview ) {
+	return;
+}
+
+// В тексте документа (раздел «Реквизиты исполнителя» оферты): только таблица и ссылка на «Контакты».
+if ( 'document' === get_field( 'view' ) ) {
+	if ( ! $trust_rows ) {
+		echo Blocks::editor_warning( __( 'Заполните реквизиты: «Настройки сайта → Реквизиты».', 'trust' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- экранировано в editor_warning().
+		return;
+	}
+	$trust_contacts = false !== get_field( 'contacts_link' ) ? Page_Types::url( 'contacts' ) : '';
+	?>
+	<div class="b-req b-req--doc">
+		<dl class="b-req__list b-req__list--doc" data-requisites>
+			<?php foreach ( $trust_rows as $trust_row ) : ?>
+				<div class="b-req__row">
+					<dt><?php echo esc_html( $trust_row['label'] ); ?></dt>
+					<dd>
+					<?php
+					echo wp_kses(
+						make_clickable( esc_html( $trust_row['value'] ) ),
+						array(
+							'a' => array(
+								'href' => true,
+								'rel'  => true,
+							),
+						)
+					);
+					?>
+						</dd>
+				</div>
+			<?php endforeach; ?>
+		</dl>
+		<?php if ( '' !== $trust_contacts ) : ?>
+			<p class="b-req__more" data-noprint>
+				<?php
+				printf(
+					/* translators: %s: ссылка на страницу «Контакты». */
+					esc_html__( 'Полные реквизиты и карточка компании — на странице %s.', 'trust' ),
+					'<a href="' . esc_url( $trust_contacts ) . '"' . ( $is_preview ? ' tabindex="-1"' : '' ) . '>«' . esc_html( get_the_title( url_to_postid( $trust_contacts ) ) ) . '»</a>'
+				);
+				?>
+			</p>
+		<?php endif; ?>
+	</div>
+	<?php
 	return;
 }
 ?>

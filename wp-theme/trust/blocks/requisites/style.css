@@ -128,3 +128,55 @@ html:not(.js) .b-req__copy {
 		display: none;
 	}
 }
+
+/* В тексте документа (оферта, «Реквизиты исполнителя»): таблица в рамке, строки в одну колонку */
+.b-req--doc {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 0;
+	background: none;
+}
+
+.b-req .b-req__list--doc {
+	display: flex;
+	flex-direction: column;
+	padding: 6px 24px;
+	border-radius: 18px;
+}
+
+.b-req__list--doc .b-req__row {
+	gap: 4px 16px;
+	padding: 13px 0;
+}
+
+.b-req__list--doc .b-req__row:last-child {
+	border-bottom: 0;
+}
+
+.b-req__list--doc .b-req__row dt {
+	flex-basis: 180px;
+}
+
+.b-req__list--doc a {
+	color: var(--c-violet);
+}
+
+.b-req__more {
+	margin: 0;
+	font-size: 15px;
+	line-height: 1.65;
+	color: var(--c-muted);
+}
+
+.b-req__more a {
+	color: var(--c-violet);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+	.b-req .b-req__list--doc {
+		padding: 6px 16px;
+	}
+}

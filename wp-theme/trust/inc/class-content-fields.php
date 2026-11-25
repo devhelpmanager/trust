@@ -25,7 +25,7 @@ final class Content_Fields {
 	/**
 	 * Группы полей: тип записи или таксономия => файл inc/fields/content/<имя>.php.
 	 */
-	private const GROUPS = array( 'post', 'category', 'case', 'review', 'team', 'vacancy', 'question', 'seo' );
+	private const GROUPS = array( 'post', 'category', 'case', 'review', 'team', 'vacancy', 'question', 'document', 'seo' );
 
 	/**
 	 * Регистрирует хуки.

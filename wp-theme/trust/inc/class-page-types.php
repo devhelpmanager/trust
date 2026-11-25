@@ -102,8 +102,14 @@ final class Page_Types {
 	 * на остальных они скрыты из списка блоков.
 	 */
 	private const EXCLUSIVE = array(
-		'trust/cases-grid'   => 'portfolio',
-		'trust/answers-list' => 'questions',
+		'trust/cases-grid'      => 'portfolio',
+		'trust/answers-list'    => 'questions',
+		'trust/summary'         => 'document',
+		'trust/definitions'     => 'document',
+		'trust/doc-cards'       => 'document',
+		'trust/consent-example' => 'document',
+		'trust/cookie-settings' => 'document',
+		'trust/documents-list'  => 'document',
 	);
 
 	/**

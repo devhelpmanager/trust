@@ -13,10 +13,12 @@
  * иначе не остановить), а cookie известных счётчиков удаляются.
  *
  * Открыть плашку снова: элемент с атрибутом data-trust-cookie-settings или ссылка на
- * #cookie-settings (её можно добавить в любое меню).
+ * #cookie-settings (её можно добавить в любое меню). На странице с блоком «Настройки cookie»
+ * (id="cookie-settings") такая ссылка ведёт к блоку, плашка не открывается.
  *
  * window.trustConsent: get() → выбор или null; has( категория ) → bool; set( { analytics,
- * marketing }, choice ) — сохранить выбор (блок «Настройки cookie» на странице политики); open().
+ * marketing }, choice ) — сохранить выбор (блок «Настройки cookie» на странице политики; открытая
+ * плашка при этом закрывается); open().
  * Событие trust:consent на window — после каждого сохранения выбора.
  */
 ( () => {
@@ -123,6 +125,12 @@
 		} );
 		write( value );
 		window.dispatchEvent( new CustomEvent( 'trust:consent', { detail: value } ) );
+		if ( banner && ! banner.hidden ) {
+			if ( banner.contains( document.activeElement ) ) {
+				document.activeElement.blur();
+			}
+			banner.hidden = true;
+		}
 
 		const revoked = CATEGORIES.some( ( category ) => ( inserted.has( category ) || ( before && before[ category ] ) ) && ! value[ category ] );
 		if ( revoked ) {
@@ -160,7 +168,9 @@
 
 	document.addEventListener( 'click', ( event ) => {
 		const trigger = event.target.closest( '[data-trust-cookie-settings], a[href$="#cookie-settings"]' );
-		if ( trigger && banner ) {
+		// Ссылка на #cookie-settings там, где есть блок «Настройки cookie», — переход к блоку.
+		const toBlock = trigger && trigger.matches( 'a' ) && document.getElementById( 'cookie-settings' );
+		if ( trigger && banner && ! toBlock ) {
 			event.preventDefault();
 			const button = open();
 			if ( button ) {

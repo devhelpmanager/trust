@@ -157,8 +157,8 @@ async function save( page ) {
 		await page.locator( '.trust-page-types__card[data-type="document"]' ).click();
 		await page.waitForTimeout( 800 );
 		s = await state( page );
-		check( 'Выбор «Документ» на новой странице: шаблон и набор (первый экран, заголовок раздела, абзац текста, реквизиты)',
-			s.template === 'templates/document.php' && JSON.stringify( s.blocks ) === JSON.stringify( [ 'trust/hero-document', 'core/heading', 'core/paragraph', 'trust/requisites' ] ), JSON.stringify( s ) );
+		check( 'Выбор «Документ» на новой странице: шаблон и набор (первый экран, «Коротко о главном», заголовок раздела, абзац текста, реквизиты, «Другие документы»)',
+			s.template === 'templates/document.php' && JSON.stringify( s.blocks ) === JSON.stringify( [ 'trust/hero-document', 'trust/summary', 'core/heading', 'core/paragraph', 'trust/requisites', 'trust/documents-list' ] ), JSON.stringify( s ) );
 		check( 'После вставки блок не выделен — справа панель страницы', await page.evaluate( () => ! wp.data.select( 'core/block-editor' ).getSelectedBlockClientId() ) );
 		await page.screenshot( { path: path.join( OUT, 'page-types-document.png' ) } );
 		await page.evaluate( ( title ) => wp.data.dispatch( 'core/editor' ).editPost( { title } ), `${ MARK } документ` );

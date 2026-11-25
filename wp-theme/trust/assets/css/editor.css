@@ -22,3 +22,41 @@
 	font-size: 14px;
 	line-height: 1.5;
 }
+
+/* Документ (шаг 4.15): стили «Пункты документа», «Вступление», «Примечание» — как на сайте
+   (номера пунктов в редакторе считаются внутри списка; на сайте — «1.1.» по разделу) */
+.is-root-container ol.is-style-clauses {
+	padding: 0;
+	list-style: none;
+	counter-reset: doc-point;
+}
+
+.is-root-container ol.is-style-clauses > li {
+	position: relative;
+	margin-bottom: 12px;
+	padding-left: 52px;
+	counter-increment: doc-point;
+}
+
+.is-root-container ol.is-style-clauses > li::before {
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: var(--c-violet);
+	font-family: var(--f-mono);
+	font-size: 13px;
+	line-height: 1.65rem;
+	content: counter(doc-point) ".";
+}
+
+.is-root-container .is-style-doc-intro {
+	padding: 24px 26px;
+	border-left: 4px solid var(--c-violet);
+	border-radius: 4px 18px 18px 4px;
+	background: #FBFAFF;
+}
+
+.is-root-container .is-style-doc-note {
+	color: var(--c-muted);
+	font-size: 14px;
+}

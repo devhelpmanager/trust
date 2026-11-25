@@ -1,0 +1,62 @@
+/*
+ * Блок «Карточки с плашкой» (o-nas/politika-cookie.html, категории cookie).
+ */
+
+.b-doc-cards {
+	container-type: inline-size;
+}
+
+.b-doc-cards__list {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-doc-cards__card {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	min-width: 0;
+	padding: 18px;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-card);
+	background: var(--c-white);
+}
+
+.b-doc-cards__label {
+	align-self: flex-start;
+	padding: 3px 10px;
+	border-radius: var(--r-pill);
+	background: var(--c-lavender-2);
+	color: var(--c-violet-dark);
+	font-size: 13px;
+	font-weight: 600;
+	line-height: normal;
+}
+
+/* Первая карточка — основная (в макете «Необходимые»): плашка темнее */
+.b-doc-cards__card:first-child .b-doc-cards__label {
+	background: var(--c-lavender-3);
+	color: var(--c-violet-deep);
+}
+
+.b-doc-cards__text {
+	font-size: 15px;
+	line-height: 1.55;
+	color: var(--c-text-2);
+}
+
+@container (max-width: 520px) {
+	.b-doc-cards__list {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+@media (max-width: 600px) {
+	.b-doc-cards__list {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}

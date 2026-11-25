@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/definitions",
+	"title": "Список определений",
+	"description": "Пары «название — значение»: термины документа, данные оператора, контакты. Вид «Линии» или «Карточка».",
+	"category": "trust-content",
+	"icon": "editor-table",
+	"keywords": [ "документ", "термины", "определения", "оператор", "контакты" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

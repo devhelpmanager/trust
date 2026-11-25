@@ -56,6 +56,7 @@ final class Theme {
 		Cookie::register();
 		Settings::register();
 		Blocks::register();
+		Document::register();
 		Icons::register();
 		Hero_Art::register();
 

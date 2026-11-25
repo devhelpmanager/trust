@@ -716,6 +716,34 @@ final class Blocks {
 	}
 
 	/**
+	 * Текст поля «Визуальный редактор» в одну строку: ссылки и выделение без абзацев
+	 * (абзацы — через перенос строки). Для пунктов списков: «Коротко о главном» и т. п.
+	 *
+	 * @param mixed $html Значение поля.
+	 */
+	public static function inline( $html ): string {
+		$html = trim( (string) preg_replace( '~</p>\s*<p[^>]*>~i', '<br>', (string) $html ) );
+		return trim(
+			wp_kses(
+				$html,
+				array(
+					'a'      => array(
+						'href'   => true,
+						'target' => true,
+						'rel'    => true,
+					),
+					'strong' => array(),
+					'b'      => array(),
+					'em'     => array(),
+					'i'      => array(),
+					'br'     => array(),
+					'code'   => array(),
+				)
+			)
+		);
+	}
+
+	/**
 	 * Значение поля «Якорь», пригодное для id (или пустая строка).
 	 *
 	 * @param mixed $value Значение поля.

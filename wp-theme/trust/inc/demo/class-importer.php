@@ -125,6 +125,12 @@ final class Importer {
 			foreach ( self::resolve_links( $page['seo'] ?? array() ) as $name => $value ) {
 				update_field( Fields::key( 'seo', $name ), $value, $id );
 			}
+			// Поля других групп страницы: 'fields' => array( группа => array( поле => значение ) ).
+			foreach ( $page['fields'] ?? array() as $group => $values ) {
+				foreach ( self::resolve_links( $values ) as $name => $value ) {
+					update_field( Fields::key( $group, $name ), $value, $id );
+				}
+			}
 
 			$content = isset( $page['blocks'] ) ? self::blocks_content( $page['blocks'] ) : ( $page['content'] ?? '' );
 			// wp_slash: WordPress снимает слэши при сохранении, а в данных блоков есть \u003c и т. п.
@@ -134,6 +140,7 @@ final class Importer {
 						'ID'           => $id,
 						'post_title'   => $page['title'],
 						'post_content' => $content,
+						'menu_order'   => (int) ( $page['menu_order'] ?? 0 ),
 					)
 				)
 			);
@@ -967,11 +974,16 @@ final class Importer {
 	 * Содержимое страницы из блоков темы.
 	 *
 	 * @param array $blocks Список array( 'имя блока', array( значения полей ), 'вложенные блоки' ):
-	 *                      третий элемент — разметка блоков ядра внутри блока (например, «Блок с текстом»).
+	 *                      третий элемент — разметка блоков ядра внутри блока (например, «Блок с текстом»);
+	 *                      строка вместо массива — готовая разметка блоков ядра (текст документов).
 	 */
 	private static function blocks_content( array $blocks ): string {
 		$parts = array();
 		foreach ( $blocks as $block ) {
+			if ( is_string( $block ) ) {
+				$parts[] = self::resolve_links( $block );
+				continue;
+			}
 			$parts[] = \Trust\Blocks::serialize( $block[0], self::resolve_links( $block[1] ), self::resolve_links( $block[2] ?? '' ) );
 		}
 		return implode( "\n\n", $parts );

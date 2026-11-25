@@ -1,0 +1,526 @@
+/*
+ * Тип страницы «Документ» (макеты o-nas/oferta.html, politika-cookie.html, soglasie-pd.html):
+ * раскладка с содержанием, текст документа (блоки ядра), нумерация, таблицы-карточки, печать.
+ * Подключается только на страницах этого типа (Trust\Document::enqueue()).
+ */
+
+/* ===== Раскладка: содержание сбоку и текст ===== */
+
+.doc__body {
+	padding: 48px var(--gutter) var(--section-y);
+}
+
+.doc__inner {
+	display: flex;
+	align-items: flex-start;
+	gap: 56px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.doc__main {
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+	min-width: 0;
+}
+
+/* ===== Содержание ===== */
+
+.doc-toc--side {
+	position: sticky;
+	top: calc(var(--sticky-top) + 24px);
+	flex: 0 0 290px;
+	box-sizing: border-box;
+	max-height: calc(100vh - var(--sticky-top) - 48px);
+	overflow: auto;
+	padding: 22px 14px 22px 18px;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-card-lg);
+	background: var(--c-white);
+	transition: top 0.25s ease;
+}
+
+.doc-toc__title {
+	display: block;
+	padding: 0 10px 12px;
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--c-violet);
+}
+
+.doc-toc__list {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.doc-toc__link {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-height: 52px; /* как в макете: 40 px + отступы 6 px */
+	box-sizing: border-box;
+	padding: 6px 10px;
+	border-radius: 10px;
+	color: var(--c-text-2);
+	font-size: 14px;
+	line-height: 1.35;
+	text-decoration: none;
+}
+
+.doc-toc__link:hover,
+.doc-toc__link[aria-current] {
+	background: var(--c-lavender-2);
+	color: var(--c-violet-deep);
+}
+
+.doc-toc__link[aria-current] {
+	font-weight: 600;
+}
+
+.doc-toc__num {
+	flex: none;
+	width: 22px;
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 400;
+	color: #6E6499; /* в макете #8A7FB5 — контраст 3,6 : 1, нужно от 4,5 */
+}
+
+/* Телефон и планшет: «Содержание» раскрывается кнопкой */
+.doc-toc--drop {
+	display: none;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-card);
+	background: var(--c-white);
+}
+
+.doc-toc__toggle {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	min-height: 56px;
+	padding: 0 18px;
+	font-size: 16px;
+	font-weight: 600;
+	list-style: none;
+	cursor: pointer;
+}
+
+.doc-toc__toggle::-webkit-details-marker {
+	display: none;
+}
+
+.doc-toc__chev {
+	flex: none;
+	color: var(--c-violet-dark);
+	transition: transform 0.2s;
+}
+
+.doc-toc--drop[open] .doc-toc__chev {
+	transform: rotate(180deg);
+}
+
+.doc-toc__list--drop {
+	padding: 0 8px 12px;
+}
+
+.doc-toc__list--drop .doc-toc__link {
+	min-height: 56px;
+	font-size: 15px;
+}
+
+.doc-toc__list--drop .doc-toc__link[aria-current] {
+	font-weight: 400;
+}
+
+@media (max-width: 1023px) {
+	.doc-toc--side {
+		display: none;
+	}
+
+	.doc-toc--drop {
+		display: block;
+	}
+}
+
+/* ===== Текст документа ===== */
+
+.doc-content {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	container: doc / inline-size;
+	color: var(--c-text-2);
+	font-size: 16px;
+	line-height: 1.65;
+}
+
+.doc-content > * {
+	margin: 0;
+}
+
+/* Текст — колонкой 820 px; «Коротко о главном» и «Другие документы» — во всю ширину */
+.doc-content > :not(.b-summary, .doc-pair, .b-docs) {
+	max-width: 820px;
+}
+
+.doc-content > * + * {
+	margin-top: 16px;
+}
+
+/* Между разделами — 40 px; после «Коротко о главном» — 32 px */
+.doc-content > h2 {
+	margin-top: 40px;
+}
+
+.doc-content > :is(.b-summary, .doc-pair) + *,
+.doc-content > .b-docs {
+	margin-top: 32px;
+}
+
+.doc-content > :first-child {
+	margin-top: 0;
+}
+
+.doc-content > h2 {
+	font-family: var(--f-display);
+	font-size: clamp(20px, 2.1vw, 24px);
+	font-weight: 600;
+	line-height: 1.3;
+	color: var(--c-text);
+}
+
+.doc-content > h3 {
+	margin-top: 24px;
+	font-size: 19px;
+	font-weight: 600;
+	line-height: 1.35;
+	color: var(--c-text);
+}
+
+.doc-content a:not([class]) {
+	color: var(--c-violet);
+}
+
+.doc-content a:not([class]):hover {
+	color: var(--c-violet-deep);
+}
+
+/* Обычные списки */
+.doc-content > :is(ul, ol):not(.is-style-clauses) {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding-left: 24px;
+}
+
+/* «Пункты документа»: номера «1.1.», «1.2.» — по разделу (H2) */
+.doc-content ol.is-style-clauses {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 0;
+	list-style: none;
+}
+
+.doc-content ol.is-style-clauses > li {
+	position: relative;
+	min-width: 0;
+	padding-left: 52px;
+	counter-increment: doc-point;
+}
+
+.doc-content ol.is-style-clauses > li::before {
+	position: absolute;
+	top: 0;
+	left: 0;
+	font-family: var(--f-mono);
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.65rem;
+	color: var(--c-violet);
+	content: counter(doc-point) ".";
+}
+
+/* Без нумерации разделов — пункты считаются внутри списка */
+.doc:not(.doc--numbered) .doc-content ol.is-style-clauses {
+	counter-reset: doc-point;
+}
+
+.doc--numbered .doc-content {
+	counter-reset: doc-section doc-point;
+}
+
+.doc--numbered .doc-content > h2 {
+	counter-increment: doc-section;
+	counter-reset: doc-point;
+}
+
+.doc--numbered .doc-content > h2::before {
+	content: counter(doc-section) ". ";
+}
+
+.doc--numbered .doc-content ol.is-style-clauses > li::before {
+	content: counter(doc-section) "." counter(doc-point) ".";
+}
+
+.doc-content li > :is(ul, ol) {
+	margin-top: 8px;
+}
+
+/* «Вступление»: абзац с полосой слева (макет согласия) */
+.doc-content .is-style-doc-intro {
+	padding: 24px 26px;
+	border-left: 4px solid var(--c-violet);
+	border-radius: 4px 18px 18px 4px;
+	background: #FBFAFF;
+	font-size: 16px;
+	line-height: 1.7;
+}
+
+/* «Примечание»: мелкий серый текст (под таблицей и т. п.) */
+.doc-content .is-style-doc-note {
+	font-size: 14px;
+	line-height: 1.55;
+	color: var(--c-muted);
+}
+
+.doc-content .is-style-doc-note a {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+/* ===== Таблицы: на узкой колонке — карточки (ТЗ, п. 8.9) ===== */
+
+.doc-content .wp-block-table {
+	overflow: hidden;
+	border: 1px solid var(--c-border);
+	border-radius: 18px;
+}
+
+.doc-content .wp-block-table table {
+	width: 100%;
+	border-collapse: collapse;
+	overflow-wrap: normal; /* ширины колонок по тексту, как в макете (у сайта — break-word) */
+	font-size: 15px;
+	line-height: 1.5;
+	color: var(--c-text-2);
+}
+
+.doc-content .wp-block-table :is(th, td) {
+	padding: 14px 16px;
+	border: 0;
+	border-bottom: 1px solid var(--c-divider);
+	text-align: left;
+	vertical-align: top;
+}
+
+.doc-content .wp-block-table thead {
+	border: 0;
+}
+
+.doc-content .wp-block-table thead th {
+	background: var(--c-lavender);
+	color: var(--c-muted);
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.doc-content .wp-block-table tbody th {
+	color: var(--c-text);
+	font-weight: 600;
+}
+
+.doc-content .wp-block-table tr.doc-table__group th {
+	padding: 14px 16px 10px;
+	background: #FBFAFF;
+	color: var(--c-violet-dark);
+	font-size: 14px;
+}
+
+.doc-content .wp-block-table tbody tr:last-child :is(th, td) {
+	border-bottom: 0;
+}
+
+.doc-content .wp-block-table code {
+	padding: 2px 6px;
+	border-radius: 6px;
+	background: var(--c-lavender-2);
+	color: var(--c-violet-deep);
+	font-family: var(--f-mono);
+	font-size: 13px;
+	white-space: nowrap; /* имя cookie целиком; в карточках — с переносом */
+}
+
+.doc-content .wp-block-table figcaption {
+	padding: 10px 16px;
+	border-top: 1px solid var(--c-divider);
+	color: var(--c-muted);
+	font-size: 14px;
+}
+
+@container doc (max-width: 640px) {
+	.doc-content .wp-block-table {
+		overflow: visible;
+		border: 0;
+		border-radius: 0;
+	}
+
+	.doc-content .wp-block-table thead {
+		display: none;
+	}
+
+	.doc-content .wp-block-table :is(table, tbody, tr, td, th) {
+		display: block;
+		width: auto;
+	}
+
+	.doc-content .wp-block-table tr {
+		margin-bottom: 12px;
+		padding: 6px 0 10px;
+		border: 1px solid var(--c-border);
+		border-radius: var(--r-card);
+		background: var(--c-white);
+	}
+
+	.doc-content .wp-block-table tbody th {
+		padding: 12px 16px 8px;
+		border: 0;
+		font-size: 16px;
+		line-height: 1.4;
+	}
+
+	.doc-content .wp-block-table td {
+		display: grid;
+		grid-template-columns: 110px minmax(0, 1fr);
+		gap: 12px;
+		padding: 6px 16px;
+		border: 0;
+	}
+
+	.doc-content .wp-block-table td::before {
+		color: var(--c-muted);
+		font-size: 13px;
+		line-height: 1.6;
+		content: attr(data-label);
+	}
+
+	.doc-content .wp-block-table td:not([data-label]) {
+		display: block;
+	}
+
+	.doc-content .wp-block-table td:not([data-label])::before {
+		content: none;
+	}
+
+	.doc-content .wp-block-table tr.doc-table__group {
+		margin: 20px 0 8px;
+		padding: 0;
+		border: 0;
+		background: transparent;
+	}
+
+	.doc-content .wp-block-table tr.doc-table__group th {
+		padding: 0;
+		border-bottom: 1px solid var(--c-divider);
+		background: transparent;
+		font-size: 15px;
+		line-height: 1.5;
+	}
+
+	.doc-content .wp-block-table figcaption {
+		padding: 0;
+		border: 0;
+	}
+
+	.doc-content .wp-block-table code {
+		white-space: normal;
+		overflow-wrap: anywhere;
+	}
+}
+
+@container doc (max-width: 300px) {
+	.doc-content .wp-block-table td {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0;
+	}
+}
+
+/* ===== «Коротко о главном» и «Пример галочки согласия» — в одну строку ===== */
+
+.doc-pair {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+}
+
+.doc-pair > .b-summary {
+	flex: 3 1 420px;
+	min-width: 0;
+}
+
+.doc-pair > .b-consent-example {
+	flex: 2 1 280px;
+	min-width: 0;
+}
+
+@media (max-width: 640px) {
+	.doc-content ol.is-style-clauses > li {
+		padding-left: 42px;
+		font-size: 15px;
+	}
+
+	.doc-content .is-style-doc-intro {
+		padding: 20px 18px;
+	}
+}
+
+/* ===== Печать: только документ (ТЗ, раздел 6.2) ===== */
+
+@media print {
+	.site-header,
+	.site-footer,
+	.doc-toc,
+	.b-docs,
+	.b-cookie-set,
+	.b-consent-example,
+	.cookie-banner,
+	[data-noprint] {
+		display: none !important;
+	}
+
+	body {
+		background: #FFFFFF;
+	}
+
+	.doc__body {
+		padding: 24px 0 0;
+	}
+
+	.doc__inner {
+		display: block;
+	}
+
+	.doc-content > :not(.b-summary, .doc-pair, .b-docs) {
+		max-width: none;
+	}
+
+	.doc-content > h2 {
+		break-after: avoid;
+	}
+
+	.doc-content ol.is-style-clauses > li,
+	.doc-content .wp-block-table tr {
+		break-inside: avoid;
+	}
+}

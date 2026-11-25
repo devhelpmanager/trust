@@ -1,0 +1,186 @@
+/*
+ * Блок «Настройки cookie» (o-nas/politika-cookie.html).
+ */
+
+.b-cookie-set {
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	padding: 24px 26px;
+	border: 1.5px solid var(--c-border-strong);
+	border-radius: var(--r-card-lg);
+	background: var(--c-white);
+	box-shadow: 0 18px 40px rgba(46, 16, 101, 0.08);
+	color: var(--c-text);
+}
+
+.b-cookie-set__head {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding-bottom: 16px;
+}
+
+.b-cookie-set__icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	background: var(--c-lavender-2);
+	color: var(--c-violet);
+}
+
+.b-cookie-set .b-cookie-set__title {
+	margin: 0;
+	font-family: var(--f-text);
+	font-size: 19px;
+	font-weight: 600;
+	line-height: normal;
+}
+
+.b-cookie-set__row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	padding: 16px 0;
+	border-top: 1px solid var(--c-divider);
+}
+
+.b-cookie-set__info {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0;
+}
+
+.b-cookie-set__name {
+	font-size: 16px;
+	font-weight: 600;
+	line-height: normal;
+}
+
+.b-cookie-set__desc {
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--c-muted);
+}
+
+.b-cookie-set__always {
+	flex: none;
+	padding: 6px 10px;
+	border-radius: var(--r-pill);
+	background: var(--c-lavender-3);
+	color: var(--c-violet-deep);
+	font-size: 13px;
+	font-weight: 600;
+	line-height: normal;
+	white-space: nowrap;
+}
+
+/* Переключатель: зона нажатия 60 × 44, дорожка 52 × 30 */
+.b-cookie-set__switch {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 60px;
+	height: 44px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+}
+
+.b-cookie-set__track {
+	display: flex;
+	justify-content: flex-start;
+	width: 52px;
+	height: 30px;
+	box-sizing: border-box;
+	padding: 3px;
+	border-radius: var(--r-pill);
+	background: #CFC6E6;
+	transition: background 0.2s;
+}
+
+.b-cookie-set__track > span {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: var(--c-white);
+	box-shadow: 0 1px 3px rgba(14, 11, 20, 0.25);
+}
+
+.b-cookie-set__switch[aria-checked="true"] .b-cookie-set__track {
+	justify-content: flex-end;
+	background: var(--c-violet);
+}
+
+.b-cookie-set__switch:hover .b-cookie-set__track {
+	filter: brightness(0.96);
+}
+
+.b-cookie-set__buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	padding-top: 18px;
+	border-top: 1px solid var(--c-divider);
+}
+
+.b-cookie-set .b-cookie-set__btn {
+	flex: 1 1 180px;
+	min-height: 52px;
+	padding: 0 18px;
+	white-space: nowrap;
+}
+
+.b-cookie-set .b-cookie-set__btn:nth-child(2) {
+	flex-basis: 150px;
+}
+
+.b-cookie-set .b-cookie-set__btn--muted {
+	border-color: var(--c-border-strong);
+	color: var(--c-text-2);
+}
+
+.b-cookie-set__status {
+	min-height: 22px;
+	margin: 14px 0 0;
+	font-size: 14px;
+	line-height: 1.55;
+	color: var(--c-muted);
+}
+
+.b-cookie-set__status.is-saved {
+	color: var(--c-violet-deep);
+}
+
+.b-cookie-set__nojs {
+	display: none;
+	margin: 14px 0 0;
+	font-size: 14px;
+	line-height: 1.55;
+	color: var(--c-muted);
+}
+
+/* Без JavaScript выбор не сохранить — вместо переключателей и кнопок подсказка */
+html:not(.js) .b-cookie-set__switch,
+html:not(.js) .b-cookie-set__buttons,
+html:not(.js) .b-cookie-set__status {
+	display: none;
+}
+
+html:not(.js) .b-cookie-set__nojs {
+	display: block;
+}
+
+@media (max-width: 640px) {
+	.b-cookie-set {
+		padding: 20px 16px;
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/cookie-settings",
+	"title": "Настройки cookie",
+	"description": "Переключатели категорий cookie (необходимые всегда включены, аналитические, рекламные) и кнопки «Сохранить выбор», «Принять все», «Только необходимые». Тот же выбор, что у плашки cookie.",
+	"category": "trust-content",
+	"icon": "admin-settings",
+	"keywords": [ "cookie", "согласие", "куки", "настройки", "метрика" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false,
+		"multiple": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}
