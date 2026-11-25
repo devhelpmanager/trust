@@ -61,7 +61,7 @@ $trust_id       = static fn( string $name ): string => esc_attr( $trust_uid . '-
 						<span class="field__error" id="<?php echo $trust_id( 'name' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_attr() в $trust_id. ?>-error" hidden></span>
 					</div>
 					<div class="field">
-						<label class="field__label" for="<?php echo $trust_id( 'contact' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_attr() в $trust_id. ?>"><?php esc_html_e( 'Телефон или email', 'trust' ); ?></label>
+						<label class="field__label" for="<?php echo $trust_id( 'contact' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_attr() в $trust_id. ?>"><?php esc_html_e( 'Ваши контакты', 'trust' ); ?></label>
 						<input class="field__input" id="<?php echo $trust_id( 'contact' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_attr() в $trust_id. ?>" name="contact" type="text" autocomplete="tel" minlength="5" maxlength="100" required placeholder="<?php echo esc_attr( Blocks::text( 'contact_placeholder', Forms::phone_example() ) ); ?>" aria-describedby="<?php echo $trust_id( 'contact' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_attr() в $trust_id. ?>-error" data-error="<?php echo $trust_error( 'contact' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_attr() в $trust_error. ?>">
 						<span class="field__error" id="<?php echo $trust_id( 'contact' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_attr() в $trust_id. ?>-error" hidden></span>
 					</div>

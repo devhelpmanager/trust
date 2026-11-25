@@ -427,6 +427,18 @@ const MOCKUP_CSS = {
 		section[aria-labelledby="dept-title"] li > h3 { margin: 0 !important; line-height: 1.3; }
 		section[aria-labelledby="dept-title"] li > p { grid-column: 1 / -1; grid-row: 2; align-self: start; margin-top: 14px !important; }
 		section[aria-labelledby="dept-title"] li > div { grid-column: 1 / -1; grid-row: 3; margin-top: 10px !important; }
+		/* «Реквизиты»: кнопки «Скопировать» и «Скачать PDF»; уже 600 px — под таблицей, в одну строку */
+		section[aria-labelledby="req-title"] button.dc-out, section[aria-labelledby="req-title"] a.dc-btn { font-size: 0 !important; white-space: nowrap; justify-content: center; }
+		section[aria-labelledby="req-title"] button.dc-out::after { content: "Скопировать"; font-size: 15px; }
+		section[aria-labelledby="req-title"] a.dc-btn::after { content: "Скачать PDF"; font-size: 15px; }
+		@media (max-width: 599px) {
+			section[aria-labelledby="req-title"] > div > div:first-child { display: contents !important; }
+			section[aria-labelledby="req-title"] > div > div:first-child > div:last-child { order: 2; flex-wrap: nowrap !important; margin-top: -8px; }
+			section[aria-labelledby="req-title"] > div > div:first-child > div:last-child > * { flex: 1 1 0; min-width: 0; padding: 0 12px !important; }
+		}
+		@media (max-width: 359px) {
+			section[aria-labelledby="req-title"] button.dc-out svg, section[aria-labelledby="req-title"] a.dc-btn svg { display: none; }
+		}
 	`,
 	'o-nas/otzyvy.html': HERO_SECTION_CSS + `
 		main section:not(.dc-hero-sec) header { gap: 16px !important; }

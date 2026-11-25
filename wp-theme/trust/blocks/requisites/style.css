@@ -8,31 +8,46 @@
 	color: var(--c-text);
 }
 
+/* Шапка слева, кнопки справа на уровне её низа, таблица — под ними во всю ширину */
 .b-req__inner {
-	display: flex;
-	flex-direction: column;
-	gap: 28px;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	grid-template-areas:
+		"head actions"
+		"list list";
+	align-items: end;
+	gap: 28px 18px;
 	max-width: var(--content);
 	margin: 0 auto;
 }
 
-.b-req__top {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: flex-end;
-	justify-content: space-between;
-	gap: 18px;
+.b-req__inner > * {
+	grid-column: 1 / -1;
+}
+
+.b-req__inner > .b-req__head {
+	grid-area: head;
+}
+
+.b-req__inner > .b-req__actions {
+	grid-area: actions;
+}
+
+.b-req__inner > .b-req__list {
+	grid-area: list;
 }
 
 .b-req__actions {
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: flex-end;
 	gap: 10px;
 }
 
 .b-req .b-req__copy,
 .b-req .b-req__card {
 	padding: 0 18px;
+	white-space: nowrap;
 }
 
 /* Без JavaScript копирование не работает — кнопки не видно */
@@ -76,8 +91,40 @@ html:not(.js) .b-req__copy {
 	overflow-wrap: anywhere;
 }
 
+/* Уже 600 px кнопки рядом с заголовком не помещаются — они под таблицей, в одну строку,
+   поровну (правка заказчика) */
+@media (max-width: 599px) {
+	.b-req__inner {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-areas:
+			"head"
+			"list"
+			"actions";
+	}
+
+	.b-req__inner > .b-req__actions {
+		flex-wrap: nowrap;
+		margin-top: -8px;
+	}
+
+	.b-req .b-req__copy,
+	.b-req .b-req__card {
+		flex: 1 1 0;
+		min-width: 0;
+		padding: 0 12px;
+	}
+}
+
 @media (max-width: 640px) {
 	.b-req__list {
 		padding: 20px 18px;
+	}
+}
+
+/* Совсем узкий экран: без значков, чтобы обе кнопки остались в строке */
+@media (max-width: 359px) {
+	.b-req .b-req__copy svg,
+	.b-req .b-req__card svg {
+		display: none;
 	}
 }

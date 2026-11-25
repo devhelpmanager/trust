@@ -64,7 +64,7 @@ return array_merge(
 			),
 		),
 		Blocks::text_field( 'channel_legend', __( 'Подпись способов связи', 'trust' ), __( 'Как с вами связаться', 'trust' ), 60 ),
-		Blocks::text_field( 'contact_placeholder', __( 'Подсказка в поле «Телефон или email»', 'trust' ), Trust\Forms::phone_example(), 60 ),
+		Blocks::text_field( 'contact_placeholder', __( 'Подсказка в поле «Ваши контакты»', 'trust' ), Trust\Forms::phone_example(), 60 ),
 		Blocks::text_field( 'task_placeholder', __( 'Подсказка в поле «Задача»', 'trust' ), __( 'Например: нужен аудит и продвижение интернет-магазина мебели', 'trust' ), 120 ),
 		Blocks::text_field( 'submit', __( 'Кнопка отправки', 'trust' ), __( 'Отправить заявку', 'trust' ), 40 ),
 		Blocks::text_field( 'success_title', __( 'Заголовок после отправки', 'trust' ), __( 'Заявка отправлена', 'trust' ), 60 ),

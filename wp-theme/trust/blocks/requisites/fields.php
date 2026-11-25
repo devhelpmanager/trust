@@ -26,8 +26,8 @@ return array_merge(
 			'type'    => 'message',
 			'message' => __( 'Реквизиты и файл «Карточка компании, PDF» — «Настройки сайта → Реквизиты».', 'trust' ),
 		),
-		Blocks::text_field( 'copy_label', __( 'Кнопка копирования', 'trust' ), __( 'Скопировать реквизиты', 'trust' ), 40 ),
+		Blocks::text_field( 'copy_label', __( 'Кнопка копирования', 'trust' ), __( 'Скопировать', 'trust' ), 40 ),
 		Blocks::text_field( 'copied_label', __( 'Подпись после копирования', 'trust' ), __( 'Скопировано', 'trust' ), 30 ),
-		Blocks::text_field( 'card_label', __( 'Кнопка карточки компании', 'trust' ), __( 'Карточка компании, PDF', 'trust' ), 40 ),
+		Blocks::text_field( 'card_label', __( 'Кнопка карточки компании', 'trust' ), __( 'Скачать PDF', 'trust' ), 40 ),
 	)
 );

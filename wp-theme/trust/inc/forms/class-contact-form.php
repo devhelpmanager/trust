@@ -76,7 +76,7 @@ final class Contact_Form {
 					'error'    => __( 'Укажите, как к вам обращаться', 'trust' ),
 				),
 				'contact' => array(
-					'label'    => __( 'Телефон или email', 'trust' ),
+					'label'    => __( 'Ваши контакты', 'trust' ), // Правка заказчика (в макете «Телефон или email»).
 					'type'     => 'text',
 					'required' => true,
 					'min'      => 5,

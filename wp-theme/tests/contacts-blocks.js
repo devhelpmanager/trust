@@ -9,8 +9,9 @@
  * карта — только по кнопке «Показать карту»; картинка схемы из настроек; пустой пункт не выводится.
  * Отделы — 5 карточек (email, телефон, ссылка в тексте) и «Письмо руководителю» (имя и email
  * из карточки сотрудника). Форма — ошибки как в макете, способ связи, «Заявка отправлена» поверх
- * формы с текстом по способу, заявка «Заявка с контактов». Реквизиты — 10 строк из настроек,
- * «Скопировать» (буфер обмена, «Скопировано»), «Карточка компании, PDF». Сверка с макетом на
+ * формы с текстом по способу, заявка «Заявка с контактов» (поле «Ваши контакты»). Реквизиты —
+ * 10 строк из настроек, «Скопировать» (буфер обмена, «Скопировано»), «Скачать PDF»; на узком
+ * экране кнопки под таблицей в одну строку. Сверка с макетом (с правками заказчика) на
  * 1280 / 768 / 390 px, ширины 1440–280, axe-core, консоль, редактор.
  */
 
@@ -185,10 +186,11 @@ async function compare( page, name, width, theme, mock ) {
 				steps: [ ...b.querySelectorAll( '.b-cform__steps li' ) ].map( ( li ) => li.textContent.trim() ),
 				channels: [ ...b.querySelectorAll( 'input[name="channel"]' ) ].map( ( i ) => i.value + ( i.checked ? '*' : '' ) ),
 				legend: b.querySelector( 'legend' ).textContent,
+				contactLabel: b.querySelector( '[name="contact"]' ).labels[ 0 ].textContent.trim(),
 			};
 		} );
-		check( '«Расскажите о задаче»: якорь #contact-form, шаги 1–3, способы связи «Звонок» (выбран), Telegram, WhatsApp, Email',
-			'contact-form' === cf.id && 3 === cf.steps.length && cf.steps[ 0 ].endsWith( 'Менеджер уточнит задачу и цели' ) && 'Звонок*|Telegram|WhatsApp|Email' === cf.channels.join( '|' ) && 'Как с вами связаться' === cf.legend, JSON.stringify( cf ) );
+		check( '«Расскажите о задаче»: якорь #contact-form, шаги 1–3, поле «Ваши контакты» (правка заказчика), способы связи «Звонок» (выбран), Telegram, WhatsApp, Email',
+			'contact-form' === cf.id && 3 === cf.steps.length && cf.steps[ 0 ].endsWith( 'Менеджер уточнит задачу и цели' ) && 'Звонок*|Telegram|WhatsApp|Email' === cf.channels.join( '|' ) && 'Как с вами связаться' === cf.legend && 'Ваши контакты' === cf.contactLabel, JSON.stringify( cf ) );
 		await form.locator( '[type="submit"]' ).click();
 		const errs = await form.locator( '.field__error:not([hidden])' ).allTextContents();
 		check( 'Пустая форма: 3 сообщения как в макете, фокус на «Имя»',
@@ -212,7 +214,7 @@ async function compare( page, name, width, theme, mock ) {
 			created.push( String( lead[ 0 ] ) );
 		}
 		check( 'Заявка «Заявка с контактов»: имя, контакт, задача, способ связи',
-			'contact' === lead[ 1 ] && JSON.stringify( lead[ 2 ] ) === JSON.stringify( [ `Имя=${ MARK } Пётр`, 'Телефон или email=petr@example.com', 'Задача=Аудит и продвижение магазина мебели', 'Как связаться=Telegram' ] ), JSON.stringify( lead ) );
+			'contact' === lead[ 1 ] && JSON.stringify( lead[ 2 ] ) === JSON.stringify( [ `Имя=${ MARK } Пётр`, 'Ваши контакты=petr@example.com', 'Задача=Аудит и продвижение магазина мебели', 'Как связаться=Telegram' ] ), JSON.stringify( lead ) );
 		await page.locator( '.b-cform .form-sent__again' ).click();
 		await page.waitForTimeout( 200 );
 		const reset = await page.evaluate( () => [ document.querySelector( '.b-cform .form-sent' ).hidden, document.querySelector( '.b-cform input[name="channel"]:checked' ).value, document.querySelector( '.b-cform .form-success__text' ).textContent ] );
@@ -225,18 +227,37 @@ async function compare( page, name, width, theme, mock ) {
 			return {
 				head: b.querySelector( '.eyebrow' ).textContent + '|' + b.querySelector( 'h2' ).textContent,
 				rows: [ ...b.querySelectorAll( '.b-req__row' ) ].map( ( r ) => r.querySelector( 'dt' ).textContent ),
-				card: [ new URL( b.querySelector( '.b-req__card' ).href ).pathname.endsWith( '.pdf' ), b.querySelector( '.b-req__card' ).target ],
+				buttons: [ b.querySelector( '.b-req__copy' ).textContent.trim(), b.querySelector( '.b-req__card' ).textContent.trim() ],
+				card: [ new URL( b.querySelector( '.b-req__card' ).href ).pathname.endsWith( '.pdf' ), b.querySelector( '.b-req__card' ).hasAttribute( 'download' ), b.querySelector( '.b-req__card' ).target ],
 			};
 		} );
-		check( '«Реквизиты»: 10 строк из «Настроек → Реквизиты» таблицей <dl>, «Карточка компании, PDF» в новой вкладке',
-			'Для договора и счетов|Реквизиты' === req.head && 'Полное наименование|Генеральный директор|ИНН / КПП|ОГРН|Юридический адрес|Почтовый адрес|Расчётный счёт|Банк|БИК|Корр. счёт' === req.rows.join( '|' ) && req.card[ 0 ] && '_blank' === req.card[ 1 ], JSON.stringify( req ) );
+		check( '«Реквизиты»: 10 строк из «Настроек → Реквизиты» таблицей <dl>, кнопки «Скопировать» и «Скачать PDF» (правки заказчика; PDF скачивается)',
+			'Для договора и счетов|Реквизиты' === req.head && 'Полное наименование|Генеральный директор|ИНН / КПП|ОГРН|Юридический адрес|Почтовый адрес|Расчётный счёт|Банк|БИК|Корр. счёт' === req.rows.join( '|' ) && 'Скопировать|Скачать PDF' === req.buttons.join( '|' ) && req.card[ 0 ] && req.card[ 1 ] && '' === req.card[ 2 ], JSON.stringify( req ) );
+		// Правка заказчика: где кнопки не помещаются рядом с заголовком (уже 600 px) — под таблицей, в одну строку.
+		const reqLayout = async ( width ) => {
+			await page.setViewportSize( { width, height: 900 } );
+			return page.evaluate( () => {
+				const q = ( sel ) => document.querySelector( sel ).getBoundingClientRect();
+				const head = q( '.b-req__head' ), list = q( '.b-req__list' ), copy = document.querySelector( '.b-req__copy' ), card = document.querySelector( '.b-req__card' );
+				const c = copy.getBoundingClientRect(), d = card.getBoundingClientRect();
+				const place = c.top >= list.bottom ? 'под таблицей' : ( c.left > head.left + 100 && c.bottom <= list.top ? 'справа' : 'иначе' );
+				return [ place, Math.abs( c.top - d.top ) < 1, copy.scrollWidth <= copy.clientWidth && card.scrollWidth <= card.clientWidth ];
+			} );
+		};
+		const reqPlaces = {};
+		for ( const width of [ 1280, 768, 600, 599, 390, 320, 280 ] ) {
+			reqPlaces[ width ] = await reqLayout( width );
+		}
+		await page.setViewportSize( { width: 1280, height: 900 } );
+		check( '«Реквизиты»: от 600 px кнопки справа от заголовка, уже — под таблицей; всегда в одну строку, текст помещается (правка заказчика)',
+			Object.entries( reqPlaces ).every( ( [ w, r ] ) => ( Number( w ) >= 600 ? 'справа' : 'под таблицей' ) === r[ 0 ] && r[ 1 ] && r[ 2 ] ), JSON.stringify( reqPlaces ) );
 		await page.locator( '.b-req__copy' ).click();
 		await page.waitForTimeout( 300 );
 		const copied = await page.evaluate( async () => [ await navigator.clipboard.readText(), document.querySelector( '[data-requisites-copy-label]' ).textContent ] );
-		check( '«Скопировать реквизиты»: строки «Название: значение» в буфере, подпись «Скопировано»',
+		check( '«Скопировать»: строки «Название: значение» в буфере, подпись «Скопировано»',
 			copied[ 0 ].startsWith( 'Полное наименование: [ООО «Название»]\nГенеральный директор: [Имя Фамилия]\n' ) && 10 === copied[ 0 ].split( '\n' ).length && 'Скопировано' === copied[ 1 ], JSON.stringify( copied ) );
 		await page.waitForTimeout( 2600 );
-		check( 'Через 2,5 с — снова «Скопировать реквизиты»', 'Скопировать реквизиты' === await page.locator( '[data-requisites-copy-label]' ).textContent() );
+		check( 'Через 2,5 с — снова «Скопировать»', 'Скопировать' === await page.locator( '[data-requisites-copy-label]' ).textContent() );
 
 		// ===== Свои данные =====
 		const qa = wp( 'eval', 'echo get_posts( array( "post_type" => "team", "name" => "qa", "numberposts" => 1, "fields" => "ids" ) )[0] ?? 0;' );
@@ -268,7 +289,7 @@ async function compare( page, name, width, theme, mock ) {
 		await plain.goto( PAGE, { waitUntil: 'domcontentloaded' } );
 		const nj = await plain.evaluate( () => [ getComputedStyle( document.querySelector( '.b-req__copy' ) ).display, getComputedStyle( document.querySelector( '.b-req__card' ) ).display !== 'none' ] );
 		await noJs.close();
-		check( 'Без JavaScript: кнопки копирования нет, карточка компании — есть', 'none' === nj[ 0 ] && nj[ 1 ], JSON.stringify( nj ) );
+		check( 'Без JavaScript: кнопки копирования нет, «Скачать PDF» — есть', 'none' === nj[ 0 ] && nj[ 1 ], JSON.stringify( nj ) );
 
 		// ===== Сверка с макетом =====
 		const sections = [
