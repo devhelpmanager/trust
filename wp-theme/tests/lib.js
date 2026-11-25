@@ -365,6 +365,39 @@ const MOCKUP_CSS = {
 		@media (max-width: 760px) {
 			section[aria-labelledby="intern-title"] { padding-top: 48px !important; padding-bottom: 48px !important; }
 		}
+		/* Правки заказчика к 4.13. Первый экран: кнопки в одну строку, на узком экране — «Вакансии» */
+		.dc-hero-in a[href="#vacancies"], .dc-hero-in a[href="#resume"] { white-space: nowrap; }
+		@media (max-width: 560px) {
+			.dc-hero-in div:has(> a[href="#vacancies"]) { gap: 8px !important; }
+			.dc-hero-in a[href="#vacancies"], .dc-hero-in a[href="#resume"] { gap: 8px !important; padding: 0 16px !important; font-size: 15px !important; }
+		}
+		@media (max-width: 423px) {
+			.dc-hero-in a[href="#vacancies"] { font-size: 0 !important; }
+			.dc-hero-in a[href="#vacancies"]::before { content: "Вакансии"; font-size: 15px; }
+		}
+		/* «Условия»: шапка во всю ширину, значок и заголовок в строку, текст под ними */
+		section[aria-labelledby="why-title"] header { max-width: none !important; }
+		section[aria-labelledby="why-title"] li { display: grid !important; grid-template-columns: 48px minmax(0, 1fr); align-content: start; align-items: center; gap: 14px 16px !important; }
+		section[aria-labelledby="why-title"] li > h3 { margin: 0 !important; }
+		section[aria-labelledby="why-title"] li > p { grid-column: 1 / -1; }
+		/* Вакансии: «Откликнуться» (46 px) у правого края, email под кнопкой */
+		.dc-acc-panel > div:last-child { flex-direction: column !important; align-items: flex-end !important; gap: 10px !important; text-align: right; }
+		.dc-acc-panel > div:last-child > a { gap: 8px !important; min-height: 46px !important; padding: 0 18px !important; border-radius: 12px !important; font-size: 15px !important; }
+		.dc-acc-panel > div:last-child > span { line-height: 1.5; }
+		/* Телефон: зарплата и стрелка — на одном уровне под названием и метками */
+		@media (max-width: 640px) {
+			.dc-acc-btn { display: grid !important; grid-template-columns: minmax(0, 1fr) auto; align-items: center !important; gap: 12px 16px !important; }
+			.dc-acc-btn > span:first-child { display: contents !important; }
+			.dc-acc-btn > span:first-child > span:first-child { grid-column: 1 / -1; }
+			.dc-acc-btn > span:first-child > span:last-child { grid-column: 1; white-space: normal !important; }
+			.dc-acc-btn > span:last-child { grid-column: 2; grid-row: 2; }
+		}
+		/* «Изнутри»: на узком экране «Вся команда» — после цитат */
+		@media (max-width: 760px) {
+			section[aria-labelledby="voices-title"] > div > div:first-child { display: contents !important; }
+			section[aria-labelledby="voices-title"] > div > ul { order: 1; }
+			section[aria-labelledby="voices-title"] > div > div:first-child > a { order: 2; align-self: flex-start; }
+		}
 	`,
 	'o-nas/kontakty.html': `
 		.dc-hero-in > div:first-child { max-width: none !important; }

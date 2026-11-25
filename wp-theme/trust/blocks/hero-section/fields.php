@@ -31,7 +31,7 @@ return array(
 		'maxlength'    => 400,
 		'instructions' => __( 'Под заголовком, 1–3 предложения.', 'trust' ),
 	),
-	Trust\Blocks::buttons_field( 2, true ),
+	Trust\Blocks::buttons_field( 2, true, true ),
 	array(
 		'name'         => 'stats',
 		'label'        => __( 'Цифры', 'trust' ),

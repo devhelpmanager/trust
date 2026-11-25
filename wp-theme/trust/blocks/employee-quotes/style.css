@@ -33,6 +33,23 @@
 	white-space: nowrap;
 }
 
+/* Узкий экран: кнопка «Вся команда» не помещается в строку с заголовком — она после цитат
+   (правка заказчика) */
+@media (max-width: 760px) {
+	.b-voices__top {
+		display: contents;
+	}
+
+	.b-voices__list {
+		order: 1;
+	}
+
+	.b-voices .b-voices__more {
+		order: 2;
+		align-self: flex-start;
+	}
+}
+
 .b-voices__list {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));

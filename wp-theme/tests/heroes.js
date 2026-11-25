@@ -115,7 +115,8 @@ async function hideHeader( page ) {
 		}
 		const career = await page.locator( '.b-hero-section' ).evaluate( ( el ) => ( {
 			vac: [ ...el.querySelectorAll( '.b-hero-section__stat' ) ][ 1 ].querySelector( 'dd' ).textContent,
-			buttons: [ ...el.querySelectorAll( '.b-hero-section__buttons a' ) ].map( ( a ) => ( { text: a.textContent.trim(), href: a.getAttribute( 'href' ), icon: !! a.querySelector( 'svg' ), white: a.classList.contains( 'btn--white' ) } ) ),
+			// Видимый текст: на компьютере — полный («Смотреть вакансии»), короткий скрыт.
+			buttons: [ ...el.querySelectorAll( '.b-hero-section__buttons a' ) ].map( ( a ) => ( { text: a.innerText.trim(), href: a.getAttribute( 'href' ), icon: !! a.querySelector( 'svg' ), white: a.classList.contains( 'btn--white' ) } ) ),
 		} ) );
 		check( `Карьера: {vacancies} → число открытых вакансий (${ vacancies })`, career.vac === String( vacancies ) && vacancies > 0, career.vac );
 		check( 'Карьера: «Смотреть вакансии» (белая, стрелка вниз) и «Отправить резюме»', JSON.stringify( career.buttons ) === JSON.stringify( [

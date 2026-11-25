@@ -47,6 +47,7 @@ final class Theme {
 		Forms\Block_Forms::register();
 		Forms\Calculator::register();
 		Forms\Estimates::register();
+		Forms\Lead_Sections::register();
 		Forms\Leader_Messages::register();
 		Forms\Review_Form::register();
 		Forms\Resume_Form::register();

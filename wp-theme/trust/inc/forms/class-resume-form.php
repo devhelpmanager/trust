@@ -5,6 +5,7 @@
  * Резюме — обычная заявка «Резюме» (те же защита, уведомления, CSV и срок хранения): имя и
  * фамилия, телефон или email, вакансия (открытые вакансии, «Стажировка», «Без вакансии»),
  * ссылка на резюме или портфолио (в заявке — ссылкой), о себе. Сообщения — как в макете.
+ * Резюме — в своём подпункте «Заявки → Резюме» (в «Все заявки» не попадают).
  *
  * @package Trust
  */
@@ -35,6 +36,51 @@ final class Resume_Form {
 	 */
 	public static function register(): void {
 		add_filter( 'trust_form_types', array( self::class, 'types' ) );
+		add_filter( 'trust_lead_sections', array( self::class, 'section' ) );
+	}
+
+	/**
+	 * Подпункт «Заявки → Резюме» (правка заказчика; Trust\Forms\Lead_Sections): после «Обращений
+	 * к руководителю», колонки «Вакансия» и «Резюме» (ссылка) вместо «Формы».
+	 *
+	 * @param array $sections Подпункты.
+	 */
+	public static function section( array $sections ): array {
+		$sections[ self::TYPE ] = array(
+			'menu'      => __( 'Резюме', 'trust' ),
+			'not_found' => __( 'Резюме пока нет: они появляются, когда соискатель отправляет форму «Отправить резюме» на странице «Карьера».', 'trust' ),
+			'position'  => 2,
+			'columns'   => array(
+				'trust_resume_vacancy' => __( 'Вакансия', 'trust' ),
+				'trust_resume_link'    => __( 'Резюме', 'trust' ),
+			),
+			'column'    => array( self::class, 'column' ),
+		);
+		return $sections;
+	}
+
+	/**
+	 * Колонки «Вакансия» и «Резюме» (ссылка в новой вкладке).
+	 *
+	 * @param string $column  Колонка.
+	 * @param int    $post_id Заявка.
+	 */
+	public static function column( string $column, int $post_id ): void {
+		$fields = (array) get_post_meta( $post_id, 'trust_fields', true );
+		if ( 'trust_resume_vacancy' === $column ) {
+			echo esc_html( (string) ( $fields['vacancy']['value'] ?? '' ) );
+			return;
+		}
+		$link = (string) ( $fields['link']['value'] ?? '' );
+		if ( 'trust_resume_link' === $column && '' !== $link ) {
+			$href  = preg_match( '#^https?://#i', $link ) ? $link : 'https://' . $link;
+			$label = (string) preg_replace( '#^https?://(www\.)?#i', '', $link );
+			printf(
+				'<a href="%1$s" target="_blank" rel="noopener noreferrer nofollow">%2$s</a>',
+				esc_url( $href ),
+				esc_html( mb_strlen( $label ) > 40 ? mb_substr( $label, 0, 39 ) . '…' : $label )
+			);
+		}
 	}
 
 	/**

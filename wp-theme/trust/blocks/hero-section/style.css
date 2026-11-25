@@ -22,11 +22,13 @@
 	max-width: 820px;
 }
 
+/* Кнопки — в одну строку (правка заказчика); не помещаются — переносятся */
 .b-hero-section__buttons {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 12px;
 	margin-top: 6px;
+	container-type: inline-size;
 }
 
 .b-hero-section .b-hero-section__btn {
@@ -34,6 +36,43 @@
 	min-height: 52px;
 	padding: 0 22px;
 	border-radius: 14px;
+	white-space: nowrap;
+}
+
+.b-hero-section .btn__short {
+	display: none;
+}
+
+@media (max-width: 560px) {
+	.b-hero-section__buttons {
+		gap: 8px;
+	}
+
+	.b-hero-section .b-hero-section__btn {
+		gap: 8px;
+		padding: 0 16px;
+		font-size: 15px;
+	}
+}
+
+/* Узкий экран: короткий текст кнопки («Вакансии» вместо «Смотреть вакансии»), если он задан */
+@container (max-width: 383px) {
+	.b-hero-section .btn__full {
+		display: none;
+	}
+
+	.b-hero-section .btn__short {
+		display: inline;
+	}
+}
+
+/* Самые узкие экраны (320 px): кнопки ещё компактнее, чтобы остаться в одной строке */
+@container (max-width: 300px) {
+	.b-hero-section .b-hero-section__btn {
+		gap: 6px;
+		padding: 0 12px;
+		font-size: 14px;
+	}
 }
 
 .b-hero-section .btn--ghost {

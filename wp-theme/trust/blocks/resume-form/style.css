@@ -27,6 +27,7 @@
 
 .b-resume .b-resume__head {
 	gap: 18px;
+	max-width: none; /* текст под заголовком — на всю ширину колонки (правка заказчика) */
 }
 
 .b-resume__hr {

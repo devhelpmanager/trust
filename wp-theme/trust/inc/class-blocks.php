@@ -447,10 +447,11 @@ final class Blocks {
 	 * якорем (#раздел), #callback-modal открывает окно «Заказать обратный звонок».
 	 * Первая кнопка — основная, остальные — второстепенные.
 	 *
-	 * @param int  $max  Сколько кнопок можно добавить.
-	 * @param bool $icon Есть ли выбор иконки (стрелка вправо или вниз).
+	 * @param int  $max   Сколько кнопок можно добавить.
+	 * @param bool $icon  Есть ли выбор иконки (стрелка вправо или вниз).
+	 * @param bool $short Есть ли «Короткий текст» для узкого экрана.
 	 */
-	public static function buttons_field( int $max = 2, bool $icon = false ): array {
+	public static function buttons_field( int $max = 2, bool $icon = false, bool $short = false ): array {
 		$sub = array(
 			array(
 				'name'          => 'link',
@@ -472,6 +473,16 @@ final class Blocks {
 				),
 				'default_value' => '',
 				'wrapper'       => array( 'width' => 40 ),
+			);
+		}
+		if ( $short ) {
+			$sub[] = array(
+				'name'         => 'short',
+				'label'        => __( 'Короткий текст', 'trust' ),
+				'type'         => 'text',
+				'maxlength'    => 30,
+				'instructions' => __( 'Необязательно. Показывается на узком экране, если кнопки не помещаются в строку: «Вакансии» вместо «Смотреть вакансии».', 'trust' ),
+				'wrapper'      => array( 'width' => 30 ),
 			);
 		}
 		return array(
@@ -500,6 +511,12 @@ final class Blocks {
 				continue;
 			}
 			$class = $classes[ min( $i, count( $classes ) - 1 ) ];
+			$text  = esc_html( $link['title'] );
+			$short = trim( (string) ( $row['short'] ?? '' ) );
+			if ( '' !== $short && $short !== $link['title'] ) {
+				// Полный и короткий текст: какой виден — решают стили блока (узкий экран — короткий).
+				$text = '<span class="btn__full">' . $text . '</span><span class="btn__short">' . esc_html( $short ) . '</span>';
+			}
 			$icon  = array(
 				'down'  => 'arrow-down',
 				'right' => 'arrow-right',
@@ -509,7 +526,7 @@ final class Blocks {
 				esc_attr( $class ),
 				esc_url( $link['url'] ),
 				! empty( $link['target'] ) ? ' target="_blank" rel="noopener"' : '',
-				esc_html( $link['title'] ),
+				$text,
 				$icon ? Icons::svg(
 					$icon,
 					array(

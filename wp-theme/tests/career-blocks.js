@@ -92,6 +92,18 @@ async function compare( page, name, width, theme, mock ) {
 		const benefits = await page.evaluate( () => [ ...document.querySelectorAll( '.b-benefits__item' ) ].map( ( li ) => [ !! li.querySelector( '.b-benefits__icon svg' ), li.querySelector( 'h3' ).textContent ] ) );
 		check( '«Почему у нас»: 6 пунктов со значками и заголовками (H3) из макета',
 			6 === benefits.length && benefits.every( ( b ) => b[ 0 ] ) && 'Наставник с первого дня|Обучение за счёт компании|Понятный рост|Гибкий формат|Официальное оформление|Реальные проекты' === benefits.map( ( b ) => b[ 1 ] ).join( '|' ), JSON.stringify( benefits ) );
+		const benefitsLayout = () => page.evaluate( () => {
+			const head = document.querySelector( '.b-benefits__head' ).getBoundingClientRect();
+			const inner = document.querySelector( '.b-benefits__inner' ).getBoundingClientRect();
+			const li = document.querySelector( '.b-benefits__item' );
+			const icon = li.querySelector( '.b-benefits__icon' ).getBoundingClientRect();
+			const h3 = li.querySelector( 'h3' ).getBoundingClientRect();
+			const p = li.querySelector( 'p' ).getBoundingClientRect();
+			return [ Math.round( head.width ) === Math.round( inner.width ), h3.left > icon.right && Math.abs( ( h3.top + h3.bottom ) / 2 - ( icon.top + icon.bottom ) / 2 ) < 2, p.top > icon.bottom && Math.round( p.left ) === Math.round( icon.left ) ];
+		} );
+		const benefitsDesk = await benefitsLayout();
+		check( '«Почему у нас»: шапка во всю ширину блока, заголовок пункта справа от значка, текст под ними (правки заказчика)',
+			JSON.stringify( benefitsDesk ) === JSON.stringify( [ true, true, true ] ), JSON.stringify( benefitsDesk ) );
 
 		// ===== Открытые вакансии =====
 		const vac = await page.evaluate( () => {
@@ -121,6 +133,16 @@ async function compare( page, name, width, theme, mock ) {
 			vac.h3 && 'SEO|[Офис или гибрид]|Опыт от 3 лет' === vac.tags.join( '|' ) && '[от N $]' === vac.salary && 'region:true' === vac.region, JSON.stringify( vac ) );
 		check( 'Раскрытая вакансия: «коротко о вакансии», три раздела по 4 пункта, «Откликнуться» (#resume), «Или пришлите резюме на hr@example.ru»',
 			'Ведёте несколько про' === vac.about && 'Чем предстоит заниматься:4|Что ждём от кандидата:4|Что предлагаем:4' === vac.sections.join( '|' ) && '#resume' === vac.apply[ 0 ] && vacancies[ 0 ][ 0 ] === vac.apply[ 1 ] && 'mailto:hr@example.ru' === vac.mail, JSON.stringify( vac ) );
+		const actions = await page.evaluate( () => {
+			const item = document.querySelector( '.b-vac__item' );
+			const panelEl = item.querySelector( '.b-vac__panel' );
+			const panel = panelEl.getBoundingClientRect();
+			const apply = item.querySelector( '.b-vac__apply' ).getBoundingClientRect();
+			const mail = item.querySelector( '.b-vac__mail' ).getBoundingClientRect();
+			return [ Math.round( panel.right - parseFloat( getComputedStyle( panelEl ).paddingRight ) - apply.right ), mail.top >= apply.bottom, Math.round( mail.right ) === Math.round( apply.right ), Math.round( apply.height ) ];
+		} );
+		check( '«Откликнуться» (46 px) у правого края карточки, «Или пришлите резюме на …» — под кнопкой (правки заказчика)',
+			JSON.stringify( actions ) === JSON.stringify( [ 0, true, true, 46 ] ), JSON.stringify( actions ) );
 
 		const state = () => page.evaluate( () => [ ...document.querySelectorAll( '.b-vac__item' ) ].map( ( li ) => ( li.hidden ? 'h' : '' ) + ( 'true' === li.querySelector( '.b-vac__toggle' ).getAttribute( 'aria-expanded' ) ? '1' : '0' ) ).join( '' ) );
 		await page.locator( '.b-vac__toggle' ).nth( 1 ).click();
@@ -233,6 +255,41 @@ async function compare( page, name, width, theme, mock ) {
 			} );
 			await admin.close();
 			check( 'В заявке ссылка на резюме — кликабельная (https://, новая вкладка, nofollow)', link && 'https://github.com/olga' === link[ 0 ] && '_blank' === link[ 1 ] && link[ 2 ].includes( 'nofollow' ), JSON.stringify( link ) );
+
+			// «Заявки → Резюме» (правка заказчика): резюме — только в своём подпункте.
+			const adm = await browser.newPage( { viewport: { width: 1280, height: 900 } } );
+			await login( adm );
+			await adm.goto( `${ URL }/wp-admin/edit.php?post_type=lead` );
+			const sub = await adm.locator( '#menu-posts-lead .wp-submenu li:not(.wp-submenu-head) a' ).evaluateAll( ( links ) => links.map( ( a ) => [ a.childNodes[ 0 ].textContent.trim(), a.querySelector( '.pending-count' )?.textContent || '' ] ) );
+			const allRows = await adm.locator( '#the-list tr' ).allInnerTexts();
+			const formOptions = await adm.locator( 'select[name="trust_form"] option' ).allTextContents();
+			check( 'Админка: подпункт «Резюме» после «Все заявки» и «Обращения к руководителю», с числом новых',
+				'Все заявки|Обращения к руководителю|Резюме' === sub.slice( 0, 3 ).map( ( x ) => x[ 0 ] ).join( '|' ) && Number( sub[ 2 ][ 1 ] ) >= 1, JSON.stringify( sub ) );
+			check( 'Админка: в «Все заявки» резюме нет, в фильтре форм — тоже',
+				! allRows.some( ( r ) => r.includes( `${ MARK } Ольга` ) ) && ! formOptions.includes( 'Резюме' ) && formOptions.includes( 'Обратный звонок' ), JSON.stringify( formOptions ) );
+			await adm.locator( '#menu-posts-lead .wp-submenu a', { hasText: 'Резюме' } ).click();
+			await adm.waitForLoadState();
+			const list = await adm.evaluate( ( mark ) => {
+				const row = [ ...document.querySelectorAll( '#the-list tr' ) ].find( ( tr ) => tr.textContent.includes( mark ) );
+				const a = row ? row.querySelector( '.column-trust_resume_link a' ) : null;
+				return {
+					h1: document.querySelector( 'h1' ).textContent.trim(),
+					current: document.querySelector( '#menu-posts-lead .wp-submenu li.current a' )?.childNodes[ 0 ].textContent.trim(),
+					cols: [ ...document.querySelectorAll( '#posts-filter thead th' ) ].map( ( th ) => th.id ),
+					vacancy: row ? row.querySelector( '.column-trust_resume_vacancy' ).textContent.trim() : '',
+					link: a ? [ a.textContent, a.href, a.target ] : null,
+					hidden: document.querySelector( '#posts-filter input[type="hidden"][name="trust_form"]' )?.value,
+					rows: document.querySelectorAll( '#the-list tr:not(.no-items)' ).length,
+					views: document.querySelector( '.subsubsub' ).textContent.replace( /\s+/g, ' ' ).trim(),
+				};
+			}, `${ MARK } Ольга` );
+			check( 'Админка: экран «Резюме» — заголовок, подсвечен подпункт, колонки «Вакансия» и «Резюме» (ссылка) вместо «Формы»',
+				'Резюме' === list.h1 && 'Резюме' === list.current && list.cols.includes( 'trust_resume_vacancy' ) && list.cols.includes( 'trust_resume_link' ) && ! list.cols.includes( 'trust_form' ) && 'resume' === list.hidden
+				&& 'Frontend-разработчик' === list.vacancy && list.link && 'github.com/olga' === list.link[ 0 ] && 'https://github.com/olga' === list.link[ 1 ] && '_blank' === list.link[ 2 ] && list.views.includes( `(${ list.rows })` ), JSON.stringify( list ) );
+			await adm.goto( `${ URL }/wp-admin/post.php?post=${ lead[ 0 ] }&action=edit` );
+			const single = await adm.locator( '#menu-posts-lead .wp-submenu li.current a' ).evaluate( ( a ) => a.childNodes[ 0 ].textContent.trim() ).catch( () => '' );
+			check( 'Админка: на экране резюме подсвечен подпункт «Резюме»', 'Резюме' === single, single );
+			await adm.close();
 		}
 
 		// Отклик при открытом экране «Резюме отправлено» — форма возвращается, вакансия выбрана.
@@ -340,6 +397,34 @@ async function compare( page, name, width, theme, mock ) {
 			return [ cols( '.b-benefits__item' ), cols( '.b-voices__card' ), cols( '.b-hiring__step' ) ];
 		} );
 		check( 'Телефон 390: условия, цитаты и шаги — в одну колонку', JSON.stringify( mob ) === JSON.stringify( [ 1, 1, 1 ] ), JSON.stringify( mob ) );
+		const benefitsMob = await benefitsLayout();
+		const mobFix = await page.evaluate( () => {
+			const centers = [ ...document.querySelectorAll( '.b-vac__item' ) ].map( ( li ) => {
+				const a = li.querySelector( '.b-vac__salary' ).getBoundingClientRect();
+				const b = li.querySelector( '.b-vac__chevron' ).getBoundingClientRect();
+				return Math.abs( ( a.top + a.bottom ) / 2 - ( b.top + b.bottom ) / 2 ) < 2 && b.left > a.left;
+			} );
+			const more = document.querySelector( '.b-voices__more' ).getBoundingClientRect();
+			const list = document.querySelector( '.b-voices__list' ).getBoundingClientRect();
+			const head = document.querySelector( '.b-resume__head' ).getBoundingClientRect();
+			const intro = document.querySelector( '.b-resume__intro' ).getBoundingClientRect();
+			return [ centers.every( Boolean ), more.top > list.bottom, Math.round( head.width ) === Math.round( intro.width ) ];
+		} );
+		check( 'Телефон 390: в «Условиях» заголовок справа от значка; стрелка вакансии — на уровне зарплаты; «Вся команда» — после цитат; текст «Отклика» во всю ширину (правки заказчика)',
+			JSON.stringify( benefitsMob ) === JSON.stringify( [ true, true, true ] ) && JSON.stringify( mobFix ) === JSON.stringify( [ true, true, true ] ), JSON.stringify( [ benefitsMob, mobFix ] ) );
+		const heroButtons = [];
+		for ( const width of [ 320, 390, 430, 1280 ] ) {
+			await page.setViewportSize( { width, height: 900 } );
+			heroButtons.push( await page.evaluate( () => {
+				const b = [ ...document.querySelectorAll( '.b-hero-section__btn' ) ];
+				return ( Math.abs( b[ 0 ].getBoundingClientRect().top - b[ 1 ].getBoundingClientRect().top ) < 2 ? 'строка:' : 'перенос:' ) + b[ 0 ].innerText.trim();
+			} ) );
+		}
+		check( 'Первый экран: кнопки в одну строку от 320 px; до 430 px — «Вакансии» вместо «Смотреть вакансии» (правка заказчика)',
+			'строка:Вакансии|строка:Вакансии|строка:Смотреть вакансии|строка:Смотреть вакансии' === heroButtons.join( '|' ), heroButtons.join( '|' ) );
+		const voicesDesk = await page.evaluate( () => document.querySelector( '.b-voices__more' ).getBoundingClientRect().top < document.querySelector( '.b-voices__list' ).getBoundingClientRect().top );
+		check( 'Компьютер: «Вся команда» — в строке с заголовком «Изнутри»', voicesDesk );
+		await page.setViewportSize( { width: 390, height: 900 } );
 		await page.setViewportSize( { width: 1280, height: 900 } );
 		const desk = await page.evaluate( () => {
 			const cols = ( sel ) => new Set( [ ...document.querySelectorAll( sel ) ].map( ( c ) => Math.round( c.getBoundingClientRect().left ) ) ).size;

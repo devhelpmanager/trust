@@ -207,24 +207,27 @@ html:not(.js) .b-vac__chevron {
 	color: var(--c-text-2);
 }
 
+/* «Откликнуться» — у правого края, «Или пришлите резюме на …» — под кнопкой (правка заказчика) */
 .b-vac__actions {
 	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 12px 20px;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 10px;
+	text-align: right;
 }
 
-/* Кнопка как в макете: 52 px, скругление 14 */
+/* Кнопка чуть меньше, чем в макете (правка заказчика: 52 → 46 px) */
 .b-vac .b-vac__apply {
-	gap: 10px;
-	min-height: 52px;
-	padding: 0 22px;
-	border-radius: 14px;
+	gap: 8px;
+	min-height: 46px;
+	padding: 0 18px;
+	border-radius: 12px;
+	font-size: 15px;
 }
 
 .b-vac__mail {
 	font-size: 14px;
-	line-height: normal;
+	line-height: 1.5;
 	color: var(--c-muted);
 }
 
@@ -248,8 +251,32 @@ html:not(.js) .b-vac__chevron {
 }
 
 @media (max-width: 640px) {
+	/* Телефон: название и метки — сверху во всю ширину, ниже зарплата и стрелка на одном уровне
+	   (правка заказчика: стрелка была посередине карточки) */
 	.b-vac__toggle {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 12px 16px;
 		padding: 18px 16px;
+	}
+
+	.b-vac__summary {
+		display: contents;
+	}
+
+	.b-vac__main {
+		grid-column: 1 / -1;
+	}
+
+	.b-vac__salary {
+		grid-column: 1;
+		white-space: normal;
+	}
+
+	.b-vac__chevron {
+		grid-column: 2;
+		grid-row: 2;
 	}
 
 	.b-vac__panel {

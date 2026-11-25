@@ -1315,12 +1315,13 @@ return array(
 				),
 				array(
 					array(
-						'link' => array(
+						'link'  => array(
 							'title'  => 'Смотреть вакансии',
 							'url'    => '#vacancies',
 							'target' => '',
 						),
-						'icon' => 'down',
+						'icon'  => 'down',
+						'short' => 'Вакансии',
 					),
 					array(
 						'link' => array(

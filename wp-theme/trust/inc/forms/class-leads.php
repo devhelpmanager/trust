@@ -411,13 +411,16 @@ final class Leads {
 		$status = isset( $_GET['trust_status'] ) ? sanitize_key( wp_unslash( $_GET['trust_status'] ) ) : '';
 		// phpcs:enable
 
-		// Обращения к руководителю — свой экран (Trust\Forms\Leader_Messages): форма зафиксирована.
-		if ( Leader_Messages::is_screen() ) {
-			printf( '<input type="hidden" name="trust_form" value="%s">', esc_attr( Leader_Messages::TYPE ) );
+		// Формы со своим подпунктом («Обращения к руководителю», «Резюме» — Trust\Forms\Lead_Sections):
+		// на их экране форма зафиксирована, в «Все заявки» их нет в фильтре.
+		$section  = Lead_Sections::current();
+		$sections = Lead_Sections::sections();
+		if ( '' !== $section ) {
+			printf( '<input type="hidden" name="trust_form" value="%s">', esc_attr( $section ) );
 		} else {
 			echo '<select name="trust_form"><option value="">' . esc_html__( 'Все формы', 'trust' ) . '</option>';
 			foreach ( Forms::types() as $key => $type ) {
-				if ( Leader_Messages::TYPE !== $key ) {
+				if ( ! isset( $sections[ $key ] ) ) {
 					printf( '<option value="%s"%s>%s</option>', esc_attr( $key ), selected( $form, $key, false ), esc_html( $type['label'] ) );
 				}
 			}
