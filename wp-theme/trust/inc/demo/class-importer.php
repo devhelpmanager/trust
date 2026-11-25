@@ -1006,7 +1006,8 @@ final class Importer {
 			$term = self::find_demo_term( $m[1], $m[1] . ':' . $m[2] );
 			return $term ? $term->term_id : 0;
 		}
-		if ( preg_match( '~^\{image:([a-z0-9-]+\.(?:jpg|png|webp))(?:\|([^}]*))?\}$~', $value, $m ) ) {
+		// {image:…} — картинка, {file:…} — другой файл (PDF): загружаются одинаково.
+		if ( preg_match( '~^\{(?:image|file):([a-z0-9-]+\.(?:jpg|png|webp|pdf))(?:\|([^}]*))?\}$~', $value, $m ) ) {
 			return self::demo_image( $m[1], $m[2] ?? '' );
 		}
 		if ( preg_match( '~^\{page(_id)?:([a-z0-9/-]+)\}$~', $value, $m ) ) {

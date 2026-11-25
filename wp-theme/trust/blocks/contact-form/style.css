@@ -1,0 +1,163 @@
+/*
+ * Блок «Расскажите о задаче» (o-nas/kontakty.html, «Заявка»). Поля и галочки — общие стили форм
+ * (main.css), здесь — раскладка, шаги и «таблетки» способов связи. «Заявка отправлена» —
+ * .form-sent--row поверх формы.
+ */
+
+.b-cform {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-lavender);
+	color: var(--c-text);
+}
+
+.b-cform__inner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 40px 64px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-cform__intro {
+	display: flex;
+	flex: 1 1 340px;
+	flex-direction: column;
+	gap: 18px;
+	min-width: 0;
+}
+
+.b-cform .b-cform__head {
+	gap: 18px;
+	max-width: none;
+}
+
+.b-cform__steps {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	margin: 8px 0 0;
+	padding: 0;
+	list-style: none;
+	font-size: 16px;
+	line-height: 1.5;
+	color: var(--c-text-2);
+}
+
+.b-cform__steps li {
+	display: flex;
+	align-items: flex-start;
+	gap: 14px;
+}
+
+.b-cform__num {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	border-radius: 999px;
+	background: var(--c-indigo);
+	font-family: var(--f-mono);
+	font-size: 13px;
+	line-height: 1;
+	color: var(--c-white);
+}
+
+/* Карточка формы («Заявка отправлена» — поверх неё) */
+.b-cform__card {
+	position: relative;
+	flex: 1 1 460px;
+	min-width: 0;
+	padding: clamp(22px, 3vw, 32px);
+	box-sizing: border-box;
+	border: 1px solid var(--c-border);
+	border-radius: 22px;
+	background: var(--c-white);
+	box-shadow: 0 18px 40px rgba(46, 16, 101, 0.08);
+}
+
+.b-cform__row {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+	gap: 18px 16px;
+}
+
+.b-cform .field__optional {
+	font-weight: 400;
+	color: var(--c-muted);
+}
+
+.b-cform textarea.field__input {
+	min-height: 120px;
+}
+
+/* Способы связи — «таблетки» с переключателем */
+.b-cform__channels {
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.b-cform__channels legend {
+	margin-bottom: 10px;
+	padding: 0;
+}
+
+.b-cform__options {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.b-cform__option {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 44px;
+	padding: 0 14px;
+	box-sizing: border-box;
+	border: 1.5px solid var(--c-border-strong);
+	border-radius: 999px;
+	background: var(--c-white);
+	font-size: 15px;
+	font-weight: 500;
+	line-height: normal;
+	color: var(--c-text-2);
+	cursor: pointer;
+}
+
+.b-cform__option:has(input:checked) {
+	border-color: var(--c-violet);
+	background: var(--c-lavender-2);
+}
+
+.b-cform__option input {
+	flex: none;
+	width: 18px;
+	height: 18px;
+	margin: 0;
+	accent-color: var(--c-violet);
+	cursor: pointer;
+}
+
+.b-cform__option:has(input:focus-visible) {
+	outline: 3px solid var(--c-focus);
+	outline-offset: 2px;
+}
+
+.b-cform__option input:focus-visible {
+	outline: none;
+}
+
+.b-cform .b-cform__note {
+	margin: -4px 0 0;
+}
+
+@media (max-width: 640px) {
+	.b-cform__card {
+		padding: 22px 16px;
+	}
+}

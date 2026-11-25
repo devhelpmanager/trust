@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/requisites",
+	"title": "Реквизиты",
+	"description": "Реквизиты компании таблицей и кнопки «Скопировать реквизиты» и «Карточка компании, PDF». Данные — «Настройки сайта → Реквизиты».",
+	"category": "trust-company",
+	"icon": "media-spreadsheet",
+	"keywords": [ "реквизиты", "ИНН", "договор", "счёт", "контакты", "документ" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

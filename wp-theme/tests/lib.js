@@ -406,6 +406,20 @@ const MOCKUP_CSS = {
 	'o-nas/kontakty.html': `
 		.dc-hero-in > div:first-child { max-width: none !important; }
 		.dc-hero-in > div:first-child > p { max-width: 760px !important; }
+		/* Блоки «Контактов» (шаг 4.14): шапка секции — как у всех блоков (H2 28–44 px, 16 px от
+		   надзаголовка; в макете 26–36 px и 14 px); у «Офиса» (узкая колонка) — как в макете */
+		#dept-title, #form-title, #req-title { font-size: clamp(28px, 3.4vw, 44px) !important; line-height: 1.15 !important; }
+		section[aria-labelledby="dept-title"] header, section[aria-labelledby="req-title"] > div > div:first-child > div:first-child { gap: 16px !important; }
+		/* «Офис»: отступы секции — как у всех (в макете 72 px сверху и 0 снизу); без подписи-заглушки
+		   «здесь будет Яндекс Карта» */
+		section[aria-labelledby="office-title"] { padding-top: 64px !important; padding-bottom: 64px !important; }
+		@media (max-width: 1100px) {
+			section[aria-labelledby="office-title"] { padding-top: 56px !important; padding-bottom: 56px !important; }
+		}
+		@media (max-width: 760px) {
+			section[aria-labelledby="office-title"] { padding-top: 48px !important; padding-bottom: 48px !important; }
+		}
+		.dc-map > span:last-child { display: none !important; }
 	`,
 	'o-nas/otzyvy.html': HERO_SECTION_CSS + `
 		main section:not(.dc-hero-sec) header { gap: 16px !important; }

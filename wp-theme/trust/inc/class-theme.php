@@ -52,6 +52,7 @@ final class Theme {
 		Forms\Leader_Messages::register();
 		Forms\Review_Form::register();
 		Forms\Resume_Form::register();
+		Forms\Contact_Form::register();
 		Cookie::register();
 		Settings::register();
 		Blocks::register();

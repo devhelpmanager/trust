@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/office-map",
+	"title": "Приезжайте в гости",
+	"description": "Офис: схема проезда (интерактивная Яндекс Карта — только по кнопке «Показать карту»), адрес, как добраться, часы работы, кнопки «Яндекс Карты» и «2ГИС». Данные — «Настройки сайта → Контакты».",
+	"category": "trust-company",
+	"icon": "location-alt",
+	"keywords": [ "контакты", "офис", "карта", "адрес", "схема проезда" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false,
+		"multiple": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

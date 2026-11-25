@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/departments",
+	"title": "Кому написать",
+	"description": "Отделы карточками: значок, название, описание, email, телефон, Telegram. Последняя карточка — «Письмо руководителю» (тёмная).",
+	"category": "trust-company",
+	"icon": "email-alt",
+	"keywords": [ "контакты", "отделы", "кому написать", "email", "руководитель" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

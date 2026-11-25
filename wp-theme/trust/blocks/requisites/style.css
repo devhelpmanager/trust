@@ -1,0 +1,83 @@
+/*
+ * Блок «Реквизиты» (o-nas/kontakty.html, «Реквизиты»).
+ */
+
+.b-req {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.b-req__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.b-req__top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 18px;
+}
+
+.b-req__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.b-req .b-req__copy,
+.b-req .b-req__card {
+	padding: 0 18px;
+}
+
+/* Без JavaScript копирование не работает — кнопки не видно */
+html:not(.js) .b-req__copy {
+	display: none;
+}
+
+.b-req__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(460px, 100%), 1fr));
+	gap: 0 48px;
+	margin: 0;
+	padding: clamp(20px, 3vw, 32px);
+	border: 1px solid var(--c-border);
+	border-radius: 22px;
+	background: var(--c-white);
+}
+
+.b-req__row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 16px;
+	padding: 14px 0;
+	border-bottom: 1px solid var(--c-divider);
+}
+
+.b-req__row dt {
+	flex: 0 0 190px;
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--c-muted);
+}
+
+.b-req__row dd {
+	flex: 1 1 200px;
+	margin: 0;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.5;
+	font-variant-numeric: tabular-nums;
+	overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+	.b-req__list {
+		padding: 20px 18px;
+	}
+}

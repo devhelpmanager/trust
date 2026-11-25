@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/contact-form",
+	"title": "Расскажите о задаче",
+	"description": "Форма заявки страницы контактов: имя, телефон или email, задача, удобный способ связи, согласие. Слева — текст и шаги «что будет дальше».",
+	"category": "trust-forms",
+	"icon": "feedback",
+	"keywords": [ "заявка", "форма", "контакты", "задача", "связаться" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}
