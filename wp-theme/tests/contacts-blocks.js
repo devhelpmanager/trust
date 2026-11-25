@@ -138,7 +138,7 @@ async function compare( page, name, width, theme, mock ) {
 			const cards = [ ...b.querySelectorAll( '.b-depts__card' ) ];
 			return {
 				head: b.querySelector( 'h2' ).textContent + '|' + b.querySelector( '.section-lead' ).textContent,
-				titles: cards.map( ( c ) => c.querySelector( 'h3' ).textContent ),
+				titles: cards.map( ( c ) => c.querySelector( '.b-depts__title' ).textContent ),
 				icons: cards.every( ( c ) => c.querySelector( '.b-depts__icon svg' ) ),
 				links: cards.map( ( c ) => [ ...c.querySelectorAll( '.b-depts__link' ) ].map( ( a ) => a.getAttribute( 'href' ) ).join( ',' ) ),
 				textLink: new URL( cards[ 3 ].querySelector( '.b-depts__text a' ).href ).pathname,
@@ -151,6 +151,29 @@ async function compare( page, name, width, theme, mock ) {
 			'mailto:sales@example.ru,tel:+10000000001|mailto:support@example.ru|mailto:buh@example.ru|mailto:hr@example.ru|mailto:pr@example.ru|mailto:ceo@example.ru' === depts.links.join( '|' ) && '/karera/' === depts.textLink, JSON.stringify( depts.links ) );
 		check( '«Письмо руководителю»: тёмная карточка, имя и email — из карточки руководителя в «Сотрудниках»',
 			depts.leader[ 0 ] && 'Если что-то пошло не так, напишите напрямую — письмо прочитает [Имя Фамилия] лично' === depts.leader[ 1 ] && 'rgb(30, 27, 75)' === depts.leader[ 2 ], JSON.stringify( depts.leader ) );
+
+		// Правки заказчика: шапка во всю ширину, название справа от значка, без тегов h в карточках.
+		const deptLayout = () => page.evaluate( () => {
+			const b = document.querySelector( '.b-depts' );
+			const inner = b.querySelector( '.b-depts__inner' ).getBoundingClientRect();
+			const lead = b.querySelector( '.section-lead' ).getBoundingClientRect();
+			return {
+				headings: b.querySelectorAll( '.b-depts__list :is(h1, h2, h3, h4, h5, h6)' ).length,
+				leadFull: Math.abs( lead.width - inner.width ) < 1,
+				beside: [ ...b.querySelectorAll( '.b-depts__card' ) ].map( ( c ) => {
+					const icon = c.querySelector( '.b-depts__icon' ).getBoundingClientRect();
+					const title = c.querySelector( '.b-depts__title' ).getBoundingClientRect();
+					const text = c.querySelector( '.b-depts__text' ).getBoundingClientRect();
+					return title.left >= icon.right && Math.abs( ( title.top + title.bottom ) / 2 - ( icon.top + icon.bottom ) / 2 ) < 2 && text.top >= icon.bottom && text.left <= icon.left + 1;
+				} ),
+			};
+		} );
+		const deptDesk = await deptLayout();
+		await page.setViewportSize( { width: 390, height: 900 } );
+		const deptPhone = await deptLayout();
+		await page.setViewportSize( { width: 1280, height: 900 } );
+		check( '«Кому написать» (1280 и 390 px): заголовок и текст шапки во всю ширину, название отдела — справа от значка, текст под ними; в карточках нет тегов h (правки заказчика)',
+			[ deptDesk, deptPhone ].every( ( d ) => 0 === d.headings && d.leadFull && 6 === d.beside.length && d.beside.every( Boolean ) ), JSON.stringify( [ deptDesk, deptPhone ] ) );
 
 		// ===== Расскажите о задаче =====
 		resetFormLimits();

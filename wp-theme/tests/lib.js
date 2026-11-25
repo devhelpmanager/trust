@@ -420,6 +420,13 @@ const MOCKUP_CSS = {
 			section[aria-labelledby="office-title"] { padding-top: 48px !important; padding-bottom: 48px !important; }
 		}
 		.dc-map > span:last-child { display: none !important; }
+		/* Правки заказчика к 4.14. «Кому написать»: шапка во всю ширину; значок и название в строку,
+		   текст и контакты — под ними, контакты прижаты к низу */
+		section[aria-labelledby="dept-title"] header { max-width: none !important; }
+		section[aria-labelledby="dept-title"] li { display: grid !important; grid-template-columns: 44px minmax(0, 1fr); grid-template-rows: auto 1fr auto; align-items: center; gap: 0 14px !important; }
+		section[aria-labelledby="dept-title"] li > h3 { margin: 0 !important; line-height: 1.3; }
+		section[aria-labelledby="dept-title"] li > p { grid-column: 1 / -1; grid-row: 2; align-self: start; margin-top: 14px !important; }
+		section[aria-labelledby="dept-title"] li > div { grid-column: 1 / -1; grid-row: 3; margin-top: 10px !important; }
 	`,
 	'o-nas/otzyvy.html': HERO_SECTION_CSS + `
 		main section:not(.dc-hero-sec) header { gap: 16px !important; }

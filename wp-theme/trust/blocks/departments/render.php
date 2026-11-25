@@ -2,8 +2,9 @@
 /**
  * Блок «Кому написать» (макет o-nas/kontakty.html, секция «Отделы»).
  *
- * Белая секция: шапка и карточки отделов (от 340 px в колонку — 3 / 2 / 1): значок, название (H3),
- * описание (можно со ссылкой), внизу — email, телефон, Telegram (email пуст — из карточки
+ * Белая секция: шапка во всю ширину и карточки отделов (от 340 px в колонку — 3 / 2 / 1): значок,
+ * справа от него название — обычным текстом, без тегов h (правки заказчика), описание (можно со
+ * ссылкой), внизу — email, телефон, Telegram (email пуст — из карточки
  * ответственного сотрудника). Последняя — тёмная карточка «Письмо руководителю»: имя руководителя
  * в тексте ({name}) и email — из его карточки в «Сотрудниках» (или свои).
  *
@@ -119,7 +120,7 @@ if ( ! $trust_items && ! $trust_leader && ! $is_preview ) {
 							);
 							?>
 						</span>
-						<h3 class="b-depts__title"><?php echo esc_html( $trust_item['title'] ); ?></h3>
+						<p class="b-depts__title"><?php echo esc_html( $trust_item['title'] ); ?></p>
 						<?php if ( '' !== trim( wp_strip_all_tags( $trust_item['text'] ) ) ) : ?>
 							<div class="b-depts__text"><?php echo wp_kses_post( $trust_item['text'] ); ?></div>
 						<?php endif; ?>
@@ -145,7 +146,7 @@ if ( ! $trust_items && ! $trust_leader && ! $is_preview ) {
 							);
 							?>
 						</span>
-						<h3 class="b-depts__title"><?php echo esc_html( $trust_leader['title'] ); ?></h3>
+						<p class="b-depts__title"><?php echo esc_html( $trust_leader['title'] ); ?></p>
 						<?php if ( '' !== $trust_leader['text'] ) : ?>
 							<p class="b-depts__text"><?php echo esc_html( $trust_leader['text'] ); ?></p>
 						<?php endif; ?>
