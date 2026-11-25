@@ -6,7 +6,7 @@
  *
  * Демо на /kontakty/ (порядок и тексты из макета o-nas/kontakty.html): офис — адрес, как
  * добраться, часы, кнопки карт из «Настроек → Контакты», схема-заглушка с меткой; интерактивная
- * карта — только по кнопке «Показать карту»; картинка схемы из настроек; пустой пункт не выводится.
+ * карта — только по кнопке «Показать на карте» (на телефоне — у правого края); картинка схемы из настроек; пустой пункт не выводится.
  * Отделы — 5 карточек (email, телефон, ссылка в тексте) и «Письмо руководителю» (имя и email
  * из карточки сотрудника). Форма — ошибки как в макете, способ связи, «Заявка отправлена» поверх
  * формы с текстом по способу, заявка «Заявка с контактов» (поле «Ваши контакты»). Реквизиты —
@@ -114,6 +114,15 @@ async function compare( page, name, width, theme, mock ) {
 		await page.goto( PAGE, { waitUntil: 'networkidle' } );
 		const before = await page.evaluate( () => [ !! document.querySelector( '.b-omap__show' ), document.querySelectorAll( '.b-omap iframe' ).length, [ ...document.querySelectorAll( '.b-omap__list strong' ) ].map( ( s ) => s.textContent ).join( '|' ) ] );
 		const requestsBefore = mapRequests.length;
+		const showSide = () => page.evaluate( () => {
+			const map = document.querySelector( '.b-omap__map' ).getBoundingClientRect();
+			const btn = document.querySelector( '.b-omap__show' ).getBoundingClientRect();
+			return btn.left - map.left < map.right - btn.right ? 'left' : 'right';
+		} );
+		const showBtn = [ ( await page.locator( '.b-omap__show' ).textContent() ).trim(), await showSide() ];
+		await page.setViewportSize( { width: 390, height: 900 } );
+		showBtn.push( await showSide() );
+		await page.setViewportSize( { width: 1280, height: 900 } );
 		await page.locator( '.b-omap__show' ).click();
 		await page.waitForSelector( '.b-omap iframe' );
 		await page.waitForTimeout( 300 );
@@ -121,8 +130,8 @@ async function compare( page, name, width, theme, mock ) {
 			const map = document.querySelector( '.b-omap__map' );
 			return [ map.classList.contains( 'is-live' ), map.hasAttribute( 'role' ), document.querySelector( '.b-omap iframe' ).title, document.activeElement.classList.contains( 'b-omap__live' ) ];
 		} );
-		check( 'Код карты задан: кнопка «Показать карту»; до нажатия карты нет и запросов к сервису нет; по нажатию — карта вместо схемы',
-			true === before[ 0 ] && 0 === before[ 1 ] && 0 === requestsBefore && JSON.stringify( after ) === JSON.stringify( [ true, false, 'Карта офиса', true ] ) && mapRequests.length >= 1, JSON.stringify( [ before, requestsBefore, after, mapRequests.length ] ) );
+		check( 'Код карты задан: кнопка «Показать на карте» (компьютер — слева, телефон — справа); до нажатия карты нет и запросов к сервису нет; по нажатию — карта вместо схемы',
+			'Показать на карте' === showBtn[ 0 ] && 'left' === showBtn[ 1 ] && 'right' === showBtn[ 2 ] && true === before[ 0 ] && 0 === before[ 1 ] && 0 === requestsBefore && JSON.stringify( after ) === JSON.stringify( [ true, false, 'Карта офиса', true ] ) && mapRequests.length >= 1, JSON.stringify( [ showBtn, before, requestsBefore, after, mapRequests.length ] ) );
 		check( 'Пустое «Как добраться: примечание» — пункта «Пропуск» нет', 'Метро|На машине|Часы работы' === before[ 2 ], before[ 2 ] );
 		await page.unroute( 'https://maps.example.org/**' );
 		const poster = wp( 'eval', 'echo get_posts( array( "post_type" => "attachment", "post_status" => "any", "numberposts" => 1, "fields" => "ids", "meta_key" => "_trust_demo_id", "meta_value" => "attachment:video-poster.jpg" ) )[0] ?? 0;' );

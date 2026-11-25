@@ -177,6 +177,12 @@
 }
 
 @media (max-width: 640px) {
+	/* «Показать на карте» — у правого края (правка заказчика) */
+	.b-omap .b-omap__show {
+		right: 14px;
+		left: auto;
+	}
+
 	.b-omap__map {
 		min-height: 300px;
 		border-radius: 18px;
