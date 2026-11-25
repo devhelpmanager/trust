@@ -12,8 +12,9 @@
  * без повторов, главный кейс не повторяется), без JavaScript — ?cases=all. REST: фильтры, лимит,
  * черновики и кейсы под паролем не попадают. Свои данные: кейс без обложки, услуг и результатов,
  * без главного кейса. ItemList в микроразметке. Сверка с макетом на 1280 / 768 / 390 px, ширины
- * 1440–280, раскладка 3 / 2 / 1, кнопки услуг на телефоне листаются строкой, axe-core, консоль,
- * редактор.
+ * 1440–280, раскладка 3 / 2 / 1, кнопки услуг на телефоне листаются строкой; правки заказчика:
+ * «Смотреть кейс» — фиолетовая кнопка в правом нижнем углу (у главного кейса крупнее), список
+ * «Отрасль» на телефоне по ширине пунктов. axe-core, консоль, редактор.
  */
 
 const path = require( 'path' );
@@ -330,6 +331,36 @@ async function compare( page, width ) {
 		}
 		check( 'Сетка 3 / 2 / 1 колонки (1280 / 768 / 390); на телефоне кнопки услуг одной строкой с прокруткой',
 			3 === columns[ 1280 ][ 0 ] && 2 === columns[ 768 ][ 0 ] && 1 === columns[ 390 ][ 0 ] && 1 === columns[ 390 ][ 1 ] && columns[ 390 ][ 2 ], JSON.stringify( columns ) );
+		// Правки заказчика: «Смотреть кейс» — фиолетовая кнопка в правом нижнем углу карточки, у
+		// главного кейса крупнее; на телефоне список «Отрасль» — по ширине пунктов, а не панели.
+		const buttons = {};
+		for ( const width of [ 1280, 390 ] ) {
+			await page.setViewportSize( { width, height: 900 } );
+			await page.goto( PAGE, { waitUntil: 'domcontentloaded' } );
+			buttons[ width ] = await page.evaluate( () => {
+				const place = ( body, btn ) => {
+					const c = body.getBoundingClientRect();
+					const b = btn.getBoundingClientRect();
+					const cs = getComputedStyle( body );
+					const st = getComputedStyle( btn );
+					return [ Math.abs( c.right - parseFloat( cs.paddingRight ) - b.right ) < 1 && Math.abs( c.bottom - parseFloat( cs.paddingBottom ) - b.bottom ) < 1, Math.round( b.height ), st.backgroundColor, st.color ];
+				};
+				const feat = document.querySelector( '.b-cases__feat-body' );
+				const cards = [ ...document.querySelectorAll( '.b-cases__body' ) ];
+				const select = document.querySelector( '.b-cases__select' ).getBoundingClientRect();
+				const panel = document.querySelector( '.b-cases__filters' ).getBoundingClientRect();
+				return {
+					feat: place( feat, feat.querySelector( '.b-cases__feat-more' ) ),
+					cards: [ ...new Set( cards.map( ( body ) => JSON.stringify( place( body, body.querySelector( '.b-cases__go' ) ) ) ) ) ],
+					select: [ Math.round( select.width ), Math.round( panel.width ) ],
+				};
+			} );
+		}
+		const violet = [ 'rgb(109, 40, 217)', 'rgb(255, 255, 255)' ];
+		check( '«Смотреть кейс»: фиолетовые кнопки в правом нижнем углу (1280 и 390 px), у главного кейса 52 px, у карточек 40 px (правка заказчика)',
+			[ 1280, 390 ].every( ( w ) => JSON.stringify( buttons[ w ].feat ) === JSON.stringify( [ true, 52, ...violet ] ) && 1 === buttons[ w ].cards.length && buttons[ w ].cards[ 0 ] === JSON.stringify( [ true, 40, ...violet ] ) ), JSON.stringify( buttons ) );
+		check( 'Телефон 390: список «Отрасль» по ширине пунктов (раскрытый список не шире названий), на компьютере — 280 px (правка заказчика)',
+			buttons[ 390 ].select[ 0 ] >= 200 && buttons[ 390 ].select[ 0 ] < buttons[ 390 ].select[ 1 ] - 60 && 280 === buttons[ 1280 ].select[ 0 ], JSON.stringify( [ buttons[ 390 ].select, buttons[ 1280 ].select ] ) );
 		await page.setViewportSize( { width: 1280, height: 900 } );
 		await page.goto( PAGE, { waitUntil: 'networkidle' } );
 		await page.addScriptTag( { path: require.resolve( 'axe-core' ) } );

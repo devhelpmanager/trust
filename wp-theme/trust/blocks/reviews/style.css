@@ -72,6 +72,28 @@
 	color: var(--c-violet-dark);
 }
 
+/* На телефоне «Все отзывы» — после отзывов, в правом нижнем углу (правка заказчика: в макетах —
+   под заголовком, слева). В разметке ссылка остаётся рядом с заголовком. */
+@media (max-width: 760px) {
+	.b-reviews__top {
+		display: contents;
+	}
+
+	.b-reviews .b-reviews__head {
+		flex: none;
+	}
+
+	.b-reviews__all {
+		order: 1;
+		align-self: flex-end;
+		margin-top: -24px;
+	}
+
+	.b-reviews--two .b-reviews__all {
+		margin-top: -8px;
+	}
+}
+
 /* Сетка карточек: от 320 px (3 карточки) или 420 px (2 карточки) на колонку */
 .b-reviews__list {
 	display: grid;

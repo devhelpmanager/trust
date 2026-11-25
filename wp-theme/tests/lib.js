@@ -303,13 +303,26 @@ const DARK_CARD_CSS = `
 	}
 `;
 // «Что говорят клиенты» в портфолио — блок «Отзывы клиентов» (2 карточки): заголовок секции и
-// шапка — как у всех блоков (в макете H2 26–40 px и 14 px от надзаголовка).
+// шапка — как у всех блоков (в макете H2 26–40 px и 14 px от надзаголовка); на телефоне
+// «Все отзывы» — после отзывов, справа, в 24 px от карточек (правка заказчика).
 const PORTFOLIO_REVIEWS_CSS = `
 	section[aria-labelledby="rev-title"] header { gap: 16px !important; max-width: none !important; }
 	#rev-title { font-size: clamp(28px, 3.4vw, 44px) !important; text-wrap: wrap !important; }
+	@media (max-width: 760px) {
+		section[aria-labelledby="rev-title"] > div > div:first-child { display: contents !important; }
+		section[aria-labelledby="rev-title"] > div > div:first-child > a { order: 1; align-self: flex-end; margin-top: -8px; }
+	}
 `;
-// «Кейсы» в портфолио: отступы секции — как у всех блоков (в макете 72 и 88 px).
+// «Кейсы» в портфолио: отступы секции — как у всех блоков (в макете 72 и 88 px). Правки заказчика:
+// «Смотреть кейс» — фиолетовая кнопка в правом нижнем углу карточки (у главного кейса крупнее:
+// 52 px, у остальных 40 px); на телефоне список «Отрасль» — по ширине пунктов.
 const PORTFOLIO_CASES_CSS = `
+	#cases .dc-cases .dc-more { align-self: flex-end; min-height: 40px !important; padding: 0 16px; border-radius: 10px; background: #6D28D9; color: #FFFFFF !important; font-size: 14px !important; }
+	#cases .dc-feat-body > span:last-child { align-self: flex-end !important; gap: 10px !important; min-height: 52px !important; padding: 0 26px !important; border-radius: 14px !important; font-size: 16px !important; }
+	#cases .dc-feat-body > span:last-child svg { width: 18px; height: 18px; }
+	@media (max-width: 640px) {
+		#cases .dc-niche .dc-select { align-self: flex-start; width: auto !important; max-width: 100%; }
+	}
 	#cases { padding-top: 64px !important; padding-bottom: 64px !important; }
 	@media (max-width: 1100px) {
 		#cases { padding-top: 56px !important; padding-bottom: 56px !important; }

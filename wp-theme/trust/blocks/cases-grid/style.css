@@ -239,18 +239,20 @@ html:not(.js) .b-cases__reset {
 	color: var(--c-violet-deep);
 }
 
+/* «Смотреть кейс» — в правом нижнем углу карточки; у главного кейса крупнее, чем у остальных
+   (правки заказчика: в макете слева, 48 px) */
 .b-cases__feat-more {
 	display: inline-flex;
-	align-self: flex-start;
+	align-self: flex-end;
 	align-items: center;
-	gap: 8px;
-	min-height: 48px;
+	gap: 10px;
+	min-height: 52px;
 	margin-top: auto;
-	padding: 0 22px;
-	border-radius: 12px;
+	padding: 0 26px;
+	border-radius: 14px;
 	background: var(--c-violet);
 	color: var(--c-white);
-	font-size: 15px;
+	font-size: 16px;
 	font-weight: 600;
 	transition: background 0.2s;
 }
@@ -424,14 +426,25 @@ html:not(.js) .b-cases__reset {
 	padding-top: 8px;
 }
 
+/* «Смотреть кейс» в карточке — фиолетовая кнопка в правом нижнем углу (правки заказчика: в
+   макете — ссылка слева) */
 .b-cases__go {
 	display: inline-flex;
+	align-self: flex-end;
 	align-items: center;
 	gap: 6px;
-	min-height: 32px;
-	color: var(--c-violet-dark);
-	font-size: 15px;
+	min-height: 40px;
+	padding: 0 16px;
+	border-radius: 10px;
+	background: var(--c-violet);
+	color: var(--c-white);
+	font-size: 14px;
 	font-weight: 600;
+	transition: background 0.2s;
+}
+
+.b-cases__card:hover .b-cases__go {
+	background: var(--c-violet-dark);
 }
 
 .b-cases__go svg {
@@ -544,6 +557,14 @@ html:not(.js) .b-cases__reset {
 
 	.b-cases__industry {
 		flex: 1 1 100%;
+	}
+
+	/* Список «Отрасль» — по ширине пунктов, а не всей панели: раскрытый список не шире
+	   названий (правка заказчика) */
+	.b-cases__select {
+		align-self: flex-start;
+		width: auto;
+		max-width: 100%;
 	}
 }
 

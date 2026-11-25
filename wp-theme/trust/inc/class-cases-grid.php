@@ -370,7 +370,7 @@ final class Cases_Grid {
 		$html .= '<span class="b-cases__feat-more">' . esc_html( $more ) . Icons::svg(
 			'arrow-right',
 			array(
-				'size'         => 16,
+				'size'         => 18,
 				'stroke_width' => 2.2,
 			)
 		) . '</span>';

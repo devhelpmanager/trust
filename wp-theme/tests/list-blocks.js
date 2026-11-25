@@ -485,6 +485,24 @@ const columns = ( page, sel ) => page.$$eval( sel, ( list ) => list.filter( ( el
 		check( 'Карусель кейсов и отзывы: заголовок и вводный текст — во всю ширину блока, до счётчика / «Все отзывы» (правка заказчика)',
 			Object.values( wide ).every( ( w ) => w.head > 760 && ( null === w.gap ? w.head === w.top : w.gap >= 0 && w.gap <= 24 && w.sameRow ) ), JSON.stringify( wide ) );
 
+		// На телефоне «Все отзывы» — после отзывов, справа (правка заказчика); с 768 px — справа от шапки.
+		const allPlace = {};
+		for ( const [ url, name ] of [ [ SEO, 'three' ], [ PORTFOLIO, 'two' ] ] ) {
+			for ( const width of [ 390, 768 ] ) {
+				await page.setViewportSize( { width, height: 900 } );
+				await page.goto( url, { waitUntil: 'domcontentloaded' } );
+				allPlace[ `${ name }-${ width }` ] = await page.locator( '.b-reviews' ).first().evaluate( ( el ) => {
+					const a = el.querySelector( '.b-reviews__all' ).getBoundingClientRect();
+					const list = el.querySelector( '.b-reviews__list' ).getBoundingClientRect();
+					const head = el.querySelector( '.b-reviews__head' ).getBoundingClientRect();
+					const inner = el.querySelector( '.b-reviews__inner' ).getBoundingClientRect();
+					return [ a.top > list.bottom ? Math.round( a.top - list.bottom ) : 'выше', Math.round( inner.right - a.right ), Math.abs( a.bottom - head.bottom ) < 2 ];
+				} );
+			}
+		}
+		check( '«Все отзывы»: на телефоне — под карточками (24 px), справа; на планшете и компьютере — справа от шапки (правка заказчика)',
+			[ 'three', 'two' ].every( ( n ) => 24 === allPlace[ `${ n }-390` ][ 0 ] && 0 === allPlace[ `${ n }-390` ][ 1 ] && 'выше' === allPlace[ `${ n }-768` ][ 0 ] && 0 === allPlace[ `${ n }-768` ][ 1 ] && allPlace[ `${ n }-768` ][ 2 ] ), JSON.stringify( allPlace ) );
+
 		// ===== Сверка с макетами =====
 		for ( const width of [ 1280, 768, 390 ] ) {
 			await compare( page, {
