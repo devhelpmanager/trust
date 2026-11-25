@@ -63,6 +63,8 @@ final class Content_Types {
 			'service_type'   => array(
 				'objects' => array( 'case', 'review' ),
 				'words'   => array( __( 'Услуга', 'trust' ), __( 'Услуги', 'trust' ), __( 'услугу', 'trust' ), __( 'услуг', 'trust' ) ),
+				// Услуги кейса — в том порядке, в каком их отметили: основная первой (метки карточек).
+				'sorted'  => true,
 			),
 			'industry'       => array(
 				'objects' => array( 'case' ),
@@ -99,7 +101,10 @@ final class Content_Types {
 					'hierarchical'       => true,
 					'rewrite'            => false,
 					'query_var'          => false,
-				)
+				) + ( empty( $taxonomy['sorted'] ) ? array() : array(
+					'sort' => true,
+					'args' => array( 'orderby' => 'term_order' ),
+				) )
 			);
 		}
 	}

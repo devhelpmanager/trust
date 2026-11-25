@@ -88,6 +88,13 @@ final class Graph {
 	private static array $videos = array();
 
 	/**
+	 * Записи списка на странице (блок «Кейсы»), в порядке вывода: адрес => название.
+	 *
+	 * @var array<string, string>
+	 */
+	private static array $items = array();
+
+	/**
 	 * Регистрирует хуки.
 	 */
 	public static function register(): void {
@@ -138,6 +145,20 @@ final class Graph {
 			$video['description'] = $video['name'];
 		}
 		self::$videos[ $key ] = $video;
+	}
+
+	/**
+	 * Блок со списком записей сообщает показанную запись (вызывается из render.php на сайте):
+	 * страница-список получает ItemList (ТЗ, раздел 11: «CollectionPage + ItemList»).
+	 *
+	 * @param string $url  Адрес записи.
+	 * @param string $name Название.
+	 */
+	public static function item( string $url, string $name ): void {
+		$name = self::text( $name );
+		if ( '' !== $url && '' !== $name && ! isset( self::$items[ $url ] ) ) {
+			self::$items[ $url ] = $name;
+		}
 	}
 
 	/**
@@ -402,6 +423,10 @@ final class Graph {
 				);
 			}
 		}
+		// Записи блока «Кейсы»: ItemList — главное содержимое страницы-списка.
+		if ( self::$items && ! isset( $page['mainEntity'] ) ) {
+			$page['mainEntity'] = array( '@id' => $url . '#items' );
+		}
 		$graph[] = $page;
 
 		if ( count( $crumbs ) > 1 ) {
@@ -433,6 +458,24 @@ final class Graph {
 				'provider'    => array( '@id' => self::site() . '#organization' ),
 				'areaServed'  => trim( (string) Settings::get( 'seo_area_served', '' ) ),
 				'offers'      => self::offers( $url ),
+			);
+		}
+
+		if ( self::$items ) {
+			$list = array();
+			foreach ( array_keys( self::$items ) as $i => $item ) {
+				$list[] = array(
+					'@type'    => 'ListItem',
+					'position' => $i + 1,
+					'url'      => $item,
+					'name'     => self::$items[ $item ],
+				);
+			}
+			$graph[] = array(
+				'@type'           => 'ItemList',
+				'@id'             => $url . '#items',
+				'numberOfItems'   => count( $list ),
+				'itemListElement' => $list,
 			);
 		}
 

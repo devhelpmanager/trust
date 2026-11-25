@@ -308,8 +308,18 @@ const PORTFOLIO_REVIEWS_CSS = `
 	section[aria-labelledby="rev-title"] header { gap: 16px !important; max-width: none !important; }
 	#rev-title { font-size: clamp(28px, 3.4vw, 44px) !important; text-wrap: wrap !important; }
 `;
+// «Кейсы» в портфолио: отступы секции — как у всех блоков (в макете 72 и 88 px).
+const PORTFOLIO_CASES_CSS = `
+	#cases { padding-top: 64px !important; padding-bottom: 64px !important; }
+	@media (max-width: 1100px) {
+		#cases { padding-top: 56px !important; padding-bottom: 56px !important; }
+	}
+	@media (max-width: 760px) {
+		#cases { padding-top: 48px !important; padding-bottom: 48px !important; }
+	}
+`;
 const MOCKUP_CSS = {
-	'portfolio-blog-404/portfolio.html': HERO_SECTION_CSS + PORTFOLIO_REVIEWS_CSS,
+	'portfolio-blog-404/portfolio.html': HERO_SECTION_CSS + PORTFOLIO_REVIEWS_CSS + PORTFOLIO_CASES_CSS,
 	// Блоки «О компании» (шаг 4.10): шапка секции — как у всех блоков (H2 28–44 px, 16 px от
 	// надзаголовка; в макете 26–40 px и 14 px).
 	'o-nas/o-kompanii.html': HERO_SECTION_CSS + `

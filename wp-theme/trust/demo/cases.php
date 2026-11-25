@@ -49,16 +49,18 @@ $trust_positions = static fn( array $rows ): array => array_map(
 
 return array(
 	array(
-		'key'     => 'repair',
-		'title'   => 'Новый сайт и SEO для компании по ремонту квартир',
+		'key'       => 'repair',
+		'thumbnail' => 'project-repair.jpg',
+		'title'     => 'Новый сайт и SEO для компании по ремонту квартир',
 		// В хлебных крошках макета кейса — короткое название.
-		'seo'     => array( 'trust_crumb_title' => 'Ремонт квартир под ключ' ),
-		'excerpt' => 'Перенесли сайт с конструктора и собрали структуру под все виды ремонта.',
-		'terms'   => array(
+		'seo'       => array( 'trust_crumb_title' => 'Ремонт квартир под ключ' ),
+		// Главный кейс портфолио: анонс — из большой карточки макета.
+		'excerpt'   => 'Перенесли сайт с конструктора, собрали структуру под все виды ремонта и вывели ключевые запросы в топ-10 Яндекса и Google.',
+		'terms'     => array(
 			'service_type' => array( 'seo', 'sites' ),
 			'industry'     => array( 'repair' ),
 		),
-		'fields'  => array(
+		'fields'    => array(
 			'trust_featured'         => 1,
 			'trust_client'           => '[Ремонт&Дизайн]',
 			'trust_niche'            => 'Ремонт квартир',
@@ -113,14 +115,15 @@ return array(
 		),
 	),
 	array(
-		'key'     => 'dental',
-		'title'   => 'Локальное SEO и карты для стоматологии',
-		'excerpt' => 'Оптимизировали страницы услуг и врачей, настроили карточки в Яндекс Картах и 2ГИС.',
-		'terms'   => array(
+		'key'       => 'dental',
+		'thumbnail' => 'project-dental.jpg',
+		'title'     => 'Локальное SEO и карты для стоматологии',
+		'excerpt'   => 'Оптимизировали страницы услуг и врачей, настроили карточки в Яндекс Картах и 2ГИС.',
+		'terms'     => array(
 			'service_type' => array( 'seo', 'geo' ),
 			'industry'     => array( 'med' ),
 		),
-		'fields'  => array(
+		'fields'    => array(
 			'trust_client'           => '[Название проекта]',
 			'trust_niche'            => 'Стоматологическая клиника',
 			'trust_results'          => $trust_results( '+[N]%', 'записей с сайта', 'Топ-[N]', 'в картах по району' ),
@@ -139,14 +142,15 @@ return array(
 		),
 	),
 	array(
-		'key'     => 'furniture',
-		'title'   => 'Интернет-магазин мебели с нуля и запуск рекламы',
-		'excerpt' => 'Сделали каталог с фильтрами и быстрым заказом, запустили товарную рекламу в Директе.',
-		'terms'   => array(
+		'key'       => 'furniture',
+		'thumbnail' => 'project-shop.jpg',
+		'title'     => 'Интернет-магазин мебели с нуля и запуск рекламы',
+		'excerpt'   => 'Сделали каталог с фильтрами и быстрым заказом, запустили товарную рекламу в Директе.',
+		'terms'     => array(
 			'service_type' => array( 'sites', 'ppc' ),
 			'industry'     => array( 'shop' ),
 		),
-		'fields'  => array(
+		'fields'    => array(
 			'trust_client'           => '[Название проекта]',
 			'trust_niche'            => 'Интернет-магазин мебели',
 			'trust_results'          => $trust_results( '[N]', 'заказов в первый месяц', '[N] $', 'стоимость заказа' ),
@@ -164,84 +168,90 @@ return array(
 		),
 	),
 	array(
-		'key'     => 'auto',
-		'title'   => 'Контекстная реклама для автосервиса',
-		'excerpt' => 'Пересобрали кампании по видам работ и районам, отключили нецелевые запросы.',
-		'terms'   => array(
+		'key'       => 'auto',
+		'thumbnail' => 'project-auto.jpg',
+		'title'     => 'Контекстная реклама для автосервиса',
+		'excerpt'   => 'Пересобрали кампании по видам работ и районам, отключили нецелевые запросы.',
+		'terms'     => array(
 			'service_type' => array( 'ppc' ),
 			'industry'     => array( 'auto' ),
 		),
-		'fields'  => array(
+		'fields'    => array(
 			'trust_client'  => '[Название проекта]',
 			'trust_niche'   => 'Автосервис',
 			'trust_results' => $trust_results( '−[N]%', 'цена заявки', '[N]', 'заявок в месяц' ),
 		),
 	),
 	array(
-		'key'     => 'law',
-		'title'   => 'SEO и GEO для юридической компании',
-		'excerpt' => 'Подготовили страницы практик и экспертные статьи, на которые ссылаются нейросети.',
-		'terms'   => array(
+		'key'       => 'law',
+		'thumbnail' => 'project-law.jpg',
+		'title'     => 'SEO и GEO для юридической компании',
+		'excerpt'   => 'Подготовили страницы практик и экспертные статьи, на которые ссылаются нейросети.',
+		'terms'     => array(
 			'service_type' => array( 'seo', 'geo' ),
 			'industry'     => array( 'law' ),
 		),
-		'fields'  => array(
+		'fields'    => array(
 			'trust_client'  => '[Название проекта]',
 			'trust_niche'   => 'Юридическая компания',
 			'trust_results' => $trust_results( '+[N]%', 'трафика из поиска', '[N]', 'упоминаний в ответах ИИ' ),
 		),
 	),
 	array(
-		'key'     => 'school',
-		'title'   => 'Лендинг и реклама для онлайн-школы английского',
-		'excerpt' => 'Сделали страницу курса и настроили рекламу на запись на пробный урок.',
-		'terms'   => array(
+		'key'       => 'school',
+		'thumbnail' => 'project-school.jpg',
+		'title'     => 'Лендинг и реклама для онлайн-школы английского',
+		'excerpt'   => 'Сделали страницу курса и настроили рекламу на запись на пробный урок.',
+		'terms'     => array(
 			'service_type' => array( 'sites', 'ppc' ),
 			'industry'     => array( 'edu' ),
 		),
-		'fields'  => array(
+		'fields'    => array(
 			'trust_client'  => '[Название проекта]',
 			'trust_niche'   => 'Онлайн-школа английского',
 			'trust_results' => $trust_results( '[N]%', 'конверсия в заявку', '[N] $', 'цена заявки' ),
 		),
 	),
 	array(
-		'key'     => 'factory',
-		'title'   => 'Каталог продукции для завода металлоконструкций',
-		'excerpt' => 'Перевели прайс в каталог с карточками продукции и формой отправки чертежа.',
-		'terms'   => array(
+		'key'       => 'factory',
+		'thumbnail' => 'project-factory.jpg',
+		'title'     => 'Каталог продукции для завода металлоконструкций',
+		'excerpt'   => 'Перевели прайс в каталог с карточками продукции и формой отправки чертежа.',
+		'terms'     => array(
 			'service_type' => array( 'sites', 'seo' ),
 			'industry'     => array( 'prod' ),
 		),
-		'fields'  => array(
+		'fields'    => array(
 			'trust_client'  => '[Название проекта]',
 			'trust_niche'   => 'Завод металлоконструкций',
 			'trust_results' => $trust_results( '+[N]%', 'запросов на расчёт', '[N]', 'страниц в индексе' ),
 		),
 	),
 	array(
-		'key'     => 'beauty',
-		'title'   => 'Сопровождение сайта студии красоты',
-		'excerpt' => 'Обновляем прайс и мастеров, подключили онлайн-запись и следим за скоростью сайта.',
-		'terms'   => array(
+		'key'       => 'beauty',
+		'thumbnail' => 'project-beauty.jpg',
+		'title'     => 'Сопровождение сайта студии красоты',
+		'excerpt'   => 'Обновляем прайс и мастеров, подключили онлайн-запись и следим за скоростью сайта.',
+		'terms'     => array(
 			'service_type' => array( 'support', 'seo' ),
 			'industry'     => array( 'beauty' ),
 		),
-		'fields'  => array(
+		'fields'    => array(
 			'trust_client'  => '[Название проекта]',
 			'trust_niche'   => 'Студия красоты',
 			'trust_results' => $trust_results( '[N]', 'задач в месяц', '[N] с', 'загрузка страницы' ),
 		),
 	),
 	array(
-		'key'     => 'flowers',
-		'title'   => 'SEO для цветочного интернет-магазина',
-		'excerpt' => 'Создали страницы под поводы и районы доставки, ускорили сайт перед праздниками.',
-		'terms'   => array(
+		'key'       => 'flowers',
+		'thumbnail' => 'project-flowers.jpg',
+		'title'     => 'SEO для цветочного интернет-магазина',
+		'excerpt'   => 'Создали страницы под поводы и районы доставки, ускорили сайт перед праздниками.',
+		'terms'     => array(
 			'service_type' => array( 'seo', 'support' ),
 			'industry'     => array( 'shop' ),
 		),
-		'fields'  => array(
+		'fields'    => array(
 			'trust_client'  => '[Название проекта]',
 			'trust_niche'   => 'Цветочный интернет-магазин',
 			'trust_results' => $trust_results( '+[N]%', 'заказов из поиска', '[N]', 'запросов в топ-10' ),

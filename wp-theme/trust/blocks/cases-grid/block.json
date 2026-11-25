@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/cases-grid",
+	"title": "Кейсы",
+	"description": "Кейсы портфолио: фильтры по услуге (с числом) и отрасли, главный кейс крупно, сетка карточек, «Показать ещё» без перезагрузки.",
+	"category": "trust-lists",
+	"icon": "portfolio",
+	"keywords": [ "кейсы", "портфолио", "проекты", "фильтр" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false,
+		"multiple": false
+	},
+	"style": [ "trust-filter", "file:./style.css" ],
+	"viewScript": "file:./view.js",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}
