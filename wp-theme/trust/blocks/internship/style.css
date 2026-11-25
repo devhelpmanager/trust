@@ -102,9 +102,11 @@
 	color: var(--c-violet-light);
 }
 
-/* Кнопка как в макете: 52 px, скругление 14 */
+/* Кнопка как в макете: 52 px, скругление 14. У правого края и когда переносится под текст
+   (телефон, планшет — правка заказчика) */
 .b-intern .b-intern__btn {
 	flex: none;
+	margin-left: auto;
 	gap: 10px;
 	min-height: 52px;
 	padding: 0 22px;

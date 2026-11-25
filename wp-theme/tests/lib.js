@@ -394,6 +394,8 @@ const MOCKUP_CSS = {
 			.dc-acc-btn > span:first-child > span:last-child { grid-column: 1; white-space: normal !important; }
 			.dc-acc-btn > span:last-child { grid-column: 2; grid-row: 2; }
 		}
+		/* «Стажировка»: «Подать заявку» у правого края и под текстом (телефон, планшет) */
+		section[aria-labelledby="intern-title"] a[href="#resume"] { margin-left: auto; }
 		/* «Изнутри»: на узком экране «Вся команда» — после цитат, у правого края */
 		@media (max-width: 760px) {
 			section[aria-labelledby="voices-title"] > div > div:first-child { display: contents !important; }

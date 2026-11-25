@@ -408,10 +408,13 @@ async function compare( page, name, width, theme, mock ) {
 			const list = document.querySelector( '.b-voices__list' ).getBoundingClientRect();
 			const head = document.querySelector( '.b-resume__head' ).getBoundingClientRect();
 			const intro = document.querySelector( '.b-resume__intro' ).getBoundingClientRect();
-			return [ centers.every( Boolean ), more.top > list.bottom && Math.abs( more.right - list.right ) < 1, Math.round( head.width ) === Math.round( intro.width ) ];
+			const card = document.querySelector( '.b-intern__card' );
+			const btn = document.querySelector( '.b-intern__btn' ).getBoundingClientRect();
+			const internRight = Math.abs( card.getBoundingClientRect().right - parseFloat( getComputedStyle( card ).paddingRight ) - btn.right ) < 1 && btn.top > document.querySelector( '.b-intern__text' ).getBoundingClientRect().bottom;
+			return [ centers.every( Boolean ), more.top > list.bottom && Math.abs( more.right - list.right ) < 1, Math.round( head.width ) === Math.round( intro.width ), internRight ];
 		} );
-		check( 'Телефон 390: в «Условиях» заголовок справа от значка; стрелка вакансии — на уровне зарплаты; «Вся команда» — после цитат, у правого края; текст «Отклика» во всю ширину (правки заказчика)',
-			JSON.stringify( benefitsMob ) === JSON.stringify( [ true, true, true ] ) && JSON.stringify( mobFix ) === JSON.stringify( [ true, true, true ] ), JSON.stringify( [ benefitsMob, mobFix ] ) );
+		check( 'Телефон 390: в «Условиях» заголовок справа от значка; стрелка вакансии — на уровне зарплаты; «Вся команда» — после цитат, у правого края; текст «Отклика» во всю ширину; «Подать заявку» — у правого края под текстом (правки заказчика)',
+			JSON.stringify( benefitsMob ) === JSON.stringify( [ true, true, true ] ) && JSON.stringify( mobFix ) === JSON.stringify( [ true, true, true, true ] ), JSON.stringify( [ benefitsMob, mobFix ] ) );
 		const heroButtons = [];
 		for ( const width of [ 320, 390, 430, 1280 ] ) {
 			await page.setViewportSize( { width, height: 900 } );
