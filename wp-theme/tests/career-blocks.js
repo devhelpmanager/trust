@@ -263,10 +263,10 @@ async function compare( page, name, width, theme, mock ) {
 			const sub = await adm.locator( '#menu-posts-lead .wp-submenu li:not(.wp-submenu-head) a' ).evaluateAll( ( links ) => links.map( ( a ) => [ a.childNodes[ 0 ].textContent.trim(), a.querySelector( '.pending-count' )?.textContent || '' ] ) );
 			const allRows = await adm.locator( '#the-list tr' ).allInnerTexts();
 			const formOptions = await adm.locator( 'select[name="trust_form"] option' ).allTextContents();
-			check( 'Админка: подпункт «Резюме» после «Все заявки» и «Обращения к руководителю», с числом новых',
-				'Все заявки|Обращения к руководителю|Резюме' === sub.slice( 0, 3 ).map( ( x ) => x[ 0 ] ).join( '|' ) && Number( sub[ 2 ][ 1 ] ) >= 1, JSON.stringify( sub ) );
+			check( 'Админка: подпункт «Резюме» после «Все заявки», «Обратной связи» и «Обращений к руководителю», с числом новых',
+				'Все заявки|Обратная связь|Обращения к руководителю|Резюме' === sub.slice( 0, 4 ).map( ( x ) => x[ 0 ] ).join( '|' ) && Number( sub[ 3 ][ 1 ] ) >= 1, JSON.stringify( sub ) );
 			check( 'Админка: в «Все заявки» резюме нет, в фильтре форм — тоже',
-				! allRows.some( ( r ) => r.includes( `${ MARK } Ольга` ) ) && ! formOptions.includes( 'Резюме' ) && formOptions.includes( 'Обратный звонок' ), JSON.stringify( formOptions ) );
+				! allRows.some( ( r ) => r.includes( `${ MARK } Ольга` ) ) && ! formOptions.includes( 'Резюме' ) && formOptions.includes( 'Бриф' ), JSON.stringify( formOptions ) );
 			await adm.locator( '#menu-posts-lead .wp-submenu a', { hasText: 'Резюме' } ).click();
 			await adm.waitForLoadState();
 			const list = await adm.evaluate( ( mark ) => {
@@ -408,9 +408,9 @@ async function compare( page, name, width, theme, mock ) {
 			const list = document.querySelector( '.b-voices__list' ).getBoundingClientRect();
 			const head = document.querySelector( '.b-resume__head' ).getBoundingClientRect();
 			const intro = document.querySelector( '.b-resume__intro' ).getBoundingClientRect();
-			return [ centers.every( Boolean ), more.top > list.bottom, Math.round( head.width ) === Math.round( intro.width ) ];
+			return [ centers.every( Boolean ), more.top > list.bottom && Math.abs( more.right - list.right ) < 1, Math.round( head.width ) === Math.round( intro.width ) ];
 		} );
-		check( 'Телефон 390: в «Условиях» заголовок справа от значка; стрелка вакансии — на уровне зарплаты; «Вся команда» — после цитат; текст «Отклика» во всю ширину (правки заказчика)',
+		check( 'Телефон 390: в «Условиях» заголовок справа от значка; стрелка вакансии — на уровне зарплаты; «Вся команда» — после цитат, у правого края; текст «Отклика» во всю ширину (правки заказчика)',
 			JSON.stringify( benefitsMob ) === JSON.stringify( [ true, true, true ] ) && JSON.stringify( mobFix ) === JSON.stringify( [ true, true, true ] ), JSON.stringify( [ benefitsMob, mobFix ] ) );
 		const heroButtons = [];
 		for ( const width of [ 320, 390, 430, 1280 ] ) {

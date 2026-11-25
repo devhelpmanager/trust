@@ -40,7 +40,7 @@ const MENU = [ 'Дизайн', 'Создание сайтов', 'Поддерж�
 	check( 'Телефон: ссылка tel:', ( await page.getAttribute( '.header-phone', 'href' ) ) === 'tel:+10000000000' );
 	check( 'Телефон: часы работы', ( await page.textContent( '.header-phone__hours' ) ).trim() === '[Пн–Пт, 10:00–19:00]' );
 	check( 'Email: ссылка mailto:', ( await page.getAttribute( '.header-email', 'href' ) ) === 'mailto:hello@example.ru' );
-	check( 'Кнопка «Заказать обратный звонок»', ( await page.textContent( '.header-callback' ) ).trim() === 'Заказать обратный звонок' );
+	check( 'Кнопка «Связаться с нами»', ( await page.textContent( '.header-callback' ) ).trim() === 'Связаться с нами' );
 
 	// --- Меню ---
 	const top = ( await page.locator( '.main-nav__list > .main-nav__item > .main-nav__link' ).allTextContents() ).map( ( t ) => t.trim() );

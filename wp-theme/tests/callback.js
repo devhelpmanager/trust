@@ -1,5 +1,6 @@
 /**
- * Тест окна «Заказать обратный звонок» (шаг 1.6) на локальном стенде с демо-контентом.
+ * Тест окна «Связаться с нами» (шаг 1.6; было «Заказать обратный звонок») на локальном стенде с
+ * демо-контентом.
  *
  * Запуск: node wp-theme/tests/callback.js
  *
@@ -7,8 +8,10 @@
  * - окно открывают кнопки шапки (текст и иконка), мобильного меню и подвала; фокус — в поле «Имя»;
  * - закрытие: Esc, крестик, щелчок по фону; щелчок внутри окна не закрывает; фокус возвращается на кнопку;
  * - фокус не уходит из окна по Tab; страница под окном не прокручивается;
- * - проверку полей: пустые, неверный телефон, нет согласия; ошибки снимаются по мере ввода;
- * - при верных данных — заявка уходит (шаг 3.5), окно показывает «Заявка отправлена»,
+ * - проверку полей: пустые, слишком короткий способ связи (принимаются телефон, email, никнейм), нет
+ *   согласия; ошибки снимаются по мере ввода; в окне нет заголовков h (правка заказчика);
+ * - при верных данных — заявка уходит (шаг 3.5) в «Заявки → Обратная связь», окно показывает
+ *   «Заявка отправлена» (заголовок справа от значка),
  *   при следующем открытии — снова пустая форма; созданная заявка удаляется в конце;
  * - ссылки на согласие и политику конфиденциальности; тексты окна из «Настроек сайта»;
  * - ширины 280–1280 px без прокрутки вбок, зоны нажатия ≥ 44 px; axe-core; консоль и журнал ошибок.
@@ -53,9 +56,11 @@ const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, collectConsoleE
 	await page.setViewportSize( { width: 1280, height: 800 } );
 	await page.goto( `${ URL }/kontakty/`, { waitUntil: 'networkidle' } );
 	await page.click( '.header-callback' );
-	check( 'Заголовок окна', ( await page.textContent( '#callback-modal-title' ) ).trim() === 'Заказать обратный звонок' );
-	check( 'Подсказка в поле «Телефон»: +1 000 000 00 00', ( await page.getAttribute( '#callback-phone', 'placeholder' ) ) === '+1 000 000 00 00' );
-	check( 'Пример номера в тексте ошибки', ( await page.getAttribute( '#callback-phone', 'data-error' ) ) === 'Проверьте номер телефона, например +1 000 000 00 00' );
+	const texts = await page.evaluate( () => [ document.getElementById( 'callback-modal-title' ).textContent.trim(), document.getElementById( 'callback-modal-title' ).tagName, document.querySelectorAll( '#callback-modal :is(h1, h2, h3, h4, h5, h6)' ).length, document.getElementById( 'callback-modal-text' ).textContent.trim(), document.querySelector( 'label[for="callback-contact"]' ).textContent.trim() ] );
+	check( 'Окно: «Запросить обратную связь» — без тегов h, текст и поле «Способ связи» (правки заказчика)',
+		JSON.stringify( texts ) === JSON.stringify( [ 'Запросить обратную связь', 'P', 0, 'Укажите своё имя и способ связи, мы свяжемся с вами в кратчайшие сроки.', 'Способ связи' ] ), JSON.stringify( texts ) );
+	check( 'Подсказка в поле «Способ связи»: «телефон, имейл или никнейм»', ( await page.getAttribute( '#callback-contact', 'placeholder' ) ) === 'телефон, имейл или никнейм' );
+	check( 'Текст ошибки способа связи', ( await page.getAttribute( '#callback-contact', 'data-error' ) ) === 'Укажите, как с вами связаться: телефон, email или никнейм' );
 	check( 'Страница под окном не прокручивается', await page.evaluate( () => document.documentElement.classList.contains( 'has-modal' ) && getComputedStyle( document.documentElement ).overflow === 'hidden' ) );
 	await page.click( '.callback-modal__close' );
 	check( 'Крестик закрывает окно', ! ( await isOpen() ) && ! ( await page.evaluate( () => document.documentElement.classList.contains( 'has-modal' ) ) ) );
@@ -86,12 +91,12 @@ const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, collectConsoleE
 
 	await page.fill( '#callback-name', 'Анна' );
 	check( 'Ошибка имени снимается при вводе', await page.locator( '#callback-name-error' ).isHidden() );
-	await page.fill( '#callback-phone', '123' );
+	await page.fill( '#callback-contact', '12' );
 	await page.click( '.form__submit' );
-	check( 'Короткий телефон — ошибка', ( await page.locator( '#callback-phone-error' ).isVisible() ) && ( await active() ) === 'callback-phone' );
-	await page.fill( '#callback-phone', '+7 (900) 123-45-67' );
+	check( 'Слишком короткий способ связи (2 символа) — ошибка', ( await page.locator( '#callback-contact-error' ).isVisible() ) && ( await active() ) === 'callback-contact' );
+	await page.fill( '#callback-contact', '@anna_tg' );
 	await page.click( '.form__submit' );
-	check( 'Без согласия — ошибка согласия', ( await page.locator( '#callback-consent-error' ).isVisible() ) && ( await page.locator( '#callback-phone-error' ).isHidden() ) );
+	check( 'Никнейм в Telegram принят; без согласия — ошибка согласия', ( await page.locator( '#callback-consent-error' ).isVisible() ) && ( await page.locator( '#callback-contact-error' ).isHidden() ) );
 	await page.check( '#callback-modal .check__input' );
 	check( 'Ошибка согласия снимается при отметке', await page.locator( '#callback-consent-error' ).isHidden() );
 
@@ -105,9 +110,18 @@ const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, collectConsoleE
 	check( 'Пока заявка уходит, кнопка недоступна', await page.locator( '#callback-modal .form__submit' ).isDisabled() );
 	await page.waitForSelector( '#callback-modal .callback-modal__success:not([hidden])', { timeout: 15000 } );
 	check( 'Верные данные: «Заявка отправлена», фокус на «Закрыть»', ( await page.textContent( '#callback-modal .form-success__title' ) ).trim() === 'Заявка отправлена' && await page.evaluate( () => document.activeElement.matches( '.callback-modal__success [data-callback-close]' ) ) );
+	const sentLayout = await page.evaluate( () => {
+		const icon = document.querySelector( '#callback-modal .form-success__icon' ).getBoundingClientRect();
+		const title = document.querySelector( '#callback-modal .form-success__title' );
+		const t = title.getBoundingClientRect();
+		const text = document.querySelector( '#callback-modal .form-success__text' ).getBoundingClientRect();
+		return [ title.tagName, t.left > icon.right && Math.abs( ( t.top + t.bottom ) / 2 - ( icon.top + icon.bottom ) / 2 ) < 2, text.top > icon.bottom, document.querySelector( '#callback-modal .form-success__text' ).textContent.trim() ];
+	} );
+	check( '«Заявка отправлена» справа от значка (не h), текст под ними: «Мы свяжемся с вами в ближайшее время.» (правки заказчика)',
+		JSON.stringify( sentLayout ) === JSON.stringify( [ 'P', true, true, 'Мы свяжемся с вами в ближайшее время.' ] ), JSON.stringify( sentLayout ) );
 	await page.screenshot( { path: path.join( OUT, 'callback-sent-1280.png' ) } );
 	const lead = wp( 'post', 'list', '--post_type=lead', '--post_status=any', '--meta_key=trust_name', '--meta_value=Анна', '--field=ID', '--orderby=ID', '--order=DESC', '--posts_per_page=1' );
-	check( 'Заявка сохранена: «Обратный звонок: Анна»', !! lead && wp( 'post', 'get', lead, '--field=post_title' ) === 'Обратный звонок: Анна' );
+	check( 'Заявка сохранена: «Обратная связь: Анна», способ связи — @anna_tg', !! lead && wp( 'post', 'get', lead, '--field=post_title' ) === 'Обратная связь: Анна' && '@anna_tg' === wp( 'post', 'meta', 'get', lead, 'trust_contact' ) );
 	await page.click( '#callback-modal .callback-modal__success [data-callback-close]' );
 	await page.click( '.header-callback' );
 	check( 'Повторное открытие: пустая форма', ( await page.locator( '#callback-modal .callback-modal__form-view' ).isVisible() ) && ( await page.inputValue( '#callback-name' ) ) === '' && ! ( await page.isChecked( '#callback-modal .check__input' ) ) );

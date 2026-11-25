@@ -58,7 +58,7 @@ const meta = ( id, key ) => {
 		// --- REST: токен, ошибки, защита ---
 		const t = await token();
 		check( 'Токен и nonce: GET /wp-json/trust/v1/forms/token без кэша', /^\d{10}-[a-f0-9]{64}$/.test( t.token ) && /^[a-f0-9]{10}$/.test( t.nonce ) && t.cache.includes( 'no-cache' ), t.cache );
-		const callback = { _trust_token: t.token, _trust_nonce: t.nonce, name: 'Анна', phone: '+1 000 000 00 00', consent: '1' };
+		const callback = { _trust_token: t.token, _trust_nonce: t.nonce, name: 'Анна', contact: '+1 000 000 00 00', consent: '1' };
 
 		let r = await post( 'nope', callback );
 		check( 'Неизвестная форма — 404', r.status === 404 && r.body?.code === 'not_found' );
@@ -77,14 +77,14 @@ const meta = ( id, key ) => {
 		r = await post( 'callback', { ...callback, trust_website: 'http://spam.example' } );
 		check( 'Заполнена ловушка — ответ «успешно», заявка не создана', r.status === 200 && r.body?.ok === true && ! r.body.lead && newLeads().length === 0 );
 
-		r = await post( 'callback', { _trust_token: t.token, _trust_nonce: t.nonce, name: '  ', phone: '12345' } );
+		r = await post( 'callback', { _trust_token: t.token, _trust_nonce: t.nonce, name: '  ', contact: '12' } );
 		const errors = r.body?.errors || {};
 		check( 'Пустые и неверные поля — 400 с сообщениями из разметки окна', r.status === 400 && r.body.code === 'invalid' &&
 			errors.name === 'Укажите, как к вам обращаться' &&
-			errors.phone === 'Проверьте номер телефона, например +1 000 000 00 00' &&
+			errors.contact === 'Укажите, как с вами связаться: телефон, email или никнейм' &&
 			errors.consent === 'Отметьте согласие — без него мы не сможем ответить на заявку', JSON.stringify( errors ) );
-		r = await post( 'callback', { ...callback, phone: '+1 000 abc 00 00 00' } );
-		check( 'Буквы в телефоне — ошибка', r.status === 400 && !! r.body.errors.phone );
+		r = await post( 'callback', { ...callback, contact: 'x'.repeat( 101 ) } );
+		check( 'Способ связи длиннее 100 символов — ошибка', r.status === 400 && !! r.body.errors.contact );
 
 		const source = { utm_source: 'yandex', utm_medium: 'cpc', utm_campaign: 'seo-audit', referrer: 'https://yandex.ru/search/?text=%D1%81%D0%B5%D0%BE', landing: `${ URL }/seo/?utm_source=yandex`, at: '2026-11-12T08:00:00.000Z', evil: 'x' };
 		r = await post( 'callback', { ...callback, name: '<b>Анна</b> <script>x</script>', page: `${ URL }/kontakty/`, source: JSON.stringify( source ) } );
@@ -96,8 +96,8 @@ const meta = ( id, key ) => {
 			const consent = meta( leadId, 'trust_consent' );
 			// Дата редакции — «Редакция от» в первом экране страницы согласия (демо — 01.11.2026).
 			const revision = wp( 'eval', 'echo Trust\\Forms::consent_revision();' );
-			check( 'Заявка: заголовок «Обратный звонок: Анна», HTML вырезан', wp( 'post', 'get', leadId, '--field=post_title' ) === 'Обратный звонок: Анна' && meta( leadId, 'trust_name' ) === 'Анна' );
-			check( 'Заявка: поля с подписями', fields?.name?.label === 'Имя' && fields?.phone?.value === '+1 000 000 00 00' && meta( leadId, 'trust_contact' ) === '+1 000 000 00 00', JSON.stringify( fields ) );
+			check( 'Заявка: заголовок «Обратная связь: Анна», HTML вырезан', wp( 'post', 'get', leadId, '--field=post_title' ) === 'Обратная связь: Анна' && meta( leadId, 'trust_name' ) === 'Анна' );
+			check( 'Заявка: поля с подписями', fields?.name?.label === 'Имя' && fields?.contact?.label === 'Способ связи' && fields?.contact?.value === '+1 000 000 00 00' && meta( leadId, 'trust_contact' ) === '+1 000 000 00 00', JSON.stringify( fields ) );
 			check( 'Заявка: форма callback, статус «Новая»', meta( leadId, 'trust_form' ) === 'callback' && meta( leadId, 'trust_status' ) === 'new' );
 			check( 'Заявка: страница отправки и её название', meta( leadId, 'trust_page' ) === `${ URL }/kontakty/` && meta( leadId, 'trust_page_title' ) === 'Контакты' );
 			check( 'Заявка: UTM и источник; %-коды целы; лишние ключи отброшены', src?.utm_source === 'yandex' && src?.utm_campaign === 'seo-audit' && src?.referrer === source.referrer && src?.landing === source.landing && ! src?.evil, JSON.stringify( src ) );
@@ -230,7 +230,7 @@ const meta = ( id, key ) => {
 		const fillCallback = async () => {
 			await p2.click( '.header-callback' );
 			await p2.fill( '#callback-name', 'Борис' );
-			await p2.fill( '#callback-phone', '+1 000 000 00 01' );
+			await p2.fill( '#callback-contact', '+1 000 000 00 01' );
 			await p2.check( '#callback-modal .check__input' );
 		};
 		await p2.goto( `${ URL }/kontakty/`, { waitUntil: 'networkidle' } );
@@ -244,12 +244,12 @@ const meta = ( id, key ) => {
 		await p2.waitForSelector( '#callback-modal .callback-modal__success:not([hidden])', { timeout: 20000 } );
 		check( 'Устаревший nonce: скрипт берёт новый и повторяет — заявка ушла', callbackPosts.length === 2, String( callbackPosts.length ) );
 
-		await p2.route( '**/trust/v1/forms/callback', ( route ) => route.fulfill( { status: 400, contentType: 'application/json', body: JSON.stringify( { ok: false, code: 'invalid', message: 'Проверьте поля формы.', errors: { phone: 'Такой номер не обслуживается' } } ) } ) );
+		await p2.route( '**/trust/v1/forms/callback', ( route ) => route.fulfill( { status: 400, contentType: 'application/json', body: JSON.stringify( { ok: false, code: 'invalid', message: 'Проверьте поля формы.', errors: { contact: 'Такой номер не обслуживается' } } ) } ) );
 		await p2.goto( `${ URL }/kontakty/`, { waitUntil: 'networkidle' } );
 		await fillCallback();
 		await p2.click( '#callback-modal .form__submit' );
-		await p2.waitForSelector( '#callback-phone[aria-invalid="true"]', { timeout: 15000 } );
-		check( 'Ошибка поля от сервера — под полем, фокус на нём', ( await p2.textContent( '#callback-phone-error' ) ) === 'Такой номер не обслуживается' && await p2.evaluate( () => document.activeElement.id === 'callback-phone' ) );
+		await p2.waitForSelector( '#callback-contact[aria-invalid="true"]', { timeout: 15000 } );
+		check( 'Ошибка поля от сервера — под полем, фокус на нём', ( await p2.textContent( '#callback-contact-error' ) ) === 'Такой номер не обслуживается' && await p2.evaluate( () => document.activeElement.id === 'callback-contact' ) );
 
 		await p2.unroute( '**/trust/v1/forms/callback' );
 		await p2.route( '**/trust/v1/forms/callback', ( route ) => route.abort() );
@@ -286,7 +286,7 @@ const meta = ( id, key ) => {
 			method: 'POST',
 			redirect: 'manual',
 			headers: { Referer: `${ URL }/kontakty/` },
-			body: new URLSearchParams( { action: 'trust_form', trust_form_type: 'callback', _trust_token: t.token, _trust_nonce: t.nonce, name: 'Без согласия', phone: '+1 000 000 00 00' } ),
+			body: new URLSearchParams( { action: 'trust_form', trust_form_type: 'callback', _trust_token: t.token, _trust_nonce: t.nonce, name: 'Без согласия', contact: '+1 000 000 00 00' } ),
 		} );
 		await fallback.text();
 		check( 'Без JavaScript, ошибка: возврат с ?trust_form=error', fallback.status === 302 && fallback.headers.get( 'location' ) === `${ URL }/kontakty/?trust_form=error&trust_form_type=callback#form-callback`, fallback.headers.get( 'location' ) );
@@ -302,9 +302,13 @@ const meta = ( id, key ) => {
 		check( 'Меню: счётчик новых заявок', menuCount === counter && Number( counter ) >= 5, `${ menuCount } / ${ counter }` );
 		const heads = ( await admin.locator( '.wp-list-table thead th' ).allTextContents() ).map( ( s ) => s.trim().replace( /\s*Сортировать.*$/, '' ) ).filter( Boolean );
 		check( 'Колонки: Заявка, Форма, Имя, Контакт, Статус, Дата', JSON.stringify( heads.map( ( h ) => h.replace( /^Date/, 'Дата' ).replace( /^(Заявка|Форма|Имя|Контакт|Статус|Дата).*$/, '$1' ) ) ) === JSON.stringify( [ 'Заявка', 'Форма', 'Имя', 'Контакт', 'Статус', 'Дата' ] ), heads.join( ' | ' ) );
+		// Заявки окна «Связаться с нами» — в подпункте «Обратная связь» (правка заказчика), не в «Все заявки».
+		check( 'Заявка обратной связи не в «Все заявки»', 0 === await admin.locator( `#post-${ leadId }` ).count() );
+		await admin.goto( `${ URL }/wp-admin/edit.php?post_type=lead&trust_form=callback` );
 		const row = admin.locator( `#post-${ leadId }` );
-		check( 'Строка заявки: форма, имя, контакт, статус «Новая»', ( await row.locator( '.column-trust_form' ).textContent() ).trim() === 'Обратный звонок' && ( await row.locator( '.column-trust_name' ).textContent() ).trim() === 'Анна' && ( await row.locator( '.column-trust_contact' ).textContent() ).trim() === '+1 000 000 00 00' && ( await row.locator( '.column-trust_status' ).textContent() ).trim() === 'Новая' );
+		check( '«Заявки → Обратная связь»: заголовок, строка заявки — имя, контакт, статус «Новая»', 'Обратная связь' === ( await admin.locator( 'h1' ).textContent() ).trim() && ( await row.locator( '.column-trust_name' ).textContent() ).trim() === 'Анна' && ( await row.locator( '.column-trust_contact' ).textContent() ).trim() === '+1 000 000 00 00' && ( await row.locator( '.column-trust_status' ).textContent() ).trim() === 'Новая' );
 		await admin.screenshot( { path: path.join( OUT, 'leads-list.png' ) } );
+		await admin.goto( `${ URL }/wp-admin/edit.php?post_type=lead` );
 
 		await admin.selectOption( 'select[name="trust_form"]', 'test' );
 		await Promise.all( [ admin.waitForNavigation(), admin.click( '#post-query-submit' ) ] );
@@ -313,14 +317,14 @@ const meta = ( id, key ) => {
 
 		await admin.goto( `${ URL }/wp-admin/post.php?post=${ leadId }&action=edit` );
 		const box = ( await admin.locator( '#trust-lead-box' ).textContent() ).replace( /\s+/g, ' ' );
-		check( 'Экран заявки: поля, страница, UTM, источник, согласие и документ', [ 'Обратный звонок', 'Имя', 'Анна', 'Телефон', 'Контакты', 'yandex', 'seo-audit', 'Откуда пришёл', 'Первая страница визита', 'Согласие на обработку персональных данных', 'Документ согласия', 'редакция от' ].every( ( s ) => box.includes( s ) ), box.slice( 0, 300 ) );
+		check( 'Экран заявки: поля, страница, UTM, источник, согласие и документ', [ 'Обратная связь', 'Имя', 'Анна', 'Способ связи', 'Контакты', 'yandex', 'seo-audit', 'Откуда пришёл', 'Первая страница визита', 'Согласие на обработку персональных данных', 'Документ согласия', 'редакция от' ].every( ( s ) => box.includes( s ) ), box.slice( 0, 300 ) );
 		check( 'Экран заявки: ссылка на страницу отправки', ( await admin.getAttribute( '#trust-lead-box a[target="_blank"]', 'href' ) ) === `${ URL }/kontakty/` );
 		await admin.screenshot( { path: path.join( OUT, 'leads-screen.png' ), fullPage: true } );
 		await admin.selectOption( '#trust-lead-status', 'work' );
 		await Promise.all( [ admin.waitForNavigation(), admin.click( '#publish' ) ] );
 		check( 'Статус на экране заявки: «В работе» сохранён', meta( leadId, 'trust_status' ) === 'work' && ( await admin.inputValue( '#trust-lead-status' ) ) === 'work' );
 
-		await admin.goto( `${ URL }/wp-admin/edit.php?post_type=lead&trust_status=work` );
+		await admin.goto( `${ URL }/wp-admin/edit.php?post_type=lead&trust_form=callback&trust_status=work` );
 		const works = await admin.locator( '.wp-list-table tbody tr:not(.no-items)' ).count();
 		check( 'Фильтр по статусу «В работе»', works === 1 && ( await admin.locator( `#post-${ leadId }` ).count() ) === 1, String( works ) );
 
@@ -354,7 +358,7 @@ const meta = ( id, key ) => {
 		check( 'Формы: срок хранения заявок', await visible( 'forms_retention_days' ) );
 		await admin.screenshot( { path: path.join( OUT, 'settings-forms.png' ), fullPage: true } );
 		await login( admin, 'editor', 'editor' );
-		await admin.goto( `${ URL }/wp-admin/edit.php?post_type=lead` );
+		await admin.goto( `${ URL }/wp-admin/edit.php?post_type=lead&trust_form=callback` );
 		check( 'Редактор видит заявки', ( await admin.locator( `#post-${ leadId }` ).count() ) === 1 );
 		check( 'Консоль админки без ошибок', adminErrors.length === 0, adminErrors.slice( 0, 3 ).join( ' | ' ) );
 		await admin.close();

@@ -83,7 +83,7 @@ async function hideHeader( page ) {
 			buttons[ 0 ].text === 'Заказать аудит' && buttons[ 0 ].href === '#callback-modal' && buttons[ 0 ].cls === 'btn' &&
 			buttons[ 1 ].text === 'Рассчитать стоимость' && buttons[ 1 ].cls === 'btn btn--outline', JSON.stringify( buttons ) );
 		await service.locator( 'a', { hasText: 'Заказать аудит' } ).click();
-		check( 'Ссылка #callback-modal открывает окно «Заказать обратный звонок»', await page.evaluate( () => document.getElementById( 'callback-modal' ).open ) && ! page.url().includes( '#callback-modal' ) );
+		check( 'Ссылка #callback-modal открывает окно «Связаться с нами»', await page.evaluate( () => document.getElementById( 'callback-modal' ).open ) && ! page.url().includes( '#callback-modal' ) );
 		await page.keyboard.press( 'Escape' );
 
 		await page.goto( `${ URL }/dizayn/`, { waitUntil: 'networkidle' } );

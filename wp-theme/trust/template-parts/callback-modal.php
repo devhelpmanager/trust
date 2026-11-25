@@ -1,6 +1,8 @@
 <?php
 /**
- * Окно «Заказать обратный звонок» (макета нет — в стиле форм сайта, ТЗ п. 9).
+ * Окно «Связаться с нами» (макета нет — в стиле форм сайта, ТЗ п. 9; правки заказчика: было
+ * «Заказать обратный звонок», заголовок — «Запросить обратную связь» без тегов h, поле «Способ
+ * связи» — телефон, email или никнейм, после отправки заголовок справа от значка).
  *
  * Открывается кнопками с атрибутом data-trust-callback (шапка, мобильное меню, подвал).
  * Стандартный <dialog>: фокус остаётся внутри окна, Esc закрывает.
@@ -28,7 +30,7 @@ $trust_form    = Forms::type( 'callback' );
 		</button>
 
 		<div class="callback-modal__form-view">
-			<h2 class="callback-modal__title" id="callback-modal-title"><?php echo esc_html( Callback::text( 'title' ) ); ?></h2>
+			<p class="callback-modal__title" id="callback-modal-title"><?php echo esc_html( Callback::text( 'title' ) ); ?></p>
 			<p class="callback-modal__text" id="callback-modal-text"><?php echo esc_html( Callback::text( 'text' ) ); ?></p>
 
 			<form class="form" id="form-callback" method="post" action="<?php echo esc_url( Forms::fallback_url() ); ?>" data-trust-form="callback" data-trust-form-custom>
@@ -43,12 +45,12 @@ $trust_form    = Forms::type( 'callback' );
 				</div>
 
 				<div class="field">
-					<label class="field__label" for="callback-phone"><?php echo esc_html( Callback::text( 'phone_label' ) ); ?></label>
-					<input class="field__input" id="callback-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" required
+					<label class="field__label" for="callback-contact"><?php echo esc_html( Callback::text( 'phone_label' ) ); ?></label>
+					<input class="field__input" id="callback-contact" name="contact" type="text" minlength="3" maxlength="100" required
 						placeholder="<?php echo esc_attr( Callback::text( 'phone_placeholder' ) ); ?>"
-						aria-describedby="callback-phone-error"
-						data-error="<?php echo esc_attr( $trust_form['fields']['phone']['error'] ?? '' ); ?>">
-					<span class="field__error" id="callback-phone-error" hidden></span>
+						aria-describedby="callback-contact-error"
+						data-error="<?php echo esc_attr( $trust_form['fields']['contact']['error'] ?? '' ); ?>">
+					<span class="field__error" id="callback-contact-error" hidden></span>
 				</div>
 
 				<div class="field">
@@ -114,7 +116,7 @@ $trust_form    = Forms::type( 'callback' );
 				);
 				?>
 			</span>
-			<h2 class="form-success__title"><?php echo esc_html( Callback::text( 'success_title' ) ); ?></h2>
+			<p class="form-success__title"><?php echo esc_html( Callback::text( 'success_title' ) ); ?></p>
 			<p class="form-success__text"><?php echo esc_html( Callback::text( 'success_text' ) ); ?></p>
 			<button type="button" class="btn btn--outline btn--sm" data-callback-close><?php esc_html_e( 'Закрыть', 'trust' ); ?></button>
 		</div>

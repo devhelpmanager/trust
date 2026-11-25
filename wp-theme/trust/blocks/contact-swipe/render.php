@@ -61,11 +61,13 @@ $trust_consent  = Forms::consent_url();
 			</div>
 
 			<div class="field">
-				<input class="field__input" id="<?php echo esc_attr( $trust_uid ); ?>-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" required
+				<?php // Форма «Обратная связь» принимает любой способ связи; здесь, как в макете, — телефон. ?>
+				<input class="field__input" id="<?php echo esc_attr( $trust_uid ); ?>-phone" name="contact" type="tel" autocomplete="tel" inputmode="tel" maxlength="30" required
 					aria-label="<?php esc_attr_e( 'Телефон', 'trust' ); ?>"
 					placeholder="<?php echo esc_attr( $trust_text( 'phone_placeholder', Forms::phone_example() ) ); ?>"
 					aria-describedby="<?php echo esc_attr( $trust_uid ); ?>-phone-error"
-					data-error="<?php echo esc_attr( $trust_form['fields']['phone']['error'] ?? '' ); ?>">
+					<?php /* translators: %s: пример номера телефона. */ ?>
+					data-error="<?php echo esc_attr( sprintf( __( 'Проверьте номер телефона, например %s', 'trust' ), Forms::phone_example() ) ); ?>">
 				<span class="field__error" id="<?php echo esc_attr( $trust_uid ); ?>-phone-error" hidden></span>
 			</div>
 

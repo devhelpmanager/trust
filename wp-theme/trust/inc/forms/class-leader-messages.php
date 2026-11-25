@@ -35,8 +35,8 @@ final class Leader_Messages {
 	}
 
 	/**
-	 * Подпункт «Заявки → Обращения к руководителю» (Trust\Forms\Lead_Sections): сразу после
-	 * «Все заявки», колонка «Сообщение» вместо «Формы».
+	 * Подпункт «Заявки → Обращения к руководителю» (Trust\Forms\Lead_Sections): после
+	 * «Обратной связи», колонка «Сообщение» вместо «Формы».
 	 *
 	 * @param array $sections Подпункты.
 	 */
@@ -44,7 +44,7 @@ final class Leader_Messages {
 		$sections[ self::TYPE ] = array(
 			'menu'      => __( 'Обращения к руководителю', 'trust' ),
 			'not_found' => __( 'Обращений пока нет: они появляются, когда посетитель отправляет форму «Написать руководителю» в блоке «Слово руководителя».', 'trust' ),
-			'position'  => 1,
+			'position'  => 2,
 			'columns'   => array( 'trust_leader_message' => __( 'Сообщение', 'trust' ) ),
 			'column'    => array( self::class, 'column' ),
 		);

@@ -1758,12 +1758,26 @@ html.has-modal {
 	color: var(--c-muted);
 }
 
-.callback-modal__success {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
+/* После отправки: значок слева, заголовок справа, текст и кнопка — под ними (правки заказчика) */
+.callback-modal__success:not([hidden]) {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	align-items: center;
 	gap: 16px;
 	padding: 8px 0;
+}
+
+.callback-modal__success > .form-success__title {
+	padding-right: 32px; /* место для крестика «Закрыть» */
+	text-wrap: balance;
+}
+
+.callback-modal__success > :not(.form-success__icon, .form-success__title) {
+	grid-column: 1 / -1;
+}
+
+.callback-modal__success > button {
+	justify-self: start;
 }
 
 @media (max-width: 520px) {

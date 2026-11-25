@@ -155,7 +155,7 @@ async function compare( page, o ) {
 		check( 'Шаг «О сайте»: 4 поля с подписями, возраст сайта (4 варианта), трафик (Да / Нет) — без готового ответа',
 			'Адрес сайта,Тематика сайта,Количество продвигаемых страниц,Цель по трафику или заказам' === mk.about.join() && 4 === mk.ages.length && 'Да,Нет' === mk.traffic.join() &&
 			0 === await calc.locator( 'input[name="step_age"]:checked, input[name="step_traffic"]:checked' ).count(), JSON.stringify( [ mk.about, mk.ages ] ) );
-		check( 'По умолчанию без формы контактов (ТЗ), кнопка результата — окно «Заказать обратный звонок»', ! mk.form && mk.cta.endsWith( '#callback-modal' ), mk.cta );
+		check( 'По умолчанию без формы контактов (ТЗ), кнопка результата — окно «Связаться с нами»', ! mk.form && mk.cta.endsWith( '#callback-modal' ), mk.cta );
 
 		// ===== Кнопка первого экрана =====
 		await page.locator( '.b-hero-service a[href$="#calculator"]' ).click();
@@ -233,7 +233,7 @@ async function compare( page, o ) {
 		check( 'Тот же расчёт ещё раз («Изменить параметры» → «Рассчитать») — второй записи нет', 1 === est.length, String( est.length ) );
 		await calc.locator( '.b-calc__cta' ).click();
 		await page.locator( '#callback-modal[open]' ).waitFor( { timeout: 5000 } );
-		check( 'Кнопка «Получить точный расчёт» открывает окно «Заказать обратный звонок»', true );
+		check( 'Кнопка «Получить точный расчёт» открывает окно «Связаться с нами»', true );
 		await page.keyboard.press( 'Escape' );
 
 		// ===== Формула на своей странице =====

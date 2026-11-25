@@ -132,7 +132,7 @@ async function compare( page, o ) {
 		check( 'Тарифы: кнопки «Выбрать «…»» открывают окно звонка', cards.every( ( c ) => c.btn[ 0 ] === `Выбрать «${ c.name }»` && c.btn[ 1 ] === '#callback-modal' ), JSON.stringify( cards.map( ( c ) => c.btn ) ) );
 		await tar.locator( '.b-tariffs__btn' ).nth( 1 ).click();
 		await page.waitForTimeout( 400 );
-		check( 'Тарифы: по кнопке открывается окно «Заказать обратный звонок»', await page.locator( '#callback-modal' ).isVisible() );
+		check( 'Тарифы: по кнопке открывается окно «Связаться с нами»', await page.locator( '#callback-modal' ).isVisible() );
 		await page.keyboard.press( 'Escape' );
 
 		// Активный тариф (правка заказчика, вариант D): наведение мышью и Tab.

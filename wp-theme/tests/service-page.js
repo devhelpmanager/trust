@@ -8,7 +8,7 @@
  * «Вопрос-ответ», «Кнопка связи», «Наш блог».
  * «Наши преимущества»: H2, 6 пунктов H3 с номерами 01–06 и иконками.
  * «Кнопка связи»:
- * - форма «Обратный звонок»: поля без подписей (aria-label), галочка согласия вместо фразы
+ * - форма «Обратная связь»: поля без подписей (aria-label), галочка согласия вместо фразы
  *   «Отправляя заявку…» (решение заказчика), свайп-кнопка;
  * - короткий свайп — ручка возвращается; пустые поля и без галочки — ошибки под полями;
  * - свайп до конца, Enter на ручке, Enter в поле — заявка уходит (в «Заявках» — «Обратный
@@ -42,7 +42,7 @@ function createPage( title, blocks ) {
 	return wp( 'post', 'create', '--post_type=page', `--post_title=${ MARK } ${ title }`, '--post_status=publish', `--post_content=${ content }`, '--porcelain' );
 }
 
-/** Последние заявки «Обратный звонок» от имени. */
+/** Последние заявки «Обратная связь» от имени. */
 function leadsBy( name ) {
 	return JSON.parse( wp( 'eval', `echo wp_json_encode( array_map( static fn( $p ) => array( 'id' => $p->ID, 'page' => get_post_meta( $p->ID, 'trust_page', true ), 'form' => get_post_meta( $p->ID, 'trust_form', true ) ), get_posts( array( 'post_type' => 'lead', 'post_status' => 'any', 'numberposts' => -1, 'meta_key' => 'trust_name', 'meta_value' => '${ name }' ) ) ) );` ) );
 }
@@ -122,13 +122,13 @@ async function compare( page, o ) {
 			( await sw.getAttribute( 'id' ) ) === 'callback' && ( await sw.locator( 'h2' ).textContent() ).trim() === 'Перезвоним и ответим на ваши вопросы' );
 		const formInfo = await sw.locator( 'form' ).evaluate( ( f ) => ( {
 			type: f.dataset.trustForm,
-			labels: [ ...f.querySelectorAll( 'input[name=name], input[name=phone]' ) ].map( ( i ) => i.getAttribute( 'aria-label' ) ),
+			labels: [ ...f.querySelectorAll( 'input[name=name], input[name=contact]' ) ].map( ( i ) => i.getAttribute( 'aria-label' ) ),
 			consent: !! f.querySelector( 'input[type=checkbox][name=consent][required]' ) && ! f.querySelector( 'input[name=consent]' ).checked,
 			phrase: /Отправляя заявку/.test( f.textContent ),
 			fallback: getComputedStyle( f.querySelector( '.b-swipe__fallback' ) ).display,
 			knob: f.querySelector( '.b-swipe__knob' ).getAttribute( 'aria-label' ),
 		} ) );
-		check( 'Кнопка связи: форма «Обратный звонок», поля с aria-label, галочка согласия не отмечена, фразы «Отправляя заявку…» нет',
+		check( 'Кнопка связи: форма «Обратная связь», поля с aria-label, галочка согласия не отмечена, фразы «Отправляя заявку…» нет',
 			formInfo.type === 'callback' && formInfo.labels.join() === 'Имя,Телефон' && formInfo.consent && ! formInfo.phrase, JSON.stringify( formInfo ) );
 		check( 'Кнопка связи: свайп-кнопка подписана для скринридеров, обычной кнопки отправки со скриптом нет', /потяните вправо или нажмите Enter/.test( formInfo.knob ) && 'none' === formInfo.fallback );
 
@@ -154,7 +154,7 @@ async function compare( page, o ) {
 		check( 'Свайп до конца с пустой формой: ошибки под полями и у галочки, фокус на имени, ручка вернулась',
 			shown.length === 3 && await page.evaluate( () => document.activeElement.name === 'name' ) && '0px' === await dx(), shown.join( ' | ' ) );
 		await sw.locator( '[name=name]' ).fill( 'Тест Свайп' );
-		await sw.locator( '[name=phone]' ).fill( '+1 000 000 00 00' );
+		await sw.locator( '[name=contact]' ).fill( '+1 000 000 00 00' );
 		await drag( 260 );
 		shown = await errorsShown();
 		check( 'Без галочки согласия заявка не уходит (ошибка у галочки)', shown.length === 1 && /согласие/.test( shown[ 0 ] ) && await sw.locator( '.b-swipe__sent' ).isHidden(), shown.join( ' | ' ) );
@@ -172,21 +172,21 @@ async function compare( page, o ) {
 		check( 'Свайп до конца: «Заявка отправлена · Мы перезвоним…» (role=status), форма очищена, фокус на «Отправить ещё одну заявку»',
 			sent.text === 'Заявка отправлена Мы перезвоним вам в ближайшее время' && 'status' === sent.role && sent.track && sent.focus && sent.cleared, JSON.stringify( sent ) );
 		let leads = leadsBy( 'Тест Свайп' );
-		check( 'Заявка в «Заявках»: форма «Обратный звонок», адрес страницы', 1 === leads.length && 'callback' === leads[ 0 ].form && `${ URL }/seo/audit/` === leads[ 0 ].page, JSON.stringify( leads ) );
+		check( 'Заявка в «Заявках»: форма «Обратная связь», адрес страницы', 1 === leads.length && 'callback' === leads[ 0 ].form && `${ URL }/seo/audit/` === leads[ 0 ].page, JSON.stringify( leads ) );
 
 		await sw.locator( '.b-swipe__again' ).click();
 		check( '«Отправить ещё одну заявку» возвращает свайп, фокус на имени', await sw.locator( '.b-swipe__track' ).isVisible() && await page.evaluate( () => document.activeElement.name === 'name' ) );
 		await sw.locator( '[name=name]' ).fill( 'Тест Свайп' );
-		await sw.locator( '[name=phone]' ).fill( '+1 000 000 00 01' );
+		await sw.locator( '[name=contact]' ).fill( '+1 000 000 00 01' );
 		await sw.locator( '[name=consent]' ).check();
 		await knob.focus();
 		await page.keyboard.press( 'Enter' );
 		await sw.locator( '.b-swipe__sent' ).waitFor( { state: 'visible', timeout: 15000 } );
 		await sw.locator( '.b-swipe__again' ).click();
 		await sw.locator( '[name=name]' ).fill( 'Тест Свайп' );
-		await sw.locator( '[name=phone]' ).fill( '+1 000 000 00 02' );
+		await sw.locator( '[name=contact]' ).fill( '+1 000 000 00 02' );
 		await sw.locator( '[name=consent]' ).check();
-		await sw.locator( '[name=phone]' ).press( 'Enter' );
+		await sw.locator( '[name=contact]' ).press( 'Enter' );
 		await sw.locator( '.b-swipe__sent' ).waitFor( { state: 'visible', timeout: 15000 } );
 		leads = leadsBy( 'Тест Свайп' );
 		check( 'Enter на ручке и Enter в поле тоже отправляют заявку', 3 === leads.length, `${ leads.length } заявок` );
@@ -199,7 +199,7 @@ async function compare( page, o ) {
 		const formId = await p2.locator( '.b-swipe__form' ).getAttribute( 'id' );
 		check( 'Без JavaScript: свайпа нет, видна кнопка «Отправить заявку»', await p2.locator( '.b-swipe__track' ).isHidden() && await p2.locator( '.b-swipe__fallback' ).isVisible() );
 		await p2.fill( `#${ formId } [name=name]`, 'Тест Свайп' );
-		await p2.fill( `#${ formId } [name=phone]`, '+1 000 000 00 03' );
+		await p2.fill( `#${ formId } [name=contact]`, '+1 000 000 00 03' );
 		await p2.check( `#${ formId } [name=consent]`, { force: true } );
 		await sleep( 3300 );
 		await Promise.all( [ p2.waitForNavigation(), p2.click( `#${ formId } .b-swipe__fallback` ) ] );

@@ -52,7 +52,7 @@ const DOCS = [ 'Публичная оферта', 'Политика конфид
 		check( 'Email', ( await footer.locator( '.site-footer__email' ).getAttribute( 'href' ) ) === 'mailto:hello@example.ru' );
 		const address = ( await footer.locator( '.site-footer__address' ).innerText() ).split( '\n' ).map( ( s ) => s.trim() );
 		check( 'Адрес и часы — двумя строками', address[ 0 ] === '[Город], [улица, дом], [этаж, офис]' && address[ 1 ] === '[Пн–Пт, 10:00–19:00]', address.join( ' / ' ) );
-		check( 'Кнопка звонка', ( await footer.locator( '.site-footer__callback' ).textContent() ).trim() === 'Заказать обратный звонок' );
+		check( 'Кнопка звонка', ( await footer.locator( '.site-footer__callback' ).textContent() ).trim() === 'Связаться с нами' );
 		check( 'Соцсетей нет, пока ссылки не заполнены', ( await footer.locator( '.site-footer__social' ).count() ) === 0 );
 
 		const legal = ( await footer.locator( '.site-footer__bottom > span' ).textContent() ).trim();

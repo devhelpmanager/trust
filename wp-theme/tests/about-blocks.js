@@ -224,10 +224,10 @@ async function compare( page, name, width, theme, mock ) {
 		const sub = await admin.locator( '#menu-posts-lead .wp-submenu li:not(.wp-submenu-head) a' ).evaluateAll( ( links ) => links.map( ( a ) => [ a.childNodes[ 0 ].textContent.trim(), a.querySelector( '.pending-count' )?.textContent || '' ] ) );
 		const allRows = await admin.locator( '#the-list tr' ).allInnerTexts();
 		const formOptions = await admin.locator( 'select[name="trust_form"] option' ).allTextContents();
-		check( 'Админка: подпункт «Обращения к руководителю» сразу после «Все заявки», с числом новых',
-			'Все заявки' === sub[ 0 ][ 0 ] && 'Обращения к руководителю' === sub[ 1 ][ 0 ] && Number( sub[ 1 ][ 1 ] ) >= 1, JSON.stringify( sub ) );
+		check( 'Админка: подпункт «Обращения к руководителю» после «Все заявки» и «Обратной связи», с числом новых',
+			'Все заявки' === sub[ 0 ][ 0 ] && 'Обратная связь' === sub[ 1 ][ 0 ] && 'Обращения к руководителю' === sub[ 2 ][ 0 ] && Number( sub[ 2 ][ 1 ] ) >= 1, JSON.stringify( sub ) );
 		check( 'Админка: в «Все заявки» обращений нет, в фильтре форм — тоже',
-			! allRows.some( ( r ) => r.includes( 'Тест Руководителю' ) ) && ! formOptions.includes( 'Обращение к руководителю' ) && formOptions.includes( 'Обратный звонок' ), JSON.stringify( formOptions ) );
+			! allRows.some( ( r ) => r.includes( 'Тест Руководителю' ) ) && ! formOptions.includes( 'Обращение к руководителю' ) && formOptions.includes( 'Бриф' ), JSON.stringify( formOptions ) );
 		await admin.locator( '#menu-posts-lead .wp-submenu a', { hasText: 'Обращения к руководителю' } ).click();
 		await admin.waitForLoadState();
 		const list = await admin.evaluate( () => ( {

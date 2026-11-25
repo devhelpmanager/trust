@@ -219,6 +219,8 @@ const MOCKUP_TEXTS = [
 	[ '+7 (000) ', '+1 (000) ' ],
 	// Отдел «Менеджеры» в «Команде» — тот же термин «Менеджмент», что в «Карьере».
 	[ 'Менеджеры', 'Менеджмент', [ 'o-nas/komanda.html' ] ],
+	// Кнопка окна звонка — «Связаться с нами» (правка заказчика к окну «Заказать обратный звонок»).
+	[ 'Заказать обратный звонок', 'Связаться с нами' ],
 	// Автор видеоотзыва: должность и компания — отдельные поля отзыва.
 	[ '[должность, компания]', '[Должность], [Компания]', [ 'o-nas/otzyvy.html' ] ],
 ];
@@ -392,11 +394,11 @@ const MOCKUP_CSS = {
 			.dc-acc-btn > span:first-child > span:last-child { grid-column: 1; white-space: normal !important; }
 			.dc-acc-btn > span:last-child { grid-column: 2; grid-row: 2; }
 		}
-		/* «Изнутри»: на узком экране «Вся команда» — после цитат */
+		/* «Изнутри»: на узком экране «Вся команда» — после цитат, у правого края */
 		@media (max-width: 760px) {
 			section[aria-labelledby="voices-title"] > div > div:first-child { display: contents !important; }
 			section[aria-labelledby="voices-title"] > div > ul { order: 1; }
-			section[aria-labelledby="voices-title"] > div > div:first-child > a { order: 2; align-self: flex-start; }
+			section[aria-labelledby="voices-title"] > div > div:first-child > a { order: 2; align-self: flex-end; }
 		}
 	`,
 	'o-nas/kontakty.html': `

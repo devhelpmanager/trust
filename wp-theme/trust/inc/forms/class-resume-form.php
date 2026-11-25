@@ -49,7 +49,7 @@ final class Resume_Form {
 		$sections[ self::TYPE ] = array(
 			'menu'      => __( 'Резюме', 'trust' ),
 			'not_found' => __( 'Резюме пока нет: они появляются, когда соискатель отправляет форму «Отправить резюме» на странице «Карьера».', 'trust' ),
-			'position'  => 2,
+			'position'  => 3,
 			'columns'   => array(
 				'trust_resume_vacancy' => __( 'Вакансия', 'trust' ),
 				'trust_resume_link'    => __( 'Резюме', 'trust' ),

@@ -70,7 +70,7 @@ async function compareState( page, name, themeAction, mockAction ) {
 	check( 'Пункты меню по порядку', JSON.stringify( items ) === JSON.stringify( MENU ), items.join( ' | ' ) );
 	check( 'Телефон в меню', ( await menu.locator( '.mobile-nav__phone' ).getAttribute( 'href' ) ) === 'tel:+10000000000' );
 	check( 'Email в меню', ( await menu.locator( '.mobile-nav__email' ).getAttribute( 'href' ) ) === 'mailto:hello@example.ru' );
-	check( 'Кнопка звонка в меню', ( await menu.locator( '.mobile-nav__callback' ).textContent() ).trim() === 'Заказать обратный звонок' );
+	check( 'Кнопка звонка в меню', ( await menu.locator( '.mobile-nav__callback' ).textContent() ).trim() === 'Связаться с нами' );
 
 	// --- Подменю ---
 	const section = ( title ) => menu.locator( '.mobile-nav__item', { has: page.locator( '.mobile-nav__toggle', { hasText: title } ) } );

@@ -46,7 +46,7 @@
 
 	.b-voices .b-voices__more {
 		order: 2;
-		align-self: flex-start;
+		align-self: flex-end; /* у правого края (правка заказчика) */
 	}
 }
 

@@ -35,29 +35,32 @@ final class Forms {
 	 */
 	public static function types(): array {
 		$types = array(
+			// Окно «Связаться с нами» и блок «Кнопка связи»; заявки — «Заявки → Обратная связь».
 			'callback' => array(
-				'label'    => __( 'Обратный звонок', 'trust' ),
+				'label'    => __( 'Обратная связь', 'trust' ),
 				'captcha'  => false,
 				'fields'   => array(
-					'name'  => array(
+					'name'    => array(
 						'label'    => __( 'Имя', 'trust' ),
 						'type'     => 'text',
 						'required' => true,
 						'max'      => 100,
 						'error'    => __( 'Укажите, как к вам обращаться', 'trust' ),
 					),
-					'phone' => array(
-						'label'    => __( 'Телефон', 'trust' ),
-						'type'     => 'tel',
+					// Способ связи — любой (правка заказчика): телефон, email, Telegram, никнейм в соцсети.
+					'contact' => array(
+						'label'    => __( 'Способ связи', 'trust' ),
+						'type'     => 'text',
 						'required' => true,
-						/* translators: %s: пример номера телефона. */
-						'error'    => sprintf( __( 'Проверьте номер телефона, например %s', 'trust' ), self::phone_example() ),
+						'min'      => 3,
+						'max'      => 100,
+						'error'    => __( 'Укажите, как с вами связаться: телефон, email или никнейм', 'trust' ),
 					),
 				),
 				'consents' => array( 'consent' => self::consent() ),
 				// Поле с именем и поля с контактом — для колонок списка заявок.
 				'name'     => 'name',
-				'contact'  => array( 'phone' ),
+				'contact'  => array( 'contact' ),
 			),
 		);
 

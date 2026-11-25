@@ -180,26 +180,5 @@
 	color: var(--c-muted);
 }
 
-/*
- * «Сообщение отправлено» (правка заказчика): заголовок справа от значка с галочкой, текст и
- * «Закрыть» — под ними на всю ширину. Справа у заголовка — место под крестик окна.
- */
-.b-leader__modal .callback-modal__success:not([hidden]) {
-	display: grid;
-	grid-template-columns: auto minmax(0, 1fr);
-	align-items: center;
-	gap: 16px;
-}
-
-.b-leader__modal .callback-modal__success > .form-success__title {
-	padding-right: 32px;
-	text-wrap: balance;
-}
-
-.b-leader__modal .callback-modal__success > :not(.form-success__icon, .form-success__title) {
-	grid-column: 1 / -1;
-}
-
-.b-leader__modal .callback-modal__success > button {
-	justify-self: start;
-}
+/* «Сообщение отправлено» (правка заказчика): значок слева, заголовок справа — общие стили окон
+   (.callback-modal__success в main.css) */

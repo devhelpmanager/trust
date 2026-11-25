@@ -72,9 +72,9 @@ return array(
 	'fields' => array(
 		array(
 			'name'    => 'callback_heading',
-			'label'   => __( 'Окно «Заказать обратный звонок»', 'trust' ),
+			'label'   => __( 'Окно «Связаться с нами»', 'trust' ),
 			'type'    => 'message',
-			'message' => __( 'Открывается кнопками в шапке, мобильном меню и подвале. Поля: имя, телефон, согласие. Пустое поле — используется текст по умолчанию.', 'trust' ),
+			'message' => __( 'Открывается кнопками в шапке, мобильном меню и подвале. Поля: имя, способ связи (телефон, email или никнейм), согласие. Заявки — «Заявки → Обратная связь». Пустое поле — используется текст по умолчанию.', 'trust' ),
 		),
 		$trust_field(
 			'button',
@@ -96,8 +96,8 @@ return array(
 		),
 		$trust_field( 'name_label', __( 'Подпись поля «Имя»', 'trust' ), array( 'wrapper' => array( 'width' => 50 ) ) ),
 		$trust_field( 'name_placeholder', __( 'Подсказка в поле «Имя»', 'trust' ), array( 'wrapper' => array( 'width' => 50 ) ) ),
-		$trust_field( 'phone_label', __( 'Подпись поля «Телефон»', 'trust' ), array( 'wrapper' => array( 'width' => 50 ) ) ),
-		$trust_field( 'phone_placeholder', __( 'Подсказка в поле «Телефон»', 'trust' ), array( 'wrapper' => array( 'width' => 50 ) ) ),
+		$trust_field( 'phone_label', __( 'Подпись поля «Способ связи»', 'trust' ), array( 'wrapper' => array( 'width' => 50 ) ) ),
+		$trust_field( 'phone_placeholder', __( 'Подсказка в поле «Способ связи»', 'trust' ), array( 'wrapper' => array( 'width' => 50 ) ) ),
 		$trust_field( 'submit', __( 'Текст кнопки отправки', 'trust' ), array( 'maxlength' => 40 ) ),
 		$trust_field( 'success_title', __( 'Заголовок после отправки', 'trust' ), array( 'wrapper' => array( 'width' => 50 ) ) ),
 		$trust_field( 'success_text', __( 'Текст после отправки', 'trust' ), array( 'wrapper' => array( 'width' => 50 ) ) ),

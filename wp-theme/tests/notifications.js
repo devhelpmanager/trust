@@ -63,7 +63,7 @@ async function results( id ) {
 		const t = await formToken();
 		await sleep( 3100 );
 		const source = { utm_source: 'yandex', utm_medium: 'cpc', utm_campaign: 'seo-audit', referrer: 'https://yandex.ru/search/?text=%D1%81%D0%B5%D0%BE', landing: `${ URL }/seo/`, at: '2026-11-12T08:00:00.000Z' };
-		const callback = { _trust_token: t.token, _trust_nonce: t.nonce, name: 'Анна <3', phone: '+1 000 000 00 00', consent: '1', page: `${ URL }/kontakty/`, source: JSON.stringify( source ) };
+		const callback = { _trust_token: t.token, _trust_nonce: t.nonce, name: 'Анна <3', contact: '+1 000 000 00 00', consent: '1', page: `${ URL }/kontakty/`, source: JSON.stringify( source ) };
 		const test = { _trust_token: t.token, _trust_nonce: t.nonce, site: 'example.com', contact: 'client@example.com', mode: 'audit', text: 'Цена < 1000 & быстро', consent: '1', publish: '1' };
 		const send = async ( type, fields ) => {
 			const r = await postForm( type, fields );
@@ -76,11 +76,11 @@ async function results( id ) {
 		let mails = option( 'trust_test_mails' );
 		const mail = mails[ 0 ] || {};
 		check( 'Получателей нет — письмо администратору сайта', r.status === 200 && mails.length === 1 && JSON.stringify( mail.to ) === JSON.stringify( [ adminEmail ] ), JSON.stringify( mail.to ) );
-		check( 'Тема: «Новая заявка: Обратный звонок — Анна <3»', mail.subject === 'Новая заявка: Обратный звонок — Анна <3', mail.subject );
+		check( 'Тема: «Новая заявка: Обратная связь — Анна <3»', mail.subject === 'Новая заявка: Обратная связь — Анна <3', mail.subject );
 		check( 'Текст: поля, UTM, откуда пришёл (раскодировано), страница, ссылка на заявку', [
-			'Обратный звонок\n\n',
+			'Обратная связь\n\n',
 			'Имя: Анна <3\n',
-			'Телефон: +1 000 000 00 00\n',
+			'Способ связи: +1 000 000 00 00\n',
 			'Реклама (UTM): yandex / cpc / seo-audit\n',
 			'Откуда пришёл: https://yandex.ru/search/?text=сео\n',
 			`Страница: Контакты ${ URL }/kontakty/\n`,
@@ -95,7 +95,7 @@ async function results( id ) {
 		r = await send( 'test', test );
 		await results( r.id );
 		mails = option( 'trust_test_mails' );
-		check( 'Свои получатели у формы «Обратный звонок»', JSON.stringify( mails[ 0 ]?.to ) === '["callback@example.com"]', JSON.stringify( mails[ 0 ]?.to ) );
+		check( 'Свои получатели у формы «Обратная связь»', JSON.stringify( mails[ 0 ]?.to ) === '["callback@example.com"]', JSON.stringify( mails[ 0 ]?.to ) );
 		check( 'Другая форма — получатели по умолчанию (оба адреса)', JSON.stringify( mails[ 1 ]?.to ) === '["sales@example.com","boss@example.com"]', JSON.stringify( mails[ 1 ]?.to ) );
 		check( 'Контакт — email: Reply-To на клиента; тема по контакту', mails[ 1 ]?.headers.includes( 'Reply-To: client@example.com' ) && mails[ 1 ]?.subject === 'Новая заявка: Тестовая форма — client@example.com', JSON.stringify( mails[ 1 ]?.headers ) );
 		check( '«<» в тексте клиента сохраняется символом', ( mails[ 1 ]?.message || '' ).includes( 'Задача: Цена < 1000 & быстро' ) );
@@ -107,7 +107,7 @@ async function results( id ) {
 		res = await results( r.id );
 		const tg = option( 'trust_test_telegram' )[ 0 ] || {};
 		check( 'Telegram: сообщение от бота в chat_id, разметка HTML, без превью ссылок', tg.token === 'good-token' && tg.chat_id === '-100222' && tg.parse_mode === 'HTML' && tg.disable_web_page_preview === 'true', JSON.stringify( { ...tg, text: undefined } ) );
-		check( 'Telegram: заголовок, поля, «<» экранирован, ссылки на страницу и заявку', ( tg.text || '' ).startsWith( '<b>Новая заявка: Обратный звонок</b>\n' ) &&
+		check( 'Telegram: заголовок, поля, «<» экранирован, ссылки на страницу и заявку', ( tg.text || '' ).startsWith( '<b>Новая заявка: Обратная связь</b>\n' ) &&
 			tg.text.includes( 'Имя: Анна &lt;3\n' ) && tg.text.includes( `Страница: <a href="${ URL }/kontakty/">Контакты</a>` ) &&
 			tg.text.includes( `<a href="${ URL }/wp-admin/post.php?post=${ r.id }&#038;action=edit">Открыть заявку в админке</a>` ), tg.text );
 		check( 'Итог в заявке: Telegram отправлено', res.telegram?.ok === true && res.email?.ok === true );
@@ -130,8 +130,8 @@ async function results( id ) {
 		} catch ( e ) {}
 		const lead = payload.lead || {};
 		check( 'Вебхук: JSON с событием lead.created и адресом сайта', hook.headers?.[ 'Content-Type' ] === 'application/json; charset=utf-8' && hook.headers[ 'X-Trust-Event' ] === 'lead.created' && payload.event === 'lead.created' && payload.site === `${ URL }/` && !! payload.sent_at, JSON.stringify( hook.headers ) );
-		check( 'Вебхук: заявка — id, форма, статус, имя, контакт, поля, страница, источник, согласие, ссылка', String( lead.id ) === r.id && lead.form === 'callback' && lead.title === 'Обратный звонок: Анна <3' && lead.form_label === 'Обратный звонок' && lead.status === 'new' &&
-			lead.name === 'Анна <3' && lead.contact === '+1 000 000 00 00' && lead.fields?.phone?.value === '+1 000 000 00 00' &&
+		check( 'Вебхук: заявка — id, форма, статус, имя, контакт, поля, страница, источник, согласие, ссылка', String( lead.id ) === r.id && lead.form === 'callback' && lead.title === 'Обратная связь: Анна <3' && lead.form_label === 'Обратная связь' && lead.status === 'new' &&
+			lead.name === 'Анна <3' && lead.contact === '+1 000 000 00 00' && lead.fields?.contact?.value === '+1 000 000 00 00' &&
 			lead.page?.url === `${ URL }/kontakty/` && lead.page?.title === 'Контакты' && lead.source?.utm_campaign === 'seo-audit' &&
 			lead.consent?.items?.[ 0 ] === 'Согласие на обработку персональных данных' && lead.admin_url === `${ URL }/wp-admin/post.php?post=${ r.id }&action=edit` && /^\d{4}-\d\d-\d\dT/.test( lead.created_at ), hook.body );
 		const signature = 'sha256=' + crypto.createHmac( 'sha256', 's3cret-key' ).update( hook.body || '' ).digest( 'hex' );
@@ -180,7 +180,7 @@ async function results( id ) {
 		await admin.goto( settingsUrl );
 		await admin.locator( '.acf-tab-wrap .acf-tab-button', { hasText: 'Формы' } ).click();
 		const labels = ( await admin.locator( '[data-name^="forms_emails"] .acf-label label' ).allTextContents() ).map( ( s ) => s.trim() );
-		check( 'Получатели: по умолчанию и у каждой формы', JSON.stringify( labels ) === JSON.stringify( [ 'Получатели писем по умолчанию', 'Получатели: Обратный звонок', 'Получатели: Тестовая форма', 'Получатели: Вопрос SEO-специалисту', 'Получатели: Заявка на аудит', 'Получатели: Бриф', 'Получатели: Бриф (короткий)', 'Получатели: Калькулятор', 'Получатели: Обращение к руководителю', 'Получатели: Отзыв с сайта', 'Получатели: Резюме' ] ), labels.join( ' | ' ) );
+		check( 'Получатели: по умолчанию и у каждой формы', JSON.stringify( labels ) === JSON.stringify( [ 'Получатели писем по умолчанию', 'Получатели: Обратная связь', 'Получатели: Тестовая форма', 'Получатели: Вопрос SEO-специалисту', 'Получатели: Заявка на аудит', 'Получатели: Бриф', 'Получатели: Бриф (короткий)', 'Получатели: Калькулятор', 'Получатели: Обращение к руководителю', 'Получатели: Отзыв с сайта', 'Получатели: Резюме' ] ), labels.join( ' | ' ) );
 		check( 'Подсказка: адрес администратора', ( await admin.getAttribute( '[data-name="forms_emails"] input', 'placeholder' ) ) === adminEmail );
 		check( 'Токен бота и секрет вебхука — поля пароля', ( await admin.getAttribute( '[data-name="telegram_bot_token"] input', 'type' ) ) === 'password' && ( await admin.getAttribute( '[data-name="webhook_secret"] input', 'type' ) ) === 'password' );
 		await admin.fill( '[data-name="forms_emails"] input', 'sales@example.com, not-an-email' );
