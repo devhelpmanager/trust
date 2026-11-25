@@ -84,7 +84,7 @@ const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, collectConsoleE
 	// --- Проверка полей ---
 	await page.keyboard.press( 'Escape' );
 	await page.click( '.header-callback' );
-	await page.click( '.form__submit' );
+	await page.click( '#callback-modal .form__submit' );
 	const shownErrors = await page.locator( '#callback-modal .field__error:visible' ).allTextContents();
 	check( 'Пустая форма: 3 ошибки', shownErrors.length === 3, shownErrors.join( ' | ' ) );
 	check( 'Пустая форма: фокус в поле «Имя», aria-invalid', ( await active() ) === 'callback-name' && ( await page.getAttribute( '#callback-name', 'aria-invalid' ) ) === 'true' );
@@ -92,10 +92,10 @@ const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, collectConsoleE
 	await page.fill( '#callback-name', 'Анна' );
 	check( 'Ошибка имени снимается при вводе', await page.locator( '#callback-name-error' ).isHidden() );
 	await page.fill( '#callback-contact', '12' );
-	await page.click( '.form__submit' );
+	await page.click( '#callback-modal .form__submit' );
 	check( 'Слишком короткий способ связи (2 символа) — ошибка', ( await page.locator( '#callback-contact-error' ).isVisible() ) && ( await active() ) === 'callback-contact' );
 	await page.fill( '#callback-contact', '@anna_tg' );
-	await page.click( '.form__submit' );
+	await page.click( '#callback-modal .form__submit' );
 	check( 'Никнейм в Telegram принят; без согласия — ошибка согласия', ( await page.locator( '#callback-consent-error' ).isVisible() ) && ( await page.locator( '#callback-contact-error' ).isHidden() ) );
 	await page.check( '#callback-modal .check__input' );
 	check( 'Ошибка согласия снимается при отметке', await page.locator( '#callback-consent-error' ).isHidden() );
@@ -106,7 +106,7 @@ const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, collectConsoleE
 	await page.screenshot( { path: path.join( OUT, 'callback-1280.png' ) } );
 
 	// --- Отправка ---
-	await page.click( '.form__submit' );
+	await page.click( '#callback-modal .form__submit' );
 	check( 'Пока заявка уходит, кнопка недоступна', await page.locator( '#callback-modal .form__submit' ).isDisabled() );
 	await page.waitForSelector( '#callback-modal .callback-modal__success:not([hidden])', { timeout: 15000 } );
 	check( 'Верные данные: «Заявка отправлена», фокус на «Закрыть»', ( await page.textContent( '#callback-modal .form-success__title' ) ).trim() === 'Заявка отправлена' && await page.evaluate( () => document.activeElement.matches( '.callback-modal__success [data-callback-close]' ) ) );
@@ -156,7 +156,7 @@ const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, collectConsoleE
 		await page.setViewportSize( { width: w, height: 700 } );
 		await page.goto( `${ URL }/kontakty/`, { waitUntil: 'networkidle' } );
 		await page.evaluate( () => document.querySelector( '[data-trust-callback]' ).click() );
-		await page.click( '.form__submit' );
+		await page.click( '#callback-modal .form__submit' );
 		const res = await page.evaluate( () => {
 			const d = document.getElementById( 'callback-modal' );
 			const r = d.getBoundingClientRect();

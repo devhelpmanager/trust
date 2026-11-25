@@ -58,6 +58,9 @@
 		}
 		const allowed = baseAllowed.filter( ( name ) => ! config.exclusive[ name ] || config.exclusive[ name ] === typeKey );
 		dispatch( 'core/editor' ).updateEditorSettings( { allowedBlockTypes: allowed } );
+		// Редактор блоков получает настройки не сразу — набор типа вставляется следом, и блоки только
+		// этого типа («Коротко о главном» у документа) он отклонил бы как запрещённые.
+		dispatch( 'core/block-editor' ).updateSettings( { allowedBlockTypes: allowed } );
 	}
 
 	/** Вставляет набор блоков типа; пустой абзац заменяется. Возвращает число блоков. */

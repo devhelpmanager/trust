@@ -7,8 +7,8 @@
  * - контакты: каналы из «Настроек сайта → Контакты» (ссылки tel:, mailto:, t.me, wa.me),
  *   подписи по умолчанию и свои, порядок, пропуск незаполненного канала;
  * - отзывы: площадки, оценка со звёздами по оценке, ссылка в новой вкладке, без ссылки — без стрелки;
- * - документ: даты редакции, «Распечатать» (только с JavaScript), «Настроить cookie» открывает
- *   выбор cookie, «Скачать PDF» с загруженным файлом, вид при печати, дата редакции согласия
+ * - документ: даты редакции, «Распечатать» (только с JavaScript), «Настроить cookie» ведёт к блоку
+ *   «Настройки cookie» (шаг 4.15; без блока на странице — открывает плашку), «Скачать PDF» с загруженным файлом, вид при печати, дата редакции согласия
  *   уходит в заявки;
  * - вопросы: раскладка (H1 над колонками, с 1000 px форма справа), проверка полей и подсказки,
  *   счётчик символов, отправка — вопрос «На утверждении» с полями и заявка со ссылкой на него,
@@ -152,8 +152,9 @@ async function hideHeader( page ) {
 		await page.goto( `${ URL }/politika-cookie/`, { waitUntil: 'networkidle' } );
 		check( 'Политика cookie: «Настроить cookie» (белая) и «Распечатать»; PDF без файла не показывается', ( await page.locator( '.b-hero-document__buttons > :not([hidden])' ).allTextContents() ).map( ( t ) => t.trim() ).join( '|' ) === 'Настроить cookie|Распечатать' );
 		await page.click( '.b-hero-document a[href="#cookie-settings"]' );
-		check( '«Настроить cookie» открывает выбор cookie', await page.locator( '.cookie-banner' ).isVisible() );
-		await page.keyboard.press( 'Escape' );
+		await page.waitForTimeout( 800 );
+		check( '«Настроить cookie» ведёт к блоку «Настройки cookie» на этой странице (шаг 4.15), плашка не открывается',
+			! await page.locator( '.cookie-banner' ).isVisible() && await page.evaluate( () => document.getElementById( 'cookie-settings' ).getBoundingClientRect().top < 300 ) );
 		await page.reload();
 
 		const pdfFile = path.join( OUT, 'hero-test.pdf' );
