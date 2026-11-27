@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/case-results",
+	"title": "Результаты",
+	"description": "Раздел кейса «Результат»: графики во вкладках и таблица «до / после».",
+	"category": "trust-case",
+	"icon": "chart-line",
+	"keywords": [ "кейс", "результат", "график", "таблица", "до", "после" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": [ "trust-case", "file:./style.css" ],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	},
+	"viewScript": "file:./view.js"
+}

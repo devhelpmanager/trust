@@ -1,0 +1,97 @@
+/*
+ * Блок «Что сделали» (макет portfolio-blog-404/keys.html, «03 · Работы»): этапы на вертикальной
+ * шкале. Шапка раздела — assets/css/case.css.
+ */
+
+.b-case-work {
+	gap: 22px;
+}
+
+.b-case-work__list {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-case-work__step {
+	display: flex;
+	gap: 18px;
+}
+
+.b-case-work__rail {
+	display: flex;
+	flex: none;
+	flex-direction: column;
+	align-items: center;
+}
+
+.b-case-work__dot {
+	width: 14px;
+	height: 14px;
+	margin-top: 6px;
+	border-radius: 50%;
+	background: var(--c-violet);
+	box-shadow: 0 0 0 5px var(--c-lavender-3);
+}
+
+.b-case-work__line {
+	flex: 1 1 auto;
+	width: 2px;
+	margin-top: 8px;
+	background: var(--c-border);
+}
+
+/* Последний этап — пустой кружок, без линии */
+.b-case-work__step:last-child .b-case-work__dot {
+	box-sizing: border-box;
+	border: 3px solid var(--c-violet);
+	background: var(--c-white);
+	box-shadow: none;
+}
+
+.b-case-work__step:last-child .b-case-work__line {
+	display: none;
+}
+
+.b-case-work__body {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	gap: 8px;
+	min-width: 0;
+	padding-bottom: 28px;
+}
+
+.b-case-work__step:last-child .b-case-work__body {
+	padding-bottom: 0;
+}
+
+.b-case-work__term {
+	align-self: flex-start;
+	padding: 3px 10px;
+	border-radius: var(--r-pill);
+	background: var(--c-lavender-3);
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: normal;
+	color: var(--c-violet-deep);
+}
+
+.b-case-work__title {
+	margin: 0;
+	font-family: var(--f-text);
+	font-size: 19px;
+	font-weight: 600;
+	line-height: normal;
+	color: var(--c-text);
+}
+
+.b-case-work__text {
+	margin: 0;
+	font-size: 16px;
+	line-height: 1.6;
+	color: var(--c-text-2);
+}

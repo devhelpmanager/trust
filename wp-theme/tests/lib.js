@@ -332,6 +332,10 @@ const PORTFOLIO_CASES_CSS = `
 	}
 `;
 const MOCKUP_CSS = {
+	// Кейс: у картинки графика рамка внутри размера (в макете картинка с рамкой шире колонки на 2 px).
+	'portfolio-blog-404/keys.html': `
+		section[aria-labelledby="result-title"] figure img { box-sizing: border-box !important; }
+	`,
 	'portfolio-blog-404/portfolio.html': HERO_SECTION_CSS + PORTFOLIO_REVIEWS_CSS + PORTFOLIO_CASES_CSS,
 	// Блоки «О компании» (шаг 4.10): шапка секции — как у всех блоков (H2 28–44 px, 16 px от
 	// надзаголовка; в макете 26–40 px и 14 px).

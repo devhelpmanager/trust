@@ -1,0 +1,49 @@
+/*
+ * Блок «Что мешало росту» (макет portfolio-blog-404/keys.html, «02 · Аудит»): карточки 2 в ряд,
+ * уже 520 px — в колонку. Шапка раздела — assets/css/case.css.
+ */
+
+.b-case-obstacles__list {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 14px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-case-obstacles__card {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 20px;
+	border: 1px solid var(--c-border);
+	border-radius: 18px;
+	background: var(--c-lavender);
+}
+
+.b-case-obstacles__number {
+	font-family: var(--f-display);
+	font-size: 26px;
+	font-weight: 600;
+	line-height: normal;
+	color: var(--c-violet-deep);
+}
+
+.b-case-obstacles__label {
+	font-size: 15px;
+	line-height: 1.5;
+	color: var(--c-text-2);
+}
+
+.b-case-obstacles__note {
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--c-muted);
+}
+
+@media (max-width: 520px) {
+	.b-case-obstacles__list {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}

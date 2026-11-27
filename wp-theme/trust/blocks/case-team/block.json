@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/case-team",
+	"title": "Кто работал над проектом",
+	"description": "Раздел кейса «Команда»: сотрудники и их роли — из карточки кейса или свой список.",
+	"category": "trust-case",
+	"icon": "groups",
+	"keywords": [ "кейс", "команда", "сотрудники" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": [ "trust-case", "file:./style.css" ],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

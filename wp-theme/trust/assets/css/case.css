@@ -1,0 +1,60 @@
+/*
+ * Разделы кейса (макет portfolio-blog-404/keys.html, колонка статьи): «С чем пришёл клиент»,
+ * «Что мешало росту», «Что сделали», «Результат», «Слово клиенту», «Кто работал над проектом».
+ * Надзаголовок с номером раздела — «01 · Задача»: номер ставит счётчик CSS по порядку блоков
+ * (в редакторе тоже), H2, между разделами 64 px. Стиль trust-case указывают блоки кейса.
+ */
+
+body {
+	counter-reset: case-section;
+}
+
+.b-case {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	margin: 0;
+	color: var(--c-text);
+	counter-increment: case-section;
+}
+
+.b-case:not(:first-child) {
+	margin-top: 64px;
+}
+
+.b-case__eyebrow {
+	margin: 0;
+	font-family: var(--f-mono);
+	font-size: 13px;
+	font-weight: 500;
+	line-height: normal;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--c-violet);
+}
+
+.b-case__num::before {
+	content: counter(case-section, decimal-leading-zero) " · ";
+}
+
+/* Без слова — только номер */
+.b-case__num:only-child::before {
+	content: counter(case-section, decimal-leading-zero);
+}
+
+.b-case__title {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: clamp(24px, 2.6vw, 32px);
+	font-weight: 600;
+	line-height: 1.2;
+	color: var(--c-text);
+}
+
+/* До шаблона кейса (шаг 5.8) кейс выводит общий шаблон: колонка текста — как в макете, справа
+   место под карточку «О проекте» (340 px и отступ 56 px) */
+@media (min-width: 1024px) {
+	.single-case .page-default__content {
+		max-width: calc(100% - 396px);
+	}
+}

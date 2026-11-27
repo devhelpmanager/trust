@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/case-quote",
+	"title": "Слово клиенту",
+	"description": "Раздел кейса «Отзыв»: цитата клиента на тёмной карточке, автор, благодарственное письмо. Отзыв из кейса, выбранный или вручную.",
+	"category": "trust-case",
+	"icon": "format-quote",
+	"keywords": [ "кейс", "отзыв", "цитата", "клиент" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": [ "trust-case", "file:./style.css" ],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	},
+	"viewScript": "trust-lightbox"
+}

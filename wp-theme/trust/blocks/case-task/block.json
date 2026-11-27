@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/case-task",
+	"title": "С чем пришёл клиент",
+	"description": "Раздел кейса «01 · Задача»: описание клиента и запроса, проблемы с красными значками.",
+	"category": "trust-case",
+	"icon": "flag",
+	"keywords": [ "кейс", "задача", "клиент", "проблемы" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": [ "trust-case", "file:./style.css" ],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

@@ -1,0 +1,70 @@
+/*
+ * Блок «Кто работал над проектом» (макет portfolio-blog-404/keys.html, «06 · Команда»): карточки
+ * сотрудников три в ряд. Шапка раздела — assets/css/case.css.
+ */
+
+.b-case-team {
+	scroll-margin-top: calc(var(--sticky-top, 0px) + 20px);
+}
+
+.b-case-team__list {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 14px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-case-team__card {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	padding: 14px;
+	border: 1px solid var(--c-border);
+	border-radius: 18px;
+}
+
+.b-case-team__photo {
+	flex: none;
+	width: 56px;
+	height: 56px;
+	border-radius: 14px;
+	object-fit: cover;
+	background: var(--c-lavender-3);
+}
+
+.b-case-team__photo--empty {
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	overflow: hidden;
+	fill: var(--c-decor);
+}
+
+.b-case-team__who {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+
+.b-case-team__name {
+	font-size: 16px;
+	font-weight: 600;
+	line-height: normal;
+	color: var(--c-text);
+}
+
+.b-case-team__role {
+	font-size: 14px;
+	line-height: 1.4;
+	color: var(--c-muted);
+}
+
+/* Как в макете: в колонку на телефоне и при узкой колонке рядом с карточкой «О проекте» */
+@media (max-width: 767px), (min-width: 1024px) and (max-width: 1279px) {
+	.b-case-team__list {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}

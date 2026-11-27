@@ -1,0 +1,52 @@
+/*
+ * Блок «С чем пришёл клиент» (макет portfolio-blog-404/keys.html, «01 · Задача»): текст и
+ * проблемы с красными крестиками. Шапка раздела — assets/css/case.css.
+ */
+
+.b-case-task__text {
+	font-size: 17px;
+	line-height: 1.65;
+	color: var(--c-text-2);
+}
+
+.b-case-task__text p {
+	margin: 0;
+}
+
+.b-case-task__text p + p {
+	margin-top: 12px;
+}
+
+.b-case-task__list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.b-case-task__item {
+	display: flex;
+	gap: 12px;
+	font-size: 16px;
+	line-height: 1.55;
+	color: var(--c-text-2);
+}
+
+.b-case-task__item strong {
+	font-weight: 600;
+	color: var(--c-text);
+}
+
+.b-case-task__icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	border-radius: 8px;
+	background: #FDECEC;
+	color: #B42318;
+}

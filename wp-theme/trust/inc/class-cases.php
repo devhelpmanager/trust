@@ -91,6 +91,25 @@ final class Cases {
 	}
 
 	/**
+	 * Команда проекта: строки поля «Команда проекта» — сотрудник (ID) и роль в проекте.
+	 *
+	 * @param int $post_id Кейс.
+	 * @return array<int, array{member: int, role: string}>
+	 */
+	public static function team( int $post_id ): array {
+		$rows = array();
+		foreach ( (array) get_field( 'trust_team', $post_id ) as $row ) {
+			if ( is_array( $row ) && ! empty( $row['member'] ) ) {
+				$rows[] = array(
+					'member' => (int) $row['member'],
+					'role'   => trim( (string) ( $row['role'] ?? '' ) ),
+				);
+			}
+		}
+		return $rows;
+	}
+
+	/**
 	 * Позиции в поиске: строки «запрос, Яндекс, Google» (позиция 0 — не указана).
 	 *
 	 * @param int $post_id Кейс.

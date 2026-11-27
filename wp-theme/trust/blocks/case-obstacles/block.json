@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/case-obstacles",
+	"title": "Что мешало росту",
+	"description": "Раздел кейса «Аудит»: карточки с числом и подписью (2 в ряд, на телефоне — в колонку).",
+	"category": "trust-case",
+	"icon": "chart-bar",
+	"keywords": [ "кейс", "аудит", "проблемы", "цифры" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": [ "trust-case", "file:./style.css" ],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}
