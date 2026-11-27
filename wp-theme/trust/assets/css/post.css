@@ -1175,6 +1175,8 @@ a.post-author-card:hover .post-author-card__name {
 	border-radius: 20px;
 	background: var(--c-lavender);
 	container-type: inline-size;
+	/* Переносы слов — только в тексте комментариев (как в макете), не в подписях формы */
+	hyphens: manual;
 }
 
 .comment-form__row {
