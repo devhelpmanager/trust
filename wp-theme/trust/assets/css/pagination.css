@@ -1,0 +1,136 @@
+/*
+ * Пагинация списков — Trust\Pagination (макеты seo-vopros/vopros-seo.html, seo-blog/blog.html):
+ * «‹ Назад 1 2 3 4 … 7 Вперёд ›». Номера с классами is-near / is-mid / is-extra (расстояние до
+ * текущей) скрываются на узких экранах, вместо них — «…» (is-from-640 / 600 / 340).
+ */
+
+.pager {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding-top: 16px;
+}
+
+.pager__arrow,
+.pager__page {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	min-height: 48px;
+	border-radius: 12px;
+	font-size: 15px;
+	font-weight: 600;
+	line-height: normal;
+	text-decoration: none;
+}
+
+.pager__arrow {
+	gap: 8px;
+	padding: 0 18px;
+	border: 1.5px solid var(--c-violet);
+	background: var(--c-white);
+	color: var(--c-violet-dark);
+	transition: background 0.2s;
+}
+
+a.pager__arrow:hover {
+	background: var(--c-lavender-2);
+	color: var(--c-violet-dark);
+}
+
+.pager__arrow.is-disabled {
+	border: 1px solid var(--c-border);
+	color: #A39DB0;
+}
+
+.pager__page {
+	min-width: 48px;
+	border: 1px solid var(--c-border);
+	background: var(--c-white);
+	color: var(--c-text-2);
+	transition: border-color 0.2s, color 0.2s;
+}
+
+.pager__page:hover {
+	border-color: var(--c-violet);
+	color: var(--c-violet-dark);
+}
+
+.pager__page.is-current {
+	border: 0;
+	background: var(--c-violet);
+	color: var(--c-white);
+}
+
+.pager__arrow:focus-visible,
+.pager__page:focus-visible {
+	outline: 3px solid var(--c-focus);
+	outline-offset: 2px;
+}
+
+.pager__dots {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 28px;
+	color: #6B6677;
+	font-size: 15px;
+}
+
+.pager__dots.is-from-640,
+.pager__dots.is-from-600,
+.pager__dots.is-from-340 {
+	display: none;
+}
+
+@media (max-width: 640px) {
+	.pager__page.is-extra {
+		display: none;
+	}
+
+	.pager__dots.is-from-640 {
+		display: inline-flex;
+	}
+}
+
+@media (max-width: 600px) {
+	.pager {
+		gap: 6px;
+	}
+
+	.pager__label,
+	.pager__page.is-mid {
+		display: none;
+	}
+
+	.pager__arrow {
+		padding: 0;
+	}
+
+	.pager__arrow,
+	.pager__page {
+		min-width: 44px;
+		min-height: 44px;
+	}
+
+	.pager__dots {
+		min-width: 20px;
+	}
+
+	.pager__dots.is-from-600 {
+		display: inline-flex;
+	}
+}
+
+@media (max-width: 340px) {
+	.pager__page.is-near {
+		display: none;
+	}
+
+	.pager__dots.is-from-340 {
+		display: inline-flex;
+	}
+}

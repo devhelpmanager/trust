@@ -64,21 +64,8 @@ if ( ! $is_preview ) {
 			</ul>
 			<?php
 			if ( ! $is_preview ) {
-				$trust_pages = Answers_List::pagination(
-					$trust_paged,
-					$trust_page['pages'],
-					$trust_anchor,
-					array(
-						'nav'       => __( 'Страницы ответов', 'trust' ),
-						'prev'      => __( 'Назад', 'trust' ),
-						'next'      => __( 'Вперёд', 'trust' ),
-						'prev_aria' => __( 'Предыдущая страница', 'trust' ),
-						'next_aria' => __( 'Следующая страница', 'trust' ),
-						/* translators: %d: номер страницы. */
-						'page'      => __( 'Страница %d', 'trust' ),
-					)
-				);
-				echo $trust_pages; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- экранировано в pagination().
+				$trust_pages = Trust\Pagination::render( $trust_paged, $trust_page['pages'], $trust_anchor, array( 'nav' => __( 'Страницы ответов', 'trust' ) ) );
+				echo $trust_pages; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- экранировано в Pagination::render().
 			}
 			?>
 		<?php else : ?>

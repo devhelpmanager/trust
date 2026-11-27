@@ -31,7 +31,7 @@ final class Settings {
 	/**
 	 * Вкладки в порядке вывода. Остальные вкладки из ТЗ добавляются на своих шагах.
 	 */
-	private const TABS = array( 'company', 'contacts', 'requisites', 'social', 'footer', 'blocks', 'forms', 'seo', 'cookie', 'urls' );
+	private const TABS = array( 'company', 'contacts', 'requisites', 'social', 'footer', 'blocks', 'templates', 'blog', 'forms', 'seo', 'cookie', 'urls' );
 
 	/**
 	 * Регистрирует хуки.

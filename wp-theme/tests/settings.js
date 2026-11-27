@@ -16,7 +16,7 @@ const path = require( 'path' );
 const { launch, URL, OUT, check, finish, wp, clearLog, checkLog, login, collectConsoleErrors, ensureUser } = require( './lib' );
 
 const PAGE = `${ URL }/wp-admin/admin.php?page=trust-settings`;
-const TABS = [ 'Компания', 'Контакты', 'Реквизиты', 'Соцсети', 'Подвал', 'Блоки по умолчанию', 'Формы', 'SEO', 'Cookie и счётчики', 'Адреса' ];
+const TABS = [ 'Компания', 'Контакты', 'Реквизиты', 'Соцсети', 'Подвал', 'Блоки по умолчанию', 'Тексты шаблонов', 'Блог', 'Формы', 'SEO', 'Cookie и счётчики', 'Адреса' ];
 // Технические вкладки — только администратору.
 const ADMIN_TABS = [ 'Формы', 'SEO', 'Cookie и счётчики', 'Адреса' ];
 

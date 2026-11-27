@@ -78,6 +78,7 @@ final class Demo_Command {
 		}
 		WP_CLI::log( sprintf( 'Страницы: создано %d, обновлено %d.', count( $pages['created'] ), count( $pages['updated'] ) ) );
 		self::log_list( 'Пропущены (изменены вручную или уже есть свои)', $pages['skipped'] );
+		WP_CLI::log( 'Настройки → Чтение: ' . Importer::import_reading() . '.' );
 
 		$settings = Importer::import_settings( $force );
 		WP_CLI::log( sprintf( 'Настройки сайта: записано %d.', count( $settings['written'] ) ) );
@@ -162,6 +163,9 @@ final class Demo_Command {
 		$menus = Importer::remove_menus();
 		WP_CLI::log( sprintf( 'Меню: удалено %d.', count( $menus['removed'] ) ) );
 
+		if ( Importer::remove_reading() ) {
+			WP_CLI::log( 'Настройки → Чтение: главная снова показывает последние записи.' );
+		}
 		$pages = Importer::remove_pages();
 		WP_CLI::log( sprintf( 'Страницы: удалено %d.', count( $pages['removed'] ) ) );
 		self::log_list( 'Оставлены (изменены вручную)', $pages['kept'] );

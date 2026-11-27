@@ -64,13 +64,13 @@ async function compare( page, o ) {
  */
 function pagesState( page ) {
 	return page.evaluate( () => {
-		const nav = document.querySelector( '.b-answers__pages' );
+		const nav = document.querySelector( '.pager' );
 		if ( ! nav ) {
 			return null;
 		}
 		const label = ( el ) => {
-			if ( el.classList.contains( 'b-answers__arrow' ) ) {
-				const text = el.querySelector( '.b-answers__arrow-label' );
+			if ( el.classList.contains( 'pager__arrow' ) ) {
+				const text = el.querySelector( '.pager__label' );
 				const shown = 'none' !== getComputedStyle( text ).display;
 				return ( el.classList.contains( 'is-next' ) ? '›' : '‹' ) + ( shown ? text.textContent : '' ) + ( 'A' === el.tagName ? '' : '-' );
 			}
@@ -132,7 +132,7 @@ function pagesState( page ) {
 			more: [ a.querySelector( '.b-answers__more' ).getAttribute( 'aria-hidden' ), ...[ ...a.querySelectorAll( '.b-answers__more-v' ) ].map( ( v ) => v.textContent.trim() ), a.querySelectorAll( '.b-answers__more svg' ).length ],
 		} ) ) );
 		check( 'Все опубликованные вопросы (20, вопрос «на утверждении» не показан), новые первыми, без пагинации (одна страница)',
-			20 === published && 20 === cards.length && 'Почему Яндекс не индексирует новые страницы каталога?' === cards[ 0 ].h3 && 'Нужно ли закрывать от индексации страницы фильтров?' === cards[ 1 ].h3 && ! await page.locator( '.b-answers__pages' ).count(), `${ published } / ${ cards.length }` );
+			20 === published && 20 === cards.length && 'Почему Яндекс не индексирует новые страницы каталога?' === cards[ 0 ].h3 && 'Нужно ли закрывать от индексации страницы фильтров?' === cards[ 1 ].h3 && ! await page.locator( '.pager' ).count(), `${ published } / ${ cards.length }` );
 		check( 'Карточка: тема, «Спрашивает Анна», вопрос (H3), начало ответа из «Отрывка», инициалы «ИФ» (скрыты от скринридеров), имя, «ответ от 6 ноября 2026» (datetime), «Читать ответ» / «Ответ» / стрелка (оформление, скрыто от скринридеров), ссылка на ответ',
 			'Индексация' === cards[ 0 ].topic && 'ИндексацияСпрашивает Анна' === cards[ 0 ].meta && cards[ 0 ].excerpt.startsWith( 'Начните с «Исключённых страниц»' ) && 'ИФ,true' === cards[ 0 ].avatar.join() && '[Имя Фамилия]' === cards[ 0 ].name &&
 			'ответ от 6 ноября 2026,2026-11-06' === cards[ 0 ].date.join() && JSON.stringify( cards[ 0 ].more ) === JSON.stringify( [ 'true', '', 'Ответ', 'Читать ответ', 3 ] ) && cards[ 0 ].href.endsWith( '/seo/voprosy/pochemu-yandeks-ne-indeksiruet-novye-stranicy-kataloga/' ), JSON.stringify( cards[ 0 ] ) );
@@ -242,7 +242,7 @@ function pagesState( page ) {
 		await page.setViewportSize( { width: 1280, height: 900 } );
 		await page.goto( listUrl, { waitUntil: 'networkidle' } );
 		const p1 = await pagesState( page );
-		const navLabel = await page.locator( '.b-answers__pages' ).getAttribute( 'aria-label' );
+		const navLabel = await page.locator( '.pager' ).getAttribute( 'aria-label' );
 		check( 'Страница 1 из 7: «‹ Назад» (неактивна) 1 2 3 4 … 7 «Вперёд ›»; навигация «Страницы ответов»; ссылки /page/N/#answers',
 			'‹Назад- 1* 2 3 4 … 7 ›Вперёд' === p1.all && p1.all === p1.visible && 'Страницы ответов' === navLabel && p1.hrefs.at( -1 ).endsWith( '/page/2/#answers' ) && p1.hrefs[ 0 ].endsWith( '#answers' ) && ! /\/page\/1\//.test( p1.hrefs[ 0 ] ) && p1.hrefs.includes( p1.hrefs.find( ( h ) => h.endsWith( '/page/7/#answers' ) ) ),
 			JSON.stringify( [ p1, navLabel ] ) );
@@ -255,7 +255,7 @@ function pagesState( page ) {
 			JSON.stringify( narrow ) === JSON.stringify( { 640: '‹Назад- 1* 2 3 … 7 ›Вперёд', 600: '‹- 1* 2 … 7 ›', 390: '‹- 1* 2 … 7 ›', 340: '‹- 1* … 7 ›', 320: '‹- 1* … 7 ›' } ), JSON.stringify( narrow ) );
 		await page.setViewportSize( { width: 1280, height: 900 } );
 		const first = await page.evaluate( () => [ ...document.querySelectorAll( '.b-answers__card h3' ) ].map( ( h ) => h.textContent ) );
-		await page.locator( '.b-answers__arrow.is-next' ).click();
+		await page.locator( '.pager__arrow.is-next' ).click();
 		await page.waitForLoadState( 'networkidle' );
 		const second = await page.evaluate( () => [ location.pathname, location.hash, [ ...document.querySelectorAll( '.b-answers__card h3' ) ].map( ( h ) => h.textContent ), Math.round( document.querySelector( '.b-answers' ).getBoundingClientRect().top ) ] );
 		check( '«Вперёд» — страница 2 (/page/2/#answers, список сразу на экране), следующие 6 ответов без повторов',
@@ -311,7 +311,7 @@ function pagesState( page ) {
 				name: 'list', width, url: PAGE, theme: '.b-answers', mockup: 'seo-vopros/vopros-seo.html', mock: '#answers',
 				// Пагинация сверяется отдельно ниже (в макете — 7 страниц, у теста здесь свои ответы).
 				// Рисунок справа от шапки — правка заказчика, в макете его нет.
-				before: ( p ) => p.addStyleTag( { content: '.b-answers__pages, .b-answers .section-art { display: none !important; }' } ),
+				before: ( p ) => p.addStyleTag( { content: '.pager, .b-answers .section-art { display: none !important; }' } ),
 				mockBefore: ( p ) => p.addStyleTag( { content: '#answers nav.dc-pg { display: none !important; }' } ),
 			} );
 			const w = await ( async () => {
@@ -326,7 +326,7 @@ function pagesState( page ) {
 			} );
 		}
 		for ( const width of [ 1280, 390 ] ) {
-			await compare( page, { name: 'pages', width, url: listUrl, theme: '.b-answers__pages', mockup: 'seo-vopros/vopros-seo.html', mock: 'nav.dc-pg' } );
+			await compare( page, { name: 'pages', width, url: listUrl, theme: '.pager', mockup: 'seo-vopros/vopros-seo.html', mock: 'nav.dc-pg' } );
 		}
 
 		// ===== Ширины, доступность =====
@@ -381,7 +381,7 @@ function pagesState( page ) {
 			JSON.stringify( pEd ) === JSON.stringify( [ 'Ответы SEO-специалистов', 'trust-lists', true, false, true, false ] ), JSON.stringify( pEd ) );
 		const canvas2 = editor.frameLocator( 'iframe[name="editor-canvas"]' );
 		await canvas2.locator( '.b-answers' ).first().waitFor( { timeout: 60000 } );
-		check( 'Редактор: превью списка — 4 карточки, без пагинации', 4 === await canvas2.locator( '.b-answers__card' ).count() && 0 === await canvas2.locator( '.b-answers__pages' ).count() );
+		check( 'Редактор: превью списка — 4 карточки, без пагинации', 4 === await canvas2.locator( '.b-answers__card' ).count() && 0 === await canvas2.locator( '.pager' ).count() );
 		const artField = JSON.parse( wp( 'eval', '$f = acf_get_field( "field_trust_block_answers_list_head_art" ); echo wp_json_encode( array( $f["type"], array_keys( $f["choices"] ), $f["default_value"], $f["wrapper"]["class"] ) );' ) );
 		const artPreviews = await editor.evaluate( () => [ 'expert-answers', 'search-algorithms', 'ai-data' ].map( ( k ) => !! ( window.trustArts && window.trustArts[ k ] && window.trustArts[ k ].startsWith( '<svg' ) ) ) );
 		check( 'Редактор: поле «Картинка справа от заголовка» — список с превью рисунков (по умолчанию «Эксперт отвечает на вопросы», можно без картинки)',

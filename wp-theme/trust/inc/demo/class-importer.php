@@ -248,6 +248,10 @@ final class Importer {
 			foreach ( self::resolve_links( $item['fields'] ?? array() ) as $name => $value ) {
 				update_field( Fields::key( $type, $name ), $value, $id );
 			}
+			// Служебные метаполя (лайки статей и т. п.): 'meta' => array( ключ => значение ).
+			foreach ( $item['meta'] ?? array() as $name => $value ) {
+				update_post_meta( $id, $name, $value );
+			}
 			// Обложка — картинка из demo/images/ (в медиатеку добавляется один раз).
 			if ( ! empty( $item['thumbnail'] ) ) {
 				$image = self::demo_image( $item['thumbnail'], $item['title'] );
@@ -921,6 +925,48 @@ final class Importer {
 			)
 		);
 		return $posts[0] ?? null;
+	}
+
+	/**
+	 * «Настройки → Чтение»: главная — демо-страница «Главная», страница записей — «Блог» (шаг 5.1).
+	 * Меняется, только если главная ещё не назначена (показывает последние записи) или назначена
+	 * демо-страница: свой выбор владельца сайта не трогаем.
+	 *
+	 * @return string Что сделано (для журнала команды).
+	 */
+	public static function import_reading(): string {
+		$front = self::find_demo_post( 'page', 'glavnaya' );
+		$blog  = self::find_demo_post( 'page', 'blog' );
+		if ( ! $front || ! $blog ) {
+			return 'страниц «Главная» и «Блог» нет — не изменено';
+		}
+		$current = (int) get_option( 'page_on_front' );
+		$own     = 'page' === get_option( 'show_on_front' ) && $current && ! get_post_meta( $current, self::META_ID, true );
+		if ( $own ) {
+			return 'главная страница назначена владельцем сайта — не изменено';
+		}
+		update_option( 'show_on_front', 'page' );
+		update_option( 'page_on_front', $front->ID );
+		update_option( 'page_for_posts', $blog->ID );
+		return 'главная — «Главная», страница записей — «Блог»';
+	}
+
+	/**
+	 * Возвращает «Чтение» к последним записям, если там назначены демо-страницы.
+	 */
+	public static function remove_reading(): bool {
+		$changed = false;
+		foreach ( array( 'page_on_front', 'page_for_posts' ) as $option ) {
+			$id = (int) get_option( $option );
+			if ( $id && get_post_meta( $id, self::META_ID, true ) ) {
+				update_option( $option, 0 );
+				$changed = true;
+			}
+		}
+		if ( $changed && ! (int) get_option( 'page_on_front' ) ) {
+			update_option( 'show_on_front', 'posts' );
+		}
+		return $changed;
 	}
 
 	/**

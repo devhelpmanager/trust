@@ -48,7 +48,75 @@ final class Blog {
 		add_action( 'manage_post_posts_custom_column', array( self::class, 'column' ), 10, 2 );
 		add_filter( 'manage_edit-post_sortable_columns', array( self::class, 'sortable_columns' ) );
 		add_action( 'pre_get_posts', array( self::class, 'sort_by_counter' ) );
+		add_action( 'pre_get_posts', array( self::class, 'list_query' ) );
 		add_action( 'admin_head-edit.php', array( self::class, 'column_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( self::class, 'enqueue' ) );
+	}
+
+	/**
+	 * Список статей блога (home.php): статей на странице — из настроек, без закреплённых;
+	 * главная статья выводится крупной карточкой сверху и в сетке не повторяется (на всех
+	 * страницах списка — поэтому страницы 2+ продолжают сетку без пропусков).
+	 *
+	 * @param \WP_Query $query Запрос.
+	 */
+	public static function list_query( \WP_Query $query ): void {
+		if ( is_admin() || ! $query->is_main_query() || ! $query->is_home() ) {
+			return;
+		}
+		$query->set( 'posts_per_page', self::per_page() );
+		$query->set( 'ignore_sticky_posts', true );
+		$featured = self::featured();
+		if ( $featured ) {
+			$query->set( 'post__not_in', array( $featured->ID ) ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- одна статья.
+		}
+	}
+
+	/**
+	 * Стили списка статей и пагинации — на странице блога.
+	 */
+	public static function enqueue(): void {
+		if ( is_home() ) {
+			wp_enqueue_style( 'trust-blog', Assets::url( 'assets/css/blog.css' ), array( 'trust-main', 'trust-pagination' ), Assets::version( 'assets/css/blog.css' ) );
+		}
+	}
+
+	/**
+	 * Автор статьи для карточки: сотрудник, связанный с пользователем (имя, должность, фото),
+	 * иначе имя пользователя. initials — для аватара без фото.
+	 *
+	 * @param int|\WP_Post $post Статья.
+	 * @return array{name: string, role: string, photo: int, initials: string}
+	 */
+	public static function author( $post ): array {
+		$post   = get_post( $post );
+		$user   = $post ? (int) $post->post_author : 0;
+		$member = $user ? Team::for_user( $user ) : null;
+		$name   = $member ? get_the_title( $member ) : ( $user ? (string) get_the_author_meta( 'display_name', $user ) : '' );
+		return array(
+			'name'     => $name,
+			'role'     => $member ? trim( (string) get_post_meta( $member->ID, 'trust_position', true ) ) : '',
+			'photo'    => $member ? (int) get_post_thumbnail_id( $member ) : 0,
+			'initials' => Answers_List::initials( $name ),
+		);
+	}
+
+	/**
+	 * Счётчик в карточке: значок, число; подпись — для скринридеров («Лайки: 64»).
+	 *
+	 * @param string $icon  Иконка (heart, chat, clock).
+	 * @param string $value Значение.
+	 * @param string $label Подпись для скринридеров ('' — без неё).
+	 */
+	public static function stat( string $icon, string $value, string $label = '' ): string {
+		return '<span class="post-stat">' . Icons::svg(
+			$icon,
+			array(
+				'size'         => 16,
+				'stroke'       => 'var(--c-violet)',
+				'stroke_width' => 2,
+			)
+		) . ( '' !== $label ? '<span class="screen-reader-text">' . esc_html( $label ) . ': </span>' : '' ) . esc_html( $value ) . '</span>';
 	}
 
 	/**
@@ -104,7 +172,32 @@ final class Blog {
 	public const READ_SPEED = 180;
 
 	/**
-	 * Время чтения в минутах: слова текста / скорость из «Настроек сайта → Блоки по умолчанию»,
+	 * Статей на странице списка по умолчанию (ТЗ, раздел 5.4: «Записей на странице (20)»).
+	 */
+	public const PER_PAGE = 20;
+
+	/**
+	 * Статей на странице списка: «Настройки сайта → Блог» (6–60), пусто — PER_PAGE.
+	 */
+	public static function per_page(): int {
+		$value = (int) Settings::get( 'blog_per_page', 0 );
+		return $value > 0 ? max( 6, min( 60, $value ) ) : self::PER_PAGE;
+	}
+
+	/**
+	 * Показывать ли лайки в карточках и статьях: «Настройки сайта → Блог», по умолчанию — да.
+	 */
+	public static function show_likes(): bool {
+		if ( ! Dependencies::has_scf() ) {
+			return true;
+		}
+		// Настройку ещё не сохраняли — null: показывать (как флажок по умолчанию).
+		$value = get_field( 'blog_show_likes', 'option' );
+		return null === $value || (bool) $value;
+	}
+
+	/**
+	 * Время чтения в минутах: слова текста / скорость из «Настроек сайта → Блог»,
 	 * округление вверх, минимум 1 минута (ТЗ, раздел 13).
 	 *
 	 * @param int|\WP_Post $post Статья.
@@ -159,6 +252,20 @@ final class Blog {
 	 * @param int $category ID рубрики; 0 — весь блог.
 	 */
 	public static function featured( int $category = 0 ): ?\WP_Post {
+		static $cache = array();
+		if ( array_key_exists( $category, $cache ) ) {
+			return $cache[ $category ];
+		}
+		$cache[ $category ] = self::find_featured( $category );
+		return $cache[ $category ];
+	}
+
+	/**
+	 * Поиск главной статьи (см. featured()).
+	 *
+	 * @param int $category ID рубрики; 0 — весь блог.
+	 */
+	private static function find_featured( int $category ): ?\WP_Post {
 		$args = array(
 			'post_type'           => 'post',
 			'post_status'         => 'publish',

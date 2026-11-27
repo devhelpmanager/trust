@@ -1,0 +1,462 @@
+/*
+ * Список статей блога (home.php; макет seo-blog/blog.html): первый экран архива (крошки, H1,
+ * подзаголовок), главная статья, «Все статьи» с карточками и пагинацией. Подключается на
+ * странице блога (Trust\Blog::enqueue()); дальше — рубрика, тег, автор.
+ */
+
+/* ===== Первый экран ===== */
+
+.archive-hero {
+	padding: 40px var(--gutter) var(--section-y);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.archive-hero__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.archive-hero__crumbs {
+	margin: -12px 0;
+}
+
+.archive-hero__head {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	max-width: 780px;
+}
+
+.archive-hero__title {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: clamp(34px, 4.6vw, 60px); /* как в макете блога (в общем --fs-h1 от 32 px) */
+	font-weight: 600;
+	line-height: 1.08;
+	letter-spacing: -0.015em;
+	text-wrap: balance;
+}
+
+.archive-hero__lead {
+	margin: 0;
+	font-size: 19px;
+	line-height: 1.55;
+	color: var(--c-muted);
+	text-wrap: pretty;
+}
+
+/* ===== Общее: плашка рубрики, счётчики ===== */
+
+.post-rubric,
+.post-feature__badge {
+	padding: 5px 10px;
+	border-radius: var(--r-pill);
+	background: var(--c-lavender-3);
+	color: var(--c-violet-dark);
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: normal;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.post-stat {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.post-stat svg {
+	flex: none;
+}
+
+/* ===== Главная статья ===== */
+
+.post-feature {
+	display: flex;
+	flex-wrap: wrap;
+	overflow: hidden;
+	border: 1px solid var(--c-border);
+	border-radius: 28px;
+	background: var(--c-white);
+	color: var(--c-text);
+	text-decoration: none;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.post-feature:hover {
+	border-color: var(--c-decor);
+	box-shadow: 0 14px 32px rgba(46, 16, 101, 0.1);
+	color: var(--c-text);
+}
+
+.post-feature:focus-visible,
+.post-card:focus-visible {
+	outline: 3px solid var(--c-focus);
+	outline-offset: 2px;
+}
+
+.post-feature__media {
+	flex: 1 1 520px;
+	min-width: 0;
+	background: var(--c-lavender-2);
+}
+
+.post-feature__img,
+.post-feature__media .post-card__placeholder {
+	display: block;
+	width: 100%;
+	height: 100%;
+	aspect-ratio: 16 / 10;
+	object-fit: cover;
+}
+
+.post-feature__body {
+	display: flex;
+	flex: 1 1 400px;
+	flex-direction: column;
+	gap: 18px;
+	box-sizing: border-box;
+	min-width: 0;
+	padding: clamp(24px, 4vw, 48px);
+}
+
+.post-feature__badges {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+.post-feature__badge {
+	background: var(--c-violet);
+	color: var(--c-white);
+}
+
+.post-feature__title {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: clamp(24px, 2.6vw, 34px);
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+	text-wrap: balance;
+	transition: color 0.2s;
+}
+
+.post-feature:hover .post-feature__title,
+.post-card:hover .post-card__title {
+	color: var(--c-violet-dark);
+}
+
+.post-feature__excerpt {
+	font-size: 17px;
+	line-height: 1.6;
+	color: var(--c-muted);
+	text-wrap: pretty;
+}
+
+.post-author {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.post-author__photo {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: var(--r-pill);
+	background: var(--c-violet);
+	color: var(--c-white);
+	font-size: 15px;
+	font-weight: 600;
+	object-fit: cover;
+}
+
+.post-author__who {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+
+.post-author__name {
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.post-author__role {
+	font-size: 13px;
+	color: #6B6677;
+}
+
+.post-feature__meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 18px;
+	font-size: 14px;
+	color: var(--c-muted);
+}
+
+.post-feature .post-feature__btn {
+	align-self: flex-start;
+	gap: 8px;
+	min-height: 48px;
+	margin-top: auto;
+	padding: 0 22px;
+	border-radius: 12px;
+	font-size: 15px;
+}
+
+.post-feature:hover .post-feature__btn {
+	background: var(--c-violet-dark);
+}
+
+/* ===== Все статьи ===== */
+
+.post-list {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-lavender);
+	color: var(--c-text);
+	scroll-margin-top: calc(var(--sticky-top, 0px) + 16px);
+}
+
+.post-list__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.post-list__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 12px 24px;
+}
+
+.post-list__page {
+	font-size: 15px;
+	color: var(--c-muted);
+}
+
+.post-list__empty {
+	margin: 0;
+	font-size: 17px;
+	color: var(--c-muted);
+}
+
+.post-cards {
+	display: grid;
+	gap: 24px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.post-cards--lg {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.post-cards--sm {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.post-cards__item {
+	min-width: 0;
+}
+
+.post-card {
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	height: 100%;
+	overflow: hidden;
+	border: 1px solid var(--c-border);
+	border-radius: 24px;
+	background: var(--c-white);
+	color: var(--c-text);
+	text-decoration: none;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.post-card:hover {
+	border-color: var(--c-decor);
+	box-shadow: 0 14px 32px rgba(46, 16, 101, 0.1);
+	color: var(--c-text);
+}
+
+.post-card--sm {
+	border-radius: 20px;
+}
+
+.post-card__cover {
+	display: block;
+	background: var(--c-lavender-2);
+}
+
+.post-card__img,
+.post-card__placeholder {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	background: var(--c-lavender-2);
+}
+
+.post-card--sm .post-card__img,
+.post-card--sm .post-card__placeholder {
+	aspect-ratio: 16 / 10;
+}
+
+.post-card__body {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	gap: 12px;
+	padding: 24px 26px 26px;
+}
+
+.post-card--sm .post-card__body {
+	padding: 20px 22px 22px;
+}
+
+.post-card .post-rubric {
+	align-self: flex-start;
+}
+
+.post-card__title {
+	margin: 0;
+	font-family: var(--f-text);
+	font-size: 22px;
+	font-weight: 600;
+	line-height: 1.3;
+	text-wrap: pretty;
+	transition: color 0.2s;
+}
+
+.post-card--sm .post-card__title {
+	font-size: 18px;
+	line-height: 1.35;
+}
+
+.post-card__excerpt {
+	font-size: 16px;
+	line-height: 1.55;
+	color: var(--c-muted);
+	text-wrap: pretty;
+}
+
+.post-card__meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 16px;
+	margin-top: auto;
+	padding-top: 6px;
+	font-size: 14px;
+	color: var(--c-muted);
+}
+
+.post-card__stats {
+	display: inline-flex;
+	gap: 16px;
+	margin-left: auto;
+}
+
+/* ===== Адаптив (как в макете) ===== */
+
+@media (max-width: 1023px) {
+	.post-cards--sm {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.post-feature__img,
+	.post-feature__media .post-card__placeholder {
+		aspect-ratio: 16 / 9;
+	}
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+	.post-feature__img,
+	.post-feature__media .post-card__placeholder {
+		aspect-ratio: 21 / 9;
+	}
+}
+
+@media (max-width: 760px) {
+	.post-cards--lg {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+/* Телефон: обычные карточки — обложка слева, текст справа */
+@media (max-width: 640px) {
+	.post-cards--sm {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 14px;
+	}
+
+	.post-card--sm {
+		flex-direction: row;
+		border-radius: 16px;
+	}
+
+	/* Высоту карточки задаёт текст, обложка заполняет колонку слева */
+	.post-card--sm .post-card__cover {
+		position: relative;
+		flex: none;
+		align-self: stretch;
+		width: 112px;
+	}
+
+	.post-card--sm .post-card__img,
+	.post-card--sm .post-card__placeholder {
+		position: absolute;
+		inset: 0;
+		height: 100%;
+		aspect-ratio: auto;
+	}
+
+	.post-card--sm .post-card__body {
+		gap: 8px;
+		min-width: 0;
+		padding: 14px 16px;
+	}
+
+	.post-card--sm .post-card__title {
+		font-size: 16px;
+	}
+
+	.post-card--sm .post-card__meta {
+		gap: 6px 12px;
+		font-size: 13px;
+	}
+
+	.post-card--sm .post-card__stats {
+		gap: 12px;
+	}
+}
+
+@media (max-width: 380px) {
+	.post-card--sm .post-card__cover {
+		width: 88px;
+	}
+
+	.post-card--sm .post-card__body {
+		padding: 12px 14px;
+	}
+}

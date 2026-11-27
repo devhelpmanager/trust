@@ -198,7 +198,119 @@ $trust_document_hero = static fn( bool $cookie = false ): array => array(
 	),
 );
 
+// «Направления» (шаг 4.10, макет o-nas/o-kompanii.html) — на «О компании» и демо-главной.
+$trust_directions = array(
+	'directions',
+	array(
+		'eyebrow' => 'Направления',
+		'title'   => 'Чем мы занимаемся',
+		'items'   => array(
+			array(
+				'icon'  => 'search',
+				'title' => 'SEO-продвижение',
+				'text'  => 'Аудит, семантика, оптимизация и контент, чтобы сайт рос в Яндексе и Google',
+				'link'  => '{page_id:seo}',
+			),
+			array(
+				'icon'  => 'sparkles',
+				'title' => 'GEO-продвижение',
+				'text'  => 'Чтобы нейросети и поисковые ассистенты упоминали и рекомендовали ваш сайт',
+				'link'  => '{page_id:geo}',
+			),
+			array(
+				'icon'  => 'browser-code',
+				'title' => 'Создание сайтов',
+				'text'  => 'Корпоративные сайты, интернет-магазины и лендинги, готовые к продвижению',
+				'link'  => '{page_id:sozdanie-saytov}',
+			),
+			array(
+				'icon'  => 'wrench',
+				'title' => 'Поддержка сайтов',
+				'text'  => 'Доработки, обновления, резервные копии и контроль доступности сайта',
+				'link'  => '{page_id:site-support}',
+			),
+			array(
+				'icon'  => 'megaphone',
+				'title' => 'Контекстная реклама',
+				'text'  => 'Яндекс Директ и Google Реклама: настройка, ведение и сквозная аналитика',
+				'link'  => '{page_id:kontekstnaya-reklama}',
+			),
+			array(
+				'icon'  => 'bot',
+				'title' => 'AI-решения',
+				'text'  => 'Чат-боты и автоматизация контента и аналитики на основе нейросетей',
+				'link'  => '{page_id:ai}',
+			),
+		),
+	),
+);
+
 return array(
+	// Демо-главная (макета нет — ТЗ, раздел 20: главную собирают из блоков). Назначается
+	// «Главной страницей» в «Настройки → Чтение», блог — «Страницей записей» (шаг 5.1).
+	array(
+		'path'   => 'glavnaya',
+		'title'  => 'Главная',
+		'type'   => 'landing',
+		'seo'    => array(
+			'trust_seo_h1' => 'Продвигаем сайты в Яндексе, Google и нейросетях',
+		),
+		'blocks' => array(
+			$trust_section_hero(
+				'[Бренд]',
+				'Создаём и сопровождаем сайты, настраиваем контекстную рекламу. Открыто пишем, что входит в каждую услугу, и отчитываемся после каждого этапа.',
+				array(
+					'работаем на рынке'              => 'с [ГГГГ]',
+					'завершённых проектов'           => '[N]+',
+					'специалистов в штате'           => '[N]',
+					'средний срок работы с клиентом' => '[N] лет',
+				),
+				array(
+					array(
+						'link' => array(
+							'title'  => 'Обсудить проект',
+							'url'    => '#callback-modal',
+							'target' => '',
+						),
+					),
+					array(
+						'link' => array(
+							'title'  => 'Портфолио',
+							'url'    => '{page:portfolio}',
+							'target' => '',
+						),
+					),
+				)
+			),
+			$trust_directions,
+			array(
+				'reviews',
+				array(
+					'anchor'     => 'reviews',
+					'eyebrow'    => 'Отзывы',
+					'title'      => 'Что говорят клиенты',
+					'view'       => 'three',
+					'background' => 'lavender',
+					'source'     => 'manual',
+					'reviews'    => array( '{post:review:block-result}', '{post:review:block-process}', '{post:review:block-team}' ),
+					'more_label' => 'Все отзывы',
+				),
+			),
+			array(
+				'posts',
+				array(
+					'anchor'     => 'blog',
+					'eyebrow'    => 'Блог',
+					'title'      => 'Наш блог',
+					'view'       => 'blog',
+					'source'     => 'latest',
+					'count'      => 5,
+					'more_label' => 'Все статьи',
+				),
+			),
+			array( 'cta', array( 'background' => 'white' ) ),
+		),
+	),
 	// Услуги.
 	array(
 		'path'   => 'dizayn',
@@ -919,9 +1031,15 @@ return array(
 			array( 'cta', array( 'background' => 'white' ) ),
 		),
 	),
+	// Страница записей (шаг 5.1, макет seo-blog/blog.html): блоки не выводятся, подзаголовок — поле.
 	array(
-		'path'  => 'blog',
-		'title' => 'Блог',
+		'path'   => 'blog',
+		'title'  => 'Блог',
+		'fields' => array(
+			'blog' => array(
+				'trust_blog_lead' => 'Разборы и инструкции о SEO, GEO-продвижении, создании сайтов и контекстной рекламе — простым языком и с примерами.',
+			),
+		),
 	),
 
 	// О нас.
@@ -1029,51 +1147,7 @@ return array(
 				)
 			),
 			// Блоки «О компании» (шаг 4.10, макет o-nas/o-kompanii.html).
-			array(
-				'directions',
-				array(
-					'eyebrow' => 'Направления',
-					'title'   => 'Чем мы занимаемся',
-					'items'   => array(
-						array(
-							'icon'  => 'search',
-							'title' => 'SEO-продвижение',
-							'text'  => 'Аудит, семантика, оптимизация и контент, чтобы сайт рос в Яндексе и Google',
-							'link'  => '{page_id:seo}',
-						),
-						array(
-							'icon'  => 'sparkles',
-							'title' => 'GEO-продвижение',
-							'text'  => 'Чтобы нейросети и поисковые ассистенты упоминали и рекомендовали ваш сайт',
-							'link'  => '{page_id:geo}',
-						),
-						array(
-							'icon'  => 'browser-code',
-							'title' => 'Создание сайтов',
-							'text'  => 'Корпоративные сайты, интернет-магазины и лендинги, готовые к продвижению',
-							'link'  => '{page_id:sozdanie-saytov}',
-						),
-						array(
-							'icon'  => 'wrench',
-							'title' => 'Поддержка сайтов',
-							'text'  => 'Доработки, обновления, резервные копии и контроль доступности сайта',
-							'link'  => '{page_id:site-support}',
-						),
-						array(
-							'icon'  => 'megaphone',
-							'title' => 'Контекстная реклама',
-							'text'  => 'Яндекс Директ и Google Реклама: настройка, ведение и сквозная аналитика',
-							'link'  => '{page_id:kontekstnaya-reklama}',
-						),
-						array(
-							'icon'  => 'bot',
-							'title' => 'AI-решения',
-							'text'  => 'Чат-боты и автоматизация контента и аналитики на основе нейросетей',
-							'link'  => '{page_id:ai}',
-						),
-					),
-				),
-			),
+			$trust_directions,
 			array(
 				'principles',
 				array(
