@@ -49,6 +49,9 @@ return array(
 		'codes'     => 'коды ответа',
 		'index'     => 'индексация',
 		'webmaster' => 'Вебмастер',
+		// Ключевые слова статьи о robots.txt (seo-blog/statya.html).
+		'audit'     => 'технический аудит',
+		'gsc'       => 'Google Search Console',
 	),
 	'service_type'   => array(
 		'seo'     => 'SEO',

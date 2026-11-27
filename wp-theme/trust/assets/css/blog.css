@@ -406,60 +406,60 @@
 	}
 }
 
-/* Телефон: обычные карточки — обложка слева, текст справа */
+/* Телефон: обычные карточки списка — обложка слева, текст справа («Читайте также» — как на компьютере) */
 @media (max-width: 640px) {
 	.post-cards--sm {
 		grid-template-columns: minmax(0, 1fr);
 		gap: 14px;
 	}
 
-	.post-card--sm {
+	.post-cards--sm .post-card--sm {
 		flex-direction: row;
 		border-radius: 16px;
 	}
 
 	/* Высоту карточки задаёт текст, обложка заполняет колонку слева */
-	.post-card--sm .post-card__cover {
+	.post-cards--sm .post-card--sm .post-card__cover {
 		position: relative;
 		flex: none;
 		align-self: stretch;
 		width: 112px;
 	}
 
-	.post-card--sm .post-card__img,
-	.post-card--sm .post-card__placeholder {
+	.post-cards--sm .post-card--sm .post-card__img,
+	.post-cards--sm .post-card--sm .post-card__placeholder {
 		position: absolute;
 		inset: 0;
 		height: 100%;
 		aspect-ratio: auto;
 	}
 
-	.post-card--sm .post-card__body {
+	.post-cards--sm .post-card--sm .post-card__body {
 		gap: 8px;
 		min-width: 0;
 		padding: 14px 16px;
 	}
 
-	.post-card--sm .post-card__title {
+	.post-cards--sm .post-card--sm .post-card__title {
 		font-size: 16px;
 	}
 
-	.post-card--sm .post-card__meta {
+	.post-cards--sm .post-card--sm .post-card__meta {
 		gap: 6px 12px;
 		font-size: 13px;
 	}
 
-	.post-card--sm .post-card__stats {
+	.post-cards--sm .post-card--sm .post-card__stats {
 		gap: 12px;
 	}
 }
 
 @media (max-width: 380px) {
-	.post-card--sm .post-card__cover {
+	.post-cards--sm .post-card--sm .post-card__cover {
 		width: 88px;
 	}
 
-	.post-card--sm .post-card__body {
+	.post-cards--sm .post-card--sm .post-card__body {
 		padding: 12px 14px;
 	}
 }

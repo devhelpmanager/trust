@@ -13,8 +13,8 @@ defined( 'ABSPATH' ) || exit;
  * Какие блоки доступны в редакторе:
  * - страницы — все блоки темы (кроме блоков кейса и ответа) и стандартные: абзац, заголовок,
  *   список, цитата, картинка, таблица, разделитель, кнопки;
- * - статьи — стандартные текстовые блоки, «Видео», «Картинка», «Оповещение», «Статьи из блога»;
- * - ответы на вопросы — то же и «Как бы поступил я»;
+ * - статьи и ответы на вопросы — стандартные текстовые блоки, «Видео», «Картинка», «Оповещение»,
+ *   «Статьи из блога» и «Как бы поступил я» (в статье — итог «Коротко: чек-лист»);
  * - кейсы — блоки кейса и стандартные текстовые.
  * Везде — синхронизированные паттерны (блок, одинаковый на многих страницах, правится в одном месте).
  * Блоки только своего типа страницы скрывает скрипт окна типов (Trust\Page_Types::EXCLUSIVE).
@@ -42,9 +42,9 @@ final class Allowed_Blocks {
 	private const CASE = array( 'trust/case-task', 'trust/case-obstacles', 'trust/case-work', 'trust/case-results', 'trust/case-quote', 'trust/case-team' );
 
 	/**
-	 * Блоки ответа — только у вопросов.
+	 * Блоки статей и ответов, которых нет на страницах.
 	 */
-	private const ANSWER = array( 'trust/how-i-would' );
+	private const ARTICLE = array( 'trust/how-i-would' );
 
 	/**
 	 * Регистрирует хуки.
@@ -65,16 +65,15 @@ final class Allowed_Blocks {
 				$theme = array_values(
 					array_filter(
 						array_keys( \WP_Block_Type_Registry::get_instance()->get_all_registered() ),
-						static fn( string $name ): bool => str_starts_with( $name, 'trust/' ) && ! in_array( $name, array_merge( self::CASE, self::ANSWER ), true )
+						static fn( string $name ): bool => str_starts_with( $name, 'trust/' ) && ! in_array( $name, array_merge( self::CASE, self::ARTICLE ), true )
 					)
 				);
 				// Блоки только своего типа страницы — в списке всегда; на чужих типах их скрывает окно типов.
 				$theme = array_values( array_unique( array_merge( $theme, array_keys( Page_Types::exclusive() ) ) ) );
 				return array_merge( $theme, self::TEXT, array( 'core/buttons', 'core/button' ), self::PATTERNS );
 			case 'post':
-				return array_merge( self::TEXT, self::POST, self::PATTERNS );
 			case 'question':
-				return array_merge( self::TEXT, self::POST, self::ANSWER, self::PATTERNS );
+				return array_merge( self::TEXT, self::POST, self::ARTICLE, self::PATTERNS );
 			case 'case':
 				return array_merge( self::TEXT, self::CASE, self::PATTERNS );
 		}

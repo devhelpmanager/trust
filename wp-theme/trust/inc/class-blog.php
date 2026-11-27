@@ -83,10 +83,10 @@ final class Blog {
 
 	/**
 	 * Автор статьи для карточки: сотрудник, связанный с пользователем (имя, должность, фото),
-	 * иначе имя пользователя. initials — для аватара без фото.
+	 * иначе имя пользователя. initials — для аватара без фото, member — ID сотрудника (0 — нет).
 	 *
 	 * @param int|\WP_Post $post Статья.
-	 * @return array{name: string, role: string, photo: int, initials: string}
+	 * @return array{name: string, role: string, photo: int, initials: string, member: int}
 	 */
 	public static function author( $post ): array {
 		$post   = get_post( $post );
@@ -98,6 +98,7 @@ final class Blog {
 			'role'     => $member ? trim( (string) get_post_meta( $member->ID, 'trust_position', true ) ) : '',
 			'photo'    => $member ? (int) get_post_thumbnail_id( $member ) : 0,
 			'initials' => Answers_List::initials( $name ),
+			'member'   => $member ? $member->ID : 0,
 		);
 	}
 
@@ -182,6 +183,17 @@ final class Blog {
 	public static function per_page(): int {
 		$value = (int) Settings::get( 'blog_per_page', 0 );
 		return $value > 0 ? max( 6, min( 60, $value ) ) : self::PER_PAGE;
+	}
+
+	/**
+	 * Показывать ли просмотры на странице статьи: «Настройки сайта → Блог», по умолчанию — да.
+	 */
+	public static function show_views(): bool {
+		if ( ! Dependencies::has_scf() ) {
+			return true;
+		}
+		$value = get_field( 'blog_show_views', 'option' );
+		return null === $value || (bool) $value;
 	}
 
 	/**

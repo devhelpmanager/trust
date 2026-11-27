@@ -189,9 +189,9 @@ async function save( page ) {
 				return apply_filters( 'allowed_block_types_all', true, new WP_Block_Editor_Context( array( 'post' => $post ) ) );
 			};
 			echo wp_json_encode( array( 'post' => $list( 'post' ), 'question' => $list( 'question' ), 'case' => $list( 'case' ), 'page' => $list( 'page' ) ) );` );
-		check( 'Статьи: текстовые блоки, «Видео», «Картинка», «Оповещение», «Статьи из блога»; без блоков страниц',
-			[ 'core/paragraph', 'core/table', 'trust/video', 'trust/image', 'trust/notice', 'trust/posts', 'core/block' ].every( ( b ) => lists.post.includes( b ) ) &&
-			! lists.post.includes( 'trust/faq' ) && ! lists.post.includes( 'trust/how-i-would' ) );
+		check( 'Статьи: текстовые блоки, «Видео», «Картинка», «Оповещение», «Статьи из блога», «Как бы поступил я»; без блоков страниц',
+			[ 'core/paragraph', 'core/table', 'trust/video', 'trust/image', 'trust/notice', 'trust/posts', 'trust/how-i-would', 'core/block' ].every( ( b ) => lists.post.includes( b ) ) &&
+			! lists.post.includes( 'trust/faq' ) );
 		check( 'Ответы: то же и «Как бы поступил я»', lists.question.includes( 'trust/how-i-would' ) && lists.question.includes( 'trust/video' ) );
 		check( 'Кейсы: блоки кейса и текстовые', lists.case.includes( 'trust/case-task' ) && lists.case.includes( 'core/paragraph' ) && ! lists.case.includes( 'trust/faq' ) );
 		check( 'Блоки кейса и ответа не попадают на страницы', ! lists.page.includes( 'trust/case-task' ) && ! lists.page.includes( 'trust/how-i-would' ) );

@@ -1039,7 +1039,8 @@ final class Importer {
 	 * Заменяет {page:адрес} ссылкой на страницу, {page_id:адрес} — её ID, {post:тип:ключ} — ID
 	 * демо-записи, {term_id:таксономия:ключ} — ID демо-термина, {image:файл|alt} — ID картинки
 	 * из demo/images/ (загружается в медиатеку) (рекурсивно в массивах;
-	 * {page:…} — и внутри текста).
+	 * {page:…} — и внутри текста; внутри текста {image_id:файл|alt} и {image_url:файл|alt} —
+	 * ID и адрес картинки для разметки блока «Изображение»).
 	 * Поэтому страницы импортируются раньше настроек.
 	 *
 	 * @param mixed $value Значение из демо-данных.
@@ -1075,6 +1076,18 @@ final class Importer {
 			}
 			return $page ? (string) get_permalink( $page ) : '';
 		}
+		// Картинка внутри разметки блока «Изображение»: {image_id:файл|alt} — ID, {image_url:файл|alt} — адрес (размер large).
+		$value = (string) preg_replace_callback(
+			'~\{image_(id|url):([a-z0-9-]+\.(?:jpg|png|webp))(?:\|([^}]*))?\}~',
+			static function ( array $m ): string {
+				$id = self::demo_image( $m[2], $m[3] ?? '' );
+				if ( 'id' === $m[1] ) {
+					return (string) $id;
+				}
+				return $id ? (string) wp_get_attachment_image_url( $id, 'large' ) : '';
+			},
+			$value
+		);
 		// Ссылки внутри текста: <a href="{page:seo/audit}">.
 		return (string) preg_replace_callback(
 			'~\{page:([a-z0-9/-]+)\}~',

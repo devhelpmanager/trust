@@ -1981,7 +1981,7 @@ html.has-modal {
 }
 
 
-/* ===== Текст: «Блок с текстом» и статьи блога (seo-bloki/03-tekst.html) ===== */
+/* ===== Текст: «Блок с текстом» (seo-bloki/03-tekst.html); у статей — .post-text (assets/css/post.css) ===== */
 
 .prose {
 	display: flex;

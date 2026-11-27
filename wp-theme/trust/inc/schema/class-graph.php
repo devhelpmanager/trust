@@ -7,6 +7,8 @@
 
 namespace Trust\Schema;
 
+use Trust\Article;
+use Trust\Blog;
 use Trust\Breadcrumbs;
 use Trust\Contacts;
 use Trust\Page_Types;
@@ -458,6 +460,35 @@ final class Graph {
 				'provider'    => array( '@id' => self::site() . '#organization' ),
 				'areaServed'  => trim( (string) Settings::get( 'seo_area_served', '' ) ),
 				'offers'      => self::offers( $url ),
+			);
+		}
+
+		// Статья блога: BlogPosting — главное содержимое страницы.
+		if ( $post && is_singular( 'post' ) ) {
+			$author  = Blog::author( $post );
+			$member  = $author['member'];
+			$rubric  = Blog::rubric( $post );
+			$graph[] = array(
+				'@type'            => 'BlogPosting',
+				'@id'              => $url . '#article',
+				'headline'         => self::text( get_the_title( $post ) ),
+				'description'      => Seo::description(),
+				'image'            => has_post_thumbnail( $post ) ? self::image( (int) get_post_thumbnail_id( $post ) ) : null,
+				'datePublished'    => get_post_time( 'c', true, $post ),
+				'dateModified'     => get_post_modified_time( 'c', true, $post ),
+				'author'           => '' !== $author['name'] ? array(
+					'@type'    => 'Person',
+					'name'     => $author['name'],
+					'jobTitle' => '' !== $author['role'] ? $author['role'] : null,
+					'url'      => $member && is_post_publicly_viewable( $member ) ? (string) get_permalink( $member ) : null,
+				) : null,
+				'publisher'        => array( '@id' => self::site() . '#organization' ),
+				'mainEntityOfPage' => array( '@id' => $url . '#webpage' ),
+				'isPartOf'         => array( '@id' => $url . '#webpage' ),
+				'articleSection'   => $rubric ? $rubric->name : null,
+				'keywords'         => implode( ', ', wp_list_pluck( Article::tags( $post ), 'name' ) ),
+				'wordCount'        => (int) preg_match_all( '/[\p{L}\p{N}]+/u', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) ),
+				'inLanguage'       => self::language(),
 			);
 		}
 

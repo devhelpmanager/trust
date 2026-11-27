@@ -33,6 +33,8 @@ final class Theme {
 		Cases_Grid::register();
 		Answers_List::register();
 		Pagination::register();
+		Post_Stats::register();
+		Article::register();
 		Team::register();
 		Vacancies::register();
 		Questions::register();

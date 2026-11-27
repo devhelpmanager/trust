@@ -22,9 +22,16 @@ final class Template_Texts {
 	public static function defaults(): array {
 		return array(
 			// Блог (шаг 5.1, макет seo-blog/blog.html).
-			'blog_new'  => __( 'Новая статья', 'trust' ),
-			'blog_read' => __( 'Читать полностью', 'trust' ), // Правка заказчика (в макете «Читать статью»).
-			'blog_all'  => __( 'Все статьи', 'trust' ),
+			'blog_new'           => __( 'Новая статья', 'trust' ),
+			'blog_read'          => __( 'Читать полностью', 'trust' ), // Правка заказчика (в макете «Читать статью»).
+			'blog_all'           => __( 'Все статьи', 'trust' ),
+			// Статья (шаг 5.2, макет seo-blog/statya.html).
+			'post_toc'           => __( 'Содержание', 'trust' ),
+			'post_tags'          => __( 'Ключевые слова', 'trust' ),
+			'post_useful'        => __( 'Статья была полезной?', 'trust' ),
+			'post_related_label' => __( 'Блог', 'trust' ),
+			'post_related'       => __( 'Читайте также', 'trust' ),
+			'post_related_more'  => __( 'Все статьи', 'trust' ),
 		);
 	}
 

@@ -49,5 +49,17 @@ return array(
 		$trust_text( 'blog_new', __( 'Плашка главной статьи', 'trust' ) ),
 		$trust_text( 'blog_read', __( 'Кнопка главной статьи', 'trust' ) ),
 		$trust_text( 'blog_all', __( 'Заголовок списка статей', 'trust' ) ),
+		array(
+			'name'    => 'tpl_post_heading',
+			'label'   => __( 'Статья', 'trust' ),
+			'type'    => 'message',
+			'message' => __( 'Страница статьи блога.', 'trust' ),
+		),
+		$trust_text( 'post_toc', __( 'Заголовок содержания', 'trust' ) ),
+		$trust_text( 'post_tags', __( 'Над тегами', 'trust' ) ),
+		$trust_text( 'post_useful', __( 'Рядом с «Нравится»', 'trust' ) ),
+		$trust_text( 'post_related_label', __( 'Надзаголовок «Читайте также»', 'trust' ) ),
+		$trust_text( 'post_related', __( 'Заголовок «Читайте также»', 'trust' ) ),
+		$trust_text( 'post_related_more', __( 'Кнопка «Читайте также»', 'trust' ) ),
 	),
 );

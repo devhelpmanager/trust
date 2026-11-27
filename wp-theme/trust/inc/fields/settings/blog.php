@@ -1,7 +1,7 @@
 <?php
 /**
  * Настройки сайта → Блог (ТЗ, раздел 5.4): статей на странице списка, скорость чтения для времени
- * чтения, показывать ли лайки.
+ * чтения, показывать ли просмотры и лайки.
  *
  * @package Trust
  */
@@ -42,13 +42,22 @@ return array(
 			'wrapper'      => array( 'width' => 33 ),
 		),
 		array(
+			'name'          => 'blog_show_views',
+			'label'         => __( 'Показывать просмотры', 'trust' ),
+			'type'          => 'true_false',
+			'ui'            => 1,
+			'default_value' => 1,
+			'instructions'  => __( 'Число просмотров на странице статьи. Считаются всегда.', 'trust' ),
+			'wrapper'       => array( 'width' => 34 ),
+		),
+		array(
 			'name'          => 'blog_show_likes',
 			'label'         => __( 'Показывать лайки', 'trust' ),
 			'type'          => 'true_false',
 			'ui'            => 1,
 			'default_value' => 1,
-			'instructions'  => __( 'Число лайков в карточках статей.', 'trust' ),
-			'wrapper'       => array( 'width' => 34 ),
+			'instructions'  => __( 'Число лайков в карточках и на странице статьи, кнопка «Нравится».', 'trust' ),
+			'wrapper'       => array( 'width' => 33 ),
 		),
 	),
 );
