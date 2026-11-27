@@ -58,7 +58,7 @@ return array_merge(
 				),
 			),
 		),
-		Blocks::text_field( 'tabs_label', __( 'Название группы вкладок (для скринридеров)', 'trust' ), __( 'Графики результатов', 'trust' ), 60 ),
+		Blocks::text_field( 'tablist_label', __( 'Название группы вкладок (для скринридеров)', 'trust' ), __( 'Графики результатов', 'trust' ), 60 ),
 		array(
 			'name'  => 'table_tab',
 			'label' => __( 'Таблица «до / после»', 'trust' ),

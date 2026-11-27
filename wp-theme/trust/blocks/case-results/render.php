@@ -31,7 +31,7 @@ echo Case_Blocks::open( 'b-case-results', $trust_title_id ); // phpcs:ignore Wor
 Case_Blocks::head( $trust_title_id, __( 'Что получилось', 'trust' ), __( 'Результат', 'trust' ) );
 ?>
 	<?php if ( $trust_has_tabs ) : ?>
-		<div class="b-case-results__tabs" role="tablist" aria-label="<?php echo esc_attr( Blocks::text( 'tabs_label', __( 'Графики результатов', 'trust' ) ) ); ?>" data-case-tabs>
+		<div class="b-case-results__tabs" role="tablist" aria-label="<?php echo esc_attr( Blocks::text( 'tablist_label', __( 'Графики результатов', 'trust' ) ) ); ?>" data-case-tabs>
 			<?php foreach ( $trust_tabs as $trust_i => $trust_tab ) : ?>
 				<button type="button" role="tab" class="b-case-results__tab" id="<?php echo esc_attr( $trust_uid . '-tab-' . $trust_i ); ?>" aria-selected="<?php echo 0 === $trust_i ? 'true' : 'false'; ?>" aria-controls="<?php echo esc_attr( $trust_uid . '-panel-' . $trust_i ); ?>" tabindex="<?php echo 0 === $trust_i && ! $is_preview ? '0' : '-1'; ?>"><?php echo esc_html( trim( (string) $trust_tab['label'] ) ); ?></button>
 			<?php endforeach; ?>
