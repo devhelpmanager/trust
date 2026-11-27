@@ -28,7 +28,6 @@
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
-	max-width: 780px;
 }
 
 .archive-hero__title {
@@ -41,6 +40,7 @@
 	text-wrap: balance;
 }
 
+/* Правка заказчика: подзаголовок — во всю ширину блока (в макете до 780 px) */
 .archive-hero__lead {
 	margin: 0;
 	font-size: 19px;
@@ -208,8 +208,9 @@
 	color: var(--c-muted);
 }
 
+/* Правка заказчика: кнопка — в правом нижнем углу карточки (в макете слева) */
 .post-feature .post-feature__btn {
-	align-self: flex-start;
+	align-self: flex-end;
 	gap: 8px;
 	min-height: 48px;
 	margin-top: auto;
@@ -224,8 +225,10 @@
 
 /* ===== Все статьи ===== */
 
+/* Правка заказчика: «Все статьи» ближе к началу блока — сверху на 24 px меньше обычного отступа
+   (40 / 32 / 32 px) */
 .post-list {
-	padding: var(--section-y) var(--gutter);
+	padding: max(32px, calc(var(--section-y) - 24px)) var(--gutter) var(--section-y);
 	background: var(--c-lavender);
 	color: var(--c-text);
 	scroll-margin-top: calc(var(--sticky-top, 0px) + 16px);

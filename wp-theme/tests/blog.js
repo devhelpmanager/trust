@@ -5,7 +5,7 @@
  *
  * Демо: «Главная» — главная страница сайта, «Блог» — страница записей (Настройки → Чтение), 21 статья
  * из макета (даты по порядку, рубрики, лайки, обложки). Проверяет крошки, H1 и подзаголовок, главную
- * статью (плашки, H2, анонс, автор, дата, время чтения, лайки, комментарии, «Читать статью»; в сетке не
+ * статью (плашки, H2, анонс, автор, дата, время чтения, лайки, комментарии, «Читать полностью» в правом нижнем углу; в сетке не
  * повторяется), «Все статьи» и «Страница N из M», карточки (первые две крупные с анонсом, остальные —
  * 3 в ряд; рубрика, H3, дата, лайки, комментарии), статей на странице из «Настроек сайта → Блог»
  * (пагинация, страницы 2+ продолжают сетку, за пределами — 404), «Тексты шаблонов», «Показывать
@@ -121,10 +121,10 @@ function state( page ) {
 		const s = await state( page );
 		check( '/blog/ — 200; крошки «Главная / Блог», один H1 «Блог», подзаголовок из поля страницы',
 			200 === res.status() && JSON.stringify( s.crumbs ) === JSON.stringify( [ 'Главная', 'Блог' ] ) && JSON.stringify( s.h1 ) === JSON.stringify( [ 'Блог' ] ) && s.lead.startsWith( 'Разборы и инструкции о SEO' ), JSON.stringify( [ s.crumbs, s.h1, s.lead ] ) );
-		check( 'Главная статья — самая новая: «Новая статья» и рубрика, H2, анонс, автор и должность, дата по-русски, «N мин чтения», лайки 86, комментарии, «Читать статью»; ссылка на статью',
+		check( 'Главная статья — самая новая: «Новая статья» и рубрика, H2, анонс, автор и должность, дата по-русски, «N мин чтения», лайки 86, комментарии, «Читать полностью»; ссылка на статью',
 			s.featured && JSON.stringify( s.featured.badges ) === JSON.stringify( [ 'Новая статья', 'Технический аудит' ] ) && 'Robots.txt: как проверить файл и не закрыть сайт от поиска' === s.featured.h2 && '' !== s.featured.excerpt &&
 			'[Имя Фамилия]' === s.featured.author[ 0 ] && !! s.featured.author[ 1 ] && /^\d+ [а-я]+ \d{4}$/.test( s.featured.date[ 0 ] ) && /^\d{4}-\d\d-\d\d$/.test( s.featured.date[ 1 ] ) &&
-			/^\d+ мин чтения$/.test( s.featured.stats[ 0 ] ) && 'Лайки: 86' === s.featured.stats[ 1 ] && /^Комментарии: \d+$/.test( s.featured.stats[ 2 ] ) && 'Читать статью' === s.featured.button && '/blog/robots-txt-proverka/' === s.featured.href,
+			/^\d+ мин чтения$/.test( s.featured.stats[ 0 ] ) && 'Лайки: 86' === s.featured.stats[ 1 ] && /^Комментарии: \d+$/.test( s.featured.stats[ 2 ] ) && 'Читать полностью' === s.featured.button && '/blog/robots-txt-proverka/' === s.featured.href,
 			JSON.stringify( s.featured ) );
 		check( '«Все статьи» (H2) и «Страница 1 из 1»; 20 статей: 2 крупные + 18 по 3 в ряд, новые первыми, главная статья в сетке не повторяется; без пагинации',
 			'Все статьи' === s.all && 'Страница 1 из 1' === s.page && JSON.stringify( s.lists ) === JSON.stringify( [ [ 'lg', 2 ], [ 'sm', 18 ] ] ) && 20 === s.cards.length &&
@@ -199,12 +199,25 @@ function state( page ) {
 					row: cover.right <= body.left + 1 ? Math.round( cover.width ) : 0, // обложка слева от текста — её ширина
 					coverFull: Math.abs( cover.height - sm.getBoundingClientRect().height + 2 ) <= 1, // обложка на всю высоту карточки
 					feature: f.querySelector( '.post-feature__media' ).getBoundingClientRect().top < f.querySelector( '.post-feature__body' ).getBoundingClientRect().top - 50 ? 'column' : 'row',
+					// Правки заказчика: подзаголовок во всю ширину, кнопка — в правом нижнем углу карточки,
+					// «Все статьи» — ближе к началу блока.
+					lead: Math.round( document.querySelector( '.archive-hero__inner' ).getBoundingClientRect().width - document.querySelector( '.archive-hero__lead' ).getBoundingClientRect().width ),
+					btn: ( () => {
+						const b = f.querySelector( '.post-feature__btn' ).getBoundingClientRect();
+						const body = f.querySelector( '.post-feature__body' );
+						const r = body.getBoundingClientRect();
+						const cs = getComputedStyle( body );
+						return [ Math.round( r.right - parseFloat( cs.paddingRight ) - b.right ), Math.round( r.bottom - parseFloat( cs.paddingBottom ) - b.bottom ) ];
+					} )(),
+					h2: Math.round( document.querySelector( '#posts-title' ).getBoundingClientRect().top - document.querySelector( '.post-list' ).getBoundingClientRect().top ),
 				};
 			} );
 		}
 		check( 'Раскладка: крупные 2 → 1 (уже 760 px), обычные 3 → 2 (уже 1024) → 1 (уже 640); главная статья — обложка слева, уже ~1000 px — сверху',
 			2 === layout[ 1280 ].lg && 3 === layout[ 1280 ].sm && 2 === layout[ 1000 ].sm && 1 === layout[ 700 ].lg && 2 === layout[ 700 ].sm && 1 === layout[ 390 ].sm && 'row' === layout[ 1280 ].feature && 'column' === layout[ 390 ].feature,
 			JSON.stringify( layout ) );
+		check( 'Правки заказчика: подзаголовок во всю ширину блока, «Читать полностью» — в правом нижнем углу главной статьи, «Все статьи» — 40 px от начала блока (на телефоне 32)',
+			Object.values( layout ).every( ( l ) => 0 === l.lead && 0 === l.btn[ 0 ] && 0 === l.btn[ 1 ] ) && 40 === layout[ 1280 ].h2 && 32 === layout[ 390 ].h2, JSON.stringify( Object.fromEntries( Object.entries( layout ).map( ( [ w, l ] ) => [ w, [ l.lead, l.btn, l.h2 ] ] ) ) ) );
 		check( 'Телефон: обычная карточка — обложка слева (112 px, уже 380 — 88 px) на всю высоту, текст справа',
 			112 === layout[ 390 ].row && 88 === layout[ 360 ].row && layout[ 390 ].coverFull && 0 === layout[ 700 ].row, JSON.stringify( [ layout[ 390 ], layout[ 360 ] ] ) );
 
@@ -251,7 +264,14 @@ function state( page ) {
 			await compare( page, {
 				name: 'hero', width, theme: '.archive-hero', mock: 'main > section',
 				before: fixHero,
-				mockBefore: ( p ) => p.addStyleTag( { content: '.dc-feat-img { visibility: hidden; }' } ),
+				mockBefore: async ( p ) => {
+					await p.addStyleTag( { content: '.dc-feat-img { visibility: hidden; }' } );
+					// Правка заказчика: текст кнопки «Читать полностью».
+					await p.evaluate( () => {
+						const span = document.querySelector( 'main > section a.dc-card > div:last-child > span:last-child' );
+						[ ...span.childNodes ].find( ( n ) => 3 === n.nodeType && n.textContent.trim() ).textContent = 'Читать полностью';
+					} );
+				},
 			} );
 			await compare( page, {
 				name: 'list', width, theme: '.post-list', mock: 'section[aria-labelledby="all-title"]',
