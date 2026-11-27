@@ -88,12 +88,16 @@ async function save( page ) {
 		const page = await browser.newPage( { viewport: { width: 1440, height: 1000 } } );
 		const errors = [];
 		page.on( 'pageerror', ( e ) => errors.push( e.message ) );
-		for ( const [ url, type ] of [ [ '/seo/audit/', 'service' ], [ '/kontakty/', 'contacts' ], [ '/oferta/', 'document' ], [ '/portfolio/', 'portfolio' ], [ '/blog/', 'default' ] ] ) {
+		for ( const [ url, type ] of [ [ '/seo/audit/', 'service' ], [ '/kontakty/', 'contacts' ], [ '/oferta/', 'document' ], [ '/portfolio/', 'portfolio' ] ] ) {
 			const res = await page.goto( URL + url );
 			const body = await page.getAttribute( 'body', 'class' );
 			const h1 = await page.locator( 'h1' ).count();
 			check( `Страница ${ url }: шаблон типа «${ type }», один H1`, res.status() === 200 && body.includes( `page-type-${ type }` ) && h1 === 1, `${ res.status() } ${ h1 }` );
 		}
+		// Блог — «Страница записей» (шаг 5.1): список статей home.php, а не блоки страницы.
+		const blogRes = await page.goto( `${ URL }/blog/` );
+		const blogBody = ( await page.getAttribute( 'body', 'class' ) ).split( /\s+/ );
+		check( 'Страница /blog/ — страница записей: список статей (home.php), один H1', 200 === blogRes.status() && blogBody.includes( 'blog' ) && 1 === await page.locator( 'h1' ).count() && 1 === await page.locator( '.post-list' ).count(), blogBody.join( ' ' ) );
 		const orphan = wp( 'post', 'create', '--post_type=page', `--post_title=${ MARK } без первого экрана`, '--post_status=publish', '--post_content=<!-- wp:trust/hero-unknown {"data":{}} /--><!-- wp:paragraph --><p>Текст</p><!-- /wp:paragraph -->', '--porcelain' );
 		await page.goto( `${ URL }/?page_id=${ orphan }` );
 		check( 'Блок первого экрана, которого нет в теме, не оставляет страницу без H1', ( await page.locator( 'h1' ).innerText() ).includes( 'без первого экрана' ) );

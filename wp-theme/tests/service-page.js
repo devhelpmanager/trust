@@ -285,10 +285,17 @@ async function compare( page, o ) {
 		check( 'Время чтения: слова / скорость из настроек, вверх; по умолчанию 180 слов в минуту', slow === Math.ceil( words / 60 ) && views[ 0 ][ 1 ] === Math.max( 1, Math.ceil( words / 180 ) ), `${ words } слов: ${ views[ 0 ][ 1 ] } и ${ slow } мин` );
 		wp( 'eval', `update_field( Trust\\Fields::key( Trust\\Settings::PREFIX, 'blog_read_speed' ), '${ savedSpeed }', 'option' );` );
 
+		// У демо-статей есть обложки (шаг 5.1) — на время проверки обложку снимаем.
+		const ppcThumb = wp( 'eval', `echo (int) get_post_thumbnail_id( ${ ppc } );` );
+		wp( 'eval', `delete_post_thumbnail( ${ ppc } );` );
 		const noThumb = createPage( 'без обложки', postsBlock( `array( 'title' => 'Без обложки', 'view' => 'cards', 'source' => 'manual', 'posts' => array( ${ ppc } ) )` ) );
 		created.push( noThumb );
 		await page.goto( `${ URL }/?page_id=${ noThumb }`, { waitUntil: 'networkidle' } );
-		check( 'Статья без обложки — заглушка в цветах сайта', ( await page.locator( '.b-posts__cover .b-posts__placeholder' ).count() ) === 1 );
+		const placeholders = await page.locator( '.b-posts__cover .b-posts__placeholder' ).count();
+		if ( '0' !== ppcThumb ) {
+			wp( 'eval', `set_post_thumbnail( ${ ppc }, ${ ppcThumb } );` );
+		}
+		check( 'Статья без обложки — заглушка в цветах сайта', 1 === placeholders );
 
 		// ===== Сверка с макетами =====
 		const fake = () => {
