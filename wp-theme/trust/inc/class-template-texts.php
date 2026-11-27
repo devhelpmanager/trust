@@ -28,7 +28,7 @@ final class Template_Texts {
 			// Статья (шаг 5.2, макет seo-blog/statya.html).
 			'post_toc'           => __( 'Содержание', 'trust' ),
 			'post_tags'          => __( 'Ключевые слова', 'trust' ),
-			'post_useful'        => __( 'Статья была полезной?', 'trust' ),
+			'post_useful'        => __( 'Понравилось? Лайкни!', 'trust' ), // Правка заказчика (в макете «Статья была полезной?»).
 			'post_related_label' => __( 'Блог', 'trust' ),
 			'post_related'       => __( 'Читайте также', 'trust' ),
 			'post_related_more'  => __( 'Все статьи', 'trust' ),

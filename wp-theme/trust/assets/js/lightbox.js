@@ -1,7 +1,8 @@
 /**
  * Просмотр картинок на весь экран (правка заказчика): блок «Картинка» (ссылка
  * a[data-trust-lightbox] на оригинал), скан письма в «Отзывах клиентов» и картинки в тексте
- * (.prose img без ссылки).
+ * без ссылки — «Блок с текстом» (.prose img) и статья блога (.post-text img: обложка и картинки
+ * текста; обложка видео не открывается — у неё своя кнопка).
  *
  * Окно — <dialog> поверх страницы: картинка целиком по размеру экрана, подпись, кнопка
  * «Закрыть». Закрывается кнопкой, Esc, нажатием мимо картинки; фокус возвращается на
@@ -141,8 +142,8 @@
 
 	// Картинки в тексте (блок «Блок с текстом», текст статей) без своей ссылки.
 	function initProse() {
-		document.querySelectorAll( '.prose img' ).forEach( ( image ) => {
-			if ( image.closest( 'a, button, [data-trust-lightbox]' ) || image.classList.contains( 'is-zoomable' ) ) {
+		document.querySelectorAll( '.prose img, .post-text img' ).forEach( ( image ) => {
+			if ( image.closest( 'a, button, [data-trust-lightbox], .b-video' ) || image.classList.contains( 'is-zoomable' ) ) {
 				return;
 			}
 			image.classList.add( 'is-zoomable' );

@@ -4,11 +4,13 @@
  * Запуск: node wp-theme/tests/post.js
  *
  * Демо-статья «Robots.txt: как проверить файл…» — полный текст из макета. Проверяет крошки и H1,
- * первый экран (автор со ссылкой на страницу сотрудника, дата, время чтения, просмотры, лайки,
- * комментарии с русскими склонениями, ключевые слова), содержание (пункты из H2, якоря транслитом,
+ * первый экран (H1 и рисунок напротив него, линия, дата, время чтения, просмотры, лайки,
+ * комментарии с русскими склонениями, ключевые слова; автора нет — правка заказчика), содержание (пункты из H2, якоря транслитом,
  * текущий раздел, «Прочитано N %», переход по пункту под шапку), текст (обложка, анонс, таблица
  * с заголовками строк, шаги, картинка с подписью, цитата с инициалами, видео, «Коротко: чек-лист»),
- * «Ключевые слова» и «Статья была полезной?», «Читайте также», просмотры (раз в сутки с браузера
+ * «Ключевые слова», в одну строку «Понравилось? Лайкни!» и автор (ссылка на страницу сотрудника,
+ * тёмная карточка; на узком экране — друг под другом), обложка и картинки текста на весь экран,
+ * «Читайте также», просмотры (раз в сутки с браузера
  * и с IP, боты не считаются), лайки (поставить и снять, все кнопки вместе, после перезагрузки,
  * лимит с IP), REST (404, no-store), настройки «Показывать просмотры / лайки», «Тексты шаблонов»,
  * мобильную полосу содержания, BlogPosting, совпадение с макетом на 1280 / 768 / 390 px, ширины
@@ -47,18 +49,21 @@ function state( page ) {
 	return page.evaluate( () => {
 		const text = ( el ) => ( el ? el.textContent.replace( /\s+/g, ' ' ).trim() : null );
 		const hero = document.querySelector( '.post-hero' );
-		const author = hero.querySelector( '.post-hero__author' );
+		const author = document.querySelector( '.post-foot .post-author-card' );
 		return {
 			crumbs: [ ...document.querySelectorAll( '.breadcrumbs__item' ) ].map( text ),
 			h1: [ ...document.querySelectorAll( 'h1' ) ].map( text ),
 			author: author && {
 				tag: author.tagName,
 				href: author.href ? new URL( author.href ).pathname : null,
-				name: text( author.querySelector( '.post-hero__name' ) ),
-				role: text( author.querySelector( '.post-hero__role' ) ),
-				photo: !! author.querySelector( 'img.post-hero__avatar[alt=""]' ),
+				name: text( author.querySelector( '.post-author-card__name' ) ),
+				role: text( author.querySelector( '.post-author-card__role' ) ),
+				photo: !! author.querySelector( 'img.post-author-card__avatar[alt=""]' ),
+				bg: getComputedStyle( author ).backgroundColor,
 			},
 			meta: [ ...hero.querySelectorAll( '.post-hero__meta > li' ) ].map( text ),
+			heroAuthor: !! hero.querySelector( '.post-author-card, [class*="author"]' ),
+			heroBg: getComputedStyle( hero.querySelector( '.post-hero__card' ) ).backgroundColor,
 			metaLabel: hero.querySelector( '.post-hero__meta' ).getAttribute( 'aria-label' ),
 			datetime: hero.querySelector( '.post-hero__meta time' ).getAttribute( 'datetime' ),
 			heroTags: [ ...hero.querySelectorAll( '.post-hero__tag' ) ].map( ( a ) => [ text( a ), getComputedStyle( a ).textTransform, new URL( a.href ).pathname ] ),
@@ -170,9 +175,9 @@ async function compare( page, o ) {
 		check( 'Статья — 200; крошки «Главная / Блог / Технический аудит / заголовок», один H1 — заголовок статьи',
 			200 === res.status() && JSON.stringify( s.crumbs ) === JSON.stringify( [ 'Главная', 'Блог', 'Технический аудит', TITLE ] ) && JSON.stringify( s.h1 ) === JSON.stringify( [ TITLE ] ),
 			JSON.stringify( [ s.crumbs, s.h1 ] ) );
-		check( 'Автор — ссылка на страницу сотрудника: фото, имя, «должность · опыт в SEO — N лет»',
-			s.author && 'A' === s.author.tag && member[ 0 ] === s.author.href && '[Имя Фамилия]' === s.author.name && `Старший SEO-специалист · ${ member[ 1 ] }` === s.author.role && s.author.photo,
-			JSON.stringify( [ s.author, member ] ) );
+		check( 'Правка заказчика: автора в первом экране нет; под статьёй — карточка автора на фоне первого экрана, ссылка на страницу сотрудника: фото, имя, «должность · опыт в SEO — N лет»',
+			! s.heroAuthor && s.author && s.author.bg === s.heroBg && 'A' === s.author.tag && member[ 0 ] === s.author.href && '[Имя Фамилия]' === s.author.name && `Старший SEO-специалист · ${ member[ 1 ] }` === s.author.role && s.author.photo,
+			JSON.stringify( [ s.heroAuthor, s.heroBg, s.author, member ] ) );
 		check( '«О статье»: дата по-русски (datetime), «N мин чтения», «1 248 просмотров», «86 лайков», «N комментариев» (склонения)',
 			'О статье' === s.metaLabel && /^\d{1,2} [а-я]+ \d{4}$/.test( s.meta[ 0 ] ) && /^\d{4}-\d\d-\d\d$/.test( s.datetime ) && /^\d+ мин чтения$/.test( s.meta[ 1 ] ) &&
 			'1 248 просмотров' === s.meta[ 2 ].replace( / /g, ' ' ) && '86 лайков' === s.meta[ 3 ].replace( / /g, ' ' ) && /^0 комментариев$/.test( s.meta[ 4 ].replace( / /g, ' ' ) ),
@@ -195,8 +200,8 @@ async function compare( page, o ) {
 		check( 'Цитата «С автором» — инициалы в круге; «Видео»; «Коротко: чек-лист» — блок «Как бы поступил я» (якорь, 5 пунктов, кнопка)',
 			s.quote && 'ИФ' === s.quote[ 0 ] && '"ИФ"' === s.quote[ 1 ] && s.video && s.how && 'korotko-chek-list' === s.how[ 0 ] && 'korotko-chek-list' === s.how[ 1 ] && 5 === s.how[ 2 ] && 'Заказать технический аудит' === s.how[ 3 ],
 			JSON.stringify( [ s.quote, s.video, s.how ] ) );
-		check( 'Под текстом: «Ключевые слова» с 5 тегами, «Статья была полезной?» с кнопкой «Нравится»; две кнопки «Нравится» (содержание и низ), обе не нажаты',
-			s.foot && 'Ключевые слова' === s.foot.label && 5 === s.foot.tags.length && 'Статья была полезной?' === s.foot.question && s.foot.like &&
+		check( 'Под текстом: «Ключевые слова» с 5 тегами, «Понравилось? Лайкни!» (правка заказчика) с кнопкой «Нравится»; две кнопки «Нравится» (содержание и низ), обе не нажаты',
+			s.foot && 'Ключевые слова' === s.foot.label && 5 === s.foot.tags.length && 'Понравилось? Лайкни!' === s.foot.question && s.foot.like &&
 			2 === s.likes.length && s.likes.every( ( l ) => 'false' === l[ 0 ] && 'Нравится: 86' === l[ 1 ] ),
 			JSON.stringify( [ s.foot, s.likes ] ) );
 		const relatedTags = JSON.parse( wp( 'eval', `$ids = array(); foreach ( Trust\\Article::related( get_post( ${ id } ), 3 ) as $p ) { $ids[] = array( wp_parse_url( get_permalink( $p ), PHP_URL_PATH ), (bool) array_intersect( wp_list_pluck( Trust\\Article::tags( $p ), 'term_id' ), wp_list_pluck( Trust\\Article::tags( get_post( ${ id } ) ), 'term_id' ) ), Trust\\Blog::rubric( $p ) && Trust\\Blog::rubric( get_post( ${ id } ) ) && Trust\\Blog::rubric( $p )->term_id === Trust\\Blog::rubric( get_post( ${ id } ) )->term_id ); } echo wp_json_encode( $ids );` ) );
@@ -308,7 +313,7 @@ async function compare( page, o ) {
 			blog_show_likes: 0,
 			tpl_post_toc: 'Оглавление',
 			tpl_post_tags: 'Теги',
-			tpl_post_useful: 'Понравилось?',
+			tpl_post_useful: 'Как вам статья?',
 			tpl_post_related_label: 'Ещё',
 			tpl_post_related: 'Похожие статьи',
 			tpl_post_related_more: 'Весь блог',
@@ -323,7 +328,69 @@ async function compare( page, o ) {
 			JSON.stringify( [ off.tocLabel, off.foot.label, off.related ] ) );
 		await page.goto( POST, { waitUntil: 'networkidle' } );
 		const useful = await page.evaluate( () => document.querySelector( '.post-foot__question' ).textContent.trim() );
-		check( '«Тексты шаблонов» вернулись — «Статья была полезной?»', 'Статья была полезной?' === useful, useful );
+		check( '«Тексты шаблонов» вернулись — «Понравилось? Лайкни!»', 'Понравилось? Лайкни!' === useful, useful );
+
+		// ===== Правки заказчика: первый экран, низ статьи, картинки на весь экран =====
+		const layout = {};
+		for ( const width of [ 1280, 1024, 390 ] ) {
+			await page.setViewportSize( { width, height: 900 } );
+			await page.goto( POST, { waitUntil: 'networkidle' } );
+			layout[ width ] = await page.evaluate( () => {
+				const r = ( el ) => el.getBoundingClientRect();
+				const title = r( document.querySelector( '.post-hero__title' ) );
+				const artEl = document.querySelector( '.post-hero__art' );
+				const art = 'none' === getComputedStyle( artEl ).display ? null : r( artEl );
+				const meta = document.querySelector( '.post-hero__meta' );
+				const line = r( meta ).top;
+				const tags = r( document.querySelector( '.post-foot__tags' ) );
+				const like = r( document.querySelector( '.post-foot__useful' ) );
+				const author = r( document.querySelector( '.post-author-card' ) );
+				const row = r( document.querySelector( '.post-foot__row' ) );
+				return {
+					// Рисунок справа от заголовка, по центру его высоты; линия (верх «О статье») — под обоими.
+					art: art && [ art.left > title.right, Math.round( Math.abs( ( art.top + art.bottom ) / 2 - ( title.top + title.bottom ) / 2 ) ), line >= art.bottom && line >= title.bottom ],
+					lineBelowTitle: line >= title.bottom && '1px' === getComputedStyle( meta ).borderTopWidth,
+					// Низ: ключевые слова сверху; лайки и автор — в одну строку или друг под другом.
+					oneRow: author.top < like.bottom && like.top < author.bottom && author.left > like.right,
+					order: tags.bottom <= like.top && like.bottom <= author.top,
+					authorFull: Math.round( row.width - author.width ),
+				};
+			} );
+		}
+		check( 'Первый экран (1280 px): рисунок справа напротив заголовка (по центру его высоты), под ними линия, ниже «О статье» и теги; уже 1280 px — без рисунка, линия под заголовком',
+			layout[ 1280 ].art && layout[ 1280 ].art[ 0 ] && layout[ 1280 ].art[ 1 ] <= 2 && layout[ 1280 ].art[ 2 ] && null === layout[ 1024 ].art && null === layout[ 390 ].art && Object.values( layout ).every( ( l ) => l.lineBelowTitle ),
+			JSON.stringify( layout ) );
+		check( 'Под статьёй: 1280 px — «Понравилось? Лайкни!» и автор в одну строку под ключевыми словами; не помещаются (1024, 390 px) — ключевые слова, лайки, автор друг под другом; на телефоне карточка автора во всю ширину',
+			layout[ 1280 ].oneRow && ! layout[ 1024 ].oneRow && layout[ 1024 ].order && layout[ 390 ].order && 0 === layout[ 390 ].authorFull,
+			JSON.stringify( Object.fromEntries( Object.entries( layout ).map( ( [ w, l ] ) => [ w, [ l.oneRow, l.order, l.authorFull ] ] ) ) ) );
+
+		const zoom = {};
+		for ( const width of [ 1280, 390 ] ) {
+			await page.setViewportSize( { width, height: 900 } );
+			await page.goto( POST, { waitUntil: 'networkidle' } );
+			const marks = await page.evaluate( () => [ ...document.querySelectorAll( '.post-text img' ) ].map( ( i ) => [ i.closest( '.b-video' ) ? 'video' : ( i.closest( '.post-text__cover' ) ? 'cover' : 'text' ), i.classList.contains( 'is-zoomable' ), i.getAttribute( 'role' ) ] ) );
+			const opened = [];
+			for ( const sel of [ '.post-text__cover img', '#post-article .wp-block-image img' ] ) {
+				await page.locator( sel ).scrollIntoViewIfNeeded();
+				await page.locator( sel ).click();
+				await page.waitForTimeout( 400 );
+				const st = await page.evaluate( () => {
+					const d = document.querySelector( 'dialog.lightbox' );
+					const im = d && d.querySelector( '.lightbox__img' );
+					const box = im && im.getBoundingClientRect();
+					return d && [ d.open, im.getAttribute( 'src' ).split( '/' ).pop(), Math.round( box.width ), ( d.querySelector( '.lightbox__caption' ).hidden ? '' : d.querySelector( '.lightbox__caption' ).textContent.trim() ).slice( 0, 30 ) ];
+				} );
+				await page.keyboard.press( 'Escape' );
+				await page.waitForTimeout( 200 );
+				opened.push( [ ...( st || [] ), await page.evaluate( () => ! document.querySelector( 'dialog.lightbox' ).open ) ] );
+			}
+			zoom[ width ] = { marks, opened };
+		}
+		check( 'Обложка и картинка в тексте открываются на весь экран (компьютер и телефон): окно, картинка в полном размере, подпись картинки; Esc закрывает; обложка видео — не открывается (у неё своя кнопка)',
+			[ 1280, 390 ].every( ( w ) => zoom[ w ].marks.every( ( m ) => ( 'video' === m[ 0 ] ) !== m[ 1 ] ) && zoom[ w ].marks.some( ( m ) => 'cover' === m[ 0 ] && m[ 1 ] && 'button' === m[ 2 ] ) &&
+				zoom[ w ].opened.length === 2 && zoom[ w ].opened.every( ( o ) => true === o[ 0 ] && ! /-\d+x\d+\./.test( o[ 1 ] ) && o[ 2 ] > 300 && true === o[ 4 ] ) && '' === zoom[ w ].opened[ 0 ][ 3 ] && zoom[ w ].opened[ 1 ][ 3 ].startsWith( 'Строка «Disallow' ) ),
+			JSON.stringify( zoom ) );
+		await page.setViewportSize( { width: 1280, height: 900 } );
 
 		// ===== Телефон: полоса содержания =====
 		const phone = await browser.newPage( { viewport: { width: 390, height: 844 } } );
@@ -368,14 +435,6 @@ async function compare( page, o ) {
 			last( meta[ 1 ], '9 мин чтения' );
 			meta[ 2 ].querySelector( 'span' ).textContent = '1 248 просмотров';
 			meta[ 4 ].querySelector( 'span' ).textContent = '12 комментариев';
-			const photo = document.querySelector( '.post-hero__avatar' );
-			if ( 'IMG' === photo.tagName ) {
-				const span = document.createElement( 'span' );
-				span.className = 'post-hero__avatar';
-				span.textContent = 'ИФ';
-				photo.replaceWith( span );
-			}
-			document.querySelector( '.post-hero__role' ).textContent = '[Должность] · опыт в SEO — [N] лет';
 			const tags = [ 'Технический аудит', 'robots.txt', 'Индексация', 'Яндекс Вебмастер', 'Google Search Console' ];
 			document.querySelectorAll( '.post-hero__tag' ).forEach( ( a, i ) => ( a.textContent = tags[ i ] ) );
 			document.querySelectorAll( '.post-hero__tag' ).forEach( ( a ) => a.classList.toggle( 'is-raw', 'robots.txt' === a.textContent ) );
@@ -384,11 +443,13 @@ async function compare( page, o ) {
 			const cite = document.querySelector( '#post-article .is-style-author cite' );
 			cite.innerHTML = '[Имя Фамилия]<br>[Должность]';
 		} ) );
-		for ( const width of [ 1280, 768, 390 ] ) {
+		// Правка заказчика: автора в первом экране нет (в макете убран при сверке); от 1280 px рисунок —
+		// напротив заголовка (раскладка проверяется отдельно, сверка — на 768 и 390 px, где рисунка нет).
+		for ( const width of [ 768, 390 ] ) {
 			await compare( page, {
 				name: 'hero', width, theme: '.post-hero', mock: 'section[aria-labelledby="post-title"]',
 				before: fixHero,
-				mockBefore: async () => {},
+				mockBefore: ( p ) => p.evaluate( () => document.querySelector( 'section[aria-labelledby="post-title"] a[href="avtor.html"]' ).remove() ),
 			} );
 		}
 		for ( const width of [ 1280, 390 ] ) {

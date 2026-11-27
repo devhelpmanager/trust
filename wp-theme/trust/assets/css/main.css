@@ -2263,7 +2263,8 @@ html.has-modal {
 }
 
 /* Картинка в тексте открывается на весь экран (assets/js/lightbox.js) */
-.prose img.is-zoomable {
+.prose img.is-zoomable,
+.post-text img.is-zoomable {
 	cursor: zoom-in;
 }
 

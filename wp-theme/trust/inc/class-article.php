@@ -33,7 +33,8 @@ final class Article {
 	}
 
 	/**
-	 * Стили (статья, карточки «Читайте также») и скрипт (содержание, лайки, просмотры).
+	 * Стили (статья, карточки «Читайте также»), скрипт (содержание, лайки, просмотры) и просмотр
+	 * картинок на весь экран.
 	 */
 	public static function enqueue(): void {
 		if ( ! is_singular( 'post' ) ) {
@@ -41,6 +42,8 @@ final class Article {
 		}
 		wp_enqueue_style( 'trust-blog', Assets::url( 'assets/css/blog.css' ), array( 'trust-main' ), Assets::version( 'assets/css/blog.css' ) );
 		wp_enqueue_style( 'trust-post', Assets::url( 'assets/css/post.css' ), array( 'trust-blog' ), Assets::version( 'assets/css/post.css' ) );
+		// Обложка и картинки текста открываются на весь экран (правка заказчика).
+		wp_enqueue_script( 'trust-lightbox' );
 		wp_enqueue_script(
 			'trust-post',
 			Assets::url( 'assets/js/post.js' ),
