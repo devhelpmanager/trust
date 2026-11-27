@@ -73,6 +73,49 @@ html.js .b-case-results__tabs ~ .b-case-results__panel:not(.is-active) {
 	background: var(--c-lavender);
 }
 
+/* График — ссылка на весь экран (правка заказчика): значок «развернуть» при наведении и фокусе,
+   на сенсорных экранах — всегда */
+.b-case-results__open {
+	position: relative;
+	display: block;
+	border-radius: 18px;
+	color: inherit;
+	cursor: zoom-in;
+}
+
+.b-case-results__open:focus-visible {
+	outline: 3px solid var(--c-focus);
+	outline-offset: 2px;
+}
+
+.b-case-results__zoom {
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: var(--r-pill);
+	background: rgba(14, 11, 20, 0.62);
+	color: var(--c-white);
+	opacity: 0;
+	transition: opacity 0.2s;
+	pointer-events: none;
+}
+
+.b-case-results__open:hover .b-case-results__zoom,
+.b-case-results__open:focus-visible .b-case-results__zoom {
+	opacity: 1;
+}
+
+@media (hover: none) {
+	.b-case-results__zoom {
+		opacity: 1;
+	}
+}
+
 .b-case-results__caption {
 	font-size: 14px;
 	line-height: 1.5;

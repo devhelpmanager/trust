@@ -4,7 +4,7 @@
  *
  * Надзаголовок с номером раздела, H2, графики во вкладках (кнопки-«таблетки», role="tablist":
  * стрелки ← →, Home, End; один график — без вкладок; без JavaScript видны все графики) с
- * подписью под каждым, таблица «до / после»: показатель (th), было, стало (фиолетовым). Таблица в
+ * подписью под каждым; график открывается на весь экран — trust-lightbox), таблица «до / после»: показатель (th), было, стало (фиолетовым). Таблица в
  * рамке листается вбок, если не помещается (тогда её можно прокрутить и с клавиатуры).
  *
  * Переменные SCF: $block (array), $is_preview (bool), $post_id (int|string).
@@ -14,6 +14,7 @@
 
 use Trust\Blocks;
 use Trust\Case_Blocks;
+use Trust\Icons;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -56,7 +57,24 @@ Case_Blocks::head( $trust_title_id, __( 'Что получилось', 'trust' )
 				),
 				$trust_alt
 			);
+			// График открывается на весь экран (правка заказчика, как скриншоты в «Карусели кейсов»):
+			// ссылка на оригинал, assets/js/lightbox.js; без JavaScript ссылка открывает файл картинки.
+			$trust_full = $is_preview ? '' : (string) wp_get_attachment_image_url( $trust_image, 'full' );
+			if ( '' !== $trust_full ) {
+				printf(
+					'<a class="b-case-results__open" href="%s" data-trust-lightbox data-lightbox-caption="%s" aria-label="%s">',
+					esc_url( $trust_full ),
+					esc_attr( trim( (string) ( $trust_tab['label'] ?? '' ) ) ),
+					/* translators: %s: описание графика (alt). */
+					esc_attr( sprintf( __( 'Открыть на весь экран: %s', 'trust' ), $trust_alt ) )
+				);
+			}
 			echo $trust_img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image().
+			if ( '' !== $trust_full ) {
+				echo '<span class="b-case-results__zoom" aria-hidden="true">';
+				Icons::render( 'expand', array( 'size' => 20 ) );
+				echo '</span></a>';
+			}
 			?>
 			<?php if ( '' !== $trust_caption ) : ?>
 				<figcaption class="b-case-results__caption"><?php echo esc_html( $trust_caption ); ?></figcaption>

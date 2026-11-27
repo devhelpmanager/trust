@@ -57,6 +57,10 @@ async function compare( page, name, width, theme, mock ) {
 	await page.goto( CASE, { waitUntil: 'networkidle' } );
 	await settle( page );
 	await page.mouse.move( 0, 0 );
+	// В макете справа от разделов — карточка «О проекте» (шаг 5.8): колонка той же ширины.
+	if ( width >= 1024 ) {
+		await page.addStyleTag( { content: '.page-default__content { max-width: calc(100% - 396px) !important; }' } );
+	}
 	await page.evaluate( ( sel ) => {
 		const el = document.querySelector( sel );
 		for ( let prev = el.previousElementSibling; prev; prev = prev.previousElementSibling ) {
@@ -185,6 +189,24 @@ async function compare( page, name, width, theme, mock ) {
 			0 === t0.selected && '0,-1,-1,-1' === t0.tabindex && 1 === t0.visible.filter( Boolean ).length && t0.visible[ 0 ] &&
 			2 === t1.selected && t1.visible[ 2 ] && 3 === t2.selected && 3 === t2.focus && 0 === t3.selected && 0 === t4.selected && 3 === t5.selected && 3 === t5.focus && '-1,-1,-1,0' === t5.tabindex && 1 === t5.visible.filter( Boolean ).length,
 			JSON.stringify( [ t0, t1, t2, t3, t4, t5 ] ) );
+		// Выбрана «Видимость». График открывается на весь экран (правка заказчика, как скриншоты в «Карусели кейсов»).
+		const zoom = await page.evaluate( () => {
+			const a = document.querySelector( '.b-case-results__panel.is-active .b-case-results__open' );
+			return a ? [ a.hasAttribute( 'data-trust-lightbox' ), /case-visibility\.jpg$/.test( a.getAttribute( 'href' ) ), a.getAttribute( 'aria-label' ), !! a.querySelector( '.b-case-results__zoom[aria-hidden="true"] svg' ), getComputedStyle( a ).cursor ] : null;
+		} );
+		await page.locator( '.b-case-results__panel.is-active .b-case-results__open' ).click();
+		await page.waitForSelector( 'dialog.lightbox[open]', { timeout: 5000 } ).catch( () => {} );
+		const zoomBox = await page.evaluate( () => {
+			const d = document.querySelector( 'dialog.lightbox[open]' );
+			return d ? [ d.querySelector( '.lightbox__caption' ).textContent, /case-visibility\.jpg$/.test( d.querySelector( '.lightbox__img' ).src ), d.querySelector( '.lightbox__img' ).alt ] : null;
+		} );
+		await page.keyboard.press( 'Escape' );
+		await page.waitForTimeout( 200 );
+		const zoomBack = await page.evaluate( () => [ ! document.querySelector( 'dialog.lightbox[open]' ), document.activeElement.classList.contains( 'b-case-results__open' ) ] );
+		check( 'График по нажатию открывается на весь экран: оригинал картинки, подпись — название вкладки, alt; Esc закрывает, фокус возвращается (правка заказчика)',
+			JSON.stringify( zoom ) === JSON.stringify( [ true, true, 'Открыть на весь экран: График видимости сайта в поиске', true, 'zoom-in' ] ) &&
+			JSON.stringify( zoomBox ) === JSON.stringify( [ 'Видимость', true, 'График видимости сайта в поиске' ] ) && JSON.stringify( zoomBack ) === JSON.stringify( [ true, true ] ),
+			JSON.stringify( [ zoom, zoomBox, zoomBack ] ) );
 		const table = await page.evaluate( () => {
 			const wrap = document.querySelector( '.b-case-results__table' );
 			const t = wrap.querySelector( 'table' );
@@ -237,8 +259,13 @@ async function compare( page, name, width, theme, mock ) {
 				return [ Math.round( document.querySelector( '.page-default__content' ).getBoundingClientRect().width ), cols( '.b-case-obstacles__card' ), cols( '.b-case-team__card' ) ];
 			} );
 		}
-		check( 'Колонка разделов — как в макете (1280: 788 px, справа место под «О проекте»); аудит 2 → 1 колонка (уже 520 px), команда 3 / 1 (1024–1279 и уже 768 — в колонку)',
-			788 === layout[ 1280 ][ 0 ] && JSON.stringify( [ layout[ 1280 ].slice( 1 ), layout[ 1100 ].slice( 1 ), layout[ 768 ].slice( 1 ), layout[ 390 ].slice( 1 ) ] ) === JSON.stringify( [ [ 2, 3 ], [ 2, 1 ], [ 2, 3 ], [ 1, 1 ] ] ), JSON.stringify( layout ) );
+		const narrow = await page.evaluate( async () => {
+			document.querySelector( '.page-default__content' ).style.maxWidth = '600px';
+			await new Promise( ( r ) => requestAnimationFrame( r ) );
+			return new Set( [ ...document.querySelectorAll( '.b-case-team__card' ) ].map( ( e ) => Math.round( e.getBoundingClientRect().left ) ) ).size;
+		} );
+		check( 'Разделы — на всю ширину страницы до карточки «О проекте» (решение заказчика; 1280: 1184 px); аудит 2 → 1 колонка (уже 520 px), команда 3 в ряд, в блоке уже 640 px — в колонку',
+			1184 === layout[ 1280 ][ 0 ] && JSON.stringify( [ layout[ 1280 ].slice( 1 ), layout[ 1100 ].slice( 1 ), layout[ 768 ].slice( 1 ), layout[ 390 ].slice( 1 ) ] ) === JSON.stringify( [ [ 2, 3 ], [ 2, 3 ], [ 2, 3 ], [ 1, 1 ] ] ) && 1 === narrow, JSON.stringify( [ layout, narrow ] ) );
 		const wide = [];
 		let scroll = null;
 		for ( const width of [ 1440, 1024, 768, 390, 320, 280 ] ) {

@@ -20,5 +20,5 @@
 		"renderTemplate": "render.php",
 		"blockVersion": 3
 	},
-	"viewScript": "file:./view.js"
+	"viewScript": [ "file:./view.js", "trust-lightbox" ]
 }
