@@ -239,7 +239,8 @@ async function compare( page, o ) {
 			postsBlock( "array( 'title' => 'Пусто', 'source' => 'category', 'category' => 999999 )" ),
 		].join( " . \"\\n\\n\" . " ) );
 		created.push( testPage );
-		wp( 'post', 'meta', 'update', ppc, 'trust_views', '50' );
+		// Больше, чем у демо-статьи о robots.txt (1 248 просмотров с шага 5.2).
+		wp( 'post', 'meta', 'update', ppc, 'trust_views', '100000' );
 		const popular = createPage( 'популярные', postsBlock( "array( 'title' => 'Популярные', 'source' => 'popular', 'count' => 1 )" ) );
 		created.push( popular );
 		await page.goto( `${ URL }/?page_id=${ testPage }`, { waitUntil: 'networkidle' } );
@@ -300,6 +301,11 @@ async function compare( page, o ) {
 		// ===== Сверка с макетами =====
 		const fake = () => {
 			document.querySelectorAll( '.b-posts time' ).forEach( ( t ) => ( t.textContent = '[дата]' ) );
+			// Анонс статьи о robots.txt в демо — из макетов блога и статьи (шаг 5.2), в 16-blog.html — короче.
+			const excerpt = document.querySelector( '.b-posts--cards .b-posts__excerpt' );
+			if ( excerpt ) {
+				excerpt.textContent = 'Разбираем частые ошибки в robots.txt и показываем, как проверить файл самостоятельно.';
+			}
 			[ '6 мин чтения', '8 мин чтения', '7 мин чтения' ].forEach( ( v, i ) => {
 				const t = document.querySelectorAll( '.b-posts__time' )[ i ];
 				if ( t ) {

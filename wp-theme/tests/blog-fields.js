@@ -185,7 +185,7 @@ function setFeatured( id, on ) {
 		const cats = wp( 'term', 'list', 'category', '--meta_key=_trust_demo_id', '--field=slug' ).split( '\n' ).sort();
 		check( 'Демо-рубрики из макета блога (7) и «Отчёты» из «Нашего блога» на странице услуги', cats.join() === [ 'ai', 'geo-prodvizhenie', 'indeksaciya', 'kontekstnaya-reklama', 'otchety', 'sayty', 'seo', 'tehnicheskiy-audit' ].sort().join(), cats.join( ', ' ) );
 		const tags = wp( 'term', 'list', 'post_tag', '--meta_key=_trust_demo_id', '--field=name' ).split( '\n' ).sort();
-		check( 'Демо-теги из макета рубрики (6)', tags.length === 6 && tags.includes( 'robots.txt' ) && tags.includes( 'коды ответа' ), tags.join( ', ' ) );
+		check( 'Демо-теги из макета рубрики (6) и ключевые слова статьи о robots.txt (2)', tags.length === 8 && tags.includes( 'robots.txt' ) && tags.includes( 'коды ответа' ) && tags.includes( 'технический аудит' ) && tags.includes( 'Google Search Console' ), tags.join( ', ' ) );
 		const robotsDesc = wp( 'term', 'get', 'post_tag', robotsId, '--field=description' );
 		check( 'Описание тега robots.txt из макета', robotsDesc.startsWith( 'Всё о файле robots.txt' ) );
 		const res = await page.goto( `${ URL }/blog/rubrika/tehnicheskiy-audit/` );

@@ -156,8 +156,9 @@ async function head( url ) {
 			wp( 'eval', `delete_term_meta( ${ auditId }, 'trust_seo_title' ); delete_term_meta( ${ auditId }, '_trust_seo_title' );` );
 		}
 
-		h = await head( '/blog/teg/robots-txt/' );
-		check( 'Тег: «#… — блог [Бренд]»; материалов меньше порога 3 — noindex, follow', h.title === '#robots.txt — блог [Бренд]' && /noindex/.test( h.robots ) && /follow/.test( h.robots ), `${ h.title } / ${ h.robots }` );
+		// У тега Google Search Console одна статья (у robots.txt с шага 5.2 — статья и ответы).
+		h = await head( '/blog/teg/google-search-console/' );
+		check( 'Тег: «#… — блог [Бренд]»; материалов меньше порога 3 — noindex, follow', h.title === '#Google Search Console — блог [Бренд]' && /noindex/.test( h.robots ) && /follow/.test( h.robots ), `${ h.title } / ${ h.robots }` );
 		setSettings( { seo_tag_threshold: 0 } );
 		h = await head( '/blog/teg/robots-txt/' );
 		check( 'Порог 0 — тег индексируется', ! /noindex/.test( h.robots ), h.robots );

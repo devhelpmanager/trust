@@ -242,7 +242,7 @@ async function compare( page, o ) {
 		await page.goto( `${ URL }/blog/robots-txt-proverka/`, { waitUntil: 'networkidle' } );
 		const video = page.locator( '.b-video' ).first();
 		const v = await video.evaluate( ( el ) => ( {
-			inline: el.classList.contains( 'b-video--inline' ) && ! el.closest( 'section' ),
+			inline: el.classList.contains( 'b-video--inline' ) && ! el.closest( 'section.b-video-sec' ),
 			poster: [ el.querySelector( 'img.b-video__poster' ).getAttribute( 'alt' ), el.querySelector( 'img' ).getAttribute( 'loading' ), Math.round( ( el.querySelector( '.b-video__frame' ).clientWidth / el.querySelector( '.b-video__frame' ).clientHeight ) * 100 ) / 100 ],
 			play: [ el.querySelector( '.b-video__play' ).tagName, el.querySelector( '.b-video__play' ).getAttribute( 'aria-label' ), el.querySelector( '.b-video__play' ).getAttribute( 'href' ), el.querySelector( '.b-video__play' ).target ],
 			duration: [ el.querySelector( '.b-video__duration' ).textContent.replace( /\s+/g, ' ' ).trim(), el.querySelector( '.b-video__duration time' ).getAttribute( 'datetime' ) ],

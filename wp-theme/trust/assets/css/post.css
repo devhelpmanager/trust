@@ -550,25 +550,30 @@ a.post-hero__author:hover .post-hero__name {
 	text-wrap: pretty;
 }
 
-.post-text p {
+.post-text > p {
 	margin: 0 0 18px;
 	text-wrap: pretty;
 }
 
+/*
+ * Оформление текста — только у элементов самой статьи (> …): абзацы и списки внутри блоков темы
+ * («Оповещение», «Как бы поступил я», «Видео») сохраняют свои стили.
+ */
+
 /* Перед списком — ближе, перед таблицей, цитатой и видео — чуть дальше (как в макете) */
-.post-text p:has(+ :is(ul, ol)) {
+.post-text > p:has(+ :is(ul, ol)) {
 	margin-bottom: 14px;
 }
 
-.post-text p:has(+ :is(.wp-block-table, .b-video)) {
+.post-text > p:has(+ :is(.wp-block-table, .b-video)) {
 	margin-bottom: 20px;
 }
 
-.post-text p:has(+ .wp-block-quote) {
+.post-text > p:has(+ .wp-block-quote) {
 	margin-bottom: 22px;
 }
 
-.post-text h2:has(+ ol) {
+.post-text > h2:has(+ ol) {
 	margin-bottom: 22px;
 }
 
@@ -578,7 +583,7 @@ a.post-hero__author:hover .post-hero__name {
 	text-underline-offset: 4px;
 }
 
-.post-text h2 {
+.post-text > h2 {
 	margin: 52px 0 18px;
 	font-family: var(--f-display);
 	font-size: clamp(22px, 2.4vw, 28px);
@@ -589,7 +594,7 @@ a.post-hero__author:hover .post-hero__name {
 	scroll-margin-top: calc(var(--sticky-top) + 24px);
 }
 
-.post-text h3 {
+.post-text > h3 {
 	margin: 36px 0 14px;
 	font-size: 22px;
 	font-weight: 600;
@@ -598,7 +603,7 @@ a.post-hero__author:hover .post-hero__name {
 	scroll-margin-top: calc(var(--sticky-top) + 24px);
 }
 
-.post-text h4 {
+.post-text > h4 {
 	margin: 28px 0 12px;
 	font-size: 19px;
 	font-weight: 600;
@@ -608,8 +613,8 @@ a.post-hero__author:hover .post-hero__name {
 
 /* До 1024 px над текстом ещё и полоса содержания */
 @media (max-width: 1023px) {
-	.post-text h2,
-	.post-text h3 {
+	.post-text > h2,
+	.post-text > h3 {
 		scroll-margin-top: calc(var(--sticky-top) + 88px);
 	}
 }
@@ -623,13 +628,14 @@ a.post-hero__author:hover .post-hero__name {
 	font-size: 0.86em;
 }
 
-.post-text strong {
+.post-text > :is(p, ul, ol, h3, h4) strong {
 	font-weight: 600;
 	color: var(--c-text);
 }
 
 /* Маркированный список — фиолетовые точки */
-.post-text ul {
+.post-text > ul,
+.post-text li > ul {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -638,12 +644,14 @@ a.post-hero__author:hover .post-hero__name {
 	list-style: none;
 }
 
-.post-text ul > li {
+.post-text > ul > li,
+.post-text li > ul > li {
 	position: relative;
 	padding-left: 22px;
 }
 
-.post-text ul > li::before {
+.post-text > ul > li::before,
+.post-text li > ul > li::before {
 	position: absolute;
 	top: 12px;
 	left: 0;
@@ -655,7 +663,8 @@ a.post-hero__author:hover .post-hero__name {
 }
 
 /* Нумерованный список — шаги: номер в фиолетовом круге, жирное начало пункта — заголовок шага */
-.post-text ol {
+.post-text > ol,
+.post-text li > ol {
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
@@ -665,14 +674,16 @@ a.post-hero__author:hover .post-hero__name {
 	counter-reset: post-step;
 }
 
-.post-text ol > li {
+.post-text > ol > li,
+.post-text li > ol > li {
 	position: relative;
 	min-height: 34px;
 	padding-left: 50px;
 	counter-increment: post-step;
 }
 
-.post-text ol > li::before {
+.post-text > ol > li::before,
+.post-text li > ol > li::before {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -691,7 +702,7 @@ a.post-hero__author:hover .post-hero__name {
 	content: counter(post-step);
 }
 
-.post-text ol > li > strong:first-child {
+.post-text > ol > li > strong:first-child {
 	display: block;
 	margin-bottom: 4px;
 	font-size: 18px;
@@ -702,7 +713,7 @@ a.post-hero__author:hover .post-hero__name {
 }
 
 /* Картинка с подписью */
-.post-text figure {
+.post-text > figure {
 	margin: 0 0 18px;
 }
 
@@ -715,7 +726,7 @@ a.post-hero__author:hover .post-hero__name {
 	box-shadow: 0 0 0 1px var(--c-border);
 }
 
-.post-text figcaption,
+.post-text > figure > figcaption,
 .post-text .wp-element-caption {
 	margin: 12px 0 0;
 	font-size: 14px;
@@ -847,17 +858,17 @@ a.post-hero__author:hover .post-hero__name {
 }
 
 /* Цитата по умолчанию */
-.post-text blockquote {
+.post-text > blockquote {
 	margin: 0 0 24px;
 	padding-left: 20px;
 	border-left: 3px solid var(--c-violet);
 }
 
-.post-text blockquote p {
+.post-text > blockquote p {
 	margin: 0;
 }
 
-.post-text blockquote cite {
+.post-text > blockquote cite {
 	display: block;
 	margin-top: 8px;
 	font-size: 15px;
@@ -957,8 +968,7 @@ a.post-hero__author:hover .post-hero__name {
 	color: var(--c-text);
 }
 
-.post-text hr,
-.post-text .wp-block-separator {
+.post-text > hr {
 	margin: 40px 0;
 	border: 0;
 	border-top: 1px solid var(--c-border);
@@ -974,9 +984,9 @@ a.post-hero__author:hover .post-hero__name {
 	margin: 52px 0 0;
 }
 
+/* «Коротко: чек-лист» — размер как у H2 статьи (в ответе на телефоне заголовок блока мельче) */
 .post-text .b-how__title {
-	margin: 0 0 22px;
-	color: var(--c-white);
+	font-size: clamp(22px, 2.4vw, 28px);
 	scroll-margin-top: calc(var(--sticky-top) + 24px);
 }
 
@@ -984,43 +994,6 @@ a.post-hero__author:hover .post-hero__name {
 	.post-text .b-how__title {
 		scroll-margin-top: calc(var(--sticky-top) + 88px);
 	}
-}
-
-.post-text .b-how__body ol > li,
-.post-text .b-how__body ul > li {
-	min-height: 0;
-	padding-left: 36px;
-}
-
-.post-text .b-how__body ol > li::before,
-.post-text .b-how__body ul > li::before {
-	top: 1px;
-	width: 24px;
-	height: 24px;
-	border-radius: 0;
-	background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='11' fill='%234A1A99'/%3E%3Cpath d='M7.5 12.2l3 3 6-6.2' stroke='%23E2D8FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / 24px;
-	content: "";
-}
-
-.post-text .b-how__body p {
-	margin: 0 0 24px;
-}
-
-.post-text .b-how__note {
-	margin: 0;
-}
-
-.post-text .b-how__body :is(ol, ul) {
-	gap: 12px;
-	margin: 0 0 24px;
-}
-
-.post-text .b-how__body > :last-child {
-	margin-bottom: 0;
-}
-
-.post-text .b-how strong {
-	color: inherit;
 }
 
 /* ===== Под текстом: ключевые слова и «Статья была полезной?» ===== */
