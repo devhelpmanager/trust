@@ -192,6 +192,19 @@ final class Handler {
 			return self::fail( 400, 'captcha', __( 'Подтвердите, что вы не робот.', 'trust' ), array( 'captcha' => __( 'Подтвердите, что вы не робот', 'trust' ) ) );
 		}
 
+		// Форма без заявки (комментарий статьи): сохраняет своя функция описания формы.
+		if ( isset( $form['save'] ) && is_callable( $form['save'] ) ) {
+			$saved = call_user_func( $form['save'], $values, $consents, $params );
+			if ( is_wp_error( $saved ) ) {
+				$data = $saved->get_error_data();
+				return self::fail( (int) ( is_array( $data ) && isset( $data['status'] ) ? $data['status'] : 400 ), $saved->get_error_code(), $saved->get_error_message() );
+			}
+			return array(
+				'status' => 200,
+				'body'   => array( 'ok' => true ) + (array) $saved,
+			);
+		}
+
 		$lead = Leads::create( $type, $form, $values, $consents, $params );
 		if ( is_wp_error( $lead ) ) {
 			return self::fail( 500, 'server', __( 'Не удалось сохранить заявку. Попробуйте ещё раз или позвоните нам.', 'trust' ) );

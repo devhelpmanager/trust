@@ -11,6 +11,7 @@
 
 namespace Trust\Demo;
 
+use Trust\Blog;
 use Trust\Fields;
 use Trust\Settings;
 
@@ -265,10 +266,82 @@ final class Importer {
 			}
 
 			update_post_meta( $id, self::META_HASH, self::post_hash( get_post( $id ) ) );
+			// Демо-комментарии (у статьи о robots.txt — из макета статьи).
+			if ( ! empty( $item['comments'] ) ) {
+				self::import_comments( $id, $type . ':' . $key, $item['comments'], ! $demo || self::is_forced( $force, $key ) );
+			}
 			$result[ $demo ? 'updated' : 'created' ][] = $key;
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Демо-комментарии записи: одобренные, с датой «через N минут после публикации записи»,
+	 * ответы — по ключу родителя, автор — демо-автор ({user:ключ}: имя сотрудника и email
+	 * пользователя) или читатель (name, email), лайки — метаполе. Уже созданные не меняются, с
+	 * --force — обновляются. Удаляются вместе с записью.
+	 *
+	 * @param int    $post_id  Запись.
+	 * @param string $prefix   Ключ записи (тип:ключ).
+	 * @param array  $comments Комментарии: key, parent, user или name и email, text, minutes, likes.
+	 * @param bool   $update   Обновить уже созданные.
+	 */
+	private static function import_comments( int $post_id, string $prefix, array $comments, bool $update ): void {
+		$base = (int) strtotime( get_post_field( 'post_date_gmt', $post_id ) . ' UTC' );
+		$ids  = array();
+		foreach ( $comments as $comment ) {
+			$demo_id  = 'comment:' . $prefix . ':' . $comment['key'];
+			$found    = get_comments(
+				array(
+					'post_id'    => $post_id,
+					'status'     => 'all',
+					'number'     => 1,
+					'meta_key'   => self::META_ID, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- разовая команда WP-CLI.
+					'meta_value' => $demo_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- см. выше.
+				)
+			);
+			$existing = $found[0] ?? null;
+			if ( $existing && ! $update ) {
+				$ids[ $comment['key'] ] = (int) $existing->comment_ID;
+				continue;
+			}
+			$user  = isset( $comment['user'] ) ? (int) self::resolve_links( $comment['user'] ) : 0;
+			$name  = (string) ( $comment['name'] ?? '' );
+			$email = (string) ( $comment['email'] ?? '' );
+			if ( $user ) {
+				$member = \Trust\Team::for_user( $user );
+				$name   = $member ? get_the_title( $member ) : (string) get_the_author_meta( 'display_name', $user );
+				$email  = (string) get_the_author_meta( 'user_email', $user );
+			}
+			$time = min( time() - MINUTE_IN_SECONDS, $base + (int) $comment['minutes'] * MINUTE_IN_SECONDS );
+			$data = array(
+				'comment_post_ID'      => $post_id,
+				'comment_author'       => $name,
+				'comment_author_email' => $email,
+				'comment_author_url'   => '',
+				'comment_content'      => $comment['text'],
+				'comment_parent'       => isset( $comment['parent'] ) ? (int) ( $ids[ $comment['parent'] ] ?? 0 ) : 0,
+				'comment_type'         => 'comment',
+				'comment_approved'     => 1,
+				'user_id'              => $user,
+				'comment_date_gmt'     => gmdate( 'Y-m-d H:i:s', $time ),
+				'comment_date'         => get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $time ) ),
+			);
+			if ( $existing ) {
+				$data['comment_ID'] = (int) $existing->comment_ID;
+				wp_update_comment( wp_slash( $data ) );
+				$id = (int) $existing->comment_ID;
+			} else {
+				$id = (int) wp_insert_comment( wp_slash( $data ) );
+				if ( ! $id ) {
+					continue;
+				}
+				add_comment_meta( $id, self::META_ID, $demo_id );
+			}
+			update_comment_meta( $id, Blog::LIKES, (int) ( $comment['likes'] ?? 0 ) );
+			$ids[ $comment['key'] ] = $id;
+		}
 	}
 
 	/**
@@ -1000,7 +1073,8 @@ final class Importer {
 		$fields = array_filter(
 			$meta,
 			static function ( $values, $key ): bool {
-				if ( ! str_starts_with( (string) $key, 'trust_' ) ) {
+				// Счётчики просмотров и лайков меняют посетители — это не ручная правка.
+				if ( ! str_starts_with( (string) $key, 'trust_' ) || in_array( $key, array( Blog::VIEWS, Blog::LIKES ), true ) ) {
 					return false;
 				}
 				foreach ( (array) $values as $value ) {

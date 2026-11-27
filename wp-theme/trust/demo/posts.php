@@ -141,6 +141,97 @@ $trust_robots = array(
 	),
 );
 
+/**
+ * Комментарии к статье о robots.txt: читатель — «[Имя читателя]» (как в макете), ответы —
+ * автор статьи. minutes — через сколько минут после публикации (новые ветки — сверху).
+ */
+$trust_reader          = static fn( int $n ): array => array(
+	'name'  => '[Имя читателя]',
+	'email' => 'reader' . $n . '@example.com',
+);
+$trust_robots_comments = array(
+	array(
+		'key'     => 'filters',
+		'minutes' => 23 * 60,
+		'likes'   => 5,
+		'text'    => 'Если закрыть страницы фильтров в robots.txt, они сразу пропадут из поиска?',
+	) + $trust_reader( 1 ),
+	array(
+		'key'     => 'filters-answer',
+		'parent'  => 'filters',
+		'user'    => '{user:seo-senior}',
+		'minutes' => 23 * 60 + 30,
+		'likes'   => 9,
+		'text'    => 'Не сразу и не всегда. Robots.txt запрещает сканирование, но уже проиндексированные страницы могут остаться в поиске. Если страницы фильтров уже в индексе, сначала добавьте на них метатег noindex, дождитесь, пока они выпадут из поиска, и только потом закрывайте их в robots.txt.',
+	),
+	array(
+		'key'     => 'groups',
+		'minutes' => 20 * 60,
+		'likes'   => 3,
+		'text'    => 'Нужно ли писать отдельные правила для Яндекса и Google или хватит одной группы User-agent: *?',
+	) + $trust_reader( 2 ),
+	array(
+		'key'     => 'subdomain',
+		'minutes' => 19 * 60,
+		'likes'   => 2,
+		'text'    => 'У нас магазин на поддомене shop.site.ru. Правильно понимаю, что ему нужен свой robots.txt?',
+	) + $trust_reader( 3 ),
+	array(
+		'key'     => 'sitemap',
+		'minutes' => 16 * 60,
+		'likes'   => 4,
+		'text'    => 'А если в robots.txt нет строки Sitemap, карту сайта роботы всё равно найдут?',
+	) + $trust_reader( 4 ),
+	array(
+		'key'     => 'sitemap-answer',
+		'parent'  => 'sitemap',
+		'user'    => '{user:seo-senior}',
+		'minutes' => 17 * 60,
+		'likes'   => 6,
+		'text'    => 'Найдут, если добавить карту в Яндекс Вебмастер и Google Search Console. Строка Sitemap в robots.txt — дополнительная подсказка роботам, лишней она не будет.',
+	),
+	array(
+		'key'     => 'speed',
+		'minutes' => 12 * 60,
+		'likes'   => 2,
+		'text'    => 'Как быстро Яндекс замечает изменения в robots.txt?',
+	) + $trust_reader( 5 ),
+	array(
+		'key'     => 'speed-answer',
+		'parent'  => 'speed',
+		'user'    => '{user:seo-senior}',
+		'minutes' => 13 * 60,
+		'likes'   => 3,
+		'text'    => 'Обычно в течение суток: робот регулярно перечитывает файл. Какую версию он получил, видно в Вебмастере, в разделе «Анализ robots.txt».',
+	),
+	array(
+		'key'     => 'thanks',
+		'minutes' => 9 * 60,
+		'likes'   => 7,
+		'text'    => 'Спасибо за чек-лист! Нашли у себя закрытую папку со стилями после смены темы сайта.',
+	) + $trust_reader( 6 ),
+	array(
+		'key'     => 'params',
+		'minutes' => 6 * 60,
+		'likes'   => 1,
+		'text'    => 'Disallow: /*?* — нормальная практика, чтобы закрыть все адреса с параметрами?',
+	) + $trust_reader( 7 ),
+	array(
+		'key'     => 'params-answer',
+		'parent'  => 'params',
+		'user'    => '{user:seo-senior}',
+		'minutes' => 7 * 60,
+		'likes'   => 5,
+		'text'    => 'Осторожно: так закроются и нужные страницы — например, пагинация или фильтры, которые вы продвигаете. Лучше закрывать конкретные параметры, а для Яндекса использовать Clean-param.',
+	),
+	array(
+		'key'     => 'pdf',
+		'minutes' => 3 * 60,
+		'likes'   => 0,
+		'text'    => 'Можно ли закрыть от поиска PDF-файлы через robots.txt?',
+	) + $trust_reader( 8 ),
+);
+
 return array(
 	array(
 		'key'       => 'robots',
@@ -161,6 +252,8 @@ return array(
 		'content'   => '',
 		// Полный текст статьи из макета seo-blog/statya.html (шаг 5.2).
 		'blocks'    => $trust_robots,
+		// Комментарии (шаг 5.3): первые три ветки — из макета, ещё 8 комментариев — «Показать ещё».
+		'comments'  => $trust_robots_comments,
 	),
 	array(
 		'key'       => 'indexing',

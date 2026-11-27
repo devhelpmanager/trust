@@ -58,12 +58,26 @@ final class Article {
 			'trust-post',
 			'window.trustPost = ' . wp_json_encode(
 				array(
-					'id'   => get_queried_object_id(),
-					'rest' => esc_url_raw( rest_url( 'trust/v1/posts/' ) ),
+					'id'       => get_queried_object_id(),
+					'rest'     => esc_url_raw( rest_url( 'trust/v1/posts/' ) ),
+					'comments' => esc_url_raw( rest_url( 'trust/v1/comments/' ) ),
 				)
 			) . ';',
 			'before'
 		);
+		// Комментарии: отправка, ответы, «Показать ещё» (общий механизм форм — trust-forms).
+		if ( comments_open() || get_comments_number() ) {
+			wp_enqueue_script(
+				'trust-comments',
+				Assets::url( 'assets/js/comments.js' ),
+				array( 'trust-forms' ),
+				Assets::version( 'assets/js/comments.js' ),
+				array(
+					'strategy'  => 'defer',
+					'in_footer' => true,
+				)
+			);
+		}
 	}
 
 	/**

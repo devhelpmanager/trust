@@ -209,7 +209,12 @@
 			state.set( form, s );
 		}
 		if ( ! s.ready ) {
-			s.ready = fetch( `${ config.endpoint }token`, { cache: 'no-store', credentials: 'same-origin' } )
+			s.ready = fetch( `${ config.endpoint }token`, {
+				cache: 'no-store',
+				credentials: 'same-origin',
+				// Токен и nonce — для того же пользователя, от имени которого уйдёт форма.
+				headers: form.dataset.restNonce ? { 'X-WP-Nonce': form.dataset.restNonce } : {},
+			} )
 				.then( ( response ) => ( response.ok ? response.json() : Promise.reject( new Error( 'token' ) ) ) )
 				.then( ( data ) => {
 					hidden( form, '_trust_token' ).value = data.token;
@@ -247,6 +252,8 @@
 				method: 'POST',
 				body: data,
 				credentials: 'same-origin',
+				// Вошедший пользователь (комментарий модератора): ключ REST WordPress из разметки формы.
+				headers: form.dataset.restNonce ? { 'X-WP-Nonce': form.dataset.restNonce } : {},
 			} );
 			return await response.json();
 		} catch ( e ) {

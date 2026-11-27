@@ -34,6 +34,7 @@ final class Theme {
 		Answers_List::register();
 		Pagination::register();
 		Post_Stats::register();
+		Comments::register();
 		Article::register();
 		Team::register();
 		Vacancies::register();

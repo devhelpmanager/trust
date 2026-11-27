@@ -44,6 +44,10 @@ $trust_recipients = array(
 	),
 );
 foreach ( Forms::types() as $trust_type => $trust_form ) {
+	// Формы без заявок (комментарии) писем по этим настройкам не шлют.
+	if ( false === ( $trust_form['lead'] ?? true ) ) {
+		continue;
+	}
 	$trust_recipients[] = array(
 		'name'         => 'forms_emails_' . $trust_type,
 		/* translators: %s: название формы. */

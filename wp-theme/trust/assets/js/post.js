@@ -5,7 +5,8 @@
  * (метка в localStorage), иначе GET — свежие числа (страница могла прийти из кеша).
  * «Нравится»: нажатие ставит или снимает лайк (POST …/like); лайкнутые статьи браузер помнит
  * в localStorage, сервер — в cookie trust_likes. Все кнопки «Нравится» и счётчик в шапке
- * статьи обновляются вместе.
+ * статьи обновляются вместе. Лайки комментариев — так же (POST trust/v1/comments/{id}/like,
+ * cookie trust_comment_likes); свежие числа приходят вместе с числами статьи.
  * Содержание: текущий раздел (aria-current), «Прочитано N %» и полоса прогресса; до 1024 px —
  * полоса вверху экрана, раскрывается по нажатию, закрывается по выбору пункта и Esc.
  *
@@ -115,6 +116,14 @@
 			return;
 		}
 		setCount( 'views', stats.views );
+		if ( stats.comments && 'object' === typeof stats.comments ) {
+			document.querySelectorAll( '[data-comment-like]' ).forEach( ( button ) => {
+				const value = stats.comments[ button.dataset.commentLike ];
+				if ( 'number' === typeof value && ! commentBusy.has( Number( button.dataset.commentLike ) ) ) {
+					button.querySelector( '[data-comment-likes]' ).textContent = number( value );
+				}
+			} );
+		}
 		if ( 'number' === typeof stats.likes ) {
 			likes = stats.likes;
 			setCount( 'likes', likes );
@@ -160,6 +169,76 @@
 				.then( () => ( busy = false ) );
 		} )
 	);
+
+	// ---------- Лайки комментариев ----------
+
+	const COMMENT_LIKES_KEY = 'trust_comment_likes';
+	const commentButtons = document.querySelectorAll( '[data-comment-like]' );
+
+	function cookieIds( name ) {
+		const match = document.cookie.match( new RegExp( '(?:^|;\\s*)' + name + '=([^;]*)' ) );
+		return match ? decodeURIComponent( match[ 1 ] ).split( '.' ).map( Number ).filter( Boolean ) : [];
+	}
+
+	function storedIds( key ) {
+		const ids = store.get( key, [] );
+		return Array.isArray( ids ) ? ids : [];
+	}
+
+	const likedComments = new Set( [ ...cookieIds( 'trust_comment_likes' ), ...storedIds( COMMENT_LIKES_KEY ) ] );
+	const commentBusy = new Set();
+
+	function showComment( button, likesCount ) {
+		const cid = Number( button.dataset.commentLike );
+		button.setAttribute( 'aria-pressed', likedComments.has( cid ) ? 'true' : 'false' );
+		if ( 'number' === typeof likesCount ) {
+			button.querySelector( '[data-comment-likes]' ).textContent = number( likesCount );
+		}
+	}
+
+	function rememberComments() {
+		store.set( COMMENT_LIKES_KEY, [ ...likedComments ].slice( -200 ) );
+	}
+
+	commentButtons.forEach( ( button ) => {
+		showComment( button );
+		button.addEventListener( 'click', () => {
+			const cid = Number( button.dataset.commentLike );
+			if ( commentBusy.has( cid ) ) {
+				return;
+			}
+			commentBusy.add( cid );
+			const counter = button.querySelector( '[data-comment-likes]' );
+			const before = parseInt( counter.textContent.replace( /\D+/g, '' ), 10 ) || 0;
+			const want = ! likedComments.has( cid );
+			if ( want ) {
+				likedComments.add( cid );
+			} else {
+				likedComments.delete( cid );
+			}
+			showComment( button, Math.max( 0, before + ( want ? 1 : -1 ) ) );
+			rememberComments();
+			window
+				.fetch( data.comments + cid + '/like', {
+					method: 'POST',
+					credentials: 'same-origin',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify( { liked: want } ),
+				} )
+				.then( ( response ) => ( response.ok ? response.json() : Promise.reject( response.status ) ) )
+				.then( ( result ) => showComment( button, result.likes ) )
+				.catch( () => {
+					if ( want ) {
+						likedComments.delete( cid );
+					} else {
+						likedComments.add( cid );
+					}
+					rememberComments();
+					showComment( button, before );
+				} )
+				.then( () => commentBusy.delete( cid ) );
+		} );
+	} );
 
 	// ---------- Просмотры (и свежие числа) ----------
 

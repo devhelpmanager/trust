@@ -6,9 +6,10 @@
  * Автор статьи — под текстом (template-parts/post/foot.php).
  *
  * Просмотры и лайки скрываются в «Настройках сайта → Блог»; их числа обновляет assets/js/post.js.
- * Тег — имя файла или адрес (с точкой, без пробелов: «robots.txt») — не переводится в заглавные.
+ * Число комментариев — ссылка на них (если раздел комментариев есть).
  *
- * Аргументы get_template_part(): post (WP_Post), tags (WP_Term[]).
+ * Аргументы: post (WP_Post), tags (WP_Term[]), comments (число комментариев или null).
+ * Тег — имя файла или адрес (с точкой, без пробелов: «robots.txt») — не переводится в заглавные.
  *
  * @package Trust
  */
@@ -64,13 +65,17 @@ $trust_art  = TRUST_DIR . '/assets/art/post-hero.svg';
 				$trust_counts = array(
 					'views'    => Blog::show_views() ? array( 'eye', Blog::views( $trust_post ) ) : null,
 					'likes'    => Blog::show_likes() ? array( 'heart', Blog::likes( $trust_post ) ) : null,
-					'comments' => array( 'chat', (int) get_comments_number( $trust_post ) ),
+					'comments' => array( 'chat', (int) ( $args['comments'] ?? get_comments_number( $trust_post ) ) ),
 				);
 				foreach ( array_filter( $trust_counts ) as $trust_kind => list( $trust_name, $trust_value ) ) :
 					?>
 					<li class="post-hero__count post-hero__count--<?php echo esc_attr( $trust_kind ); ?>">
 						<?php echo $trust_icon( $trust_name ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG из Icons::svg(). ?>
-						<span data-post-count="<?php echo esc_attr( $trust_kind ); ?>" data-forms="<?php echo esc_attr( implode( '|', Article::FORMS[ $trust_kind ] ) ); ?>"><?php echo esc_html( Article::count( $trust_value, $trust_kind ) ); ?></span>
+						<?php if ( 'comments' === $trust_kind && null !== ( $args['comments'] ?? null ) ) : ?>
+							<a class="post-hero__link" href="#comments"><?php echo esc_html( Article::count( $trust_value, $trust_kind ) ); ?></a>
+						<?php else : ?>
+							<span data-post-count="<?php echo esc_attr( $trust_kind ); ?>" data-forms="<?php echo esc_attr( implode( '|', Article::FORMS[ $trust_kind ] ) ); ?>"><?php echo esc_html( Article::count( $trust_value, $trust_kind ) ); ?></span>
+						<?php endif; ?>
 					</li>
 				<?php endforeach; ?>
 			</ul>

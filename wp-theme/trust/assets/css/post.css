@@ -126,6 +126,19 @@
 	flex: none;
 }
 
+/* Число комментариев — ссылка на них */
+.post-hero__link {
+	color: inherit;
+	text-decoration: underline;
+	text-decoration-color: rgba(255, 255, 255, 0.35);
+	text-underline-offset: 4px;
+}
+
+.post-hero__link:hover {
+	color: var(--c-white);
+	text-decoration-color: var(--c-white);
+}
+
 /* Лайк поставлен — сердце залито */
 .post-hero__count--likes.is-liked .post-hero__icon {
 	fill: #C4B5FD;
@@ -322,6 +335,30 @@
 .post-side__actions {
 	display: flex;
 	gap: 10px;
+}
+
+/* Ссылка на комментарии рядом с «Нравится» */
+.post-side__comments {
+	display: inline-flex;
+	flex: 1 1 0;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	box-sizing: border-box;
+	min-height: 48px;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-btn);
+	background: var(--c-white);
+	color: var(--c-text-2);
+	font-size: 15px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: background 0.2s;
+}
+
+.post-side__comments:hover {
+	background: var(--c-lavender);
+	color: var(--c-text-2);
 }
 
 /* «Нравится»: контурная, нажатая — залитая */
@@ -1084,6 +1121,462 @@ a.post-author-card:hover .post-author-card__name {
 	font-size: 14px;
 	line-height: 1.4;
 	color: #D4D2F0;
+}
+
+/* ===== Комментарии (comments.php) ===== */
+
+.post-comments {
+	margin-top: 64px;
+	overflow-wrap: anywhere;
+	hyphens: auto;
+}
+
+.post-comments__title {
+	display: flex;
+	align-items: baseline;
+	gap: 12px;
+	margin: 0 0 24px;
+	font-family: var(--f-display);
+	font-size: clamp(22px, 2.4vw, 28px);
+	font-weight: 600;
+	line-height: 1.25;
+	letter-spacing: -0.01em;
+	color: var(--c-text);
+	scroll-margin-top: calc(var(--sticky-top) + 24px);
+}
+
+@media (max-width: 1023px) {
+	.post-comments__title {
+		scroll-margin-top: calc(var(--sticky-top) + 88px);
+	}
+}
+
+.post-comments__count {
+	font-family: var(--f-text);
+	font-size: 18px;
+	font-weight: 500;
+	letter-spacing: 0;
+	color: var(--c-muted-2);
+}
+
+.post-comments__closed {
+	margin: 0;
+	font-size: 15px;
+	color: var(--c-muted);
+}
+
+/* Форма: лавандовая карточка; имя и email — в строку, если хватает места */
+.comment-form {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	padding: clamp(18px, 3vw, 24px);
+	border: 1px solid var(--c-border);
+	border-radius: 20px;
+	background: var(--c-lavender);
+	container-type: inline-size;
+}
+
+.comment-form__row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 14px;
+}
+
+@container (min-width: 520px) {
+	.comment-form__row {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.comment-form .field__input {
+	box-sizing: border-box;
+	min-height: 48px;
+	padding: 0 14px;
+	border-radius: 12px;
+}
+
+.comment-form .comment-form__text {
+	min-height: 120px;
+	padding: 12px 14px;
+	line-height: 1.5;
+	resize: vertical;
+}
+
+.comment-form .field__optional {
+	font-weight: 400;
+	color: var(--c-muted);
+}
+
+.comment-form .check {
+	font-size: 14px;
+}
+
+.comment-form__foot {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.comment-form__note {
+	font-size: 13px;
+	line-height: 1.5;
+	color: var(--c-muted);
+}
+
+.comment-form__submit {
+	display: inline-flex;
+	align-items: center;
+	min-height: 48px;
+	padding: 0 24px;
+	border: 0;
+	border-radius: var(--r-btn);
+	background: var(--c-violet);
+	color: var(--c-white);
+	font-family: inherit;
+	font-size: 15px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.2s, opacity 0.2s;
+}
+
+.comment-form__submit:hover {
+	background: var(--c-violet-dark);
+}
+
+/* Пока комментарий пустой — кнопка неактивна (как в макете) */
+.comment-form__submit:disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+
+.comment-form__submit:disabled:hover {
+	background: var(--c-violet);
+}
+
+.comment-form__submit[aria-busy="true"] {
+	opacity: 0.7;
+	cursor: progress;
+}
+
+/* «Спасибо! Комментарий появится после проверки модератором.» */
+.comment-sent {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 14px;
+	padding: 20px 24px;
+	border-radius: 20px;
+	background: var(--c-ok-bg);
+	color: #0E5A31;
+}
+
+.comment-sent:focus {
+	outline: none;
+}
+
+.comment-sent__icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: var(--r-pill);
+	background: var(--c-ok);
+	color: var(--c-white);
+}
+
+.comment-sent__text {
+	flex: 1 1 240px;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.5;
+}
+
+.comment-sent__again {
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	padding: 0 16px;
+	box-sizing: border-box;
+	border: 1px solid var(--c-ok);
+	border-radius: 10px;
+	color: #0E5A31;
+	font-size: 14px;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.comment-sent__again:hover {
+	background: rgba(23, 145, 79, 0.08);
+	color: #0E5A31;
+}
+
+/* Список: аватар-инициалы, имя, дата, текст, «Нравится», «Ответить»; ответы — со сдвигом и линией */
+.comments {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	margin: 32px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+/* «Показать ещё»: со скриптом ветки после первых N спрятаны (без скрипта видны все) */
+html.js .comments > .is-more {
+	display: none;
+}
+
+.comment {
+	display: flex;
+	gap: 14px;
+	scroll-margin-top: calc(var(--sticky-top) + 88px);
+}
+
+.comment__avatar {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: var(--r-pill);
+	background: var(--avatar-bg, var(--c-lavender-3));
+	color: var(--avatar-fg, var(--c-violet-dark));
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.comment--reply .comment__avatar {
+	width: 40px;
+	height: 40px;
+	font-size: 14px;
+}
+
+.comment__body {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.comment__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px 12px;
+}
+
+.comment__author {
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--c-text);
+}
+
+.comment__badge {
+	padding: 3px 8px;
+	border-radius: var(--r-pill);
+	background: var(--c-violet);
+	color: var(--c-white);
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.comment__date {
+	font-size: 14px;
+	color: var(--c-muted-2);
+}
+
+.comment__text {
+	margin: 6px 0 4px;
+	font-size: 17px;
+	line-height: 1.6;
+	color: var(--c-text-2);
+}
+
+.comment__text p {
+	margin: 0;
+}
+
+.comment__text p + p {
+	margin-top: 8px;
+}
+
+.comment__text a {
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.comment__actions {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	margin-left: -10px;
+}
+
+.comment__like,
+.comment__reply {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	min-height: 44px;
+	padding: 0 10px;
+	border: 0;
+	border-radius: 10px;
+	background: transparent;
+	font-family: inherit;
+	font-size: 14px;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.comment__like {
+	color: var(--c-muted);
+}
+
+.comment__reply {
+	color: var(--c-violet-dark);
+	font-weight: 600;
+}
+
+.comment__like:hover,
+.comment__reply:hover {
+	background: var(--c-lavender);
+}
+
+.comment__like[aria-pressed="true"] {
+	color: var(--c-violet-dark);
+	font-weight: 600;
+}
+
+.comment__like[aria-pressed="true"] .comment__like-icon {
+	fill: var(--c-violet);
+}
+
+/* «Ответить» работает только со скриптом */
+html:not(.js) .comment__reply {
+	display: none;
+}
+
+.comment__replies {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	margin: 18px 0 0;
+	padding: 0 0 0 18px;
+	border-left: 2px solid var(--c-divider);
+	list-style: none;
+}
+
+/* Форма ответа — под комментарием, без карточки (как в макете) */
+.comment-reply {
+	margin-top: 8px;
+}
+
+.comment-form--reply {
+	gap: 10px;
+	padding: 0;
+	border: 0;
+	background: none;
+}
+
+.comment-form--reply .comment-form__text {
+	min-height: 96px;
+}
+
+.comment-form__buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.comment-form__submit--sm {
+	min-height: 44px;
+	padding: 0 18px;
+	border-radius: 10px;
+	font-size: 14px;
+}
+
+.comment-form__cancel {
+	min-height: 44px;
+	padding: 0 18px;
+	border: 1px solid var(--c-border);
+	border-radius: 10px;
+	background: var(--c-white);
+	color: var(--c-text-2);
+	font-family: inherit;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.comment-form__cancel:hover {
+	background: var(--c-lavender);
+}
+
+.comment-reply-sent {
+	margin: 4px 0 0;
+	font-size: 14px;
+	color: #0F6B3A;
+}
+
+.comment-reply-sent:focus {
+	outline: none;
+}
+
+.comments__more {
+	width: 100%;
+	min-height: 52px;
+	margin-top: 32px;
+	border: 1.5px solid var(--c-violet);
+	border-radius: var(--r-btn);
+	background: var(--c-white);
+	color: var(--c-violet-dark);
+	font-family: inherit;
+	font-size: 15px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.comments__more:hover {
+	background: var(--c-lavender-2);
+}
+
+html:not(.js) .comments__more {
+	display: none;
+}
+
+.comment__like:focus-visible,
+.comment__reply:focus-visible,
+.comments__more:focus-visible,
+.comment-form__submit:focus-visible,
+.comment-form__cancel:focus-visible,
+.comment-sent__again:focus-visible,
+.post-side__comments:focus-visible {
+	outline: 3px solid var(--c-focus);
+	outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+	.comment {
+		gap: 10px;
+	}
+
+	.comment__replies {
+		padding-left: 10px;
+	}
+
+	.comment__avatar,
+	.comment--reply .comment__avatar {
+		width: 36px;
+		height: 36px;
+		font-size: 13px;
+	}
 }
 
 /* ===== «Читайте также» ===== */

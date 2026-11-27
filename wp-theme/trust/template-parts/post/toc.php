@@ -3,16 +3,19 @@
  * Содержание статьи (макет seo-blog/statya.html) — пункты из H2 текста (Trust\Article::content()).
  *
  * Вид side: колонка слева (от 1024 px), закреплена при прокрутке — «Содержание», «Прочитано
- * N %», полоса прогресса, пункты с номерами 01, 02…, под ними кнопка «Нравится».
+ * N %», полоса прогресса, пункты с номерами 01, 02…, под ними кнопка «Нравится» и ссылка на
+ * комментарии с их числом.
  * Вид bar: до 1024 px — полоса вверху экрана: «Содержание», текущий раздел, N %, стрелка;
  * по нажатию раскрывается список пунктов. Текущий пункт (aria-current) и проценты ставит
  * assets/js/post.js.
  *
- * Аргументы get_template_part(): post (WP_Post), toc (array{id, title}[]), view (side | bar).
+ * Аргументы get_template_part(): post (WP_Post), toc (array{id, title}[]), view (side | bar),
+ * comments (число комментариев; null — раздела комментариев нет).
  *
  * @package Trust
  */
 
+use Trust\Article;
 use Trust\Icons;
 use Trust\Template_Texts;
 
@@ -48,8 +51,9 @@ if ( 'side' === $trust_view ) :
 			'class' => 'post-like--wide',
 		)
 	);
-	$trust_like = trim( (string) ob_get_clean() );
-	if ( ! $trust_toc && '' === $trust_like ) {
+	$trust_like     = trim( (string) ob_get_clean() );
+	$trust_comments = $args['comments'] ?? null;
+	if ( ! $trust_toc && '' === $trust_like && null === $trust_comments ) {
 		return;
 	}
 	?>
@@ -65,9 +69,23 @@ if ( 'side' === $trust_view ) :
 				<?php $trust_list(); ?>
 			</nav>
 		<?php endif; ?>
-		<?php if ( '' !== $trust_like ) : ?>
+		<?php if ( '' !== $trust_like || null !== $trust_comments ) : ?>
 			<div class="post-side__actions">
 				<?php echo $trust_like; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- разметка template-parts/post/like.php. ?>
+				<?php if ( null !== $trust_comments ) : ?>
+					<a class="post-side__comments" href="#comments">
+						<?php
+						Icons::render(
+							'chat',
+							array(
+								'size'   => 18,
+								'stroke' => 'var(--c-violet)',
+							)
+						);
+						?>
+						<span class="screen-reader-text"><?php esc_html_e( 'Комментарии:', 'trust' ); ?> </span><?php echo esc_html( Article::number( (int) $trust_comments ) ); ?>
+					</a>
+				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 	</aside>

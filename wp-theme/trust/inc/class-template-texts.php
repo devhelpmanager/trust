@@ -32,6 +32,11 @@ final class Template_Texts {
 			'post_related_label' => __( 'Блог', 'trust' ),
 			'post_related'       => __( 'Читайте также', 'trust' ),
 			'post_related_more'  => __( 'Все статьи', 'trust' ),
+			// Комментарии статьи (шаг 5.3).
+			'post_comments'      => __( 'Комментарии', 'trust' ),
+			'comment_note'       => __( 'Комментарий появится после проверки модератором.', 'trust' ),
+			'comment_sent'       => __( 'Спасибо! Комментарий появится после проверки модератором.', 'trust' ),
+			'comment_reply_sent' => __( 'Ответ отправлен на модерацию.', 'trust' ),
 		);
 	}
 

@@ -180,15 +180,16 @@ async function compare( page, o ) {
 			JSON.stringify( [ s.heroAuthor, s.heroBg, s.author, member ] ) );
 		check( '«О статье»: дата по-русски (datetime), «N мин чтения», «1 248 просмотров», «86 лайков», «N комментариев» (склонения)',
 			'О статье' === s.metaLabel && /^\d{1,2} [а-я]+ \d{4}$/.test( s.meta[ 0 ] ) && /^\d{4}-\d\d-\d\d$/.test( s.datetime ) && /^\d+ мин чтения$/.test( s.meta[ 1 ] ) &&
-			'1 248 просмотров' === s.meta[ 2 ].replace( / /g, ' ' ) && '86 лайков' === s.meta[ 3 ].replace( / /g, ' ' ) && /^0 комментариев$/.test( s.meta[ 4 ].replace( / /g, ' ' ) ),
+			'1 248 просмотров' === s.meta[ 2 ].replace( / /g, ' ' ) && '86 лайков' === s.meta[ 3 ].replace( / /g, ' ' ) && '12 комментариев' === s.meta[ 4 ].replace( / /g, ' ' ),
 			JSON.stringify( s.meta ) );
 		const tagNames = s.heroTags.map( ( t ) => t[ 0 ] ).sort();
 		check( 'Ключевые слова в первом экране: 5 тегов ссылками /blog/teg/…, заглавными; «robots.txt» — как написано',
 			'Ключевые слова' === s.heroTagsLabel && 5 === s.heroTags.length && JSON.stringify( tagNames ) === JSON.stringify( [ 'Google Search Console', 'robots.txt', 'Вебмастер', 'индексация', 'технический аудит' ].sort() ) &&
 			s.heroTags.every( ( t ) => t[ 2 ].startsWith( '/blog/teg/' ) && ( 'robots.txt' === t[ 0 ] ? 'none' === t[ 1 ] : 'uppercase' === t[ 1 ] ) ),
 			JSON.stringify( s.heroTags ) );
-		check( 'Содержание: «Содержание», 7 пунктов 01–07 — H2 текста по порядку (и «Коротко: чек-лист» блока), якоря транслитом',
-			'Содержание' === s.tocLabel && 7 === s.toc.length && s.toc.every( ( t, i ) => t[ 0 ] === String( i + 1 ).padStart( 2, '0' ) && t[ 1 ] === H2[ i ] && t[ 2 ] === s.h2[ i ][ 1 ] ) &&
+		check( 'Содержание: «Содержание», 7 пунктов 01–07 — H2 текста по порядку (и «Коротко: чек-лист» блока), якоря транслитом; 08 — «Комментарии · 12»',
+			'Содержание' === s.tocLabel && 8 === s.toc.length && s.toc.slice( 0, 7 ).every( ( t, i ) => t[ 0 ] === String( i + 1 ).padStart( 2, '0' ) && t[ 1 ] === H2[ i ] && t[ 2 ] === s.h2[ i ][ 1 ] ) &&
+			JSON.stringify( s.toc[ 7 ] ) === JSON.stringify( [ '08', 'Комментарии · 12', 'comments' ] ) &&
 			JSON.stringify( s.h2.map( ( h ) => h[ 0 ] ) ) === JSON.stringify( H2 ) && 'chto-takoe-robots-txt-i-gde-on-lezhit' === s.h2[ 0 ][ 1 ] && 'korotko-chek-list' === s.h2[ 6 ][ 1 ],
 			JSON.stringify( s.toc ) );
 		check( 'Текст: обложка с alt (загружается сразу, fetchpriority=high), анонс — вводный абзац',
@@ -418,7 +419,7 @@ async function compare( page, o ) {
 		await phone.close();
 		check( 'Телефон: колонки содержания нет, вверху — полоса «Содержание»: закреплена под шапкой, текущий раздел и %; раскрывается списком (текущий отмечен)',
 			'none' === m0[ 0 ] && 'block' === m0[ 1 ] && 'false' === m0[ 2 ] && true === m0[ 3 ] && 0 === m1p[ 0 ] && 'Основные директивы' === m1p[ 1 ] && m1p[ 2 ] > 0 &&
-			'true' === m2[ 0 ] && false === m2[ 1 ] && 7 === m2[ 2 ] && '#osnovnye-direktivy' === m2[ 3 ],
+			'true' === m2[ 0 ] && false === m2[ 1 ] && 8 === m2[ 2 ] && '#osnovnye-direktivy' === m2[ 3 ],
 			JSON.stringify( [ m0, m1p, m2 ] ) );
 		check( 'Телефон: выбор пункта закрывает список, раздел — под полосой; Esc закрывает список и возвращает фокус на кнопку',
 			true === m3p[ 0 ] && m3p[ 1 ] && 'Частые ошибки' === m3p[ 2 ] && true === m4[ 0 ] && m4[ 1 ], JSON.stringify( [ m3p, m4 ] ) );
@@ -434,7 +435,7 @@ async function compare( page, o ) {
 			};
 			last( meta[ 1 ], '9 мин чтения' );
 			meta[ 2 ].querySelector( 'span' ).textContent = '1 248 просмотров';
-			meta[ 4 ].querySelector( 'span' ).textContent = '12 комментариев';
+			meta[ 4 ].querySelector( 'span, a' ).textContent = '12 комментариев';
 			const tags = [ 'Технический аудит', 'robots.txt', 'Индексация', 'Яндекс Вебмастер', 'Google Search Console' ];
 			document.querySelectorAll( '.post-hero__tag' ).forEach( ( a, i ) => ( a.textContent = tags[ i ] ) );
 			document.querySelectorAll( '.post-hero__tag' ).forEach( ( a ) => a.classList.toggle( 'is-raw', 'robots.txt' === a.textContent ) );

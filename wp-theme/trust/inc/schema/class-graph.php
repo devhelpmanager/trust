@@ -10,6 +10,7 @@ namespace Trust\Schema;
 use Trust\Article;
 use Trust\Blog;
 use Trust\Breadcrumbs;
+use Trust\Comments;
 use Trust\Contacts;
 use Trust\Page_Types;
 use Trust\Seo;
@@ -488,6 +489,7 @@ final class Graph {
 				'articleSection'   => $rubric ? $rubric->name : null,
 				'keywords'         => implode( ', ', wp_list_pluck( Article::tags( $post ), 'name' ) ),
 				'wordCount'        => (int) preg_match_all( '/[\p{L}\p{N}]+/u', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) ),
+				'commentCount'     => Comments::count( Comments::tree( $post ) ),
 				'inLanguage'       => self::language(),
 			);
 		}

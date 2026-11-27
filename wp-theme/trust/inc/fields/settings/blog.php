@@ -7,6 +7,7 @@
  */
 
 use Trust\Blog;
+use Trust\Comments;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -56,8 +57,18 @@ return array(
 			'type'          => 'true_false',
 			'ui'            => 1,
 			'default_value' => 1,
-			'instructions'  => __( 'Число лайков в карточках и на странице статьи, кнопка «Нравится».', 'trust' ),
+			'instructions'  => __( 'Число лайков в карточках и на странице статьи, кнопка «Нравится» у статьи и комментариев.', 'trust' ),
 			'wrapper'       => array( 'width' => 33 ),
+		),
+		array(
+			'name'         => 'blog_comments_shown',
+			'label'        => __( 'Комментариев сразу', 'trust' ),
+			'type'         => 'number',
+			'min'          => 1,
+			'max'          => 50,
+			'placeholder'  => (string) Comments::SHOWN,
+			'instructions' => __( 'Сколько первых комментариев (с ответами на них) видно под статьёй; остальные — по кнопке «Показать ещё». Пусто — 3.', 'trust' ),
+			'wrapper'      => array( 'width' => 33 ),
 		),
 	),
 );

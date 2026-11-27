@@ -30,6 +30,8 @@ final class Forms {
 	 * Тип поля: text, textarea, tel, email, url, contact (телефон или email), choice, checkbox,
 	 * choices (несколько вариантов: приходят подписи отмеченных, до 12; options — если список задан).
 	 * Правила: required, min, max (длина), options (для choice). error — сообщение, как в макетах.
+	 * Форма без заявки (комментарий статьи): lead => false и save — функция ( значения, согласия,
+	 * все поля ), возвращает данные ответа или WP_Error; такие формы не попадают в «Заявки».
 	 *
 	 * @return array<string, array{label: string, captcha: bool, fields: array, consents: array, name: string, contact: string[]}>
 	 */

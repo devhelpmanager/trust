@@ -420,7 +420,7 @@ final class Leads {
 		} else {
 			echo '<select name="trust_form"><option value="">' . esc_html__( 'Все формы', 'trust' ) . '</option>';
 			foreach ( Forms::types() as $key => $type ) {
-				if ( ! isset( $sections[ $key ] ) ) {
+				if ( ! isset( $sections[ $key ] ) && false !== ( $type['lead'] ?? true ) ) {
 					printf( '<option value="%s"%s>%s</option>', esc_attr( $key ), selected( $form, $key, false ), esc_html( $type['label'] ) );
 				}
 			}

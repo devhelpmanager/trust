@@ -61,5 +61,9 @@ return array(
 		$trust_text( 'post_related_label', __( 'Надзаголовок «Читайте также»', 'trust' ) ),
 		$trust_text( 'post_related', __( 'Заголовок «Читайте также»', 'trust' ) ),
 		$trust_text( 'post_related_more', __( 'Кнопка «Читайте также»', 'trust' ) ),
+		$trust_text( 'post_comments', __( 'Заголовок комментариев', 'trust' ) ),
+		$trust_text( 'comment_note', __( 'Подпись у кнопки «Отправить»', 'trust' ) ),
+		$trust_text( 'comment_sent', __( 'После отправки комментария', 'trust' ) ),
+		$trust_text( 'comment_reply_sent', __( 'После отправки ответа', 'trust' ) ),
 	),
 );
