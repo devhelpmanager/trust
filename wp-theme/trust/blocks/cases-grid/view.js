@@ -2,7 +2,7 @@
  * Блок «Кейсы»: фильтры по услуге и отрасли без перезагрузки, «Показать ещё кейсы».
  *
  * Список всех кейсов с услугами и отраслями (data-index) — для чисел на кнопках услуг (по
- * выбранной отрасли) и строки «Найдено: N». Карточки — из REST (GET trust/v1/cases): при смене
+ * выбранной отрасли), у отраслей в списке (по выбранной услуге) и строки «Найдено: N». Карточки — из REST (GET trust/v1/cases): при смене
  * фильтров список заменяется, по «Показать ещё» — дополняется; фокус — на первую новую карточку.
  * Пока фильтры не выбраны, главный кейс стоит отдельно (в сетке его нет — параметр skip).
  * Выбор пишется в адрес (?service=…&industry=…), чтобы ссылкой можно было поделиться.
@@ -48,7 +48,12 @@
 				}
 			} );
 			if ( select ) {
+				// Отрасль и число кейсов у каждой — по выбранной услуге (список — assets/js/dropdown.js).
 				select.value = state.industry;
+				[ ...select.options ].forEach( ( option ) => {
+					option.dataset.count = index.filter( ( item ) => matches( item, state.service, option.value ) ).length;
+				} );
+				select.dispatchEvent( new Event( 'trust-dropdown:update' ) );
 			}
 			const total = index.filter( ( item ) => matches( item, state.service, state.industry ) ).length;
 			state.total = total;

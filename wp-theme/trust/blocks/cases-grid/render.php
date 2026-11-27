@@ -62,11 +62,12 @@ if ( ! $is_preview ) {
 	}
 }
 
-// Число кейсов на кнопке услуги — среди кейсов выбранной отрасли.
-$trust_count = static function ( string $service ) use ( $trust_index, $trust_industry ): int {
+// Сколько кейсов подходит под услугу и отрасль (пусто — любая): числа на кнопках услуг (по
+// выбранной отрасли) и у отраслей в списке (по выбранной услуге).
+$trust_count = static function ( string $service, string $industry ) use ( $trust_index ): int {
 	$n = 0;
 	foreach ( $trust_index['cases'] as $trust_case ) {
-		$n += ( '' === $trust_industry || in_array( $trust_industry, $trust_case['n'], true ) ) && ( '' === $service || in_array( $service, $trust_case['s'], true ) ) ? 1 : 0;
+		$n += ( '' === $industry || in_array( $industry, $trust_case['n'], true ) ) && ( '' === $service || in_array( $service, $trust_case['s'], true ) ) ? 1 : 0;
 	}
 	return $n;
 };
@@ -105,18 +106,18 @@ $trust_cases       = array_map(
 			<div class="b-cases__services">
 				<span class="b-cases__label" id="<?php echo esc_attr( $trust_uid ); ?>-svc"><?php echo esc_html( Blocks::text( 'service_label', __( 'Услуга', 'trust' ) ) ); ?></span>
 				<div class="filter-chips b-cases__chips" role="group" aria-labelledby="<?php echo esc_attr( $trust_uid ); ?>-svc" aria-controls="<?php echo esc_attr( $trust_uid ); ?>-list">
-					<button type="button" class="filter-chip" data-service="" aria-pressed="<?php echo '' === $trust_service ? 'true' : 'false'; ?>"<?php echo $is_preview ? ' tabindex="-1"' : ''; ?>><?php echo esc_html( Blocks::text( 'all_label', __( 'Все', 'trust' ) ) ); ?><span class="filter-chip__count" data-count><?php echo esc_html( (string) $trust_count( '' ) ); ?></span></button>
+					<button type="button" class="filter-chip" data-service="" aria-pressed="<?php echo '' === $trust_service ? 'true' : 'false'; ?>"<?php echo $is_preview ? ' tabindex="-1"' : ''; ?>><?php echo esc_html( Blocks::text( 'all_label', __( 'Все', 'trust' ) ) ); ?><span class="filter-chip__count" data-count><?php echo esc_html( (string) $trust_count( '', $trust_industry ) ); ?></span></button>
 					<?php foreach ( $trust_index['services'] as $trust_slug => $trust_name ) : ?>
-						<button type="button" class="filter-chip" data-service="<?php echo esc_attr( $trust_slug ); ?>" aria-pressed="<?php echo $trust_slug === $trust_service ? 'true' : 'false'; ?>"<?php echo $is_preview ? ' tabindex="-1"' : ''; ?>><?php echo esc_html( $trust_name ); ?><span class="filter-chip__count" data-count><?php echo esc_html( (string) $trust_count( $trust_slug ) ); ?></span></button>
+						<button type="button" class="filter-chip" data-service="<?php echo esc_attr( $trust_slug ); ?>" aria-pressed="<?php echo $trust_slug === $trust_service ? 'true' : 'false'; ?>"<?php echo $is_preview ? ' tabindex="-1"' : ''; ?>><?php echo esc_html( $trust_name ); ?><span class="filter-chip__count" data-count><?php echo esc_html( (string) $trust_count( $trust_slug, $trust_industry ) ); ?></span></button>
 					<?php endforeach; ?>
 				</div>
 			</div>
 			<div class="b-cases__industry">
 				<label class="b-cases__label" for="<?php echo esc_attr( $trust_uid ); ?>-niche"><?php echo esc_html( Blocks::text( 'industry_label', __( 'Отрасль', 'trust' ) ) ); ?></label>
-				<select class="b-cases__select" id="<?php echo esc_attr( $trust_uid ); ?>-niche" data-industry-select<?php echo $is_preview ? ' tabindex="-1"' : ''; ?>>
-					<option value=""><?php echo esc_html( Blocks::text( 'industry_all', __( 'Все отрасли', 'trust' ) ) ); ?></option>
+				<select class="b-cases__select" id="<?php echo esc_attr( $trust_uid ); ?>-niche" data-industry-select data-dropdown<?php echo $is_preview ? ' tabindex="-1"' : ''; ?>>
+					<option value="" data-count="<?php echo esc_attr( (string) $trust_count( $trust_service, '' ) ); ?>"><?php echo esc_html( Blocks::text( 'industry_all', __( 'Все отрасли', 'trust' ) ) ); ?></option>
 					<?php foreach ( $trust_index['industries'] as $trust_slug => $trust_name ) : ?>
-						<option value="<?php echo esc_attr( $trust_slug ); ?>"<?php selected( $trust_slug, $trust_industry ); ?>><?php echo esc_html( $trust_name ); ?></option>
+						<option value="<?php echo esc_attr( $trust_slug ); ?>" data-count="<?php echo esc_attr( (string) $trust_count( $trust_service, $trust_slug ) ); ?>"<?php selected( $trust_slug, $trust_industry ); ?>><?php echo esc_html( $trust_name ); ?></option>
 					<?php endforeach; ?>
 				</select>
 			</div>

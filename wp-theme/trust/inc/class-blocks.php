@@ -165,6 +165,18 @@ final class Blocks {
 				'in_footer' => true,
 			)
 		);
+		// Выпадающий список в стиле сайта вместо системного (<select data-dropdown>): "trust-dropdown".
+		wp_register_style( 'trust-dropdown', Assets::url( 'assets/css/dropdown.css' ), array(), Assets::version( 'assets/css/dropdown.css' ) );
+		wp_register_script(
+			'trust-dropdown',
+			Assets::url( 'assets/js/dropdown.js' ),
+			array(),
+			Assets::version( 'assets/js/dropdown.js' ),
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => true,
+			)
+		);
 		foreach ( self::names() as $name ) {
 			register_block_type( TRUST_DIR . '/blocks/' . $name );
 		}

@@ -15,8 +15,8 @@
 		"customClassName": false,
 		"multiple": false
 	},
-	"style": [ "trust-filter", "file:./style.css" ],
-	"viewScript": "file:./view.js",
+	"style": [ "trust-filter", "trust-dropdown", "file:./style.css" ],
+	"viewScript": [ "trust-dropdown", "file:./view.js" ],
 	"acf": {
 		"mode": "preview",
 		"renderTemplate": "render.php",

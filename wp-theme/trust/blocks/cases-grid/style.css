@@ -559,12 +559,16 @@ html:not(.js) .b-cases__reset {
 		flex: 1 1 100%;
 	}
 
-	/* Список «Отрасль» — по ширине пунктов, а не всей панели: раскрытый список не шире
-	   названий (правка заказчика) */
-	.b-cases__select {
+	/* Список «Отрасль» — по ширине самого длинного варианта, а не всей панели (правка заказчика) */
+	.b-cases__industry > .dropdown,
+	.b-cases__industry > .b-cases__select {
 		align-self: flex-start;
-		width: auto;
+		width: fit-content;
 		max-width: 100%;
+	}
+
+	.b-cases__select {
+		width: auto;
 	}
 }
 

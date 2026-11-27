@@ -14,7 +14,8 @@
  * без главного кейса. ItemList в микроразметке. Сверка с макетом на 1280 / 768 / 390 px, ширины
  * 1440–280, раскладка 3 / 2 / 1, кнопки услуг на телефоне листаются строкой; правки заказчика:
  * «Смотреть кейс» — фиолетовая кнопка в правом нижнем углу (у главного кейса крупнее), список
- * «Отрасль» на телефоне по ширине пунктов. axe-core, консоль, редактор.
+ * «Отрасль» на телефоне по ширине пунктов; список «Отрасль» в стиле сайта вместо системного (мышь,
+ * клавиатура, числа кейсов по услуге, подпись, axe). axe-core, консоль, редактор.
  */
 
 const path = require( 'path' );
@@ -63,6 +64,17 @@ function state( page ) {
 			search: location.search,
 		};
 	} );
+}
+
+/**
+ * Выбор отрасли в выпадающем списке в стиле сайта: кнопка «Отрасль», затем вариант.
+ *
+ * @param {import('playwright').Page} page Страница.
+ * @param {string}                    name Название отрасли.
+ */
+async function pickIndustry( page, name ) {
+	await page.locator( '.b-cases .dropdown__button' ).click();
+	await page.locator( '.b-cases .dropdown__option', { hasText: name } ).click();
 }
 
 /**
@@ -171,7 +183,7 @@ async function compare( page, width ) {
 		const seo = await state( page );
 		check( 'Нажата «SEO»: «Найдено: 6 кейсов», сброс виден, главный кейс скрыт — он в сетке, 6 карточек, адрес ?service=seo',
 			'SEO:6*' === seo.chips[ 1 ] && 'Найдено: 6 кейсов' === seo.found && seo.reset && ! seo.lead && 6 === seo.cards.length && 'novyy-sayt-i-seo-dlya-kompanii-po-remontu-kvartir' === seo.cards[ 0 ] && '?service=seo' === seo.search && '' === seo.more, JSON.stringify( seo ) );
-		await page.selectOption( '.b-cases__select', 'internet-magaziny' );
+		await pickIndustry( page, 'Интернет-магазины' );
 		await page.waitForFunction( () => 1 === document.querySelectorAll( '.b-cases__card' ).length );
 		const shop = await state( page );
 		check( 'Плюс «Интернет-магазины»: числа на кнопках — по отрасли (Все 2, SEO 1, GEO 0…), «Найдено: 1 кейс», адрес с обоими фильтрами',
@@ -188,12 +200,111 @@ async function compare( page, width ) {
 		const focused = await page.evaluate( () => [ document.activeElement.classList.contains( 'filter-chip' ), document.activeElement.dataset.service ] );
 		check( '«Показать все кейсы»: фильтры сброшены, снова главный кейс и 8 карточек, адрес без фильтров, фокус на «Все»',
 			JSON.stringify( back.chips ) === JSON.stringify( start.chips ) && '' === back.industry && back.lead && JSON.stringify( back.cards ) === JSON.stringify( start.cards ) && ! back.reset && ! back.empty && '' === back.search && focused[ 0 ] && '' === focused[ 1 ], JSON.stringify( [ back, focused ] ) );
-		await page.selectOption( '.b-cases__select', 'medicina' );
+		await pickIndustry( page, 'Медицина' );
 		await page.waitForFunction( () => 1 === document.querySelectorAll( '.b-cases__card' ).length );
 		await page.locator( '.b-cases__reset' ).click();
 		await page.waitForFunction( () => 8 === document.querySelectorAll( '.b-cases__card' ).length );
 		const resetTop = await state( page );
 		check( '«Сбросить фильтры» над списком — то же, сброс исчезает', '' === resetTop.industry && resetTop.lead && ! resetTop.reset && '' === resetTop.search, JSON.stringify( resetTop ) );
+
+		// ===== Список «Отрасль» в стиле сайта (правка заказчика: системный список — не в дизайне) =====
+		const dd = () => page.evaluate( () => {
+			const button = document.querySelector( '.b-cases .dropdown__button' );
+			const list = document.getElementById( button.getAttribute( 'aria-controls' ) );
+			const active = button.getAttribute( 'aria-activedescendant' );
+			return {
+				expanded: button.getAttribute( 'aria-expanded' ),
+				value: button.textContent,
+				open: ! list.hidden,
+				options: [ ...list.querySelectorAll( '[role="option"]' ) ].map( ( o ) => o.firstChild.textContent + ':' + o.querySelector( '.dropdown__count' ).textContent + ( 'true' === o.getAttribute( 'aria-selected' ) ? '*' : '' ) + ( o.classList.contains( 'is-empty' ) ? '0' : '' ) ),
+				active: active ? document.getElementById( active ).firstChild.textContent : '',
+				focus: document.activeElement === button,
+				select: document.querySelector( '.b-cases__select' ).value,
+			};
+		} );
+		const ddBase = await page.evaluate( () => {
+			const button = document.querySelector( '.b-cases .dropdown__button' );
+			const select = document.querySelector( '.b-cases__select' );
+			const label = document.querySelector( '.b-cases__industry label' );
+			const list = document.getElementById( button.getAttribute( 'aria-controls' ) );
+			return [ button.getAttribute( 'role' ), button.getAttribute( 'aria-haspopup' ), document.getElementById( button.getAttribute( 'aria-labelledby' ) ) === label, list.getAttribute( 'role' ), getComputedStyle( select ).visibility, Math.round( button.getBoundingClientRect().width ) === Math.round( select.getBoundingClientRect().width ), button.textContent ];
+		} );
+		check( 'Список «Отрасль»: кнопка role=combobox с подписью «Отрасль» и списком role=listbox вместо системного; <select> невидим и задаёт ширину',
+			JSON.stringify( ddBase ) === JSON.stringify( [ 'combobox', 'listbox', true, 'listbox', 'hidden', true, 'Все отрасли' ] ), JSON.stringify( ddBase ) );
+		await page.locator( '.b-cases .dropdown__button' ).click();
+		const ddOpen = await dd();
+		const ddBox = await page.evaluate( () => {
+			const list = document.querySelector( '.b-cases .dropdown__list' );
+			const st = getComputedStyle( list );
+			return [ st.backgroundColor, st.borderRadius, st.boxShadow !== 'none', list.scrollHeight <= list.clientHeight ];
+		} );
+		check( 'Открыт мышью: панель в стиле сайта (белая, скругление 16 px, тень, все 9 отраслей без прокрутки), у отраслей — число кейсов, выбранная отмечена',
+			'true' === ddOpen.expanded && ddOpen.open && 9 === ddOpen.options.length && 'Все отрасли:9*' === ddOpen.options[ 0 ] && ddOpen.options.includes( 'Интернет-магазины:2' ) && 'Все отрасли' === ddOpen.active &&
+			JSON.stringify( ddBox ) === JSON.stringify( [ 'rgb(255, 255, 255)', '16px', true, true ] ), JSON.stringify( [ ddOpen, ddBox ] ) );
+		await page.mouse.click( 5, 5 );
+		const ddOutside = await dd();
+		check( 'Нажатие мимо закрывает список без выбора', 'false' === ddOutside.expanded && ! ddOutside.open && '' === ddOutside.select, JSON.stringify( ddOutside ) );
+		await page.locator( '.b-cases .filter-chip', { hasText: 'SEO' } ).first().click();
+		await page.waitForFunction( () => 6 === document.querySelectorAll( '.b-cases__card' ).length );
+		await page.locator( '.b-cases .dropdown__button' ).click();
+		const ddSeo = await dd();
+		check( 'Числа у отраслей — по выбранной услуге (SEO: все 6, автоуслуги 0 — приглушены)',
+			'Все отрасли:6*' === ddSeo.options[ 0 ] && ddSeo.options.includes( 'Автоуслуги:00' ) && ddSeo.options.includes( 'Медицина:1' ), JSON.stringify( ddSeo.options ) );
+		await page.locator( '.b-cases .dropdown__option', { hasText: 'Медицина' } ).click();
+		await page.waitForFunction( () => 1 === document.querySelectorAll( '.b-cases__card' ).length );
+		const ddPicked = await dd();
+		check( 'Выбор мышью: список закрыт, на кнопке «Медицина», фокус на кнопке, фильтр применён (?service=seo&industry=medicina)',
+			! ddPicked.open && 'Медицина' === ddPicked.value && ddPicked.focus && 'medicina' === ddPicked.select && '?service=seo&industry=medicina' === ( await state( page ) ).search, JSON.stringify( ddPicked ) );
+		await page.keyboard.press( 'ArrowDown' );
+		const kOpen = await dd();
+		await page.keyboard.press( 'ArrowDown' );
+		await page.keyboard.press( 'ArrowDown' );
+		const kMove = await dd();
+		await page.keyboard.press( 'Escape' );
+		const kEsc = await dd();
+		check( 'Клавиатура: ↓ открывает список на выбранной отрасли, ↓↓ — к «Автоуслугам», Esc закрывает без выбора, фокус остаётся на кнопке',
+			kOpen.open && 'Медицина' === kOpen.active && 'Автоуслуги' === kMove.active && ! kEsc.open && 'medicina' === kEsc.select && kEsc.focus, JSON.stringify( [ kOpen.active, kMove.active, kEsc ] ) );
+		await page.keyboard.press( 'End' );
+		const kEnd = await dd();
+		await page.keyboard.press( 'Home' );
+		await page.keyboard.press( 'Enter' );
+		await page.waitForFunction( () => 6 === document.querySelectorAll( '.b-cases__card' ).length );
+		const kHome = await dd();
+		// Буквы русской раскладки: Playwright их не нажимает (type() вставляет текст без keydown) —
+		// событие keydown, как от клавиатуры.
+		await page.evaluate( () => [ 'ю', 'р' ].forEach( ( key ) => document.activeElement.dispatchEvent( new KeyboardEvent( 'keydown', { key, bubbles: true, cancelable: true } ) ) ) );
+		const kType = await dd();
+		await page.keyboard.press( 'Enter' );
+		await page.waitForFunction( () => 1 === document.querySelectorAll( '.b-cases__card' ).length );
+		const kTyped = await dd();
+		check( 'Клавиатура: End — к последней отрасли, Home + Enter — «Все отрасли», буквы «юр» — к «Юридическим услугам», Enter выбирает',
+			'Красота' === kEnd.active && 'Все отрасли' === kHome.value && '' === kHome.select && 'Юридические услуги' === kType.active && 'yuridicheskie-uslugi' === kTyped.select && ! kTyped.open, JSON.stringify( [ kEnd.active, kHome.value, kType.active, kTyped.select ] ) );
+		await page.locator( '.b-cases__industry label' ).click();
+		const ddLabel = await dd();
+		check( 'Нажатие на подпись «Отрасль» переводит фокус на список, не открывая его', ddLabel.focus && ! ddLabel.open, JSON.stringify( ddLabel ) );
+		await page.locator( '.b-cases .dropdown__button' ).click();
+		await page.addScriptTag( { path: require.resolve( 'axe-core' ) } );
+		const ddAxe = await page.evaluate( async () => ( await window.axe.run( '.b-cases__filters', { resultTypes: [ 'violations' ] } ) ).violations.map( ( v ) => `${ v.id } (${ v.nodes.length })` ) );
+		check( 'axe: раскрытый список без нарушений', 0 === ddAxe.length, ddAxe.join( ', ' ) );
+		await page.keyboard.press( 'Escape' );
+		await page.setViewportSize( { width: 390, height: 844 } );
+		await page.goto( PAGE, { waitUntil: 'networkidle' } );
+		const ddMob = {};
+		// Кнопка вверху экрана — список под ней; внизу экрана (места под ней нет) — над ней, не под шапкой.
+		for ( const [ name, offset ] of [ [ 'down', 120 ], [ 'up', 760 ] ] ) {
+			await page.evaluate( ( o ) => scrollTo( 0, document.querySelector( '.b-cases .dropdown__button' ).getBoundingClientRect().top + scrollY - o ), offset );
+			await page.locator( '.b-cases .dropdown__button' ).click();
+			ddMob[ name ] = await page.evaluate( () => {
+				const b = document.querySelector( '.b-cases .dropdown__button' ).getBoundingClientRect();
+				const l = document.querySelector( '.b-cases .dropdown__list' ).getBoundingClientRect();
+				const head = document.querySelector( '.site-header' ).getBoundingClientRect();
+				return [ Math.round( b.width ), Math.round( l.width ), l.left >= 8 && l.right <= innerWidth - 8, l.top > b.bottom ? 'под' : ( l.bottom < b.top ? 'над' : '?' ), l.top >= head.bottom && l.bottom <= innerHeight ];
+			} );
+			await page.keyboard.press( 'Escape' );
+		}
+		check( 'Телефон 390: кнопка по ширине самого длинного названия, список не уже кнопки и целиком на экране — под кнопкой, а у низа экрана над ней (не под шапкой)',
+			ddMob.down[ 0 ] >= 200 && ddMob.down[ 0 ] < 330 && ddMob.down[ 1 ] >= ddMob.down[ 0 ] && ddMob.down[ 2 ] && 'под' === ddMob.down[ 3 ] && ddMob.down[ 4 ] && 'над' === ddMob.up[ 3 ] && ddMob.up[ 2 ] && ddMob.up[ 4 ], JSON.stringify( ddMob ) );
+		await page.setViewportSize( { width: 1280, height: 900 } );
 
 		// Открытие по ссылке с фильтрами — список сразу отфильтрован (без JavaScript тоже).
 		await page.goto( `${ PAGE }?service=seo&industry=medicina`, { waitUntil: 'networkidle' } );
@@ -347,7 +458,7 @@ async function compare( page, width ) {
 				};
 				const feat = document.querySelector( '.b-cases__feat-body' );
 				const cards = [ ...document.querySelectorAll( '.b-cases__body' ) ];
-				const select = document.querySelector( '.b-cases__select' ).getBoundingClientRect();
+				const select = document.querySelector( '.b-cases .dropdown__button' ).getBoundingClientRect();
 				const panel = document.querySelector( '.b-cases__filters' ).getBoundingClientRect();
 				return {
 					feat: place( feat, feat.querySelector( '.b-cases__feat-more' ) ),
@@ -359,7 +470,7 @@ async function compare( page, width ) {
 		const violet = [ 'rgb(109, 40, 217)', 'rgb(255, 255, 255)' ];
 		check( '«Смотреть кейс»: фиолетовые кнопки в правом нижнем углу (1280 и 390 px), у главного кейса 52 px, у карточек 40 px (правка заказчика)',
 			[ 1280, 390 ].every( ( w ) => JSON.stringify( buttons[ w ].feat ) === JSON.stringify( [ true, 52, ...violet ] ) && 1 === buttons[ w ].cards.length && buttons[ w ].cards[ 0 ] === JSON.stringify( [ true, 40, ...violet ] ) ), JSON.stringify( buttons ) );
-		check( 'Телефон 390: список «Отрасль» по ширине пунктов (раскрытый список не шире названий), на компьютере — 280 px (правка заказчика)',
+		check( 'Телефон 390: список «Отрасль» по ширине самого длинного названия, на компьютере — 280 px (правка заказчика)',
 			buttons[ 390 ].select[ 0 ] >= 200 && buttons[ 390 ].select[ 0 ] < buttons[ 390 ].select[ 1 ] - 60 && 280 === buttons[ 1280 ].select[ 0 ], JSON.stringify( [ buttons[ 390 ].select, buttons[ 1280 ].select ] ) );
 		await page.setViewportSize( { width: 1280, height: 900 } );
 		await page.goto( PAGE, { waitUntil: 'networkidle' } );
