@@ -223,7 +223,7 @@ final class Blocks {
 
 		if ( is_readable( $dir . '/example.php' ) ) {
 			$values = require $dir . '/example.php';
-			// Вложенные блоки превью (блоки с InnerBlocks): 'inner_blocks' => array( array( имя, атрибуты ) ).
+			// Вложенные блоки превью (блоки с InnerBlocks): 'inner_blocks' => array( array( имя, атрибуты, вложенные ) ).
 			$inner = $values['inner_blocks'] ?? array();
 			unset( $values['inner_blocks'] );
 			$metadata['example'] = array(
@@ -233,13 +233,18 @@ final class Blocks {
 				),
 			);
 			if ( $inner ) {
-				$metadata['example']['innerBlocks'] = array_map(
-					static fn( array $item ): array => array(
+				// Третий элемент — вложенные блоки этого блока (пункты списка): array( имя, атрибуты, вложенные ).
+				$map                                = static function ( array $item ) use ( &$map ): array {
+					$example = array(
 						'name'       => $item[0],
 						'attributes' => $item[1] ?? array(),
-					),
-					$inner
-				);
+					);
+					if ( ! empty( $item[2] ) ) {
+						$example['innerBlocks'] = array_map( $map, $item[2] );
+					}
+					return $example;
+				};
+				$metadata['example']['innerBlocks'] = array_map( $map, $inner );
 			}
 		}
 

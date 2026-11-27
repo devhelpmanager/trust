@@ -507,6 +507,17 @@ const MOCKUP_CSS = {
 		.dc-req dt { flex-basis: 200px !important; }
 	`,
 	'seo-vopros/vopros-seo.html': `
+		/* «Ответы SEO-специалистов»: отступы секции, шапка и H2 — как у всех блоков (в макете
+		   72 / 96 px, 14 px от надзаголовка, H2 26–40 px) */
+		#answers { padding-top: 64px !important; padding-bottom: 64px !important; }
+		@media (max-width: 1100px) {
+			#answers { padding-top: 56px !important; padding-bottom: 56px !important; }
+		}
+		@media (max-width: 760px) {
+			#answers { padding-top: 48px !important; padding-bottom: 48px !important; }
+		}
+		#answers header { gap: 16px !important; }
+		#answers-title { font-size: clamp(28px, 3.4vw, 44px) !important; }
 		/* Форма под текстом (уже 1000 px) — текст во всю ширину карточки (правка заказчика) */
 		@media (max-width: 999px) {
 			.dc-ask-intro > p { max-width: none !important; }

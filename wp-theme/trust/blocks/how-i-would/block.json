@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/how-i-would",
+	"title": "Как бы поступил я",
+	"description": "Итог ответа на вопрос: фиолетовая карточка с заголовком, пунктами-галочками (текст печатается прямо в блоке) и кнопкой внизу, например «Заказать технический аудит».",
+	"category": "trust-content",
+	"icon": "yes-alt",
+	"keywords": [ "ответ", "итог", "вывод", "вопрос", "чек-лист" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false,
+		"jsx": true
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

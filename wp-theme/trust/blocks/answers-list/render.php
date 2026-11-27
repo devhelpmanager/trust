@@ -1,0 +1,74 @@
+<?php
+/**
+ * Блок «Ответы SEO-специалистов» (макет seo-vopros/vopros-seo.html, секция «Ответы SEO-специалистов»).
+ *
+ * Шапка секции и карточки опубликованных вопросов, новые первыми (Trust\Answers_List): тема,
+ * «Спрашивает Имя», вопрос (H3), начало ответа (на телефоне 3 строки), инициалы и имя специалиста,
+ * «ответ от» дата, «Читать ответ». Две колонки от 800 px. Страницы — ссылками /page/N/#answers:
+ * «‹ Назад 1 2 3 4 … 7 Вперёд ›», на узких экранах номера сокращаются (до 340 px — «‹ 1 … 7 ›»).
+ * Страница за пределами списка — 404. Показанные ответы — ItemList в микроразметке.
+ *
+ * Переменные SCF: $block (array), $is_preview (bool), $post_id (int|string).
+ *
+ * @package Trust
+ */
+
+use Trust\Answers_List;
+use Trust\Blocks;
+
+defined( 'ABSPATH' ) || exit;
+
+$trust_per      = Answers_List::per_page( get_field( 'per_page' ) );
+$trust_paged    = $is_preview ? 1 : max( 1, (int) get_query_var( 'paged' ) );
+$trust_page     = Answers_List::query( $trust_paged, $is_preview ? min( 4, $trust_per ) : $trust_per );
+$trust_anchor   = Blocks::anchor( get_field( 'anchor' ) );
+$trust_anchor   = '' !== $trust_anchor ? $trust_anchor : 'answers';
+$trust_title_id = Blocks::uid( $block, 'title' );
+$trust_labels   = array(
+	'asks'     => Blocks::text( 'asks_label', __( 'Спрашивает', 'trust' ) ),
+	'answered' => Blocks::text( 'answered_label', __( 'ответ от', 'trust' ) ),
+	'more'     => Blocks::text( 'more_label', __( 'Читать ответ', 'trust' ) ),
+);
+
+// Микроразметка: показанные ответы — ItemList страницы «Вопросы SEO».
+if ( ! $is_preview ) {
+	foreach ( $trust_page['ids'] as $trust_id ) {
+		Trust\Schema\Graph::item( (string) get_permalink( $trust_id ), get_the_title( $trust_id ) );
+	}
+}
+?>
+<section class="b-answers trust-bg-white" id="<?php echo esc_attr( $trust_anchor ); ?>" aria-labelledby="<?php echo esc_attr( $trust_title_id ); ?>">
+	<div class="b-answers__inner">
+		<?php Blocks::section_head( 'b-answers__head', $trust_title_id ); ?>
+		<?php if ( $trust_page['ids'] ) : ?>
+			<ul class="b-answers__grid" aria-label="<?php esc_attr_e( 'Ответы на вопросы', 'trust' ); ?>">
+				<?php
+				foreach ( $trust_page['ids'] as $trust_id ) {
+					echo Answers_List::card( $trust_id, $trust_labels ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- экранировано в card().
+				}
+				?>
+			</ul>
+			<?php
+			if ( ! $is_preview ) {
+				$trust_pages = Answers_List::pagination(
+					$trust_paged,
+					$trust_page['pages'],
+					$trust_anchor,
+					array(
+						'nav'       => __( 'Страницы ответов', 'trust' ),
+						'prev'      => __( 'Назад', 'trust' ),
+						'next'      => __( 'Вперёд', 'trust' ),
+						'prev_aria' => __( 'Предыдущая страница', 'trust' ),
+						'next_aria' => __( 'Следующая страница', 'trust' ),
+						/* translators: %d: номер страницы. */
+						'page'      => __( 'Страница %d', 'trust' ),
+					)
+				);
+				echo $trust_pages; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- экранировано в pagination().
+			}
+			?>
+		<?php else : ?>
+			<p class="b-answers__empty"><?php echo esc_html( Blocks::text( 'empty_text', __( 'Ответов пока нет. Задайте первый вопрос — специалист ответит здесь.', 'trust' ) ) ); ?></p>
+		<?php endif; ?>
+	</div>
+</section>

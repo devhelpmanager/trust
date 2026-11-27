@@ -31,6 +31,7 @@ final class Theme {
 		Reviews::register();
 		Reviews_List::register();
 		Cases_Grid::register();
+		Answers_List::register();
 		Team::register();
 		Vacancies::register();
 		Questions::register();

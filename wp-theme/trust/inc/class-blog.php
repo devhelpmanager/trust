@@ -19,6 +19,11 @@ defined( 'ABSPATH' ) || exit;
 final class Blog {
 
 	/**
+	 * Месяцы в родительном падеже: даты по-русски («5 ноября 2026») без языковых файлов WordPress.
+	 */
+	public const MONTHS = array( 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря' );
+
+	/**
 	 * Метаполе: число просмотров статьи.
 	 */
 	public const VIEWS = 'trust_views';
@@ -119,9 +124,8 @@ final class Blog {
 	 * @param int|\WP_Post $post Статья.
 	 */
 	public static function date( $post ): string {
-		$time   = get_post_timestamp( $post );
-		$months = array( 'января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря' );
-		return $time ? wp_date( 'j', $time ) . ' ' . $months[ (int) wp_date( 'n', $time ) - 1 ] . ' ' . wp_date( 'Y', $time ) : '';
+		$time = get_post_timestamp( $post );
+		return $time ? wp_date( 'j', $time ) . ' ' . self::MONTHS[ (int) wp_date( 'n', $time ) - 1 ] . ' ' . wp_date( 'Y', $time ) : '';
 	}
 
 	/**
