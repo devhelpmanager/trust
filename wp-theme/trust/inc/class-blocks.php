@@ -42,6 +42,19 @@ final class Blocks {
 	public const TEXT_BLOCKS = array( 'core/paragraph', 'core/heading', 'core/list', 'core/list-item', 'core/quote', 'core/image', 'core/table' );
 
 	/**
+	 * Рисунки справа от шапки секции на выбор (правка заказчика): имя блока => (имя рисунка =>
+	 * подпись). Файлы — head-art-{имя}.svg в папке блока, первый — по умолчанию. Блоки без
+	 * выбора — один рисунок head-art.svg и флажок (head_art_field()).
+	 */
+	public const HEAD_ARTS = array(
+		'answers-list' => array(
+			'expert-answers'    => 'Эксперт отвечает на вопросы',
+			'search-algorithms' => 'Думает над алгоритмами поисковиков',
+			'ai-data'           => 'Анализирует данные от ИИ',
+		),
+	);
+
+	/**
 	 * Поля блоков с ключами: имя блока => поля.
 	 *
 	 * @var array<string, array>
@@ -404,20 +417,55 @@ final class Blocks {
 	}
 
 	/**
-	 * Рисунок справа от шапки секции (см. head_art_field()) — украшение, скрыт от скринридеров.
+	 * Поле «Картинка справа от заголовка» с выбором рисунка (блоки из HEAD_ARTS): список с превью
+	 * рисунков (assets/js/icon-select.js), по умолчанию — первый, можно без картинки.
 	 *
-	 * @param string $name Имя блока (папка с head-art.svg).
+	 * @param string $name Имя блока.
+	 */
+	public static function head_art_select_field( string $name ): array {
+		$choices = self::HEAD_ARTS[ $name ] ?? array();
+		return array(
+			'name'          => 'head_art',
+			'label'         => __( 'Картинка справа от заголовка', 'trust' ),
+			'type'          => 'select',
+			'ui'            => 1,
+			'allow_null'    => 0,
+			'choices'       => $choices + array( 'none' => __( 'Без картинки', 'trust' ) ),
+			'default_value' => (string) array_key_first( $choices ),
+			'instructions'  => __( 'Рисунок справа от надзаголовка, заголовка и вводного текста. Показывается на экранах шире 900 px, на телефонах и планшетах скрыт — текст во всю ширину.', 'trust' ),
+			'wrapper'       => array( 'class' => 'trust-icon-select trust-art-select' ),
+		);
+	}
+
+	/**
+	 * SVG рисунка справа от шапки: выбранный (блоки из HEAD_ARTS) или единственный head-art.svg;
+	 * '' — нет файла.
+	 *
+	 * @param string $name Имя блока.
+	 * @param string $art  Имя рисунка из HEAD_ARTS; '' — head-art.svg.
+	 */
+	public static function head_art_svg( string $name, string $art = '' ): string {
+		$file = TRUST_DIR . '/blocks/' . $name . '/head-art' . ( '' !== $art ? '-' . sanitize_key( $art ) : '' ) . '.svg';
+		return is_readable( $file ) ? trim( (string) file_get_contents( $file ) ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- файл темы.
+	}
+
+	/**
+	 * Рисунок справа от шапки секции (см. head_art_field(), head_art_select_field()) — украшение,
+	 * скрыт от скринридеров.
+	 *
+	 * @param string $name Имя блока (папка с head-art.svg или head-art-{имя}.svg).
 	 */
 	public static function head_art( string $name ): string {
-		$on = get_field( 'head_art' );
-		if ( null !== $on && ! $on ) {
-			return '';
+		$on  = get_field( 'head_art' );
+		$art = '';
+		if ( isset( self::HEAD_ARTS[ $name ] ) ) {
+			// Выбор рисунка; блок без сохранённых полей — рисунок по умолчанию.
+			$art = is_string( $on ) && '' !== $on ? $on : (string) array_key_first( self::HEAD_ARTS[ $name ] );
+			$svg = isset( self::HEAD_ARTS[ $name ][ $art ] ) ? self::head_art_svg( $name, $art ) : '';
+		} else {
+			$svg = null !== $on && ! $on ? '' : self::head_art_svg( $name );
 		}
-		$file = TRUST_DIR . '/blocks/' . $name . '/head-art.svg';
-		if ( ! is_readable( $file ) ) {
-			return '';
-		}
-		return '<div class="section-art" aria-hidden="true">' . file_get_contents( $file ) . '</div>'; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- файл темы.
+		return '' !== $svg ? '<div class="section-art"' . ( '' !== $art ? ' data-art="' . esc_attr( $art ) . '"' : '' ) . ' aria-hidden="true">' . $svg . '</div>' : '';
 	}
 
 	/**

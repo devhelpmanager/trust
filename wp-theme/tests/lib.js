@@ -518,6 +518,16 @@ const MOCKUP_CSS = {
 		}
 		#answers header { gap: 16px !important; }
 		#answers-title { font-size: clamp(28px, 3.4vw, 44px) !important; }
+		/* «Важно знать»: заголовок справа от значка, текст и ссылка под ними во всю ширину плашки
+		   (правка заказчика) */
+		section[aria-label="Важно знать"] .dc-note { display: grid !important; grid-template-columns: auto minmax(0, 1fr); gap: 14px 20px !important; align-items: center !important; }
+		section[aria-label="Важно знать"] .dc-note > div { display: contents !important; }
+		section[aria-label="Важно знать"] .dc-note > div > p { grid-column: 1 / -1; max-width: none !important; }
+		@media (max-width: 420px) {
+			section[aria-label="Важно знать"] .dc-note { column-gap: 14px !important; }
+			section[aria-label="Важно знать"] .dc-note > span { width: 44px !important; height: 44px !important; border-radius: 12px !important; }
+			section[aria-label="Важно знать"] .dc-note h2 { font-size: 18px !important; }
+		}
 		/* Форма под текстом (уже 1000 px) — текст во всю ширину карточки (правка заказчика) */
 		@media (max-width: 999px) {
 			.dc-ask-intro > p { max-width: none !important; }

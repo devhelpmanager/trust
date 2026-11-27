@@ -55,6 +55,12 @@ final class Hero_Art {
 		foreach ( array_keys( self::LIST ) as $name ) {
 			$arts[ $name ] = self::svg( $name );
 		}
+		// Рисунки справа от шапки секции на выбор (Trust\Blocks::HEAD_ARTS) — в том же списке превью.
+		foreach ( Blocks::HEAD_ARTS as $block => $choices ) {
+			foreach ( array_keys( $choices ) as $name ) {
+				$arts[ $name ] = Blocks::head_art_svg( $block, $name );
+			}
+		}
 		wp_add_inline_script( 'trust-icon-select', 'window.trustArts = ' . wp_json_encode( $arts, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG ) . ';', 'before' );
 	}
 

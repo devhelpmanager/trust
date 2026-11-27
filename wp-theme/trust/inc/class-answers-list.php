@@ -150,10 +150,11 @@ final class Answers_List {
 
 	/**
 	 * Карточка ответа: тема, «Спрашивает Имя», вопрос (H3), начало ответа, специалист (инициалы,
-	 * имя), «ответ от» дата, «Читать ответ». Вся карточка — ссылка на ответ.
+	 * имя), «ответ от» дата, «Читать ответ» (не помещается рядом с именем — «Ответ», затем только
+	 * стрелка; style.css). Вся карточка — ссылка на ответ.
 	 *
 	 * @param int   $id     Вопрос.
-	 * @param array $labels Подписи: asks, answered, more.
+	 * @param array $labels Подписи: asks, answered, more, short.
 	 */
 	public static function card( int $id, array $labels ): string {
 		$topics = get_the_terms( $id, 'question_topic' );
@@ -188,13 +189,18 @@ final class Answers_List {
 			$html .= '<span class="b-answers__name">' . esc_html( get_the_title( $expert ) ) . '</span>';
 		}
 		$html .= '<span class="b-answers__date">' . esc_html( $labels['answered'] ) . ' <time datetime="' . esc_attr( $date ) . '">' . esc_html( self::date_text( $date ) ) . '</time></span>';
-		$html .= '</span><span class="b-answers__more"><span class="b-answers__more-text">' . esc_html( $labels['more'] ) . '</span>' . Icons::svg(
-			'arrow-right',
-			array(
-				'size'         => 16,
-				'stroke_width' => 2.2,
-			)
-		) . '</span></div></a></li>';
+		$html .= '</span><span class="b-answers__more" aria-hidden="true">';
+		// Варианты от короткого к длинному: виден самый длинный, что помещается рядом с именем.
+		foreach ( array_unique( array( '', (string) ( $labels['short'] ?? '' ), (string) $labels['more'] ) ) as $label ) {
+			$html .= '<span class="b-answers__more-v"><span class="b-answers__more-in">' . ( '' !== $label ? '<span class="b-answers__more-text">' . esc_html( $label ) . '</span>' : '' ) . Icons::svg(
+				'arrow-right',
+				array(
+					'size'         => 16,
+					'stroke_width' => 2.2,
+				)
+			) . '</span></span>';
+		}
+		$html .= '</span></div></a></li>';
 		return $html;
 	}
 

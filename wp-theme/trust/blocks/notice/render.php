@@ -2,10 +2,11 @@
 /**
  * Блок «Оповещение» (ТЗ, п. 8.3; макеты seo-vopros/vopros-seo.html — «Важно знать», otvet.html).
  *
- * Лавандовая плашка со значком: заголовок, текст и строка со ссылкой. На странице — секция
- * («Вопросы SEO»: под первым экраном, заголовок H2, ссылка «Закажите технический аудит»);
- * в статье и ответе — плашка в тексте (заголовок — выделенная строка, не H2: не ломает
- * оглавление). Пустые поля — из «Настроек сайта → Блоки по умолчанию» (Trust\Block_Texts).
+ * Лавандовая плашка: значок и справа от него заголовок, под ними во всю ширину — текст и строка со
+ * ссылкой. Заголовок — выделенная строка, не H2 (правка заказчика; в статье не ломает оглавление).
+ * На странице — секция («Вопросы SEO»: под первым экраном, ссылка «Закажите технический аудит»,
+ * название секции — заголовок плашки); в статье и ответе — плашка в тексте. Пустые поля — из
+ * «Настроек сайта → Блоки по умолчанию» (Trust\Block_Texts).
  *
  * Переменные SCF: $block (array), $is_preview (bool), $post_id (int|string).
  *
@@ -37,27 +38,28 @@ $trust_prefix = Block_Texts::field( 'link_prefix', 'notice_link_prefix' );
 $trust_label  = $trust_link && '' !== trim( (string) ( $trust_link['title'] ?? '' ) ) ? trim( $trust_link['title'] ) : Block_Texts::get( 'notice_link_label' );
 
 $trust_box = static function () use ( $trust_icon, $trust_title, $trust_text, $trust_inline, $trust_title_id, $trust_link, $trust_prefix, $trust_label ): void {
+	// Правка заказчика: заголовок — строка справа от значка (не H2), текст и ссылка — под ними во
+	// всю ширину плашки. Без заголовка справа от значка — текст.
+	$trust_beside = '' !== $trust_title ? 'title' : 'text';
 	?>
-	<span class="b-notice__icon" aria-hidden="true">
-		<?php Icons::render( $trust_icon, array( 'size' => $trust_inline ? 22 : 24 ) ); ?>
-	</span>
-	<div class="b-notice__body">
-		<?php if ( '' !== $trust_title ) : ?>
-			<?php if ( $trust_inline ) : ?>
-				<p class="b-notice__title"><?php echo esc_html( $trust_title ); ?></p>
-			<?php else : ?>
-				<h2 class="b-notice__title" id="<?php echo esc_attr( $trust_title_id ); ?>"><?php echo esc_html( $trust_title ); ?></h2>
-			<?php endif; ?>
-		<?php endif; ?>
-		<?php if ( '' !== $trust_text ) : ?>
+	<div class="b-notice__head">
+		<span class="b-notice__icon" aria-hidden="true">
+			<?php Icons::render( $trust_icon, array( 'size' => $trust_inline ? 22 : 24 ) ); ?>
+		</span>
+		<?php if ( 'title' === $trust_beside ) : ?>
+			<p class="b-notice__title" id="<?php echo esc_attr( $trust_title_id ); ?>"><?php echo esc_html( $trust_title ); ?></p>
+		<?php elseif ( '' !== $trust_text ) : ?>
 			<p class="b-notice__text"><?php echo esc_html( $trust_text ); ?></p>
 		<?php endif; ?>
-		<?php if ( $trust_link ) : ?>
-			<p class="b-notice__more">
-				<?php echo '' !== $trust_prefix ? esc_html( $trust_prefix ) . ' ' : ''; ?><a href="<?php echo esc_url( $trust_link['url'] ); ?>"<?php echo ! empty( $trust_link['target'] ) ? ' target="_blank" rel="noopener"' : ''; ?>><?php echo esc_html( $trust_label ); ?></a>
-			</p>
-		<?php endif; ?>
 	</div>
+	<?php if ( 'title' === $trust_beside && '' !== $trust_text ) : ?>
+		<p class="b-notice__text"><?php echo esc_html( $trust_text ); ?></p>
+	<?php endif; ?>
+	<?php if ( $trust_link ) : ?>
+		<p class="b-notice__more">
+			<?php echo '' !== $trust_prefix ? esc_html( $trust_prefix ) . ' ' : ''; ?><a href="<?php echo esc_url( $trust_link['url'] ); ?>"<?php echo ! empty( $trust_link['target'] ) ? ' target="_blank" rel="noopener"' : ''; ?>><?php echo esc_html( $trust_label ); ?></a>
+		</p>
+	<?php endif; ?>
 	<?php
 };
 ?>

@@ -2,9 +2,10 @@
 /**
  * Блок «Ответы SEO-специалистов» (макет seo-vopros/vopros-seo.html, секция «Ответы SEO-специалистов»).
  *
- * Шапка секции и карточки опубликованных вопросов, новые первыми (Trust\Answers_List): тема,
- * «Спрашивает Имя», вопрос (H3), начало ответа (на телефоне 3 строки), инициалы и имя специалиста,
- * «ответ от» дата, «Читать ответ». Две колонки от 800 px. Страницы — ссылками /page/N/#answers:
+ * Шапка секции (справа — рисунок на выбор, на экранах уже 900 px скрыт) и карточки опубликованных
+ * вопросов, новые первыми (Trust\Answers_List): тема, «Спрашивает Имя», вопрос (H3), начало ответа
+ * (на телефоне 3 строки), инициалы и имя специалиста, «ответ от» дата, «Читать ответ» (не помещается
+ * рядом с именем — «Ответ», затем только стрелка). Две колонки от 800 px. Страницы — ссылками /page/N/#answers:
  * «‹ Назад 1 2 3 4 … 7 Вперёд ›», на узких экранах номера сокращаются (до 340 px — «‹ 1 … 7 ›»).
  * Страница за пределами списка — 404. Показанные ответы — ItemList в микроразметке.
  *
@@ -28,7 +29,14 @@ $trust_labels   = array(
 	'asks'     => Blocks::text( 'asks_label', __( 'Спрашивает', 'trust' ) ),
 	'answered' => Blocks::text( 'answered_label', __( 'ответ от', 'trust' ) ),
 	'more'     => Blocks::text( 'more_label', __( 'Читать ответ', 'trust' ) ),
+	'short'    => Blocks::text( 'more_short_label', __( 'Ответ', 'trust' ) ),
 );
+
+// Шапка секции; справа — выбранный рисунок (на экранах уже 900 px скрыт, текст во всю ширину).
+ob_start();
+Blocks::section_head( 'b-answers__head', $trust_title_id );
+$trust_head = (string) ob_get_clean();
+$trust_art  = '' !== $trust_head ? Blocks::head_art( 'answers-list' ) : '';
 
 // Микроразметка: показанные ответы — ItemList страницы «Вопросы SEO».
 if ( ! $is_preview ) {
@@ -39,7 +47,13 @@ if ( ! $is_preview ) {
 ?>
 <section class="b-answers trust-bg-white" id="<?php echo esc_attr( $trust_anchor ); ?>" aria-labelledby="<?php echo esc_attr( $trust_title_id ); ?>">
 	<div class="b-answers__inner">
-		<?php Blocks::section_head( 'b-answers__head', $trust_title_id ); ?>
+		<?php if ( '' !== $trust_art ) : ?>
+			<div class="section-top b-answers__top">
+				<?php echo $trust_head . $trust_art; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- экранировано в section_head(), рисунок темы. ?>
+			</div>
+		<?php else : ?>
+			<?php echo $trust_head; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- экранировано в section_head(). ?>
+		<?php endif; ?>
 		<?php if ( $trust_page['ids'] ) : ?>
 			<ul class="b-answers__grid" aria-label="<?php esc_attr_e( 'Ответы на вопросы', 'trust' ); ?>">
 				<?php

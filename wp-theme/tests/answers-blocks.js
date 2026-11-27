@@ -110,12 +110,15 @@ function pagesState( page ) {
 				labelled: s.getAttribute( 'aria-labelledby' ) === h2.id,
 				lead: s.querySelector( '.section-lead' ).textContent,
 				list: s.querySelector( 'ul' ).getAttribute( 'aria-label' ),
+				art: ( ( a ) => a && [ a.dataset.art, a.getAttribute( 'aria-hidden' ), !! a.querySelector( 'svg' ), a.parentElement.classList.contains( 'section-top' ), a.previousElementSibling.classList.contains( 'b-answers__head' ) ] )( s.querySelector( '.section-art' ) ),
 			};
 		} );
 		check( 'Демо /seo/voprosy/: «Ответы SEO-специалистов» после первого экрана и «Важно знать», якорь #answers («Читать ответы» ведёт к ним)',
 			'b-answers' === head.order.at( -1 ) && 'answers' === head.id && head.link, JSON.stringify( head.order ) );
 		check( 'Шапка: «Вопросы и ответы», H2 «Ответы SEO-специалистов», вводный текст; список с подписью для скринридеров',
 			'Вопросы и ответы' === head.eyebrow && 'Ответы SEO-специалистов' === head.h2 && head.labelled && head.lead.startsWith( 'Вопросы читателей' ) && 'Ответы на вопросы' === head.list, JSON.stringify( head ) );
+		check( 'Справа от шапки — рисунок «Эксперт отвечает на вопросы» (по умолчанию), скрыт от скринридеров',
+			JSON.stringify( head.art ) === JSON.stringify( [ 'expert-answers', 'true', true, true, true ] ), JSON.stringify( head.art ) );
 		const published = Number( wp( 'eval', 'echo count( get_posts( array( "post_type" => "question", "post_status" => "publish", "numberposts" => -1, "fields" => "ids" ) ) );' ) );
 		const cards = await page.evaluate( () => [ ...document.querySelectorAll( '.b-answers__card' ) ].map( ( a ) => ( {
 			href: a.getAttribute( 'href' ),
@@ -126,13 +129,13 @@ function pagesState( page ) {
 			avatar: [ a.querySelector( '.b-answers__avatar' ).textContent, a.querySelector( '.b-answers__avatar' ).getAttribute( 'aria-hidden' ) ],
 			name: a.querySelector( '.b-answers__name' ).textContent,
 			date: [ a.querySelector( '.b-answers__date' ).textContent, a.querySelector( 'time' ).getAttribute( 'datetime' ) ],
-			more: a.querySelector( '.b-answers__more' ).textContent.trim(),
+			more: [ a.querySelector( '.b-answers__more' ).getAttribute( 'aria-hidden' ), ...[ ...a.querySelectorAll( '.b-answers__more-v' ) ].map( ( v ) => v.textContent.trim() ), a.querySelectorAll( '.b-answers__more svg' ).length ],
 		} ) ) );
 		check( 'Все опубликованные вопросы (20, вопрос «на утверждении» не показан), новые первыми, без пагинации (одна страница)',
 			20 === published && 20 === cards.length && 'Почему Яндекс не индексирует новые страницы каталога?' === cards[ 0 ].h3 && 'Нужно ли закрывать от индексации страницы фильтров?' === cards[ 1 ].h3 && ! await page.locator( '.b-answers__pages' ).count(), `${ published } / ${ cards.length }` );
-		check( 'Карточка: тема, «Спрашивает Анна», вопрос (H3), начало ответа из «Отрывка», инициалы «ИФ» (скрыты от скринридеров), имя, «ответ от 6 ноября 2026» (datetime), «Читать ответ», ссылка на ответ',
+		check( 'Карточка: тема, «Спрашивает Анна», вопрос (H3), начало ответа из «Отрывка», инициалы «ИФ» (скрыты от скринридеров), имя, «ответ от 6 ноября 2026» (datetime), «Читать ответ» / «Ответ» / стрелка (оформление, скрыто от скринридеров), ссылка на ответ',
 			'Индексация' === cards[ 0 ].topic && 'ИндексацияСпрашивает Анна' === cards[ 0 ].meta && cards[ 0 ].excerpt.startsWith( 'Начните с «Исключённых страниц»' ) && 'ИФ,true' === cards[ 0 ].avatar.join() && '[Имя Фамилия]' === cards[ 0 ].name &&
-			'ответ от 6 ноября 2026,2026-11-06' === cards[ 0 ].date.join() && 'Читать ответ' === cards[ 0 ].more && cards[ 0 ].href.endsWith( '/seo/voprosy/pochemu-yandeks-ne-indeksiruet-novye-stranicy-kataloga/' ), JSON.stringify( cards[ 0 ] ) );
+			'ответ от 6 ноября 2026,2026-11-06' === cards[ 0 ].date.join() && JSON.stringify( cards[ 0 ].more ) === JSON.stringify( [ 'true', '', 'Ответ', 'Читать ответ', 3 ] ) && cards[ 0 ].href.endsWith( '/seo/voprosy/pochemu-yandeks-ne-indeksiruet-novye-stranicy-kataloga/' ), JSON.stringify( cards[ 0 ] ) );
 		check( 'Без «Отрывка» — первый абзац ответа', cards[ 1 ].excerpt.startsWith( 'Не все. Фильтры, под которые есть спрос' ), cards[ 1 ].excerpt );
 		const ld = await page.evaluate( () => {
 			const graph = [ ...document.querySelectorAll( 'script[type="application/ld+json"]' ) ].flatMap( ( s ) => JSON.parse( s.textContent )[ '@graph' ] || [] );
@@ -145,25 +148,90 @@ function pagesState( page ) {
 
 		// ===== Раскладка =====
 		const layout = {};
-		for ( const width of [ 1280, 900, 768, 390, 360 ] ) {
+		const links = {};
+		for ( const width of [ 1280, 901, 900, 768, 390, 360, 320, 280 ] ) {
 			await page.setViewportSize( { width, height: 900 } );
 			await page.goto( PAGE, { waitUntil: 'domcontentloaded' } );
-			layout[ width ] = await page.evaluate( () => {
+			[ layout[ width ], links[ width ] ] = await page.evaluate( () => {
 				const card = document.querySelector( '.b-answers__card' );
 				const p = card.querySelector( '.b-answers__excerpt' );
 				const cs = getComputedStyle( p );
-				return [
+				// Ссылка: варианты лежат друг на друге; виден верхний из тех, чья подпись поместилась
+				// в строку (не перенесена на обрезанную вторую строку), его фон закрывает остальные.
+				const vs = [ ...card.querySelectorAll( '.b-answers__more-v' ) ];
+				const fit = vs.map( ( v ) => Math.abs( v.querySelector( '.b-answers__more-in' ).getBoundingClientRect().top - v.getBoundingClientRect().top ) < 1 );
+				const shown = vs[ fit.lastIndexOf( true ) ];
+				const inner = shown.querySelector( '.b-answers__more-in' );
+				const box = shown.getBoundingClientRect();
+				const ir = inner.getBoundingClientRect();
+				const arrow = shown.querySelector( 'svg' ).getBoundingClientRect();
+				const inside = ( r ) => r.left >= box.left - 0.5 && r.right <= box.right + 0.5 && r.top >= box.top - 0.5 && r.bottom <= box.bottom + 0.5;
+				const who = card.querySelector( '.b-answers__who' ).getBoundingClientRect();
+				const art = document.querySelector( '#answers .section-art' );
+				const lead = document.querySelector( '#answers .section-lead' ).getBoundingClientRect();
+				return [ [
 					new Set( [ ...document.querySelectorAll( '.b-answers__item' ) ].map( ( li ) => Math.round( li.getBoundingClientRect().left ) ) ).size,
 					Math.round( p.getBoundingClientRect().height / parseFloat( cs.lineHeight ) ),
 					getComputedStyle( card.querySelector( 'h3' ) ).fontSize,
-					'none' !== getComputedStyle( card.querySelector( '.b-answers__more' ) ).display,
-					'none' !== getComputedStyle( card.querySelector( '.b-answers__more-text' ) ).display,
-				];
+					getComputedStyle( art ).display,
+					Math.round( document.querySelector( '#answers .b-answers__inner' ).getBoundingClientRect().width - lead.width ),
+				], [
+					shown.textContent.trim() || '→',
+					fit.join(),
+					inside( ir ) && inside( arrow ), // подпись и стрелка целиком в строке, не обрезаны
+					getComputedStyle( inner ).backgroundColor === getComputedStyle( card ).backgroundColor, // закрывает варианты под собой
+					who.right <= ir.left, // рядом с именем, не поверх
+					arrow.width > 0,
+				] ];
 			} );
 		}
-		check( 'Две колонки от ~800 px ширины списка (окно 900), уже — одна; на телефоне начало ответа — 3 строки, вопрос 17 px, в узкой карточке «Читать ответ» — стрелкой, уже 380 px — без неё',
-			2 === layout[ 1280 ][ 0 ] && 2 === layout[ 900 ][ 0 ] && 1 === layout[ 768 ][ 0 ] && 1 === layout[ 390 ][ 0 ] && 3 === layout[ 390 ][ 1 ] && '17px' === layout[ 390 ][ 2 ] && '19px' === layout[ 1280 ][ 2 ] &&
-			true === layout[ 1280 ][ 4 ] && true === layout[ 390 ][ 3 ] && false === layout[ 390 ][ 4 ] && false === layout[ 360 ][ 3 ], JSON.stringify( layout ) );
+		check( 'Две колонки от ~800 px ширины списка (окно 900), уже — одна; на телефоне начало ответа — 3 строки, вопрос 17 px',
+			2 === layout[ 1280 ][ 0 ] && 2 === layout[ 900 ][ 0 ] && 1 === layout[ 768 ][ 0 ] && 1 === layout[ 390 ][ 0 ] && 3 === layout[ 390 ][ 1 ] && '17px' === layout[ 390 ][ 2 ] && '19px' === layout[ 1280 ][ 2 ], JSON.stringify( layout ) );
+		check( 'Рисунок справа от шапки — шире 900 px; уже — скрыт, вводный текст во всю ширину блока',
+			'block' === layout[ 1280 ][ 3 ] && 'block' === layout[ 901 ][ 3 ] && 'none' === layout[ 900 ][ 3 ] && 'none' === layout[ 390 ][ 3 ] && 0 === layout[ 900 ][ 4 ] && 0 === layout[ 768 ][ 4 ] && 0 === layout[ 390 ][ 4 ], JSON.stringify( layout ) );
+		check( 'Ссылка в карточке: «Читать ответ →»; не помещается рядом с именем — «Ответ →» (390, 360 px), и он не помещается — только стрелка (320, 280 px); стрелка видна всегда, подпись не налезает на имя',
+			'Читать ответ' === links[ 1280 ][ 0 ] && 'Читать ответ' === links[ 768 ][ 0 ] && 'Ответ' === links[ 390 ][ 0 ] && 'Ответ' === links[ 360 ][ 0 ] && '→' === links[ 320 ][ 0 ] && '→' === links[ 280 ][ 0 ] &&
+			Object.values( links ).every( ( l ) => /^true(,true)*(,false)*$/.test( l[ 1 ] ) && l[ 2 ] && l[ 3 ] && l[ 4 ] && l[ 5 ] ), JSON.stringify( links ) );
+
+		// ===== Рисунок справа от шапки: длинный вводный текст, выбор рисунка, без рисунка =====
+		const longLead = 'Вопросы читателей и ответы наших специалистов. Новые ответы — сверху. '.repeat( 5 ).trim();
+		const artPages = {};
+		for ( const art of [ '', 'ai-data', 'search-algorithms', 'none' ] ) {
+			const fields = `array( 'title' => 'Ответы', 'lead' => '${ longLead }', 'per_page' => 6${ art ? `, 'head_art' => '${ art }'` : '' } )`;
+			const id = wp( 'eval', `$id = wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => '${ MARK } рисунок ${ art || 'default' }', 'post_content' => wp_slash( ${ block( 'answers-list', fields ) } ) ) ); update_post_meta( $id, '_wp_page_template', 'templates/questions.php' ); echo $id;` );
+			created.push( id );
+			artPages[ art || 'default' ] = `${ URL }/?page_id=${ id }`;
+		}
+		const arts = {};
+		for ( const [ key, url ] of Object.entries( artPages ) ) {
+			for ( const width of [ 1280, 1000, 768 ] ) {
+				await page.setViewportSize( { width, height: 900 } );
+				await page.goto( url, { waitUntil: 'domcontentloaded' } );
+				arts[ `${ key } ${ width }` ] = await page.evaluate( () => {
+					const s = document.querySelector( '.b-answers' );
+					const a = s.querySelector( '.section-art' );
+					const head = s.querySelector( '.b-answers__head' ).getBoundingClientRect();
+					const lead = s.querySelector( '.section-lead' ).getBoundingClientRect();
+					const inner = s.querySelector( '.b-answers__inner' ).getBoundingClientRect();
+					const r = a && 'none' !== getComputedStyle( a ).display ? a.getBoundingClientRect() : null;
+					return [
+						a ? a.dataset.art : null,
+						!! s.querySelector( '.section-top' ),
+						r ? Math.round( r.left - lead.right ) : Math.round( inner.width - lead.width ), // с рисунком — промежуток до него, без — 0
+						r ? Math.round( inner.right - r.right ) : null, // рисунок у правого края
+						r ? Math.abs( Math.round( ( r.top + r.bottom ) / 2 - ( head.top + head.bottom ) / 2 ) ) <= 1 : null, // по центру шапки
+						r ? r.height <= head.height : null, // не выше шапки
+						Math.round( lead.height / parseFloat( getComputedStyle( s.querySelector( '.section-lead' ) ).lineHeight ) ),
+					];
+				} );
+			}
+		}
+		check( 'Длинный вводный текст: рисунок справа (48 px от текста, у правого края, по центру шапки, не выше её), текст — во всю оставшуюся ширину; уже 900 px — без рисунка, текст во всю ширину',
+			[ 'default 1280', 'default 1000' ].every( ( k ) => 'expert-answers' === arts[ k ][ 0 ] && arts[ k ][ 1 ] && 48 === arts[ k ][ 2 ] && 0 === arts[ k ][ 3 ] && arts[ k ][ 4 ] && arts[ k ][ 5 ] && arts[ k ][ 6 ] >= 2 ) &&
+			0 === arts[ 'default 768' ][ 2 ], JSON.stringify( arts ) );
+		check( 'Выбор рисунка в блоке: «Анализирует данные от ИИ», «Думает над алгоритмами поисковиков», «Без картинки» — без рисунка, текст во всю ширину',
+			'ai-data' === arts[ 'ai-data 1280' ][ 0 ] && 48 === arts[ 'ai-data 1280' ][ 2 ] && 'search-algorithms' === arts[ 'search-algorithms 1280' ][ 0 ] && 48 === arts[ 'search-algorithms 1280' ][ 2 ] &&
+			null === arts[ 'none 1280' ][ 0 ] && false === arts[ 'none 1280' ][ 1 ] && 0 === arts[ 'none 1280' ][ 2 ], JSON.stringify( [ arts[ 'ai-data 1280' ], arts[ 'search-algorithms 1280' ], arts[ 'none 1280' ] ] ) );
 
 		// ===== Пагинация: 42 ответа по 6 — 7 страниц =====
 		const extra = JSON.parse( wp( 'eval', `$ids = array(); for ( $i = 1; $i <= 22; $i++ ) { $ids[] = wp_insert_post( array( 'post_type' => 'question', 'post_status' => 'publish', 'post_title' => '${ MARK } ' . $i, 'post_content' => '<!-- wp:paragraph --><p>Ответ ' . $i . '.</p><!-- /wp:paragraph -->', 'post_date' => sprintf( '2025-01-%02d 10:00:00', $i ) ) ); } echo wp_json_encode( $ids );` ) );
@@ -242,7 +310,8 @@ function pagesState( page ) {
 			await compare( page, {
 				name: 'list', width, url: PAGE, theme: '.b-answers', mockup: 'seo-vopros/vopros-seo.html', mock: '#answers',
 				// Пагинация сверяется отдельно ниже (в макете — 7 страниц, у теста здесь свои ответы).
-				before: ( p ) => p.addStyleTag( { content: '.b-answers__pages { display: none !important; }' } ),
+				// Рисунок справа от шапки — правка заказчика, в макете его нет.
+				before: ( p ) => p.addStyleTag( { content: '.b-answers__pages, .b-answers .section-art { display: none !important; }' } ),
 				mockBefore: ( p ) => p.addStyleTag( { content: '#answers nav.dc-pg { display: none !important; }' } ),
 			} );
 			const w = await ( async () => {
@@ -313,6 +382,10 @@ function pagesState( page ) {
 		const canvas2 = editor.frameLocator( 'iframe[name="editor-canvas"]' );
 		await canvas2.locator( '.b-answers' ).first().waitFor( { timeout: 60000 } );
 		check( 'Редактор: превью списка — 4 карточки, без пагинации', 4 === await canvas2.locator( '.b-answers__card' ).count() && 0 === await canvas2.locator( '.b-answers__pages' ).count() );
+		const artField = JSON.parse( wp( 'eval', '$f = acf_get_field( "field_trust_block_answers_list_head_art" ); echo wp_json_encode( array( $f["type"], array_keys( $f["choices"] ), $f["default_value"], $f["wrapper"]["class"] ) );' ) );
+		const artPreviews = await editor.evaluate( () => [ 'expert-answers', 'search-algorithms', 'ai-data' ].map( ( k ) => !! ( window.trustArts && window.trustArts[ k ] && window.trustArts[ k ].startsWith( '<svg' ) ) ) );
+		check( 'Редактор: поле «Картинка справа от заголовка» — список с превью рисунков (по умолчанию «Эксперт отвечает на вопросы», можно без картинки)',
+			JSON.stringify( artField ) === JSON.stringify( [ 'select', [ 'expert-answers', 'search-algorithms', 'ai-data', 'none' ], 'expert-answers', 'trust-icon-select trust-art-select' ] ) && artPreviews.every( Boolean ), JSON.stringify( [ artField, artPreviews ] ) );
 		check( 'Редактор без ошибок JavaScript', 0 === editorErrors.length, editorErrors.slice( 0, 3 ).join( ' | ' ) );
 		await editor.close();
 	} finally {

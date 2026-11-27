@@ -1,5 +1,6 @@
 /*
  * Блок «Оповещение» (seo-vopros/vopros-seo.html — секция «Важно знать», otvet.html — плашка в тексте).
+ * Правка заказчика: заголовок справа от значка, текст и ссылка под ними во всю ширину плашки.
  */
 
 /* Секция на странице: сверху 32 px, снизу без отступа — следующий блок со своим отступом (как в макете);
@@ -14,8 +15,8 @@
 
 .b-notice {
 	display: flex;
-	align-items: flex-start;
-	gap: 20px;
+	flex-direction: column;
+	gap: 14px;
 	max-width: var(--content);
 	margin: 0 auto;
 	padding: clamp(22px, 3vw, 32px);
@@ -24,6 +25,12 @@
 	border-radius: 22px;
 	background: var(--c-lavender);
 	color: var(--c-text);
+}
+
+.b-notice__head {
+	display: flex;
+	align-items: center;
+	gap: 20px;
 }
 
 .b-notice__icon {
@@ -38,15 +45,8 @@
 	color: var(--c-violet);
 }
 
-.b-notice__body {
-	display: flex;
-	flex: 1 1 auto;
-	flex-direction: column;
-	gap: 10px;
-	min-width: 0;
-}
-
 .b-notice__title {
+	min-width: 0;
 	margin: 0;
 	font-family: inherit;
 	font-size: 20px;
@@ -57,7 +57,7 @@
 }
 
 .b-notice__text {
-	max-width: 860px;
+	min-width: 0;
 	margin: 0;
 	font-size: 17px;
 	line-height: 1.65;
@@ -80,7 +80,7 @@
 
 /* В статье и ответе — плашка в тексте (otvet.html) */
 .b-notice--inline {
-	gap: 18px;
+	gap: 12px;
 	max-width: none;
 	margin: 40px 0;
 	padding: clamp(20px, 3vw, 28px);
@@ -93,8 +93,8 @@
 	border-radius: 12px;
 }
 
-.b-notice--inline .b-notice__body {
-	gap: 6px;
+.b-notice--inline .b-notice__head {
+	gap: 16px;
 }
 
 .b-notice--inline .b-notice__title {
@@ -103,14 +103,22 @@
 }
 
 .b-notice--inline .b-notice__text {
-	max-width: none;
 	font-size: 16px;
 	line-height: 1.6;
 }
 
 @media (max-width: 420px) {
-	.b-notice {
-		flex-direction: column;
+	.b-notice__head {
 		gap: 14px;
+	}
+
+	.b-notice__icon {
+		width: 44px;
+		height: 44px;
+		border-radius: 12px;
+	}
+
+	.b-notice__title {
+		font-size: 18px;
 	}
 }

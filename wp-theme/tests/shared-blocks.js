@@ -180,15 +180,17 @@ async function compare( page, o ) {
 		await page.goto( `${ URL }/seo/voprosy/`, { waitUntil: 'networkidle' } );
 		const notice = await page.locator( '.b-notice-sec' ).evaluate( ( el ) => ( {
 			afterHero: !! el.previousElementSibling && el.previousElementSibling.classList.contains( 'b-hero-questions' ),
-			labelled: el.getAttribute( 'aria-labelledby' ) === el.querySelector( 'h2' ).id,
-			h2: el.querySelector( 'h2' ).textContent.trim(),
+			labelled: el.getAttribute( 'aria-labelledby' ) === el.querySelector( '.b-notice__title' ).id,
+			headings: el.querySelectorAll( 'h1, h2, h3, h4, h5, h6' ).length,
+			tag: el.querySelector( '.b-notice__title' ).tagName,
+			h2: el.querySelector( '.b-notice__title' ).textContent.trim(),
 			text: el.querySelector( '.b-notice__text' ).textContent.trim(),
 			more: el.querySelector( '.b-notice__more' ).textContent.replace( /\s+/g, ' ' ).trim(),
 			href: new URL( el.querySelector( '.b-notice__more a' ).href ).pathname,
 			icon: !! el.querySelector( '.b-notice__icon[aria-hidden="true"] svg' ),
 		} ) );
-		check( '«Оповещение» на «Вопросы SEO»: под первым экраном, H2 и текст по умолчанию ({brand} — бренд из настроек)',
-			notice.afterHero && notice.labelled && 'Ответ — личное мнение автора, а не аудит сайта' === notice.h2 && notice.text.startsWith( 'Ответ отражает личное мнение автора — SEO-специалиста [Бренд].' ) && notice.icon, JSON.stringify( notice ) );
+		check( '«Оповещение» на «Вопросы SEO»: под первым экраном, заголовок — строка, не H2 (правка заказчика; название секции), текст по умолчанию ({brand} — бренд из настроек)',
+			notice.afterHero && notice.labelled && 0 === notice.headings && 'P' === notice.tag && 'Ответ — личное мнение автора, а не аудит сайта' === notice.h2 && notice.text.startsWith( 'Ответ отражает личное мнение автора — SEO-специалиста [Бренд].' ) && notice.icon, JSON.stringify( notice ) );
 		check( '«Оповещение»: «Нужна полная проверка сайта? Закажите технический аудит» → /seo/audit/ (ссылка из настроек)',
 			'Нужна полная проверка сайта? Закажите технический аудит' === notice.more && '/seo/audit/' === notice.href, JSON.stringify( notice ) );
 		const inlineId = createPost( 'post', 'Notice', block( 'notice', "array( 'title' => 'Важно', 'text' => 'Текст в статье', 'show_link' => 0 )" ) );
@@ -199,9 +201,35 @@ async function compare( page, o ) {
 			JSON.stringify( inline ) === JSON.stringify( [ 'note', true, 0, 'P', 0, false ] ), JSON.stringify( inline ) );
 		setSettings( { notice_title: 'Заголовок оповещения из настроек', notice_link: '' } );
 		await page.goto( `${ URL }/seo/voprosy/`, { waitUntil: 'networkidle' } );
-		const noticeSet = [ ( await page.locator( '.b-notice-sec h2' ).textContent() ).trim(), await page.locator( '.b-notice-sec .b-notice__more' ).count() ];
+		const noticeSet = [ ( await page.locator( '.b-notice-sec .b-notice__title' ).textContent() ).trim(), await page.locator( '.b-notice-sec .b-notice__more' ).count() ];
 		setSettings( saved );
 		check( 'Заголовок из настроек; без ссылки в настройках строки со ссылкой нет', JSON.stringify( noticeSet ) === JSON.stringify( [ 'Заголовок оповещения из настроек', 0 ] ), JSON.stringify( noticeSet ) );
+
+		// Правка заказчика: заголовок справа от значка, текст и ссылка под ними во всю ширину плашки.
+		const noticeLayout = {};
+		for ( const [ key, url, width ] of [ [ 'page 1280', `${ URL }/seo/voprosy/`, 1280 ], [ 'page 390', `${ URL }/seo/voprosy/`, 390 ], [ 'page 320', `${ URL }/seo/voprosy/`, 320 ], [ 'inline 1280', `${ URL }/?p=${ inlineId }`, 1280 ], [ 'inline 390', `${ URL }/?p=${ inlineId }`, 390 ] ] ) {
+			await page.setViewportSize( { width, height: 900 } );
+			await page.goto( url, { waitUntil: 'networkidle' } );
+			noticeLayout[ key ] = await page.locator( '.b-notice' ).evaluate( ( el ) => {
+				const r = ( q ) => el.querySelector( q ).getBoundingClientRect();
+				const cs = getComputedStyle( el );
+				const box = el.getBoundingClientRect();
+				const content = [ box.left + parseFloat( cs.paddingLeft ) + parseFloat( cs.borderLeftWidth ), box.right - parseFloat( cs.paddingRight ) - parseFloat( cs.borderRightWidth ) ];
+				const icon = r( '.b-notice__icon' );
+				const title = r( '.b-notice__title' );
+				const text = r( '.b-notice__text' );
+				return [
+					title.left > icon.right && Math.abs( ( title.top + title.bottom ) / 2 - ( icon.top + icon.bottom ) / 2 ) <= 1, // справа от значка, по центру
+					text.top >= Math.max( icon.bottom, title.bottom ), // текст под ними
+					Math.round( text.left - content[ 0 ] ), // от левого края плашки
+					Math.round( content[ 1 ] - content[ 0 ] - text.width ), // во всю ширину
+					el.querySelector( '.b-notice__more' ) ? Math.round( r( '.b-notice__more' ).left - content[ 0 ] ) : 0,
+				];
+			} );
+		}
+		check( '«Оповещение»: заголовок справа от значка (по центру), текст и ссылка — под ними во всю ширину плашки (на странице и в статье, 1280 / 390 / 320 px)',
+			Object.values( noticeLayout ).every( ( l ) => JSON.stringify( l ) === JSON.stringify( [ true, true, 0, 0, 0 ] ) ), JSON.stringify( noticeLayout ) );
+		await page.setViewportSize( { width: 1280, height: 900 } );
 
 		// ===== «Видео» =====
 		const external = [];

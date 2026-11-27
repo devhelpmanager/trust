@@ -19,6 +19,7 @@ return array_merge(
 		)
 	),
 	array(
+		Blocks::head_art_select_field( 'answers-list' ),
 		array(
 			'name'    => 'answers_note',
 			'label'   => __( 'Откуда ответы', 'trust' ),
@@ -36,7 +37,8 @@ return array_merge(
 		),
 		Blocks::text_field( 'asks_label', __( 'Перед именем спросившего', 'trust' ), __( 'Спрашивает', 'trust' ), 30 ),
 		Blocks::text_field( 'answered_label', __( 'Перед датой ответа', 'trust' ), __( 'ответ от', 'trust' ), 30 ),
-		Blocks::text_field( 'more_label', __( 'Ссылка в карточке', 'trust' ), __( 'Читать ответ', 'trust' ), 30 ),
+		Blocks::text_field( 'more_label', __( 'Ссылка в карточке', 'trust' ), __( 'Читать ответ', 'trust' ), 30, __( 'Если рядом с именем специалиста не помещается — короткая подпись, если и она не помещается — только стрелка.', 'trust' ) ),
+		Blocks::text_field( 'more_short_label', __( 'Ссылка в карточке — коротко', 'trust' ), __( 'Ответ', 'trust' ), 20 ),
 		Blocks::text_field( 'empty_text', __( 'Нет ответов', 'trust' ), __( 'Ответов пока нет. Задайте первый вопрос — специалист ответит здесь.', 'trust' ), 160 ),
 	)
 );
