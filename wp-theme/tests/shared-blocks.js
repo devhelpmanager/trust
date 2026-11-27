@@ -333,8 +333,11 @@ async function compare( page, o ) {
 		await page.setViewportSize( { width: 990, height: 900 } );
 		await page.goto( `${ URL }/seo/voprosy/`, { waitUntil: 'networkidle' } );
 		const heroLead = await page.evaluate( () => [ Math.round( document.querySelector( '.b-hero-questions__lead' ).getBoundingClientRect().width ), Math.round( document.querySelector( '.b-hero-questions__card' ).getBoundingClientRect().width ) ] );
+		// На «Вопросах SEO» после оповещения идёт список ответов (шаг 4.18) — своя страница, где оно последнее.
+		const lastNoticeId = createPost( 'page', 'Notice last', block( 'notice', "array( 'title' => 'Важно знать', 'text' => 'Оповещение последним', 'show_link' => 0 )" ) );
+		created.push( lastNoticeId );
 		await page.setViewportSize( { width: 1280, height: 900 } );
-		await page.goto( `${ URL }/seo/voprosy/`, { waitUntil: 'networkidle' } );
+		await page.goto( `${ URL }/?page_id=${ lastNoticeId }`, { waitUntil: 'networkidle' } );
 		const footerGap = await page.evaluate( () => Math.round( document.querySelector( '.site-footer' ).getBoundingClientRect().top - document.querySelector( '.b-notice' ).getBoundingClientRect().bottom ) );
 		check( '«Вопросы SEO», 990 px: форма под текстом — текст первого экрана во всю ширину карточки', heroLead[ 0 ] === heroLead[ 1 ], JSON.stringify( heroLead ) );
 		check( '«Оповещение» последним на странице — отступ до подвала 64 px', 64 === footerGap, String( footerGap ) );
