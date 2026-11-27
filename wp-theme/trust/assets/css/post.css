@@ -944,25 +944,23 @@
 }
 
 /*
- * ===== Под текстом: ключевые слова; ниже в одну строку «Понравилось? Лайкни!» и автор =====
- * (правка заказчика: автор — здесь, а не в первом экране). Не помещаются — друг под другом.
+ * ===== Под текстом: автор, линия, ключевые слова, «Понравилось? Лайкни!» =====
+ * (правки заказчика: автор — не в первом экране, а сразу после текста статьи).
  */
 
 .post-foot {
 	display: flex;
 	flex-direction: column;
-	gap: 24px;
+	gap: 32px;
 	margin-top: 40px;
-	padding-top: 28px;
-	border-top: 1px solid var(--c-border);
 }
 
-.post-foot__row {
+.post-foot__bottom {
 	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: space-between;
-	gap: 16px 24px;
+	flex-direction: column;
+	gap: 24px;
+	padding-top: 28px;
+	border-top: 1px solid var(--c-border);
 }
 
 .post-foot__tags {
@@ -1017,7 +1015,7 @@
 	color: var(--c-muted);
 }
 
-/* Автор: тёмная карточка, как первый экран статьи */
+/* Автор: тёмная карточка во всю ширину колонки, как первый экран статьи */
 .post-author-card {
 	display: flex;
 	align-items: center;
@@ -1086,13 +1084,6 @@ a.post-author-card:hover .post-author-card__name {
 	font-size: 14px;
 	line-height: 1.4;
 	color: #D4D2F0;
-}
-
-/* Телефон: карточка автора — во всю ширину под лайками */
-@media (max-width: 640px) {
-	.post-author-card {
-		flex: 1 1 100%;
-	}
 }
 
 /* ===== «Читайте также» ===== */

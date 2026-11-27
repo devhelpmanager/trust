@@ -8,8 +8,8 @@
  * комментарии с русскими склонениями, ключевые слова; автора нет — правка заказчика), содержание (пункты из H2, якоря транслитом,
  * текущий раздел, «Прочитано N %», переход по пункту под шапку), текст (обложка, анонс, таблица
  * с заголовками строк, шаги, картинка с подписью, цитата с инициалами, видео, «Коротко: чек-лист»),
- * «Ключевые слова», в одну строку «Понравилось? Лайкни!» и автор (ссылка на страницу сотрудника,
- * тёмная карточка; на узком экране — друг под другом), обложка и картинки текста на весь экран,
+ * автор (тёмная карточка, ссылка на страницу сотрудника), линия, «Ключевые слова» и «Понравилось?
+ * Лайкни!», обложка и картинки текста на весь экран,
  * «Читайте также», просмотры (раз в сутки с браузера
  * и с IP, боты не считаются), лайки (поставить и снять, все кнопки вместе, после перезагрузки,
  * лимит с IP), REST (404, no-store), настройки «Показывать просмотры / лайки», «Тексты шаблонов»,
@@ -342,27 +342,27 @@ async function compare( page, o ) {
 				const art = 'none' === getComputedStyle( artEl ).display ? null : r( artEl );
 				const meta = document.querySelector( '.post-hero__meta' );
 				const line = r( meta ).top;
+				const article = r( document.getElementById( 'post-article' ) );
+				const bottom = document.querySelector( '.post-foot__bottom' );
 				const tags = r( document.querySelector( '.post-foot__tags' ) );
 				const like = r( document.querySelector( '.post-foot__useful' ) );
 				const author = r( document.querySelector( '.post-author-card' ) );
-				const row = r( document.querySelector( '.post-foot__row' ) );
 				return {
 					// Рисунок справа от заголовка, по центру его высоты; линия (верх «О статье») — под обоими.
 					art: art && [ art.left > title.right, Math.round( Math.abs( ( art.top + art.bottom ) / 2 - ( title.top + title.bottom ) / 2 ) ), line >= art.bottom && line >= title.bottom ],
 					lineBelowTitle: line >= title.bottom && '1px' === getComputedStyle( meta ).borderTopWidth,
-					// Низ: ключевые слова сверху; лайки и автор — в одну строку или друг под другом.
-					oneRow: author.top < like.bottom && like.top < author.bottom && author.left > like.right,
-					order: tags.bottom <= like.top && like.bottom <= author.top,
-					authorFull: Math.round( row.width - author.width ),
+					// Низ: текст статьи, автор (во всю ширину колонки), линия, ключевые слова, лайки.
+					order: article.bottom <= author.top && author.bottom <= r( bottom ).top && '1px' === getComputedStyle( bottom ).borderTopWidth && r( bottom ).top <= tags.top && tags.bottom <= like.top,
+					authorFull: Math.round( article.width - author.width ),
 				};
 			} );
 		}
 		check( 'Первый экран (1280 px): рисунок справа напротив заголовка (по центру его высоты), под ними линия, ниже «О статье» и теги; уже 1280 px — без рисунка, линия под заголовком',
 			layout[ 1280 ].art && layout[ 1280 ].art[ 0 ] && layout[ 1280 ].art[ 1 ] <= 2 && layout[ 1280 ].art[ 2 ] && null === layout[ 1024 ].art && null === layout[ 390 ].art && Object.values( layout ).every( ( l ) => l.lineBelowTitle ),
 			JSON.stringify( layout ) );
-		check( 'Под статьёй: 1280 px — «Понравилось? Лайкни!» и автор в одну строку под ключевыми словами; не помещаются (1024, 390 px) — ключевые слова, лайки, автор друг под другом; на телефоне карточка автора во всю ширину',
-			layout[ 1280 ].oneRow && ! layout[ 1024 ].oneRow && layout[ 1024 ].order && layout[ 390 ].order && 0 === layout[ 390 ].authorFull,
-			JSON.stringify( Object.fromEntries( Object.entries( layout ).map( ( [ w, l ] ) => [ w, [ l.oneRow, l.order, l.authorFull ] ] ) ) ) );
+		check( 'Под статьёй (1280 / 1024 / 390 px): сразу после текста — карточка автора во всю ширину колонки, ниже линия, «Ключевые слова», «Понравилось? Лайкни!»',
+			Object.values( layout ).every( ( l ) => l.order && 0 === l.authorFull ),
+			JSON.stringify( Object.fromEntries( Object.entries( layout ).map( ( [ w, l ] ) => [ w, [ l.order, l.authorFull ] ] ) ) ) );
 
 		const zoom = {};
 		for ( const width of [ 1280, 390 ] ) {
