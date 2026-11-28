@@ -177,10 +177,14 @@ function state( page ) {
 		await page.waitForTimeout( 3300 );
 		await page.click( '#comment-reply-form [type="submit"]' );
 		await page.waitForSelector( '#comment-reply-sent:not([hidden])', { timeout: 15000 } );
-		const replied = await page.evaluate( ( cid ) => [ document.getElementById( 'comment-reply' ).hidden, document.getElementById( 'comment-reply-sent' ).parentElement.closest( '.comment' ).id === `comment-${ cid }`, document.getElementById( 'comment-reply-sent' ).textContent.trim() ], first );
+		const replied = await page.evaluate( ( cid ) => {
+			const sentEl = document.getElementById( 'comment-reply-sent' );
+			const cs = getComputedStyle( sentEl );
+			return [ document.getElementById( 'comment-reply' ).hidden, sentEl.parentElement.closest( '.comment' ).id === `comment-${ cid }`, sentEl.textContent.trim(), cs.fontSize, cs.borderTopStyle, parseFloat( cs.borderTopWidth ) >= 1 ];
+		}, first );
 		const db2 = testComments();
-		check( 'Ответ: «Ответ отправлен на модерацию.» под комментарием; в базе — ответ этому комментарию, на модерации',
-			JSON.stringify( replied ) === JSON.stringify( [ true, true, 'Ответ отправлен на модерацию.' ] ) && 2 === db2.length && db2[ 1 ].parent === Number( first ) && '0' === db2[ 1 ].approved,
+		check( 'Ответ: «Ответ отправлен на модерацию.» под комментарием — 16 px, в рамке (правка заказчика); в базе — ответ этому комментарию, на модерации',
+			JSON.stringify( replied ) === JSON.stringify( [ true, true, 'Ответ отправлен на модерацию.', '16px', 'solid', true ] ) && 2 === db2.length && db2[ 1 ].parent === Number( first ) && '0' === db2[ 1 ].approved,
 			JSON.stringify( [ replied, db2 ] ) );
 		ageTests();
 
@@ -302,13 +306,21 @@ function state( page ) {
 		const mob = await phone.evaluate( () => {
 			const row = document.querySelector( '#comment-form .comment-form__row' ).children;
 			const reply = document.querySelector( '.comment__replies' );
-			return [ row[ 0 ].getBoundingClientRect().top < row[ 1 ].getBoundingClientRect().top, getComputedStyle( reply ).paddingLeft, getComputedStyle( document.querySelector( '.comment__avatar' ) ).width, document.documentElement.scrollWidth <= innerWidth ];
+			const foot = document.querySelector( '#comment-form .comment-form__foot' ).getBoundingClientRect();
+			const button = document.querySelector( '#comment-form [type="submit"]' ).getBoundingClientRect();
+			return [ row[ 0 ].getBoundingClientRect().top < row[ 1 ].getBoundingClientRect().top, getComputedStyle( reply ).paddingLeft, getComputedStyle( document.querySelector( '.comment__avatar' ) ).width, document.documentElement.scrollWidth <= innerWidth, Math.round( foot.right - button.right ) ];
 		} );
 		await phone.locator( '.comments > .comment [data-comment-reply]' ).first().click();
-		const mobReply = await phone.evaluate( () => { const box = document.getElementById( 'comment-reply' ); const r = box.getBoundingClientRect(); return [ ! box.hidden, r.right <= innerWidth, document.documentElement.scrollWidth <= innerWidth ]; } );
+		const mobReply = await phone.evaluate( () => {
+			const box = document.getElementById( 'comment-reply' );
+			const r = box.getBoundingClientRect();
+			const send = box.querySelector( '[type="submit"]' ).getBoundingClientRect();
+			const cancel = box.querySelector( '[data-comment-cancel]' ).getBoundingClientRect();
+			return [ ! box.hidden, r.right <= innerWidth, document.documentElement.scrollWidth <= innerWidth, Math.round( r.right - send.right ), cancel.right <= send.left ];
+		} );
 		await phone.close();
-		check( 'Телефон 390 px: имя и email — друг под другом, ответы со сдвигом 10 px, аватар 36 px, форма ответа помещается, без прокрутки вбок',
-			JSON.stringify( mob ) === JSON.stringify( [ true, '10px', '36px', true ] ) && JSON.stringify( mobReply ) === JSON.stringify( [ true, true, true ] ), JSON.stringify( [ mob, mobReply ] ) );
+		check( 'Телефон 390 px: имя и email — друг под другом, «Отправить» справа (правка заказчика), ответы со сдвигом 10 px, аватар 36 px; форма ответа помещается, «Отмена» и «Отправить» справа; без прокрутки вбок',
+			JSON.stringify( mob ) === JSON.stringify( [ true, '10px', '36px', true, 0 ] ) && JSON.stringify( mobReply ) === JSON.stringify( [ true, true, true, 0, true ] ), JSON.stringify( [ mob, mobReply ] ) );
 
 		// ===== Сверка списка с макетом =====
 		// Даты демо — от дня импорта, у читателей в макете — силуэт: при сверке — как в макете.

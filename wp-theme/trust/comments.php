@@ -170,11 +170,24 @@ $trust_person = static function ( string $uid ) use ( $trust_error, $trust_user 
 				<?php Forms::consent_check( 'comment-reply', Comments::FORM ); ?>
 				<p class="form__status" role="alert" hidden></p>
 				<div class="comment-form__buttons">
-					<button type="submit" class="comment-form__submit comment-form__submit--sm"><?php esc_html_e( 'Отправить', 'trust' ); ?></button>
 					<button type="button" class="comment-form__cancel" data-comment-cancel><?php esc_html_e( 'Отмена', 'trust' ); ?></button>
+					<button type="submit" class="comment-form__submit comment-form__submit--sm"><?php esc_html_e( 'Отправить', 'trust' ); ?></button>
 				</div>
 			</form>
 		</div>
-		<p class="comment-reply-sent" id="comment-reply-sent" role="status" tabindex="-1" hidden><?php echo esc_html( Template_Texts::get( 'comment_reply_sent' ) ); ?></p>
+		<div class="comment-reply-sent" id="comment-reply-sent" role="status" tabindex="-1" hidden>
+			<span class="comment-sent__icon comment-reply-sent__icon" aria-hidden="true">
+				<?php
+				Icons::render(
+					'check',
+					array(
+						'size'         => 14,
+						'stroke_width' => 2.6,
+					)
+				);
+				?>
+			</span>
+			<span class="comment-reply-sent__text"><?php echo esc_html( Template_Texts::get( 'comment_reply_sent' ) ); ?></span>
+		</div>
 	<?php endif; ?>
 </section>

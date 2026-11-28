@@ -1231,6 +1231,8 @@ a.post-author-card:hover .post-author-card__name {
 .comment-form__submit {
 	display: inline-flex;
 	align-items: center;
+	/* Правка заказчика: кнопка всегда справа — и когда на узком экране она уходит на новую строку */
+	margin-left: auto;
 	min-height: 48px;
 	padding: 0 24px;
 	border: 0;
@@ -1490,10 +1492,16 @@ html:not(.js) .comment__reply {
 	min-height: 96px;
 }
 
+/* Форма ответа: «Отмена» и «Отправить» — справа, «Отправить» последней (как у основной формы) */
 .comment-form__buttons {
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: flex-end;
 	gap: 10px;
+}
+
+.comment-form__buttons .comment-form__submit {
+	margin-left: 0;
 }
 
 .comment-form__submit--sm {
@@ -1520,10 +1528,25 @@ html:not(.js) .comment__reply {
 	background: var(--c-lavender);
 }
 
+/* «Ответ отправлен на модерацию.» — крупно, в зелёной рамке со значком (правка заказчика; в макете — мелкая строка) */
 .comment-reply-sent {
-	margin: 4px 0 0;
-	font-size: 14px;
-	color: #0F6B3A;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 10px 0 0;
+	padding: 14px 18px;
+	border: 1.5px solid var(--c-ok);
+	border-radius: 14px;
+	background: var(--c-ok-bg);
+	color: #0E5A31;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.45;
+}
+
+.comment-reply-sent__icon {
+	width: 24px;
+	height: 24px;
 }
 
 .comment-reply-sent:focus {
