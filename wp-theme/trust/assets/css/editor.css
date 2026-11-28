@@ -5,7 +5,7 @@
  * умолчанию сужает блоки до ширины текста (760 px из theme.json).
  */
 
-.is-root-container > .wp-block[data-type^="trust/"] {
+.is-root-container > .wp-block[data-type^="trust/"]:not([data-type="trust/quote"]) {
 	max-width: none;
 	margin-right: 0;
 	margin-left: 0;
@@ -21,6 +21,33 @@
 	color: #0E0B14;
 	font-size: 14px;
 	line-height: 1.5;
+}
+
+/* «Цитата с автором» — часть текста статьи: в редакторе шириной текста, как на сайте */
+
+/* Стандартная «Цитата» — видна как цитата и в редакторе: линия слева; стиль «С автором» —
+   лавандовая плашка, подпись — серым (на сайте — как в статье). Цитата эксперта с полями для
+   автора — блок темы «Цитата с автором». */
+.is-root-container .wp-block-quote {
+	margin-right: 0;
+	margin-left: 0;
+	padding-left: 20px;
+	border-left: 3px solid var(--c-violet);
+}
+
+.is-root-container .wp-block-quote.is-style-author {
+	padding: 24px 28px;
+	border: 0;
+	border-radius: 22px;
+	background: var(--c-lavender);
+}
+
+.is-root-container .wp-block-quote cite {
+	display: block;
+	margin-top: 8px;
+	color: var(--c-muted);
+	font-size: 14px;
+	font-style: normal;
 }
 
 /* Документ (шаг 4.15): стили «Пункты документа», «Вступление», «Примечание» — как на сайте

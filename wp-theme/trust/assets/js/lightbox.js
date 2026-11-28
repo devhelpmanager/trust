@@ -143,7 +143,7 @@
 	// Картинки в тексте (блок «Блок с текстом», текст статей) без своей ссылки.
 	function initProse() {
 		document.querySelectorAll( '.prose img, .post-text img' ).forEach( ( image ) => {
-			if ( image.closest( 'a, button, [data-trust-lightbox], .b-video' ) || image.classList.contains( 'is-zoomable' ) ) {
+			if ( image.closest( 'a, button, [data-trust-lightbox], .b-video, .b-quote' ) || image.classList.contains( 'is-zoomable' ) ) {
 				return;
 			}
 			image.classList.add( 'is-zoomable' );

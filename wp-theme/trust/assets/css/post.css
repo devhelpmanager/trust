@@ -553,7 +553,7 @@
 	margin-bottom: 20px;
 }
 
-.post-text > p:has(+ .wp-block-quote) {
+.post-text > p:has(+ :is(.wp-block-quote, .b-quote)) {
 	margin-bottom: 22px;
 }
 
@@ -697,7 +697,7 @@
 }
 
 /* Картинка с подписью */
-.post-text > figure {
+.post-text > figure:where(:not(.b-quote)) {
 	margin: 0 0 18px;
 }
 
@@ -710,7 +710,7 @@
 	box-shadow: 0 0 0 1px var(--c-border);
 }
 
-.post-text > figure > figcaption,
+.post-text > figure:where(:not(.b-quote)) > figcaption,
 .post-text .wp-element-caption {
 	margin: 12px 0 0;
 	font-size: 14px;

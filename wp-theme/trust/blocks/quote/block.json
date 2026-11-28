@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "trust/quote",
+	"title": "Цитата с автором",
+	"description": "Мнение эксперта в тексте статьи или ответа: текст цитаты и автор — сотрудник из раздела «Сотрудники» (имя, должность, фото) или вписанный вручную. Лавандовая плашка со знаком цитаты, внизу — фото или инициалы, имя и должность.",
+	"category": "trust-content",
+	"icon": "format-quote",
+	"keywords": [ "цитата", "автор", "эксперт", "мнение", "специалист" ],
+	"textdomain": "trust",
+	"supports": {
+		"html": false,
+		"anchor": false,
+		"align": false,
+		"customClassName": false
+	},
+	"style": "file:./style.css",
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php",
+		"blockVersion": 3
+	}
+}

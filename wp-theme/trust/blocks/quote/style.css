@@ -1,0 +1,82 @@
+/*
+ * Блок «Цитата с автором» (макет seo-blog/statya.html — цитата в тексте статьи): лавандовая плашка,
+ * знак цитаты, текст 19–22 px, внизу — фото или инициалы в круге, имя и должность.
+ * Те же стили — в превью редактора.
+ */
+
+.b-quote {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	margin: 0 0 24px;
+	padding: clamp(24px, 4vw, 36px);
+	box-sizing: border-box;
+	border-radius: 22px;
+	background: var(--c-lavender);
+	color: var(--c-text);
+}
+
+.b-quote__icon {
+	flex: none;
+	color: var(--c-violet);
+}
+
+.b-quote__text {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: clamp(19px, 2vw, 22px);
+	font-weight: 500;
+	line-height: 1.55;
+	color: var(--c-text);
+	text-wrap: pretty;
+}
+
+.b-quote__text p {
+	margin: 0;
+}
+
+.b-quote__author {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 0;
+}
+
+.b-quote__photo {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: var(--r-pill);
+	background: var(--c-violet);
+	color: var(--c-white);
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1;
+	object-fit: cover;
+}
+
+.b-quote__who {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+	line-height: 1.3;
+}
+
+.b-quote__name {
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--c-text);
+}
+
+.b-quote__role {
+	font-size: 14px;
+	color: var(--c-muted);
+}

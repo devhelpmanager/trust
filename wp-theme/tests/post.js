@@ -90,8 +90,14 @@ function state( page ) {
 				return f && [ !! f.querySelector( 'img' ).alt, text( f.querySelector( 'figcaption' ) ) ];
 			} )(),
 			quote: ( () => {
-				const cite = document.querySelector( '#post-article .is-style-author cite' );
-				return cite && [ cite.dataset.initials, getComputedStyle( cite, '::before' ).content ];
+				const q = document.querySelector( '#post-article > figure.b-quote' );
+				return q && {
+					text: text( q.querySelector( 'blockquote' ) ),
+					name: text( q.querySelector( 'figcaption .b-quote__name' ) ),
+					role: text( q.querySelector( 'figcaption .b-quote__role' ) ),
+					photo: q.querySelector( '.b-quote__photo' ).tagName,
+					zoom: q.querySelector( 'img' ) ? q.querySelector( 'img' ).classList.contains( 'is-zoomable' ) : false,
+				};
 			} )(),
 			video: !! document.querySelector( '#post-article .b-video' ),
 			how: ( () => {
@@ -198,8 +204,8 @@ async function compare( page, o ) {
 			s.table && 5 === s.table.rows && JSON.stringify( s.table.labels ) === JSON.stringify( [ 'Что делает', 'Пример' ] ) && s.table.caption.startsWith( 'Директивы, которые понимают' ) &&
 			5 === s.steps.length && 'Откройте файл в браузере' === s.steps[ 0 ] && s.figure && s.figure[ 0 ] && s.figure[ 1 ].includes( 'закрывает от сканирования весь сайт' ),
 			JSON.stringify( [ s.table, s.steps, s.figure ] ) );
-		check( 'Цитата «С автором» — инициалы в круге; «Видео»; «Коротко: чек-лист» — блок «Как бы поступил я» (якорь, 5 пунктов, кнопка)',
-			s.quote && 'ИФ' === s.quote[ 0 ] && '"ИФ"' === s.quote[ 1 ] && s.video && s.how && 'korotko-chek-list' === s.how[ 0 ] && 'korotko-chek-list' === s.how[ 1 ] && 5 === s.how[ 2 ] && 'Заказать технический аудит' === s.how[ 3 ],
+		check( 'Цитата — блок «Цитата с автором»: <figure>, текст в <blockquote>, в <figcaption> фото, имя и должность сотрудника (фото не открывается на весь экран); «Видео»; «Коротко: чек-лист» — блок «Как бы поступил я» (якорь, 5 пунктов, кнопка)',
+			s.quote && s.quote.text.startsWith( 'Robots.txt стоит проверять после каждого релиза' ) && '[Имя Фамилия]' === s.quote.name && 'Старший SEO-специалист' === s.quote.role && 'IMG' === s.quote.photo && ! s.quote.zoom && s.video && s.how && 'korotko-chek-list' === s.how[ 0 ] && 'korotko-chek-list' === s.how[ 1 ] && 5 === s.how[ 2 ] && 'Заказать технический аудит' === s.how[ 3 ],
 			JSON.stringify( [ s.quote, s.video, s.how ] ) );
 		check( 'Под текстом: «Ключевые слова» с 5 тегами, «Понравилось? Лайкни!» (правка заказчика) с кнопкой «Нравится»; две кнопки «Нравится» (содержание и низ), обе не нажаты',
 			s.foot && 'Ключевые слова' === s.foot.label && 5 === s.foot.tags.length && 'Понравилось? Лайкни!' === s.foot.question && s.foot.like &&
@@ -369,7 +375,8 @@ async function compare( page, o ) {
 		for ( const width of [ 1280, 390 ] ) {
 			await page.setViewportSize( { width, height: 900 } );
 			await page.goto( POST, { waitUntil: 'networkidle' } );
-			const marks = await page.evaluate( () => [ ...document.querySelectorAll( '.post-text img' ) ].map( ( i ) => [ i.closest( '.b-video' ) ? 'video' : ( i.closest( '.post-text__cover' ) ? 'cover' : 'text' ), i.classList.contains( 'is-zoomable' ), i.getAttribute( 'role' ) ] ) );
+			// Фото автора в «Цитате с автором» — не картинка статьи, на весь экран не открывается (проверено выше).
+			const marks = await page.evaluate( () => [ ...document.querySelectorAll( '.post-text img:not(.b-quote__photo)' ) ].map( ( i ) => [ i.closest( '.b-video' ) ? 'video' : ( i.closest( '.post-text__cover' ) ? 'cover' : 'text' ), i.classList.contains( 'is-zoomable' ), i.getAttribute( 'role' ) ] ) );
 			const opened = [];
 			for ( const sel of [ '.post-text__cover img', '#post-article .wp-block-image img' ] ) {
 				await page.locator( sel ).scrollIntoViewIfNeeded();
@@ -441,8 +448,13 @@ async function compare( page, o ) {
 			document.querySelectorAll( '.post-hero__tag' ).forEach( ( a ) => a.classList.toggle( 'is-raw', 'robots.txt' === a.textContent ) );
 		} );
 		const fixText = ( p ) => p.addStyleTag( { content: '#post-article img { object-position: -99999px 0; }' } ).then( () => p.evaluate( () => {
-			const cite = document.querySelector( '#post-article .is-style-author cite' );
-			cite.innerHTML = '[Имя Фамилия]<br>[Должность]';
+			// Фото сотрудника — инициалы, как в макете; должность — как в макете.
+			const photo = document.querySelector( '#post-article .b-quote__photo' );
+			const span = document.createElement( 'span' );
+			span.className = 'b-quote__photo';
+			span.textContent = 'ИФ';
+			photo.replaceWith( span );
+			document.querySelector( '#post-article .b-quote__role' ).textContent = '[Должность]';
 		} ) );
 		// Правка заказчика: автора в первом экране нет (в макете убран при сверке); от 1280 px рисунок —
 		// напротив заголовка (раскладка проверяется отдельно, сверка — на 768 и 390 px, где рисунка нет).
@@ -480,6 +492,30 @@ async function compare( page, o ) {
 		}
 		check( 'Консоль браузера без ошибок', 0 === errors.length, errors.slice( 0, 3 ).join( ' | ' ) );
 
+		// ===== «Цитата с автором»: варианты автора =====
+		const quotes = JSON.parse( wp( 'eval', `
+			global $post;
+			$post = get_post( ${ id } );
+			setup_postdata( $post );
+			$render = static fn( array $data ): string => trim( do_blocks( Trust\\Blocks::serialize( 'quote', $data ) ) );
+			$parse  = static function ( string $html ): array {
+				preg_match( '~<span class="b-quote__name">(.*?)</span>~', $html, $name );
+				preg_match( '~<span class="b-quote__role">(.*?)</span>~', $html, $role );
+				preg_match( '~<span class="b-quote__photo"[^>]*>(.*?)</span>~', $html, $initials );
+				return array( 'p' => substr_count( $html, '<p>' ), 'name' => $name[1] ?? null, 'role' => $role[1] ?? null, 'initials' => $initials[1] ?? null, 'img' => str_contains( $html, '<img' ), 'empty' => '' === $html );
+			};
+			echo wp_json_encode( array(
+				$parse( $render( array( 'text' => "Первый абзац.\n\nВторой абзац.", 'source' => 'manual', 'name' => 'Анна Петрова', 'role' => 'Директор, ООО «Пример»' ) ) ),
+				$parse( $render( array( 'text' => 'Без автора.', 'source' => 'none' ) ) ),
+				$parse( $render( array( 'text' => 'Автор статьи.', 'source' => 'member' ) ) ),
+				$parse( $render( array( 'text' => '', 'source' => 'none' ) ) ),
+			) );
+		` ) );
+		check( '«Цитата с автором»: вписанный вручную автор — инициалы, имя, должность, абзацы через пустую строку; «Без автора» — без подписи; сотрудник не выбран — автор статьи; без текста на сайте блока нет',
+			2 === quotes[ 0 ].p && 'Анна Петрова' === quotes[ 0 ].name && 'Директор, ООО «Пример»' === quotes[ 0 ].role && 'АП' === quotes[ 0 ].initials &&
+				null === quotes[ 1 ].name && 1 === quotes[ 1 ].p && '[Имя Фамилия]' === quotes[ 2 ].name && 'Старший SEO-специалист' === quotes[ 2 ].role && quotes[ 3 ].empty,
+			JSON.stringify( quotes ) );
+
 		// ===== Редактор =====
 		const editor = await browser.newPage( { viewport: { width: 1400, height: 1000 } } );
 		const editorErrors = collectConsoleErrors( editor );
@@ -495,11 +531,41 @@ async function compare( page, o ) {
 			} );
 			walk( wp.data.select( 'core/block-editor' ).getBlocks() );
 			const allowed = wp.data.select( 'core/block-editor' ).getSettings().allowedBlockTypes;
-			return [ all.filter( ( b ) => ! b.isValid ).map( ( b ) => b.name ), [ ...new Set( all.map( ( b ) => b.name ) ) ].sort(), Array.isArray( allowed ) && allowed.includes( 'trust/how-i-would' ) ];
+			return [ all.filter( ( b ) => ! b.isValid ).map( ( b ) => b.name ), [ ...new Set( all.map( ( b ) => b.name ) ) ].sort(), Array.isArray( allowed ) && allowed.includes( 'trust/how-i-would' ) && allowed.includes( 'trust/quote' ) ];
 		} );
-		check( 'Редактор: все блоки статьи без ошибок (таблица, шаги, картинка, цитата, «Видео», «Как бы поступил я»); «Как бы поступил я» доступен в статьях',
-			0 === ed[ 0 ].length && [ 'core/table', 'core/image', 'core/quote', 'core/list', 'trust/video', 'trust/how-i-would' ].every( ( b ) => ed[ 1 ].includes( b ) ) && true === ed[ 2 ],
+		check( 'Редактор: все блоки статьи без ошибок (таблица, шаги, картинка, «Цитата с автором», «Видео», «Как бы поступил я»); «Как бы поступил я» и «Цитата с автором» доступны в статьях',
+			0 === ed[ 0 ].length && [ 'core/table', 'core/image', 'trust/quote', 'core/list', 'trust/video', 'trust/how-i-would' ].every( ( b ) => ed[ 1 ].includes( b ) ) && true === ed[ 2 ],
 			JSON.stringify( ed ) );
+		// Поля «Цитаты с автором» в боковой панели: текст, автор (сотрудник / вручную / без автора).
+		await editor.evaluate( () => {
+			const find = ( blocks ) => blocks.reduce( ( hit, b ) => hit || ( 'trust/quote' === b.name ? b : find( b.innerBlocks ) ), null );
+			wp.data.dispatch( 'core/block-editor' ).selectBlock( find( wp.data.select( 'core/block-editor' ).getBlocks() ).clientId );
+			const sidebar = wp.data.dispatch( 'core/edit-post' ) || wp.data.dispatch( 'core/editor' );
+			if ( sidebar.openGeneralSidebar ) {
+				sidebar.openGeneralSidebar( 'edit-post/block' );
+			}
+		} );
+		await editor.waitForSelector( '.acf-block-fields .acf-field[data-name="text"]', { timeout: 30000 } );
+		const panel = await editor.evaluate( () => {
+			const box = document.querySelector( '.acf-block-fields' );
+			const label = ( name ) => {
+				const f = box.querySelector( `.acf-field[data-name="${ name }"]` );
+				return f ? [ f.querySelector( '.acf-label label' ).textContent.replace( /\s+/g, ' ' ).replace( '*', '' ).trim(), ! f.classList.contains( 'acf-hidden' ) ] : null;
+			};
+			return {
+				text: label( 'text' ),
+				textValue: box.querySelector( '.acf-field[data-name="text"] textarea' ).value.slice( 0, 30 ),
+				source: label( 'source' ),
+				choices: [ ...box.querySelectorAll( '.acf-field[data-name="source"] label' ) ].map( ( l ) => l.textContent.trim() ),
+				member: label( 'member' ),
+				name: label( 'name' ),
+				preview: !! document.querySelector( 'iframe[name="editor-canvas"]' ) ? !! document.querySelector( 'iframe[name="editor-canvas"]' ).contentDocument.querySelector( '.b-quote .b-quote__name' ) : !! document.querySelector( '.b-quote .b-quote__name' ),
+			};
+		} );
+		check( 'Редактор, «Цитата с автором»: поля «Текст цитаты» (заполнено), «Автор цитаты» — Сотрудник / Вписать вручную / Без автора, «Сотрудник»; «Имя» скрыто, пока не выбрано «Вписать вручную»; превью — плашка с автором',
+			panel.text && 'Текст цитаты' === panel.text[ 0 ] && 'Robots.txt стоит проверять пос' === panel.textValue && 'Автор цитаты' === panel.source[ 0 ] &&
+				JSON.stringify( panel.choices.slice( -3 ) ) === JSON.stringify( [ 'Сотрудник', 'Вписать вручную', 'Без автора' ] ) && panel.member[ 1 ] && ! panel.name[ 1 ] && panel.preview,
+			JSON.stringify( panel ) );
 		check( 'Редактор без ошибок JavaScript', 0 === editorErrors.length, editorErrors.slice( 0, 3 ).join( ' | ' ) );
 		await editor.close();
 	} finally {
