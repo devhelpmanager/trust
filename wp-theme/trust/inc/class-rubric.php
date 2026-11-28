@@ -218,28 +218,6 @@ final class Rubric {
 	}
 
 	/**
-	 * Ведущий рубрики: сотрудник из поля «Ведёт рубрику» (имя, должность, фото, адрес страницы).
-	 *
-	 * @param \WP_Term $term Рубрика.
-	 * @return array{name: string, role: string, photo: int, initials: string, url: string}|null
-	 */
-	public static function lead( \WP_Term $term ): ?array {
-		$id     = Dependencies::has_scf() ? (int) get_field( 'trust_rubric_lead', $term ) : (int) get_term_meta( $term->term_id, 'trust_rubric_lead', true );
-		$member = $id ? get_post( $id ) : null;
-		if ( ! $member || 'team' !== $member->post_type || 'publish' !== $member->post_status ) {
-			return null;
-		}
-		$name = get_the_title( $member );
-		return array(
-			'name'     => $name,
-			'role'     => trim( (string) get_post_meta( $member->ID, 'trust_position', true ) ),
-			'photo'    => (int) get_post_thumbnail_id( $member ),
-			'initials' => Answers_List::initials( $name ),
-			'url'      => is_post_type_viewable( 'team' ) ? (string) get_permalink( $member ) : '',
-		);
-	}
-
-	/**
 	 * Текст «О рубрике» (поле WYSIWYG), '' — блока нет.
 	 *
 	 * @param \WP_Term $term Рубрика.

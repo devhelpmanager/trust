@@ -39,7 +39,6 @@ final class Template_Texts {
 			'comment_reply_sent' => __( 'Ответ отправлен на модерацию.', 'trust' ),
 
 			'rubric_label'       => __( 'Рубрика', 'trust' ),
-			'rubric_lead'        => __( 'Ведёт рубрику', 'trust' ),
 			'rubric_tags'        => __( 'Теги рубрики:', 'trust' ),
 			'rubric_list'        => __( 'Статьи рубрики', 'trust' ),
 			'rubric_new'         => __( 'Новые', 'trust' ),

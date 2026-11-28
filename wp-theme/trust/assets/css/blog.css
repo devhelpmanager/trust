@@ -398,6 +398,54 @@
 	margin-left: auto;
 }
 
+/* ===== Полоса рубрик (рубрика; в блоге — между «Все статьи» и карточками, правка заказчика) ===== */
+
+.rubric-strip {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.rubric-strip__item {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	box-sizing: border-box;
+	min-height: 44px;
+	padding: 0 16px;
+	border: 1.5px solid var(--c-border-strong);
+	border-radius: var(--r-pill);
+	background: var(--c-white);
+	color: var(--c-text-2);
+	font-size: 15px;
+	font-weight: 600;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: border-color 0.2s, background 0.2s;
+}
+
+.rubric-strip__item:hover {
+	border-color: var(--c-violet);
+	color: var(--c-text-2);
+}
+
+.rubric-strip__count {
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	color: var(--c-muted-2);
+}
+
+.rubric-strip__item[aria-current="page"] {
+	border-color: var(--c-violet);
+	background: var(--c-violet);
+	color: var(--c-white);
+}
+
+.rubric-strip__item[aria-current="page"] .rubric-strip__count {
+	color: var(--c-violet-light);
+}
+
 /* ===== Адаптив (как в макете) ===== */
 
 @media (max-width: 1023px) {
@@ -421,6 +469,25 @@
 @media (max-width: 760px) {
 	.post-cards--lg {
 		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+/* Телефон: полоса рубрик — одной строкой с прокруткой до краёв экрана */
+@media (max-width: 760px) {
+	.rubric-strip {
+		flex-wrap: nowrap;
+		margin: 0 calc(-1 * var(--gutter));
+		padding: 2px var(--gutter) 8px;
+		overflow-x: auto;
+		scrollbar-width: none;
+	}
+
+	.rubric-strip::-webkit-scrollbar {
+		display: none;
+	}
+
+	.rubric-strip__item {
+		flex: none;
 	}
 }
 

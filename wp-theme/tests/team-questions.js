@@ -185,7 +185,6 @@ async function pick( page, field, search, option ) {
 			$demo = static fn( $type, $status = 'publish' ) => get_posts( array( 'post_type' => $type, 'post_status' => $status, 'numberposts' => -1, 'meta_key' => '_trust_demo_id', 'orderby' => 'menu_order', 'order' => 'ASC' ) );
 			$team = $demo( 'team' );
 			$repair = get_posts( array( 'post_type' => 'case', 'name' => 'novyy-sayt-i-seo-dlya-kompanii-po-remontu-kvartir' ) )[0];
-			$audit = get_term_by( 'slug', 'tehnicheskiy-audit', 'category' );
 			echo wp_json_encode( array(
 				'team'      => count( $team ),
 				'first'     => $team[0]->post_name,
@@ -196,13 +195,12 @@ async function pick( page, field, search, option ) {
 				'pending'   => count( $demo( 'question', 'pending' ) ),
 				'experts'   => count( array_filter( $demo( 'question' ), static fn( $p ) => get_field( 'trust_expert', $p->ID ) ) ),
 				'caseTeam'  => array_map( static fn( $r ) => get_post_field( 'post_name', $r['member'] ), (array) get_field( 'trust_team', $repair->ID ) ),
-				'rubric'    => get_post_field( 'post_name', get_field( 'trust_rubric_lead', 'term_' . $audit->term_id ) ),
 			) );` );
 		check( 'Демо: 15 сотрудников по порядку макета, 3 руководителя', demo.team === 15 && demo.first === 'ceo' && demo.leaders === 3, JSON.stringify( demo ) );
 		check( 'Демо: 6 вакансий, у каждой три раздела', demo.vacancies === 6 && demo.sections === 6 );
 		check( 'Демо: 20 опубликованных вопросов со специалистом и 1 на утверждении', demo.questions === 20 && demo.experts === 20 && demo.pending === 1 );
-		check( 'Демо: команда кейса «Ремонт квартир» и ведущий рубрики «Технический аудит»',
-			demo.caseTeam.join() === 'seo-specialist,designer,frontend' && demo.rubric === 'seo-senior', JSON.stringify( [ demo.caseTeam, demo.rubric ] ) );
+		check( 'Демо: команда кейса «Ремонт квартир»',
+			demo.caseTeam.join() === 'seo-specialist,designer,frontend', JSON.stringify( demo.caseTeam ) );
 		const pages = [ '/komanda/seo-senior/', wp( 'post', 'list', `--post__in=${ q1 }`, '--post_type=question', '--field=url' ).replace( URL, '' ) ];
 		const codes = [];
 		for ( const u of pages ) {

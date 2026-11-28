@@ -3,7 +3,8 @@
  * Поля рубрики (ТЗ, раздел 5.3).
  *
  * Название — H1 страницы рубрики, описание — подзаголовок под ним (подсказки к стандартным
- * полям WordPress — Trust\Content_Types::category_labels()). SEO-поля — шаг 3.1.
+ * полям WordPress — Trust\Content_Types::category_labels()). SEO-поля — шаг 3.1. Поле «Ведёт
+ * рубрику» убрано по решению заказчика (блок «Ведёт рубрику» на странице рубрики не выводится).
  *
  * @package Trust
  */
@@ -14,17 +15,6 @@ return array(
 	'title'    => __( 'Рубрика', 'trust' ),
 	'location' => 'taxonomy',
 	'fields'   => array(
-		array(
-			'name'          => 'trust_rubric_lead',
-			'label'         => __( 'Ведёт рубрику', 'trust' ),
-			'type'          => 'post_object',
-			'post_type'     => array( 'team' ),
-			'post_status'   => array( 'publish' ),
-			'return_format' => 'id',
-			'allow_null'    => 1,
-			'ui'            => 1,
-			'instructions'  => __( 'Сотрудник из раздела «Сотрудники»: фото, имя и должность выводятся рядом с заголовком рубрики. Пусто — блок не показывается.', 'trust' ),
-		),
 		array(
 			'name'         => 'trust_rubric_about',
 			'label'        => __( 'О рубрике', 'trust' ),

@@ -1,24 +1,11 @@
 /*
- * Рубрика блога (category.php; макет portfolio-blog-404/rubrika.html): первый экран с ведущим
- * рубрики, полоса рубрик, теги рубрики, «Статьи рубрики» с сортировкой, «Не нашли ответ?»,
- * «О рубрике». Общие части списка (первый экран, главная статья, карточки, пагинация) — blog.css.
+ * Рубрика блога (category.php; макет portfolio-blog-404/rubrika.html): первый экран (H1 и описание
+ * во всю ширину — правка заказчика), теги рубрики, «Статьи рубрики» с сортировкой, «Не нашли
+ * ответ?», «О рубрике». Общие части (первый экран, полоса рубрик, главная статья, карточки,
+ * пагинация) — blog.css.
  */
 
 /* ===== Первый экран ===== */
-
-.rubric-hero__top {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: flex-end;
-	justify-content: space-between;
-	gap: 24px 48px;
-}
-
-.rubric-hero__head {
-	flex: 1 1 560px;
-	min-width: 0;
-	max-width: 780px;
-}
 
 .rubric-hero .archive-hero__title {
 	font-size: clamp(32px, 4.6vw, 60px); /* как в макете рубрики (в блоге — от 34 px) */
@@ -44,66 +31,6 @@
 	color: var(--c-muted);
 }
 
-/* «Ведёт рубрику» */
-.rubric-lead {
-	display: flex;
-	flex: 0 1 354px; /* 320 px и поля, как в макете; на телефоне — во всю строку */
-	align-items: center;
-	gap: 14px;
-	box-sizing: border-box;
-	min-width: 0;
-	padding: 14px 16px;
-	border: 1px solid var(--c-border);
-	border-radius: 18px;
-	background: #FBFAFF;
-	color: var(--c-text);
-	text-decoration: none;
-	transition: border-color 0.2s;
-}
-
-a.rubric-lead:hover {
-	border-color: var(--c-decor);
-	color: var(--c-text);
-}
-
-a.rubric-lead:focus-visible {
-	outline: 3px solid var(--c-focus);
-	outline-offset: 2px;
-}
-
-.rubric-lead__photo {
-	display: flex;
-	flex: none;
-	align-items: center;
-	justify-content: center;
-	width: 48px;
-	height: 48px;
-	border-radius: var(--r-pill);
-	background: var(--c-violet);
-	color: var(--c-white);
-	font-size: 16px;
-	font-weight: 600;
-	object-fit: cover;
-}
-
-.rubric-lead__who {
-	display: flex;
-	flex-direction: column;
-	gap: 2px;
-	min-width: 0;
-}
-
-.rubric-lead__label,
-.rubric-lead__role {
-	font-size: 13px;
-	color: var(--c-muted);
-}
-
-.rubric-lead__name {
-	font-size: 16px;
-	font-weight: 600;
-}
-
 /* Главная статья рубрики: заголовок от 22 px, обложка 16 : 10 на всех ширинах (как в макете рубрики) */
 .rubric-hero .post-feature__title {
 	font-size: clamp(22px, 2.6vw, 34px);
@@ -112,53 +39,6 @@ a.rubric-lead:focus-visible {
 .rubric-hero .post-feature__img,
 .rubric-hero .post-feature__media .post-card__placeholder {
 	aspect-ratio: 16 / 10;
-}
-
-/* Полоса рубрик */
-.rubric-strip {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 8px;
-}
-
-.rubric-strip__item {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	box-sizing: border-box;
-	min-height: 44px;
-	padding: 0 16px;
-	border: 1.5px solid var(--c-border-strong);
-	border-radius: var(--r-pill);
-	background: var(--c-white);
-	color: var(--c-text-2);
-	font-size: 15px;
-	font-weight: 600;
-	text-decoration: none;
-	white-space: nowrap;
-	transition: border-color 0.2s, background 0.2s;
-}
-
-.rubric-strip__item:hover {
-	border-color: var(--c-violet);
-	color: var(--c-text-2);
-}
-
-.rubric-strip__count {
-	font-family: var(--f-mono);
-	font-size: 12px;
-	font-weight: 500;
-	color: var(--c-muted-2);
-}
-
-.rubric-strip__item[aria-current="page"] {
-	border-color: var(--c-violet);
-	background: var(--c-violet);
-	color: var(--c-white);
-}
-
-.rubric-strip__item[aria-current="page"] .rubric-strip__count {
-	color: var(--c-violet-light);
 }
 
 /* Теги рубрики */
@@ -211,21 +91,24 @@ a.rubric-lead:focus-visible {
 	gap: 14px 24px;
 }
 
+/* Правка заказчика: кнопки ниже и шире (в макете 44 px и поля 16 px) */
 .rubric-sort {
 	display: inline-flex;
-	padding: 4px;
+	padding: 3px;
 	border: 1px solid var(--c-border);
-	border-radius: 14px;
+	border-radius: 12px;
 	background: var(--c-white);
 }
 
 .rubric-sort__item {
 	display: inline-flex;
 	align-items: center;
+	justify-content: center;
 	box-sizing: border-box;
-	min-height: 44px;
-	padding: 0 16px;
-	border-radius: 10px;
+	min-width: 132px;
+	min-height: 34px;
+	padding: 0 28px;
+	border-radius: 9px;
 	color: var(--c-text-2);
 	font-size: 15px;
 	font-weight: 600;
@@ -259,13 +142,13 @@ a.rubric-lead:focus-visible {
 	opacity: 0.5;
 }
 
-/* «Не нашли ответ?» */
+/* «Не нашли ответ?» — правка заказчика: заголовок справа от значка, текст под ними во всю ширину,
+   кнопка в правом нижнем углу */
 .ask-teaser {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
 	align-items: center;
-	justify-content: space-between;
-	gap: 20px 32px;
+	gap: 14px 16px;
 	margin-top: 16px;
 	padding: 28px 32px;
 	border-radius: 24px;
@@ -273,12 +156,9 @@ a.rubric-lead:focus-visible {
 	color: var(--c-white);
 }
 
-.ask-teaser__main {
-	display: flex;
-	flex: 1 1 420px;
-	align-items: flex-start;
-	gap: 16px;
-	min-width: 0;
+.ask-teaser__text,
+.ask-teaser__btn {
+	grid-column: 1 / -1;
 }
 
 .ask-teaser__icon {
@@ -290,12 +170,6 @@ a.rubric-lead:focus-visible {
 	height: 48px;
 	border-radius: 14px;
 	background: var(--c-violet);
-}
-
-.ask-teaser__body {
-	display: flex;
-	flex-direction: column;
-	gap: 6px;
 }
 
 .ask-teaser__title {
@@ -313,6 +187,7 @@ a.rubric-lead:focus-visible {
 }
 
 .ask-teaser__btn {
+	justify-self: end;
 	display: inline-flex;
 	align-items: center;
 	gap: 10px;
@@ -417,22 +292,11 @@ a.rubric-lead:focus-visible {
 	}
 }
 
-/* Телефон: полоса рубрик — одной строкой с прокруткой до краёв экрана */
-@media (max-width: 760px) {
-	.rubric-strip {
-		flex-wrap: nowrap;
-		margin: 0 calc(-1 * var(--gutter));
-		padding: 2px var(--gutter) 8px;
-		overflow-x: auto;
-		scrollbar-width: none;
-	}
-
-	.rubric-strip::-webkit-scrollbar {
-		display: none;
-	}
-
-	.rubric-strip__item {
-		flex: none;
+/* Очень узкий экран: кнопки сортировки — по ширине текста, чтобы поместились в строку */
+@media (max-width: 359px) {
+	.rubric-sort__item {
+		min-width: 0;
+		padding: 0 16px;
 	}
 }
 

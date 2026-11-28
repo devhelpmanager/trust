@@ -68,8 +68,8 @@ function setFeatured( id, on ) {
 			) );` );
 		check( 'Статья: поле «Главная статья» (флажок, в боковой панели, только редактор и выше)',
 			JSON.stringify( reg.post ) === JSON.stringify( [ [ 'trust_featured', 'true_false', 'edit_others_posts' ] ] ) && reg.position === 'side', JSON.stringify( reg.post ) );
-		check( 'Рубрика: «Ведёт рубрику» (сотрудник) и «О рубрике» (текст)',
-			JSON.stringify( reg.cat ) === JSON.stringify( [ [ 'trust_rubric_lead', 'post_object', [ 'team' ] ], [ 'trust_rubric_about', 'wysiwyg', '' ] ] ), JSON.stringify( reg.cat ) );
+		check( 'Рубрика: «О рубрике» (текст); «Ведёт рубрику» убрано (правка заказчика)',
+			JSON.stringify( reg.cat ) === JSON.stringify( [ [ 'trust_rubric_about', 'wysiwyg', '' ] ] ), JSON.stringify( reg.cat ) );
 		check( 'Счётчики trust_views и trust_likes: целые, по умолчанию 0',
 			reg.views?.type === 'integer' && reg.views.default === 0 && reg.likes?.type === 'integer' && reg.likes.default === 0 );
 		check( 'Счётчики скрыты из «Произвольных полей»', reg.protected === true );
@@ -146,23 +146,11 @@ function setFeatured( id, on ) {
 		const auditId = wp( 'term', 'list', 'category', '--slug=tehnicheskiy-audit', '--field=term_id' );
 		await page.goto( `${ URL }/wp-admin/term.php?taxonomy=category&tag_ID=${ auditId }` );
 		const form = await page.locator( '#edittag' ).innerText();
-		check( 'Экран рубрики: «Ведёт рубрику» и «О рубрике»', form.includes( 'Ведёт рубрику' ) && form.includes( 'О рубрике' ) );
+		check( 'Экран рубрики: «О рубрике», без «Ведёт рубрику»', ! form.includes( 'Ведёт рубрику' ) && form.includes( 'О рубрике' ) );
 		check( 'Экран рубрики: подсказки к названию и описанию', form.includes( 'Заголовок H1 страницы рубрики' ) && form.includes( 'Подзаголовок под H1 на странице рубрики' ) );
 		const about = await page.locator( '.acf-field[data-name="trust_rubric_about"] textarea' ).inputValue();
 		check( 'Демо «О рубрике» из макета, ссылка на страницу аудита', about.includes( 'Технический аудит — проверка' ) && about.includes( `href="${ URL }/seo/audit/"` ), about.slice( 0, 80 ) );
 		await page.screenshot( { path: path.join( OUT, 'blog-fields-category.png' ), fullPage: true } );
-
-		// Своя рубрика: выбор ведущего через интерфейс и сохранение.
-		const leadId = wp( 'post', 'create', '--post_type=team', `--post_title=${ MARK } Анна`, '--post_status=publish', '--porcelain' );
-		created.posts.push( leadId );
-		await page.goto( `${ URL }/wp-admin/term.php?taxonomy=category&tag_ID=${ c1 }` );
-		await page.locator( '.acf-field[data-name="trust_rubric_lead"] .select2-selection' ).click();
-		await page.locator( '.select2-search__field' ).fill( 'Анна' );
-		await page.locator( '.select2-results__option', { hasText: `${ MARK } Анна` } ).click();
-		await Promise.all( [ page.waitForLoadState( 'networkidle' ), page.locator( '.edit-tag-actions [type="submit"]' ).click() ] );
-		await page.waitForTimeout( 500 );
-		const lead = wp( 'eval', `echo (int) get_field( 'trust_rubric_lead', 'term_${ c1 }' );` );
-		check( 'Рубрика: «Ведёт рубрику» выбирается из сотрудников и сохраняется', lead === leadId, `получено ${ lead }, ожидалось ${ leadId }` );
 
 		// Тег: подсказки, без полей рубрики.
 		const robotsId = wp( 'term', 'list', 'post_tag', '--slug=robots-txt', '--field=term_id' );

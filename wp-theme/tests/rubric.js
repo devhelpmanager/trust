@@ -3,13 +3,13 @@
  *
  * Запуск: node wp-theme/tests/rubric.js
  *
- * Демо: рубрика «Технический аудит» — 5 статей (robots.txt — главная, ещё 4 в списке), ведущий
- * рубрики, описание, «О рубрике». Проверяет первый экран (крошки, плашка, H1, описание, «N статей ·
- * обновлено …», «Ведёт рубрику»), полосу рубрик (порядок, числа, текущая, без рубрики по умолчанию),
+ * Демо: рубрика «Технический аудит» — 5 статей (robots.txt — главная, ещё 4 в списке), описание,
+ * «О рубрике». Проверяет первый экран (крошки, плашка, H1 и описание во всю ширину, «N статей ·
+ * обновлено …», без «Ведёт рубрику» — правки заказчика), полосу рубрик (порядок, числа, текущая, без рубрики по умолчанию; в блоге — между «Все статьи» и карточками),
  * теги рубрики, главную статью (теги, без автора, в списке не повторяется, флажок «Главная статья»),
  * «Статьи рубрики» (карточки: теги, H3, анонс, дата, время чтения, лайки, комментарии), сортировку
  * «Новые / Популярные» без перезагрузки (REST, адрес, «Назад»), прямой адрес ?sort=popular и canonical,
- * REST (ошибки), пагинацию с сортировкой (временная рубрика), пустую рубрику, «Не нашли ответ?»,
+ * REST (ошибки), пагинацию с сортировкой (временная рубрика), пустую рубрику, «Не нашли ответ?» (заголовок справа от значка, текст под ними, кнопка в правом нижнем углу), кнопки сортировки ниже и шире,
  * «О рубрике», тексты из настроек, CollectionPage + ItemList, раскладку 1280 / 390, ширины 1440–280,
  * совпадение с макетом на 1280 / 768 / 390 px, axe-core, консоль и журнал WordPress.
  */
@@ -135,12 +135,8 @@ async function compare( page, o ) {
 		const robots = postId( 'robots-txt-proverka' );
 		const expect = evalJson( `
 			$robots = get_post( ${ robots } );
-			$member = get_post( (int) get_field( 'trust_rubric_lead', get_term( ${ audit } ) ) );
 			echo wp_json_encode( array(
 				'updated' => Trust\\Blog::date( $robots ),
-				'member'  => get_the_title( $member ),
-				'role'    => get_post_meta( $member->ID, 'trust_position', true ),
-				'url'     => is_post_type_viewable( 'team' ) ? wp_parse_url( get_permalink( $member ), PHP_URL_PATH ) : null,
 				'all'     => (int) wp_count_posts( 'post' )->publish,
 				'blog'    => wp_parse_url( Trust\\Blog::index_url(), PHP_URL_PATH ),
 				'ask'     => Trust\\Block_Texts::page_url( 'ask_page', 'questions' ),
@@ -154,9 +150,7 @@ async function compare( page, o ) {
 			JSON.stringify( s.crumbs ) === JSON.stringify( [ 'Главная', 'Блог', 'Технический аудит' ] ) && 'Рубрика' === s.label && JSON.stringify( s.h1 ) === JSON.stringify( [ 'Технический аудит' ] ) &&
 				/^Как найти и исправить технические ошибки сайта/.test( s.desc ) && `5 статей · обновлено ${ expect.updated }` === s.meta,
 			JSON.stringify( [ s.crumbs, s.label, s.h1, s.desc, s.meta ] ) );
-		check( '«Ведёт рубрику»: сотрудник из поля рубрики — имя, должность; ссылка на его страницу (если страницы сотрудников открыты)',
-			s.lead && 'Ведёт рубрику' === s.lead.label && expect.member === s.lead.name && expect.role === s.lead.role && ( expect.url ? 'A' === s.lead.tag && new globalThis.URL( s.lead.href ).pathname === expect.url : 'DIV' === s.lead.tag ),
-			JSON.stringify( [ s.lead, expect ] ) );
+		check( 'Правка заказчика: блока «Ведёт рубрику» нет', null === s.lead && ! ( await page.content() ).includes( 'Ведёт рубрику' ), JSON.stringify( s.lead ) );
 		const names = s.strip.map( ( i ) => i[ 0 ] );
 		check( 'Полоса рубрик: «Все статьи 21» → блог, дальше непустые рубрики в порядке создания с числом статей; текущая — aria-current; без «Без рубрики»',
 			JSON.stringify( names ) === JSON.stringify( [ 'Все статьи', 'SEO', 'Технический аудит', 'Индексация', 'GEO-продвижение', 'Сайты', 'Контекстная реклама', 'AI', 'Отчёты' ] ) &&
@@ -322,10 +316,28 @@ async function compare( page, o ) {
 				const cur = strip.querySelector( '[aria-current]' ).getBoundingClientRect();
 				const sr = strip.getBoundingClientRect();
 				const cards = [ ...document.querySelectorAll( '.post-cards--rubric > li' ) ].map( ( li ) => Math.round( li.getBoundingClientRect().top ) );
+				const teaser = document.querySelector( '.ask-teaser' );
+				const tcs = getComputedStyle( teaser );
+				const tr = teaser.getBoundingClientRect();
+				const icon = r( '.ask-teaser__icon' );
+				const title = r( '.ask-teaser__title' );
+				const text = r( '.ask-teaser__text' );
+				const btn = r( '.ask-teaser__btn' );
+				const sort = [ ...document.querySelectorAll( '.rubric-sort__item' ) ].map( ( a ) => a.getBoundingClientRect() );
 				return {
 					cols: cards.filter( ( t ) => t === cards[ 0 ] ).length,
-					lead: r( '.rubric-lead' ).left > r( '.rubric-hero__head' ).right ? 'right' : 'below',
-					leadFull: Math.round( r( '.archive-hero__inner' ).width - r( '.rubric-lead' ).width ),
+					// Правка заказчика: H1 и описание — во всю ширину блока.
+					full: [ r( '.archive-hero__inner' ).width - r( '.rubric-hero .archive-hero__title' ).width, r( '.archive-hero__inner' ).width - r( '.rubric-hero .archive-hero__lead' ).width ].map( Math.round ),
+					// Правка заказчика: кнопки сортировки ниже и шире.
+					sort: [ Math.round( sort[ 0 ].height ), Math.round( sort[ 0 ].width ), Math.round( sort[ 1 ].width ) ],
+					// Правка заказчика: заголовок справа от значка, текст под ними, кнопка в правом нижнем углу.
+					teaser: [
+						title.left > icon.right && Math.abs( ( title.top + title.bottom ) / 2 - ( icon.top + icon.bottom ) / 2 ) < 2,
+						text.top >= icon.bottom && Math.round( text.left - icon.left ),
+						Math.round( tr.right - parseFloat( tcs.paddingRight ) - btn.right ),
+						Math.round( tr.bottom - parseFloat( tcs.paddingBottom ) - btn.bottom ),
+						btn.top >= text.bottom,
+					],
 					stripRow: 'nowrap' === getComputedStyle( strip ).flexWrap && strip.scrollWidth > strip.clientWidth,
 					current: cur.left >= sr.left - 1 && cur.right <= sr.right + 1,
 					sortBelow: r( '.rubric-sort' ).top > r( '#posts-title' ).bottom - 1,
@@ -333,11 +345,17 @@ async function compare( page, o ) {
 				};
 			} );
 		}
-		check( 'Компьютер 1280: карточки по 2 в ряд, «Ведёт рубрику» справа от заголовка, полоса рубрик переносится, сортировка справа от H2',
-			2 === layout[ 1280 ].cols && 'right' === layout[ 1280 ].lead && ! layout[ 1280 ].stripRow && ! layout[ 1280 ].sortBelow, JSON.stringify( layout[ 1280 ] ) );
-		check( 'Телефон 390: карточки в колонку, «Ведёт рубрику» под заголовком во всю ширину, полоса рубрик — строкой с прокруткой, текущая рубрика видна; сортировка под H2; без прокрутки вбок',
-			1 === layout[ 390 ].cols && 'below' === layout[ 390 ].lead && 0 === layout[ 390 ].leadFull && layout[ 390 ].stripRow && layout[ 390 ].current && layout[ 390 ].sortBelow && ! layout[ 390 ].overflow,
+		check( 'Компьютер 1280: карточки по 2 в ряд, полоса рубрик переносится, сортировка справа от H2',
+			2 === layout[ 1280 ].cols && ! layout[ 1280 ].stripRow && ! layout[ 1280 ].sortBelow, JSON.stringify( layout[ 1280 ] ) );
+		check( 'Телефон 390: карточки в колонку, полоса рубрик — строкой с прокруткой, текущая рубрика видна; сортировка под H2; без прокрутки вбок',
+			1 === layout[ 390 ].cols && layout[ 390 ].stripRow && layout[ 390 ].current && layout[ 390 ].sortBelow && ! layout[ 390 ].overflow,
 			JSON.stringify( layout[ 390 ] ) );
+		check( 'Правки заказчика: H1 и описание рубрики — во всю ширину (1280 и 390); «Новые / Популярные» — высотой 34 px (было 44) и шириной от 132 px',
+			[ 1280, 390 ].every( ( w ) => JSON.stringify( layout[ w ].full ) === JSON.stringify( [ 0, 0 ] ) && 34 === layout[ w ].sort[ 0 ] && layout[ w ].sort[ 1 ] >= 132 && layout[ w ].sort[ 2 ] >= 132 ),
+			JSON.stringify( [ 1280, 390 ].map( ( w ) => [ layout[ w ].full, layout[ w ].sort ] ) ) );
+		check( 'Правка заказчика, «Не нашли ответ?»: заголовок справа от значка, текст — под ними от левого края, кнопка — в правом нижнем углу (1280 и 390)',
+			[ 1280, 390 ].every( ( w ) => JSON.stringify( layout[ w ].teaser ) === JSON.stringify( [ true, 0, 0, 0, true ] ) ),
+			JSON.stringify( [ layout[ 1280 ].teaser, layout[ 390 ].teaser ] ) );
 
 		// ===== Сверка с макетом =====
 		// Обложки и даты в демо — другие, у статей другие анонсы, время чтения и число комментариев;
@@ -362,14 +380,6 @@ async function compare( page, o ) {
 		const fixHero = ( p ) => p.evaluate( ( [ m, fn ] ) => {
 			const last = new Function( 'el', 'value', fn ); // eslint-disable-line no-new-func
 			document.querySelector( '.rubric-hero__meta' ).textContent = '[N] статей · обновлено 5 ноября 2026';
-			const photo = document.querySelector( '.rubric-lead__photo' );
-			if ( 'IMG' === photo.tagName ) {
-				const span = document.createElement( 'span' );
-				span.className = 'rubric-lead__photo';
-				span.textContent = 'ИФ';
-				photo.replaceWith( span );
-			}
-			document.querySelector( '.rubric-lead__role' ).textContent = '[Должность]';
 			const strip = document.querySelector( '.rubric-strip' );
 			[ ...strip.children ].slice( 8 ).forEach( ( a ) => a.remove() );
 			strip.scrollLeft = 0;

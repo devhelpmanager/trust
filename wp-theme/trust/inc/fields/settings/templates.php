@@ -72,7 +72,6 @@ return array(
 			'message' => __( 'Страница рубрики блога. Тексты блока «Не нашли ответ?» — во вкладке «Блоки по умолчанию».', 'trust' ),
 		),
 		$trust_text( 'rubric_label', __( 'Плашка над заголовком', 'trust' ) ),
-		$trust_text( 'rubric_lead', __( 'Над ведущим рубрики', 'trust' ) ),
 		$trust_text( 'rubric_tags', __( 'Перед тегами', 'trust' ) ),
 		$trust_text( 'rubric_list', __( 'Заголовок списка статей', 'trust' ) ),
 		$trust_text( 'rubric_new', __( 'Сортировка: новые', 'trust' ) ),

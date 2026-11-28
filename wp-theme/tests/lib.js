@@ -544,6 +544,17 @@ const MOCKUP_CSS = {
 		#list-title { font-size: clamp(28px, 3.4vw, 44px) !important; }
 		/* Кнопка главной статьи — в правом нижнем углу (правка заказчика к главной статье блога) */
 		main > section:first-of-type a.dc-card > div:last-child > span:last-child { align-self: flex-end !important; }
+		/* Правки заказчика к рубрике: без «Ведёт рубрику», H1 и описание во всю ширину */
+		main > section:first-of-type a[href="#author"] { display: none !important; }
+		main > section:first-of-type div:has(> h1) { max-width: none !important; }
+		/* «Новые / Популярные» ниже и шире */
+		div[role="group"][aria-label="Сортировка"] { padding: 3px !important; border-radius: 12px !important; }
+		div[role="group"][aria-label="Сортировка"] > button { display: inline-flex; align-items: center; justify-content: center; min-width: 132px; min-height: 34px !important; padding: 0 28px !important; border-radius: 9px !important; }
+		/* «Не нашли ответ?»: заголовок справа от значка, текст под ними, кнопка в правом нижнем углу */
+		.dc-ask { display: grid !important; grid-template-columns: auto minmax(0, 1fr); align-items: center !important; gap: 14px 16px !important; }
+		.dc-ask > div:first-child, .dc-ask > div:first-child > div { display: contents !important; }
+		.dc-ask > div:first-child > div > span:last-child, .dc-ask > a { grid-column: 1 / -1; }
+		.dc-ask > a { justify-self: end; }
 	`,
 	'seo-vopros/vopros-seo.html': `
 		/* «Ответы SEO-специалистов»: отступы секции, шапка и H2 — как у всех блоков (в макете

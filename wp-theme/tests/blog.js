@@ -134,6 +134,26 @@ function state( page ) {
 			'Индексация' === s.cards[ 0 ].rubric && null !== s.cards[ 0 ].excerpt && null === s.cards[ 2 ].excerpt && 'Контекстная реклама' === s.cards[ 2 ].rubric && 'Лайки: 64' === s.cards[ 0 ].stats[ 0 ] && /^Комментарии: \d+$/.test( s.cards[ 0 ].stats[ 1 ] ) &&
 			s.cards.every( ( c ) => c.img && c.date && c.h3 ) && s.cards[ 0 ].href.startsWith( '/blog/' ), JSON.stringify( s.cards.slice( 0, 3 ) ) );
 		check( 'Страница блога 2 при одной странице — 404', 404 === ( await page.request.get( `${ BLOG }page/2/` ) ).status() );
+		// Правка заказчика: рубрики блога — между «Все статьи» и карточками (только рубрики, без тегов).
+		const strip = await page.evaluate( () => {
+			const nav = document.querySelector( '.post-list .rubric-strip' );
+			if ( ! nav ) {
+				return null;
+			}
+			const items = [ ...nav.querySelectorAll( 'a' ) ];
+			return {
+				after: nav.previousElementSibling.classList.contains( 'post-list__head' ) && nav.nextElementSibling.classList.contains( 'post-cards' ),
+				label: nav.getAttribute( 'aria-label' ),
+				names: items.map( ( a ) => a.firstChild.textContent.trim() ),
+				current: items.filter( ( a ) => a.getAttribute( 'aria-current' ) ).map( ( a ) => a.firstChild.textContent.trim() ),
+				hrefs: items.slice( 1, 3 ).map( ( a ) => new URL( a.href ).pathname ),
+				tags: !! document.querySelector( '.post-list .rubric-tags' ),
+			};
+		} );
+		check( 'Правка заказчика: полоса рубрик в блоге — между «Все статьи» и карточками: «Все статьи» (выделены) и рубрики со ссылками, тегов нет',
+			strip && strip.after && 'Рубрики блога' === strip.label && 'Все статьи' === strip.names[ 0 ] && strip.names.includes( 'Технический аудит' ) && JSON.stringify( strip.current ) === JSON.stringify( [ 'Все статьи' ] ) &&
+				JSON.stringify( strip.hrefs ) === JSON.stringify( [ '/blog/rubrika/seo/', '/blog/rubrika/tehnicheskiy-audit/' ] ) && ! strip.tags,
+			JSON.stringify( strip ) );
 
 		const ld = await page.evaluate( () => {
 			const graph = [ ...document.querySelectorAll( 'script[type="application/ld+json"]' ) ].flatMap( ( x ) => JSON.parse( x.textContent )[ '@graph' ] || [] );
@@ -244,7 +264,8 @@ function state( page ) {
 		const fixList = ( p ) => p.evaluate( ( [ mock, fn ] ) => {
 			const last = new Function( 'el', 'value', fn ); // eslint-disable-line no-new-func
 			const style = document.createElement( 'style' );
-			style.textContent = '.post-card__img { visibility: hidden; } .post-cards--sm > li:nth-child(n+4) { display: none; } .pager { display: none; }';
+			// Полосы рубрик в макете блога нет (правка заказчика) — при сверке скрыта.
+			style.textContent = '.post-card__img { visibility: hidden; } .post-cards--sm > li:nth-child(n+4) { display: none; } .pager, .post-list .rubric-strip { display: none; }';
 			document.head.append( style );
 			document.querySelector( '.post-list__page' ).textContent = 'Страница 1 из 9';
 			document.querySelectorAll( '.post-card' ).forEach( ( card, i ) => {
