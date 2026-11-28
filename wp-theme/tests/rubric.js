@@ -324,20 +324,26 @@ async function compare( page, o ) {
 				const text = r( '.ask-teaser__text' );
 				const btn = r( '.ask-teaser__btn' );
 				const sort = [ ...document.querySelectorAll( '.rubric-sort__item' ) ].map( ( a ) => a.getBoundingClientRect() );
+				const group = r( '.rubric-sort' );
+				const listInner = r( '.rubric-list .post-list__inner' );
 				return {
 					cols: cards.filter( ( t ) => t === cards[ 0 ] ).length,
 					// Правка заказчика: H1 и описание — во всю ширину блока.
 					full: [ r( '.archive-hero__inner' ).width - r( '.rubric-hero .archive-hero__title' ).width, r( '.archive-hero__inner' ).width - r( '.rubric-hero .archive-hero__lead' ).width ].map( Math.round ),
 					// Правка заказчика: кнопки сортировки ниже и шире.
 					sort: [ Math.round( sort[ 0 ].height ), Math.round( sort[ 0 ].width ), Math.round( sort[ 1 ].width ) ],
-					// Правка заказчика: заголовок справа от значка, текст под ними, кнопка в правом нижнем углу.
+					// Правка заказчика: на телефоне кнопки сортировки — во всю ширину блока, поровну.
+					sortFull: [ Math.round( listInner.width - group.width ), Math.round( sort[ 0 ].width - sort[ 1 ].width ) ],
+					// Правки заказчика: заголовок справа от значка, текст под ними; кнопка — на компьютере
+					// справа от текста, на телефоне — под текстом в правом нижнем углу.
 					teaser: [
 						title.left > icon.right && Math.abs( ( title.top + title.bottom ) / 2 - ( icon.top + icon.bottom ) / 2 ) < 2,
 						text.top >= icon.bottom && Math.round( text.left - icon.left ),
 						Math.round( tr.right - parseFloat( tcs.paddingRight ) - btn.right ),
-						Math.round( tr.bottom - parseFloat( tcs.paddingBottom ) - btn.bottom ),
-						btn.top >= text.bottom,
+						btn.top >= text.bottom ? 'below' : ( btn.left >= text.right && btn.top < text.bottom && btn.bottom > text.top ? 'right' : 'other' ),
 					],
+					// Правка заказчика: «О рубрике» — шириной как «Не нашли ответ?».
+					about: Math.round( r( '.rubric-about__box' ).width - tr.width ),
 					stripRow: 'nowrap' === getComputedStyle( strip ).flexWrap && strip.scrollWidth > strip.clientWidth,
 					current: cur.left >= sr.left - 1 && cur.right <= sr.right + 1,
 					sortBelow: r( '.rubric-sort' ).top > r( '#posts-title' ).bottom - 1,
@@ -350,12 +356,14 @@ async function compare( page, o ) {
 		check( 'Телефон 390: карточки в колонку, полоса рубрик — строкой с прокруткой, текущая рубрика видна; сортировка под H2; без прокрутки вбок',
 			1 === layout[ 390 ].cols && layout[ 390 ].stripRow && layout[ 390 ].current && layout[ 390 ].sortBelow && ! layout[ 390 ].overflow,
 			JSON.stringify( layout[ 390 ] ) );
-		check( 'Правки заказчика: H1 и описание рубрики — во всю ширину (1280 и 390); «Новые / Популярные» — высотой 34 px (было 44) и шириной от 132 px',
-			[ 1280, 390 ].every( ( w ) => JSON.stringify( layout[ w ].full ) === JSON.stringify( [ 0, 0 ] ) && 34 === layout[ w ].sort[ 0 ] && layout[ w ].sort[ 1 ] >= 132 && layout[ w ].sort[ 2 ] >= 132 ),
-			JSON.stringify( [ 1280, 390 ].map( ( w ) => [ layout[ w ].full, layout[ w ].sort ] ) ) );
-		check( 'Правка заказчика, «Не нашли ответ?»: заголовок справа от значка, текст — под ними от левого края, кнопка — в правом нижнем углу (1280 и 390)',
-			[ 1280, 390 ].every( ( w ) => JSON.stringify( layout[ w ].teaser ) === JSON.stringify( [ true, 0, 0, 0, true ] ) ),
+		check( 'Правки заказчика: H1 и описание рубрики — во всю ширину (1280 и 390); «Новые / Популярные» — высотой 34 px (было 44) и шириной от 132 px; на телефоне — во всю ширину блока, поровну',
+			[ 1280, 390 ].every( ( w ) => JSON.stringify( layout[ w ].full ) === JSON.stringify( [ 0, 0 ] ) && 34 === layout[ w ].sort[ 0 ] && layout[ w ].sort[ 1 ] >= 132 && layout[ w ].sort[ 2 ] >= 132 ) &&
+				JSON.stringify( layout[ 390 ].sortFull ) === JSON.stringify( [ 0, 0 ] ) && layout[ 1280 ].sortFull[ 0 ] > 500,
+			JSON.stringify( [ 1280, 390 ].map( ( w ) => [ layout[ w ].full, layout[ w ].sort, layout[ w ].sortFull ] ) ) );
+		check( 'Правки заказчика, «Не нашли ответ?»: заголовок справа от значка, текст под ними от левого края; кнопка у правого края — на компьютере справа от текста, на телефоне под текстом',
+			JSON.stringify( layout[ 1280 ].teaser ) === JSON.stringify( [ true, 0, 0, 'right' ] ) && JSON.stringify( layout[ 390 ].teaser ) === JSON.stringify( [ true, 0, 0, 'below' ] ),
 			JSON.stringify( [ layout[ 1280 ].teaser, layout[ 390 ].teaser ] ) );
+		check( 'Правка заказчика: «О рубрике» — шириной как «Не нашли ответ?» (1280 и 390)', 0 === layout[ 1280 ].about && 0 === layout[ 390 ].about, JSON.stringify( [ layout[ 1280 ].about, layout[ 390 ].about ] ) );
 
 		// ===== Сверка с макетом =====
 		// Обложки и даты в демо — другие, у статей другие анонсы, время чтения и число комментариев;

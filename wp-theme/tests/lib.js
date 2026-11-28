@@ -555,6 +555,20 @@ const MOCKUP_CSS = {
 		.dc-ask > div:first-child, .dc-ask > div:first-child > div { display: contents !important; }
 		.dc-ask > div:first-child > div > span:last-child, .dc-ask > a { grid-column: 1 / -1; }
 		.dc-ask > a { justify-self: end; }
+		/* …на компьютере кнопка — справа от текста */
+		@media (min-width: 761px) {
+			.dc-ask { grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 16px !important; }
+			.dc-ask > div:first-child > div > span:first-child { grid-column: 2 / -1; }
+			.dc-ask > div:first-child > div > span:last-child { grid-column: 1 / 3; }
+			.dc-ask > a { grid-column: 3; margin-left: 16px; }
+		}
+		/* На телефоне «Новые» и «Популярные» — во всю ширину блока */
+		@media (max-width: 640px) {
+			div[role="group"][aria-label="Сортировка"] { display: flex !important; width: 100%; box-sizing: border-box; }
+			div[role="group"][aria-label="Сортировка"] > button { flex: 1 1 0; min-width: 0; padding: 0 12px !important; }
+		}
+		/* «О рубрике» — шириной как «Не нашли ответ?» */
+		section[aria-labelledby="about-title"] > div { max-width: 1200px !important; }
 	`,
 	'seo-vopros/vopros-seo.html': `
 		/* «Ответы SEO-специалистов»: отступы секции, шапка и H2 — как у всех блоков (в макете
