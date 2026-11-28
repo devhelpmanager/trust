@@ -77,5 +77,29 @@ return array(
 		$trust_text( 'rubric_new', __( 'Сортировка: новые', 'trust' ) ),
 		$trust_text( 'rubric_popular', __( 'Сортировка: популярные', 'trust' ) ),
 		$trust_text( 'rubric_about', __( 'Заголовок «О рубрике»', 'trust' ), __( 'После него — название рубрики в кавычках.', 'trust' ) ),
+		array(
+			'name'    => 'tpl_tag_heading',
+			'label'   => __( 'Тег', 'trust' ),
+			'type'    => 'message',
+			'message' => __( 'Страница тега: статьи и ответы на вопросы с этим тегом.', 'trust' ),
+		),
+		$trust_text( 'tag_label', __( 'Плашка над заголовком', 'trust' ) ),
+		$trust_text( 'tag_all', __( 'Фильтр: все материалы', 'trust' ) ),
+		$trust_text( 'tag_posts', __( 'Фильтр: статьи', 'trust' ) ),
+		$trust_text( 'tag_answers', __( 'Фильтр: ответы', 'trust' ) ),
+		$trust_text( 'tag_post_badge', __( 'Плашка статьи', 'trust' ) ),
+		$trust_text( 'tag_answer_badge', __( 'Плашка ответа', 'trust' ) ),
+		$trust_text( 'tag_answered_by', __( 'Перед именем специалиста', 'trust' ) ),
+		$trust_text( 'tag_rubric', __( 'Сбоку: над рубрикой', 'trust' ) ),
+		$trust_text( 'tag_similar', __( 'Сбоку: над похожими тегами', 'trust' ) ),
+		$trust_text( 'tag_ask_title', __( 'Сбоку: заголовок «Остался вопрос»', 'trust' ), __( '{tag} — название тега.', 'trust' ) ),
+		array_merge(
+			$trust_text( 'tag_ask_text', __( 'Сбоку: текст «Остался вопрос»', 'trust' ) ),
+			array(
+				'maxlength' => 160,
+				'wrapper'   => array( 'width' => 66 ),
+			)
+		),
+		$trust_text( 'tag_ask_button', __( 'Сбоку: кнопка', 'trust' ) ),
 	),
 );

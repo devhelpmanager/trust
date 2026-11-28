@@ -570,6 +570,18 @@ const MOCKUP_CSS = {
 		/* «О рубрике» — шириной как «Не нашли ответ?» */
 		section[aria-labelledby="about-title"] > div { max-width: 1200px !important; }
 	`,
+	'portfolio-blog-404/teg.html': `
+		/* H1 и описание — во всю ширину (как у рубрики после правки заказчика); отступ под
+		   материалами — как у всех блоков (в макете 96 px) */
+		main > section:first-of-type div:has(> h1) { max-width: none !important; }
+		main > div { padding-bottom: 64px !important; }
+		@media (max-width: 1100px) {
+			main > div { padding-bottom: 56px !important; }
+		}
+		@media (max-width: 760px) {
+			main > div { padding-bottom: 48px !important; }
+		}
+	`,
 	'seo-vopros/vopros-seo.html': `
 		/* «Ответы SEO-специалистов»: отступы секции, шапка и H2 — как у всех блоков (в макете
 		   72 / 96 px, 14 px от надзаголовка, H2 26–40 px) */

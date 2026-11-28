@@ -267,7 +267,11 @@ return array(
 		'excerpt'   => 'Собрали основные причины, по которым поисковики исключают страницы, и что делать в каждом случае.',
 		'date'      => $trust_day( 4 ),
 		'meta'      => array( 'trust_likes' => 64 ),
-		'terms'     => array( 'category' => array( 'indexing' ) ),
+		// robots.txt — как в макете тега (portfolio-blog-404/teg.html).
+		'terms'     => array(
+			'category' => array( 'indexing' ),
+			'post_tag' => array( 'robots' ),
+		),
 		'thumbnail' => 'blog-indexing.jpg',
 		'content'   => $trust_text(
 			'Страница была в поиске, а потом исчезла. Чаще всего причина техническая: робот не смог её получить, посчитал дублем или увидел запрет индексации.',
@@ -435,7 +439,7 @@ return array(
 		'meta'      => array( 'trust_likes' => 45 ),
 		'terms'     => array(
 			'category' => array( 'audit' ),
-			'post_tag' => array( 'sitemap', 'index' ),
+			'post_tag' => array( 'sitemap', 'index', 'robots' ),
 		),
 		'thumbnail' => 'blog-sitemap.jpg',
 		'content'   => $trust_text(

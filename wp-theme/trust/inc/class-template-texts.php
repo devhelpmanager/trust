@@ -44,6 +44,19 @@ final class Template_Texts {
 			'rubric_new'         => __( 'Новые', 'trust' ),
 			'rubric_popular'     => __( 'Популярные', 'trust' ),
 			'rubric_about'       => __( 'О рубрике', 'trust' ),
+
+			'tag_label'          => __( 'Тег', 'trust' ),
+			'tag_all'            => __( 'Все', 'trust' ),
+			'tag_posts'          => __( 'Статьи', 'trust' ),
+			'tag_answers'        => __( 'Ответы на вопросы', 'trust' ),
+			'tag_post_badge'     => __( 'Статья', 'trust' ),
+			'tag_answer_badge'   => __( 'Ответ SEO-специалиста', 'trust' ),
+			'tag_answered_by'    => __( 'Отвечает', 'trust' ),
+			'tag_rubric'         => __( 'Рубрика', 'trust' ),
+			'tag_similar'        => __( 'Похожие теги', 'trust' ),
+			'tag_ask_title'      => __( 'Остался вопрос про {tag}?', 'trust' ),
+			'tag_ask_text'       => __( 'Задайте его SEO-специалисту — ответим бесплатно и опубликуем ответ на сайте.', 'trust' ),
+			'tag_ask_button'     => __( 'Задать вопрос', 'trust' ),
 		);
 	}
 

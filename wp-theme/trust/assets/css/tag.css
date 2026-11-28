@@ -1,0 +1,497 @@
+/*
+ * Тег блога (tag.php; макет portfolio-blog-404/teg.html): лавандовый первый экран, материалы
+ * (фильтр «Все / Статьи / Ответы на вопросы», карточки статей и ответов) и боковая колонка
+ * (рубрика, похожие теги, «Остался вопрос про …?»). Общие части (крошки, пагинация) — blog.css.
+ */
+
+/* ===== Первый экран ===== */
+
+.tag-hero {
+	padding: 40px var(--gutter) 48px;
+	background: var(--c-lavender);
+	color: var(--c-text);
+}
+
+.tag-hero__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 22px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+/* H1 и описание — во всю ширину (как у рубрики после правки заказчика; в макете до 780 px) */
+.tag-hero__head {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.tag-hero__label {
+	align-self: flex-start;
+	padding: 6px 12px;
+	border: 1px solid var(--c-border);
+	border-radius: var(--r-pill);
+	background: var(--c-white);
+	color: var(--c-violet-dark);
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: normal;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.tag-hero__title {
+	margin: 0;
+	font-family: var(--f-display);
+	font-size: clamp(32px, 4.4vw, 56px);
+	font-weight: 600;
+	line-height: 1.08;
+	letter-spacing: -0.015em;
+	overflow-wrap: anywhere;
+}
+
+.tag-hero__hash {
+	color: var(--c-focus);
+}
+
+.tag-hero__lead {
+	margin: 0;
+	font-size: 18px;
+	line-height: 1.6;
+	color: var(--c-muted);
+	text-wrap: pretty;
+}
+
+.tag-hero__meta {
+	margin: 0;
+	font-size: 15px;
+	color: var(--c-muted);
+}
+
+/* ===== Материалы и боковая колонка ===== */
+
+.tag-body {
+	padding: 48px var(--gutter) var(--section-y);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.tag-body__inner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 40px 48px;
+	max-width: var(--content);
+	margin: 0 auto;
+}
+
+.tag-main {
+	display: flex;
+	flex: 999 1 560px;
+	flex-direction: column;
+	gap: 22px;
+	min-width: 0;
+	scroll-margin-top: calc(var(--sticky-top, 0px) + 16px);
+}
+
+.tag-main__list {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	transition: opacity 0.2s;
+}
+
+.tag-main__list[aria-busy="true"] {
+	opacity: 0.5;
+}
+
+/* Фильтр «Все / Статьи / Ответы на вопросы» */
+.tag-filter {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.tag-filter__item {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	box-sizing: border-box;
+	min-height: 44px;
+	padding: 0 16px;
+	border: 1.5px solid var(--c-border-strong);
+	border-radius: var(--r-pill);
+	background: var(--c-white);
+	color: var(--c-text-2);
+	font-size: 15px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: border-color 0.2s, background 0.2s;
+}
+
+.tag-filter__item:hover {
+	border-color: var(--c-violet);
+	color: var(--c-text-2);
+}
+
+.tag-filter__item[aria-current="true"] {
+	border-color: var(--c-violet);
+	background: var(--c-violet);
+	color: var(--c-white);
+}
+
+.tag-filter__count {
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	opacity: 0.75;
+}
+
+/* Карточки */
+.materials {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.materials__item {
+	min-width: 0;
+}
+
+.material {
+	display: flex;
+	box-sizing: border-box;
+	overflow: hidden;
+	border: 1px solid var(--c-border);
+	border-radius: 20px;
+	background: var(--c-white);
+	color: var(--c-text);
+	text-decoration: none;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.material:hover {
+	border-color: var(--c-decor);
+	box-shadow: 0 14px 32px rgba(46, 16, 101, 0.1);
+	color: var(--c-text);
+}
+
+.material:focus-visible {
+	outline: 3px solid var(--c-focus);
+	outline-offset: 2px;
+}
+
+.material:hover .material__title {
+	color: var(--c-violet-dark);
+}
+
+/* Статья: обложка слева на всю высоту карточки */
+.material__cover {
+	position: relative;
+	flex: none;
+	width: 240px;
+	max-width: 40%;
+	background: var(--c-lavender-2);
+}
+
+.material__img,
+.material__cover .post-card__placeholder {
+	position: absolute;
+	inset: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.material__body {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	gap: 10px;
+	min-width: 0;
+	padding: 20px 24px;
+}
+
+.material__top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 12px;
+}
+
+.material__badge {
+	padding: 3px 9px;
+	border-radius: var(--r-pill);
+	background: var(--c-lavender-3);
+	color: var(--c-violet-dark);
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: normal;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.material__badge--answer {
+	border: 1px solid var(--c-border);
+	background: var(--c-lavender-2);
+	color: var(--c-violet-deep);
+}
+
+.material__rubric {
+	font-size: 14px;
+	color: var(--c-muted);
+}
+
+.material__title {
+	margin: 0;
+	font-family: var(--f-text);
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 1.3;
+	text-wrap: pretty;
+	transition: color 0.2s;
+}
+
+.material__text {
+	font-size: 15px;
+	line-height: 1.55;
+	color: var(--c-muted);
+}
+
+.material__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 16px;
+	margin-top: auto;
+	font-size: 14px;
+	color: var(--c-muted);
+}
+
+/* Ответ: знак «?» слева */
+.material--answer {
+	gap: 18px;
+	padding: 22px 24px;
+}
+
+.material--answer .material__body {
+	padding: 0;
+}
+
+.material--answer .material__title {
+	font-size: 19px;
+	line-height: 1.35;
+}
+
+.material--answer .material__meta {
+	margin-top: 0;
+}
+
+.material__icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 12px;
+	background: var(--c-indigo);
+	color: var(--c-white);
+	font-family: var(--f-display);
+	font-size: 18px;
+	font-weight: 600;
+}
+
+/* Боковая колонка: на компьютере едет вместе со страницей */
+.tag-side {
+	position: sticky;
+	top: calc(var(--sticky-top, 0px) + 24px);
+	display: flex;
+	flex: 1 1 300px;
+	flex-direction: column;
+	gap: 16px;
+	min-width: 0;
+}
+
+.tag-side__card {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 22px;
+	border: 1px solid var(--c-border);
+	border-radius: 20px;
+	background: var(--c-white);
+}
+
+.tag-side__label {
+	color: var(--c-violet);
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.tag-side__rubric {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	min-height: 44px;
+	color: var(--c-text);
+	font-size: 18px;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.tag-side__rubric svg {
+	flex: none;
+	color: var(--c-violet);
+}
+
+.tag-side__rubric:hover {
+	color: var(--c-violet-dark);
+}
+
+.tag-side__note {
+	font-size: 14px;
+	line-height: 1.5;
+	color: var(--c-muted);
+}
+
+.tag-side__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.tag-side__tag {
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	padding: 0 12px;
+	border-radius: 10px;
+	background: var(--c-lavender);
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: none;
+	transition: background 0.2s;
+}
+
+.tag-side__tag:hover {
+	background: var(--c-lavender-3);
+}
+
+/* «Остался вопрос про …?» */
+.tag-side__ask {
+	position: relative;
+	isolation: isolate;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	overflow: hidden;
+	padding: 24px;
+	border-radius: 20px;
+	background: var(--c-indigo);
+	color: var(--c-white);
+}
+
+.tag-side__circle {
+	position: absolute;
+	right: -60px;
+	bottom: -70px;
+	z-index: -1;
+	width: 180px;
+	height: 180px;
+	border-radius: 50%;
+	background: #25215C;
+}
+
+.tag-side__ask-title {
+	margin: 0;
+	font-size: 19px;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.tag-side__ask-text {
+	margin: 0;
+	font-size: 15px;
+	line-height: 1.55;
+	color: #D4D2F0;
+}
+
+.tag-side__ask-btn {
+	display: inline-flex;
+	align-self: flex-start;
+	align-items: center;
+	gap: 8px;
+	box-sizing: border-box;
+	min-height: 48px;
+	margin-top: 4px;
+	padding: 0 18px;
+	border-radius: 12px;
+	background: var(--c-white);
+	color: var(--c-violet-dark);
+	font-size: 15px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: background 0.2s;
+}
+
+.tag-side__ask-btn:hover {
+	background: var(--c-lavender-2);
+	color: var(--c-violet-deep);
+}
+
+.tag-side__ask-btn:focus-visible {
+	outline: 3px solid var(--c-focus);
+	outline-offset: 2px;
+}
+
+/* ===== Адаптив (как в макете) ===== */
+
+@media (max-width: 1023px), (max-height: 760px) {
+	.tag-side {
+		position: static;
+	}
+}
+
+@media (max-width: 640px) {
+	.material--post {
+		flex-direction: column;
+	}
+
+	.material__cover {
+		width: 100%;
+		max-width: none;
+		aspect-ratio: 16 / 9;
+	}
+
+	.material--post .material__body {
+		padding: 16px 18px 20px;
+	}
+
+	.material--answer {
+		padding: 18px 18px 20px;
+	}
+
+	.tag-side__card,
+	.tag-side__ask {
+		padding: 20px 18px;
+	}
+}
+
+@media (max-width: 480px) {
+	.material__icon {
+		display: none;
+	}
+}

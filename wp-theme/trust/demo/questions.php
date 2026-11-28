@@ -127,7 +127,8 @@ $trust_questions = array(
 		'content' => $trust_p( 'Не все. Фильтры, под которые есть спрос, лучше оставить открытыми и оптимизировать, а сочетания без спроса закрыть, чтобы не плодить дубли.' ),
 		'terms'   => array(
 			'question_topic' => array( 'audit' ),
-			'post_tag'       => array( 'index', 'dupes' ),
+			// robots.txt — как в макете тега (portfolio-blog-404/teg.html).
+			'post_tag'       => array( 'index', 'dupes', 'robots' ),
 		),
 		'fields'  => array(
 			'trust_question'    => 'Нужно ли закрывать от индексации страницы фильтров?',
@@ -280,7 +281,7 @@ $trust_questions = array(
 		'content' => $trust_p( 'Укажите canonical на основной адрес, а для Яндекса добавьте в robots.txt директиву Clean-param — она убирает такие адреса из обхода.' ),
 		'terms'   => array(
 			'question_topic' => array( 'duplicates' ),
-			'post_tag'       => array( 'dupes' ),
+			'post_tag'       => array( 'dupes', 'robots' ),
 		),
 		'fields'  => array(
 			'trust_question'    => 'Что делать с дублями страниц из-за UTM-меток?',

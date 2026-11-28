@@ -37,6 +37,7 @@ final class Theme {
 		Comments::register();
 		Article::register();
 		Rubric::register();
+		Tag_Page::register();
 		Team::register();
 		Vacancies::register();
 		Questions::register();
