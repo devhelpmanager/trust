@@ -318,7 +318,11 @@ return array(
 		'date'      => $trust_day( 13 ),
 		'thumbnail' => 'blog-report.jpg',
 		'meta'      => array( 'trust_likes' => 39 ),
-		'terms'     => array( 'category' => array( 'reports' ) ),
+		// В «Нашем блоге» (страница SEO) — «Отчёты», в макетах блога и рубрики — «Технический аудит».
+		'terms'     => array(
+			'category' => array( 'reports', 'audit' ),
+			'post_tag' => array( 'report', 'webmaster' ),
+		),
 		'content'   => $trust_text(
 			'Отчёт по аудиту — это список проблем с приоритетами и рекомендациями. Разберём, как работать с ним, чтобы исправления дали результат быстрее.',
 			array(
@@ -427,7 +431,7 @@ return array(
 		'meta'      => array( 'trust_likes' => 45 ),
 		'terms'     => array(
 			'category' => array( 'audit' ),
-			'post_tag' => array( 'sitemap' ),
+			'post_tag' => array( 'sitemap', 'index' ),
 		),
 		'thumbnail' => 'blog-sitemap.jpg',
 		'content'   => $trust_text(
@@ -490,7 +494,7 @@ return array(
 		'meta'      => array( 'trust_likes' => 47 ),
 		'terms'     => array(
 			'category' => array( 'audit' ),
-			'post_tag' => array( 'dupes' ),
+			'post_tag' => array( 'dupes', 'robots' ),
 		),
 		'thumbnail' => 'blog-dupes.jpg',
 		'content'   => $trust_text(

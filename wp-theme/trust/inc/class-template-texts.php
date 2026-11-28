@@ -37,6 +37,14 @@ final class Template_Texts {
 			'comment_note'       => __( 'Комментарий появится после проверки модератором.', 'trust' ),
 			'comment_sent'       => __( 'Спасибо! Комментарий появится после проверки модератором.', 'trust' ),
 			'comment_reply_sent' => __( 'Ответ отправлен на модерацию.', 'trust' ),
+
+			'rubric_label'       => __( 'Рубрика', 'trust' ),
+			'rubric_lead'        => __( 'Ведёт рубрику', 'trust' ),
+			'rubric_tags'        => __( 'Теги рубрики:', 'trust' ),
+			'rubric_list'        => __( 'Статьи рубрики', 'trust' ),
+			'rubric_new'         => __( 'Новые', 'trust' ),
+			'rubric_popular'     => __( 'Популярные', 'trust' ),
+			'rubric_about'       => __( 'О рубрике', 'trust' ),
 		);
 	}
 

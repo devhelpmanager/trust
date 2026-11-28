@@ -1,7 +1,7 @@
 /*
  * Список статей блога (home.php; макет seo-blog/blog.html): первый экран архива (крошки, H1,
  * подзаголовок), главная статья, «Все статьи» с карточками и пагинацией. Подключается на
- * странице блога (Trust\Blog::enqueue()); дальше — рубрика, тег, автор.
+ * странице блога (Trust\Blog::enqueue()) и рубрики (Trust\Rubric::enqueue()); дальше — тег, автор.
  */
 
 /* ===== Первый экран ===== */
@@ -63,6 +63,24 @@
 	line-height: normal;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
+}
+
+/* Теги в карточке («#robots.txt #индексация» — рубрика, тег) */
+.post-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 12px;
+}
+
+.post-tags__tag {
+	color: var(--c-violet-dark);
+	font-size: 14px;
+	font-weight: 500;
+	line-height: normal;
+}
+
+.post-feature__badges .post-tags {
+	display: contents;
 }
 
 .post-stat {

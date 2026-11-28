@@ -65,5 +65,18 @@ return array(
 		$trust_text( 'comment_note', __( 'Подпись у кнопки «Отправить»', 'trust' ) ),
 		$trust_text( 'comment_sent', __( 'После отправки комментария', 'trust' ) ),
 		$trust_text( 'comment_reply_sent', __( 'После отправки ответа', 'trust' ) ),
+		array(
+			'name'    => 'tpl_rubric_heading',
+			'label'   => __( 'Рубрика', 'trust' ),
+			'type'    => 'message',
+			'message' => __( 'Страница рубрики блога. Тексты блока «Не нашли ответ?» — во вкладке «Блоки по умолчанию».', 'trust' ),
+		),
+		$trust_text( 'rubric_label', __( 'Плашка над заголовком', 'trust' ) ),
+		$trust_text( 'rubric_lead', __( 'Над ведущим рубрики', 'trust' ) ),
+		$trust_text( 'rubric_tags', __( 'Перед тегами', 'trust' ) ),
+		$trust_text( 'rubric_list', __( 'Заголовок списка статей', 'trust' ) ),
+		$trust_text( 'rubric_new', __( 'Сортировка: новые', 'trust' ) ),
+		$trust_text( 'rubric_popular', __( 'Сортировка: популярные', 'trust' ) ),
+		$trust_text( 'rubric_about', __( 'Заголовок «О рубрике»', 'trust' ), __( 'После него — название рубрики в кавычках.', 'trust' ) ),
 	),
 );

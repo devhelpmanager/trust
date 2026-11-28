@@ -1,0 +1,451 @@
+/*
+ * Рубрика блога (category.php; макет portfolio-blog-404/rubrika.html): первый экран с ведущим
+ * рубрики, полоса рубрик, теги рубрики, «Статьи рубрики» с сортировкой, «Не нашли ответ?»,
+ * «О рубрике». Общие части списка (первый экран, главная статья, карточки, пагинация) — blog.css.
+ */
+
+/* ===== Первый экран ===== */
+
+.rubric-hero__top {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 24px 48px;
+}
+
+.rubric-hero__head {
+	flex: 1 1 560px;
+	min-width: 0;
+	max-width: 780px;
+}
+
+.rubric-hero .archive-hero__title {
+	font-size: clamp(32px, 4.6vw, 60px); /* как в макете рубрики (в блоге — от 34 px) */
+}
+
+.rubric-hero__label {
+	align-self: flex-start;
+	padding: 6px 12px;
+	border-radius: var(--r-pill);
+	background: var(--c-lavender-3);
+	color: var(--c-violet-dark);
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	line-height: normal;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.rubric-hero__meta {
+	margin: 0;
+	font-size: 15px;
+	color: var(--c-muted);
+}
+
+/* «Ведёт рубрику» */
+.rubric-lead {
+	display: flex;
+	flex: 0 1 354px; /* 320 px и поля, как в макете; на телефоне — во всю строку */
+	align-items: center;
+	gap: 14px;
+	box-sizing: border-box;
+	min-width: 0;
+	padding: 14px 16px;
+	border: 1px solid var(--c-border);
+	border-radius: 18px;
+	background: #FBFAFF;
+	color: var(--c-text);
+	text-decoration: none;
+	transition: border-color 0.2s;
+}
+
+a.rubric-lead:hover {
+	border-color: var(--c-decor);
+	color: var(--c-text);
+}
+
+a.rubric-lead:focus-visible {
+	outline: 3px solid var(--c-focus);
+	outline-offset: 2px;
+}
+
+.rubric-lead__photo {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	border-radius: var(--r-pill);
+	background: var(--c-violet);
+	color: var(--c-white);
+	font-size: 16px;
+	font-weight: 600;
+	object-fit: cover;
+}
+
+.rubric-lead__who {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-width: 0;
+}
+
+.rubric-lead__label,
+.rubric-lead__role {
+	font-size: 13px;
+	color: var(--c-muted);
+}
+
+.rubric-lead__name {
+	font-size: 16px;
+	font-weight: 600;
+}
+
+/* Главная статья рубрики: заголовок от 22 px, обложка 16 : 10 на всех ширинах (как в макете рубрики) */
+.rubric-hero .post-feature__title {
+	font-size: clamp(22px, 2.6vw, 34px);
+}
+
+.rubric-hero .post-feature__img,
+.rubric-hero .post-feature__media .post-card__placeholder {
+	aspect-ratio: 16 / 10;
+}
+
+/* Полоса рубрик */
+.rubric-strip {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.rubric-strip__item {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	box-sizing: border-box;
+	min-height: 44px;
+	padding: 0 16px;
+	border: 1.5px solid var(--c-border-strong);
+	border-radius: var(--r-pill);
+	background: var(--c-white);
+	color: var(--c-text-2);
+	font-size: 15px;
+	font-weight: 600;
+	text-decoration: none;
+	white-space: nowrap;
+	transition: border-color 0.2s, background 0.2s;
+}
+
+.rubric-strip__item:hover {
+	border-color: var(--c-violet);
+	color: var(--c-text-2);
+}
+
+.rubric-strip__count {
+	font-family: var(--f-mono);
+	font-size: 12px;
+	font-weight: 500;
+	color: var(--c-muted-2);
+}
+
+.rubric-strip__item[aria-current="page"] {
+	border-color: var(--c-violet);
+	background: var(--c-violet);
+	color: var(--c-white);
+}
+
+.rubric-strip__item[aria-current="page"] .rubric-strip__count {
+	color: var(--c-violet-light);
+}
+
+/* Теги рубрики */
+.rubric-tags {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 10px;
+}
+
+.rubric-tags__label {
+	margin-right: 4px;
+	color: var(--c-text-2);
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.rubric-tags__list {
+	display: contents;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.rubric-tags__tag {
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	padding: 0 12px;
+	border-radius: 10px;
+	background: var(--c-lavender);
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: none;
+	transition: background 0.2s;
+}
+
+.rubric-tags__tag:hover {
+	background: var(--c-lavender-3);
+}
+
+/* ===== Статьи рубрики ===== */
+
+.rubric-list .post-list__inner {
+	gap: 28px;
+}
+
+.rubric-list__head {
+	align-items: center;
+	gap: 14px 24px;
+}
+
+.rubric-sort {
+	display: inline-flex;
+	padding: 4px;
+	border: 1px solid var(--c-border);
+	border-radius: 14px;
+	background: var(--c-white);
+}
+
+.rubric-sort__item {
+	display: inline-flex;
+	align-items: center;
+	box-sizing: border-box;
+	min-height: 44px;
+	padding: 0 16px;
+	border-radius: 10px;
+	color: var(--c-text-2);
+	font-size: 15px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: background 0.2s, color 0.2s;
+}
+
+.rubric-sort__item:hover {
+	background: var(--c-lavender-2);
+	color: var(--c-text-2);
+}
+
+.rubric-sort__item[aria-current="true"] {
+	background: var(--c-violet);
+	color: var(--c-white);
+}
+
+.post-cards--rubric .post-card__stats {
+	gap: 14px;
+	white-space: nowrap;
+}
+
+.rubric-list__body {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+	transition: opacity 0.2s;
+}
+
+.rubric-list__body[aria-busy="true"] {
+	opacity: 0.5;
+}
+
+/* «Не нашли ответ?» */
+.ask-teaser {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px 32px;
+	margin-top: 16px;
+	padding: 28px 32px;
+	border-radius: 24px;
+	background: var(--c-indigo);
+	color: var(--c-white);
+}
+
+.ask-teaser__main {
+	display: flex;
+	flex: 1 1 420px;
+	align-items: flex-start;
+	gap: 16px;
+	min-width: 0;
+}
+
+.ask-teaser__icon {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	border-radius: 14px;
+	background: var(--c-violet);
+}
+
+.ask-teaser__body {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.ask-teaser__title {
+	margin: 0;
+	font-size: 20px;
+	font-weight: 600;
+	line-height: normal;
+}
+
+.ask-teaser__text {
+	margin: 0;
+	font-size: 16px;
+	line-height: 1.55;
+	color: #D4D2F0;
+}
+
+.ask-teaser__btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	box-sizing: border-box;
+	min-height: 52px;
+	padding: 0 22px;
+	border-radius: 14px;
+	background: var(--c-white);
+	color: var(--c-violet-dark);
+	font-size: 16px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: background 0.2s;
+}
+
+.ask-teaser__btn:hover {
+	background: var(--c-lavender-2);
+	color: var(--c-violet-deep);
+}
+
+.ask-teaser__btn:focus-visible {
+	outline: 3px solid var(--c-focus);
+	outline-offset: 2px;
+}
+
+/* ===== О рубрике ===== */
+
+.rubric-about {
+	padding: var(--section-y) var(--gutter);
+	background: var(--c-white);
+	color: var(--c-text);
+}
+
+.rubric-about__box {
+	max-width: 820px;
+	margin: 0 auto;
+	border: 1px solid var(--c-border);
+	border-radius: 20px;
+	background: var(--c-white);
+}
+
+.rubric-about__summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	min-height: 64px;
+	padding: 0 24px;
+	border-radius: 20px;
+	cursor: pointer;
+	list-style: none;
+}
+
+.rubric-about__summary::-webkit-details-marker {
+	display: none;
+}
+
+.rubric-about__summary:focus-visible {
+	outline: 3px solid var(--c-focus);
+	outline-offset: 2px;
+}
+
+.rubric-about__title {
+	margin: 0;
+	font-family: var(--f-text);
+	font-size: 20px;
+	font-weight: 600;
+	line-height: 1.25;
+}
+
+.rubric-about__chevron {
+	flex: none;
+	color: var(--c-violet-dark);
+	transition: transform 0.2s;
+}
+
+.rubric-about__box[open] .rubric-about__chevron {
+	transform: rotate(180deg);
+}
+
+.rubric-about__text {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	padding: 0 24px 24px;
+	color: var(--c-text-2);
+	font-size: 16px;
+	line-height: 1.7;
+}
+
+.rubric-about__text > * {
+	margin: 0;
+}
+
+/* ===== Адаптив (как в макете) ===== */
+
+/* Телефон, повёрнутый горизонтально: обложка главной статьи пониже, как в блоге */
+@media (max-height: 500px) and (orientation: landscape) {
+	.rubric-hero .post-feature__img,
+	.rubric-hero .post-feature__media .post-card__placeholder {
+		aspect-ratio: 21 / 9;
+	}
+}
+
+/* Телефон: полоса рубрик — одной строкой с прокруткой до краёв экрана */
+@media (max-width: 760px) {
+	.rubric-strip {
+		flex-wrap: nowrap;
+		margin: 0 calc(-1 * var(--gutter));
+		padding: 2px var(--gutter) 8px;
+		overflow-x: auto;
+		scrollbar-width: none;
+	}
+
+	.rubric-strip::-webkit-scrollbar {
+		display: none;
+	}
+
+	.rubric-strip__item {
+		flex: none;
+	}
+}
+
+@media (max-width: 640px) {
+	.rubric-hero .post-feature__body {
+		padding: 22px 18px 24px;
+	}
+
+	.post-cards--rubric .post-card__body {
+		padding: 18px 18px 20px;
+	}
+
+	.ask-teaser {
+		padding: 22px 18px;
+	}
+}

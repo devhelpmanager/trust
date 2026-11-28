@@ -36,6 +36,7 @@ final class Theme {
 		Post_Stats::register();
 		Comments::register();
 		Article::register();
+		Rubric::register();
 		Team::register();
 		Vacancies::register();
 		Questions::register();

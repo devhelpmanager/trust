@@ -525,6 +525,26 @@ const MOCKUP_CSS = {
 		main > section:first-of-type div:has(> h1) { max-width: none !important; }
 		main > section:first-of-type a.dc-card > div:last-child > span:last-child { align-self: flex-end !important; }
 	`,
+	'portfolio-blog-404/rubrika.html': `
+		/* Отступы секций и H2 — как у всех блоков (в макете 40 / 72 и 72 / 88 px, H2 24–34 px);
+		   «Статьи рубрики» — ближе к началу блока, как «Все статьи» в блоге (правка заказчика) */
+		main > section:first-of-type { padding-bottom: 64px !important; }
+		section[aria-labelledby="list-title"] { padding-top: 40px !important; padding-bottom: 64px !important; }
+		section[aria-labelledby="about-title"] { padding-top: 64px !important; padding-bottom: 64px !important; }
+		@media (max-width: 1100px) {
+			main > section:first-of-type { padding-bottom: 56px !important; }
+			section[aria-labelledby="list-title"] { padding-top: 32px !important; padding-bottom: 56px !important; }
+			section[aria-labelledby="about-title"] { padding-top: 56px !important; padding-bottom: 56px !important; }
+		}
+		@media (max-width: 760px) {
+			main > section:first-of-type { padding-bottom: 48px !important; }
+			section[aria-labelledby="list-title"] { padding-top: 32px !important; padding-bottom: 48px !important; }
+			section[aria-labelledby="about-title"] { padding-top: 48px !important; padding-bottom: 48px !important; }
+		}
+		#list-title { font-size: clamp(28px, 3.4vw, 44px) !important; }
+		/* Кнопка главной статьи — в правом нижнем углу (правка заказчика к главной статье блога) */
+		main > section:first-of-type a.dc-card > div:last-child > span:last-child { align-self: flex-end !important; }
+	`,
 	'seo-vopros/vopros-seo.html': `
 		/* «Ответы SEO-специалистов»: отступы секции, шапка и H2 — как у всех блоков (в макете
 		   72 / 96 px, 14 px от надзаголовка, H2 26–40 px) */

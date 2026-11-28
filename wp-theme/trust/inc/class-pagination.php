@@ -52,17 +52,18 @@ final class Pagination {
 	 * помечены расстоянием до него (near — 1, mid — 2, extra — 3): на узких экранах дальние
 	 * скрываются, вместо них — «…». Одна страница — ''.
 	 *
-	 * @param int    $current Текущая страница.
-	 * @param int    $pages   Всего страниц.
-	 * @param string $anchor  Якорь списка без # ('' — без якоря).
-	 * @param array  $labels  Подписи (см. labels()).
+	 * @param int           $current Текущая страница.
+	 * @param int           $pages   Всего страниц.
+	 * @param string        $anchor  Якорь списка без # ('' — без якоря).
+	 * @param array         $labels  Подписи (см. labels()).
+	 * @param callable|null $link    Адрес страницы N вместо get_pagenum_link() (для ответа REST).
 	 */
-	public static function render( int $current, int $pages, string $anchor = '', array $labels = array() ): string {
+	public static function render( int $current, int $pages, string $anchor = '', array $labels = array(), ?callable $link = null ): string {
 		if ( $pages < 2 ) {
 			return '';
 		}
 		$labels = array_merge( self::labels(), $labels );
-		$url    = static fn( int $n ): string => esc_url( get_pagenum_link( $n, false ) . ( '' !== $anchor ? '#' . $anchor : '' ) );
+		$url    = static fn( int $n ): string => esc_url( ( $link ? (string) $link( $n ) : get_pagenum_link( $n, false ) ) . ( '' !== $anchor ? '#' . $anchor : '' ) );
 		$arrow  = static fn( string $icon ): string => Icons::svg(
 			$icon,
 			array(

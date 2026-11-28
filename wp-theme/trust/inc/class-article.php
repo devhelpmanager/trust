@@ -22,6 +22,7 @@ final class Article {
 		'views'    => array( 'просмотр', 'просмотра', 'просмотров' ),
 		'likes'    => array( 'лайк', 'лайка', 'лайков' ),
 		'comments' => array( 'комментарий', 'комментария', 'комментариев' ),
+		'posts'    => array( 'статья', 'статьи', 'статей' ),
 	);
 
 	/**
@@ -217,7 +218,7 @@ final class Article {
 	 * Счётчик словами: «1 248 просмотров», «1 лайк».
 	 *
 	 * @param int    $n    Число.
-	 * @param string $kind views, likes или comments.
+	 * @param string $kind views, likes, comments или posts.
 	 */
 	public static function count( int $n, string $kind ): string {
 		return self::number( $n ) . "\u{00A0}" . self::plural( $n, self::FORMS[ $kind ] );

@@ -246,6 +246,45 @@ final class Blog {
 	}
 
 	/**
+	 * Теги статьи для карточки в рубрике («#отчёт #Вебмастер»): сначала самые редкие на сайте —
+	 * они точнее описывают статью (как в макете), при равенстве — по алфавиту.
+	 *
+	 * @param int|\WP_Post $post  Статья.
+	 * @param int          $limit Сколько тегов.
+	 * @return \WP_Term[]
+	 */
+	public static function card_tags( $post, int $limit = 2 ): array {
+		$tags = get_the_tags( get_post( $post )->ID ?? 0 );
+		if ( ! is_array( $tags ) ) {
+			return array();
+		}
+		usort(
+			$tags,
+			static function ( \WP_Term $a, \WP_Term $b ): int {
+				$by_count = $a->count <=> $b->count;
+				return 0 !== $by_count ? $by_count : strcmp( mb_strtolower( $a->name ), mb_strtolower( $b->name ) );
+			}
+		);
+		return array_slice( $tags, 0, $limit );
+	}
+
+	/**
+	 * Теги в карточке: «#robots.txt» (не ссылки — вся карточка ведёт на статью).
+	 *
+	 * @param \WP_Term[] $tags Теги.
+	 */
+	public static function tags_html( array $tags ): string {
+		if ( ! $tags ) {
+			return '';
+		}
+		$html = '<span class="post-tags">';
+		foreach ( $tags as $tag ) {
+			$html .= '<span class="post-tags__tag">#' . esc_html( $tag->name ) . '</span>';
+		}
+		return $html . '</span>';
+	}
+
+	/**
 	 * Адрес списка статей: страница записей из «Настроек → Чтение», страница /blog/ или /blog/.
 	 */
 	public static function index_url(): string {

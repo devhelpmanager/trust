@@ -52,6 +52,8 @@ return array(
 		// Ключевые слова статьи о robots.txt (seo-blog/statya.html).
 		'audit'     => 'технический аудит',
 		'gsc'       => 'Google Search Console',
+		// Теги карточек «Статей рубрики» (portfolio-blog-404/rubrika.html).
+		'report'    => 'отчёт',
 	),
 	'service_type'   => array(
 		'seo'     => 'SEO',

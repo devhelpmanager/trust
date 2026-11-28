@@ -6,7 +6,10 @@
  * углу (правка заказчика). Вся карточка — ссылка на статью. Подписи — «Настройки сайта → Тексты
  * шаблонов».
  *
- * Аргументы get_template_part(): post (WP_Post).
+ * Вид «рубрика» (макет portfolio-blog-404/rubrika.html): вместо плашки рубрики — два тега, без
+ * автора (рядом с заголовком рубрики — «Ведёт рубрику»).
+ *
+ * Аргументы get_template_part(): post (WP_Post), variant ('' | 'rubric').
  *
  * @package Trust
  */
@@ -21,8 +24,9 @@ $trust_post = $args['post'] ?? null;
 if ( ! $trust_post instanceof WP_Post ) {
 	return;
 }
-$trust_rubric = Blog::rubric( $trust_post );
-$trust_author = Blog::author( $trust_post );
+$trust_in_rub = 'rubric' === ( $args['variant'] ?? '' );
+$trust_rubric = $trust_in_rub ? null : Blog::rubric( $trust_post );
+$trust_author = $trust_in_rub ? array( 'name' => '' ) : Blog::author( $trust_post );
 $trust_time   = Blog::reading_time( $trust_post );
 ?>
 <a class="post-feature" href="<?php echo esc_url( get_permalink( $trust_post ) ); ?>">
@@ -49,6 +53,7 @@ $trust_time   = Blog::reading_time( $trust_post );
 			<?php if ( $trust_rubric ) : ?>
 				<span class="post-rubric"><?php echo esc_html( $trust_rubric->name ); ?></span>
 			<?php endif; ?>
+			<?php echo $trust_in_rub ? Blog::tags_html( Blog::card_tags( $trust_post ) ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- экранировано в Blog::tags_html(). ?>
 		</span>
 		<h2 class="post-feature__title"><?php echo esc_html( get_the_title( $trust_post ) ); ?></h2>
 		<?php if ( has_excerpt( $trust_post ) ) : ?>
