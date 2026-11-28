@@ -11,6 +11,10 @@
  * - Аватары — инициалы на цветном круге, Gravatar отключён («Показывать аватары» выключено всегда).
  * - Один раз при входе в админку включаются «Комментарий должен быть одобрен вручную» и
  *   древовидные комментарии на 2 уровня (дальше настройки «Обсуждения» — как решит владелец).
+ * - Ответ из админки («Комментарии → Ответить», комментарии в записи, «Активность» в консоли):
+ *   список «Ответить от имени» — автор статьи (по умолчанию) или любой пользователь, который
+ *   пишет статьи (assets/js/admin-reply-as.js). Ответ публикуется сразу; у автора статьи — плашка
+ *   «Автор». Имя — сотрудника, связанного с пользователем, иначе «Отображать как».
  *
  * @package Trust
  */
@@ -47,6 +51,18 @@ final class Comments {
 	private const DEFAULTS = 'trust_comment_defaults';
 
 	/**
+	 * Значение «Автор статьи» в списке «Ответить от имени».
+	 */
+	public const POST_AUTHOR = 'post_author';
+
+	/**
+	 * Ответ из админки от имени другого пользователя — публикуется сразу.
+	 *
+	 * @var bool
+	 */
+	private static bool $reply_as = false;
+
+	/**
 	 * Цвета круга с инициалами читателя: фон и текст (контраст текста не ниже 4,5 : 1).
 	 */
 	private const COLORS = array(
@@ -64,6 +80,117 @@ final class Comments {
 		add_filter( 'pre_option_show_avatars', '__return_zero' );
 		add_action( 'pre_comment_on_post', array( self::class, 'direct' ) );
 		add_action( 'admin_init', array( self::class, 'defaults' ) );
+		add_action( 'admin_enqueue_scripts', array( self::class, 'admin_assets' ) );
+		add_filter( 'preprocess_comment', array( self::class, 'reply_as' ), 5 );
+		add_filter( 'pre_comment_approved', array( self::class, 'reply_as_approved' ), 20 );
+	}
+
+	/**
+	 * Имя и email пользователя для комментария: сотрудник, связанный с пользователем, иначе
+	 * «Отображать как».
+	 *
+	 * @param \WP_User $user Пользователь.
+	 * @return array{name: string, email: string}
+	 */
+	public static function person( \WP_User $user ): array {
+		$member = Team::for_user( $user->ID );
+		return array(
+			'name'  => $member ? get_the_title( $member ) : (string) $user->display_name,
+			'email' => (string) $user->user_email,
+		);
+	}
+
+	/**
+	 * Кто может быть автором ответа из админки: пользователи, которые пишут статьи.
+	 *
+	 * @return \WP_User[]
+	 */
+	public static function reply_users(): array {
+		return get_users(
+			array(
+				'capability' => array( 'edit_posts' ),
+				'orderby'    => 'display_name',
+				'number'     => 200,
+			)
+		);
+	}
+
+	/**
+	 * Скрипт «Ответить от имени» — там, где в админке есть форма ответа на комментарий.
+	 *
+	 * @param string $hook Экран.
+	 */
+	public static function admin_assets( string $hook ): void {
+		if ( ! in_array( $hook, array( 'edit-comments.php', 'post.php', 'index.php' ), true ) || ! current_user_can( 'moderate_comments' ) ) {
+			return;
+		}
+		$options = array(
+			array(
+				'value' => self::POST_AUTHOR,
+				'label' => __( 'Автор статьи', 'trust' ),
+			),
+		);
+		foreach ( self::reply_users() as $user ) {
+			$person    = self::person( $user );
+			$member    = Team::for_user( $user->ID );
+			$position  = $member ? trim( (string) get_post_meta( $member->ID, 'trust_position', true ) ) : '';
+			$options[] = array(
+				'value' => (string) $user->ID,
+				'label' => $person['name'] . ( '' !== $position ? ' — ' . $position : '' ) . ' (' . $user->user_login . ( get_current_user_id() === $user->ID ? ', ' . __( 'вы', 'trust' ) : '' ) . ')',
+			);
+		}
+		wp_enqueue_script( 'trust-admin-reply-as', Assets::url( 'assets/js/admin-reply-as.js' ), array( 'jquery' ), Assets::version( 'assets/js/admin-reply-as.js' ), true );
+		wp_add_inline_script(
+			'trust-admin-reply-as',
+			'window.trustReplyAs = ' . wp_json_encode(
+				array(
+					'label'   => __( 'Ответить от имени', 'trust' ),
+					'options' => $options,
+				)
+			) . ';',
+			'before'
+		);
+	}
+
+	/**
+	 * Ответ из админки: автор — выбранный в «Ответить от имени» пользователь.
+	 *
+	 * @param array $data Данные комментария.
+	 */
+	public static function reply_as( array $data ): array {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce ответа проверяется ниже.
+		$action = isset( $_POST['action'] ) ? sanitize_key( wp_unslash( $_POST['action'] ) ) : '';
+		if ( ! wp_doing_ajax() || 'replyto-comment' !== $action || empty( $_POST['trust_reply_as'] ) ) {
+			return $data;
+		}
+		$nonce  = isset( $_POST['_ajax_nonce-replyto-comment'] ) ? sanitize_text_field( wp_unslash( $_POST['_ajax_nonce-replyto-comment'] ) ) : '';
+		$choice = sanitize_key( wp_unslash( $_POST['trust_reply_as'] ) );
+		// phpcs:enable
+		if ( ! wp_verify_nonce( $nonce, 'replyto-comment' ) || ! current_user_can( 'moderate_comments' ) ) {
+			return $data;
+		}
+		$post = get_post( (int) ( $data['comment_post_ID'] ?? 0 ) );
+		$user = $post ? get_userdata( self::POST_AUTHOR === $choice ? (int) $post->post_author : absint( $choice ) ) : false;
+		if ( ! $user || ! user_can( $user, 'edit_posts' ) ) {
+			return $data;
+		}
+		$person                       = self::person( $user );
+		$data['user_id']              = $user->ID;
+		$data['comment_author']       = wp_slash( $person['name'] );
+		$data['comment_author_email'] = wp_slash( $person['email'] );
+		$data['comment_author_url']   = '';
+		self::$reply_as               = true;
+		return $data;
+	}
+
+	/**
+	 * Ответ из админки от имени другого пользователя публикуется сразу.
+	 *
+	 * @param int|string|\WP_Error $approved Статус.
+	 * @return int|string|\WP_Error
+	 */
+	public static function reply_as_approved( $approved ) {
+		return self::$reply_as && ! is_wp_error( $approved ) && 'spam' !== $approved && 'trash' !== $approved ? 1 : $approved;
 	}
 
 	/**

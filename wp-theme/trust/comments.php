@@ -44,6 +44,10 @@ $trust_result = isset( $_GET['trust_form'], $_GET['trust_form_type'] ) && Commen
 // phpcs:enable
 $trust_sent  = 'sent' === $trust_result;
 $trust_user  = wp_get_current_user();
+$trust_me    = $trust_user->exists() ? Comments::person( $trust_user ) : array(
+	'name'  => '',
+	'email' => '',
+);
 $trust_rest  = $trust_user->exists() ? ' data-rest-nonce="' . esc_attr( wp_create_nonce( 'wp_rest' ) ) . '"' : '';
 $trust_error = static function ( string $name ) use ( $trust_form ): string {
 	return (string) ( $trust_form['fields'][ $name ]['error'] ?? '' );
@@ -54,12 +58,12 @@ $trust_error = static function ( string $name ) use ( $trust_form ): string {
  *
  * @param string $uid Начало id полей.
  */
-$trust_person = static function ( string $uid ) use ( $trust_error, $trust_user ): void {
+$trust_person = static function ( string $uid ) use ( $trust_error, $trust_me ): void {
 	?>
 	<div class="comment-form__row">
 		<div class="field">
 			<label class="field__label" for="<?php echo esc_attr( $uid ); ?>-name"><?php esc_html_e( 'Имя', 'trust' ); ?></label>
-			<input class="field__input" id="<?php echo esc_attr( $uid ); ?>-name" name="name" type="text" autocomplete="name" maxlength="100" required value="<?php echo esc_attr( $trust_user->exists() ? $trust_user->display_name : '' ); ?>"
+			<input class="field__input" id="<?php echo esc_attr( $uid ); ?>-name" name="name" type="text" autocomplete="name" maxlength="100" required value="<?php echo esc_attr( $trust_me['name'] ); ?>"
 				placeholder="<?php esc_attr_e( 'Как к вам обращаться', 'trust' ); ?>"
 				aria-describedby="<?php echo esc_attr( $uid ); ?>-name-error"
 				data-error="<?php echo esc_attr( $trust_error( 'name' ) ); ?>">
@@ -67,7 +71,7 @@ $trust_person = static function ( string $uid ) use ( $trust_error, $trust_user 
 		</div>
 		<div class="field">
 			<label class="field__label" for="<?php echo esc_attr( $uid ); ?>-email"><?php esc_html_e( 'Email', 'trust' ); ?> <span class="field__optional"><?php esc_html_e( '— не публикуется', 'trust' ); ?></span></label>
-			<input class="field__input" id="<?php echo esc_attr( $uid ); ?>-email" name="email" type="email" autocomplete="email" maxlength="100" required value="<?php echo esc_attr( $trust_user->exists() ? $trust_user->user_email : '' ); ?>"
+			<input class="field__input" id="<?php echo esc_attr( $uid ); ?>-email" name="email" type="email" autocomplete="email" maxlength="100" required value="<?php echo esc_attr( $trust_me['email'] ); ?>"
 				placeholder="name@mail.ru"
 				aria-describedby="<?php echo esc_attr( $uid ); ?>-email-error"
 				data-error="<?php echo esc_attr( $trust_error( 'email' ) ); ?>">

@@ -1303,6 +1303,8 @@ a.post-author-card:hover .post-author-card__name {
 .comment-sent__again {
 	display: inline-flex;
 	align-items: center;
+	/* Правка заказчика: справа — и когда на узком экране кнопка уходит на новую строку */
+	margin-left: auto;
 	min-height: 44px;
 	padding: 0 16px;
 	box-sizing: border-box;

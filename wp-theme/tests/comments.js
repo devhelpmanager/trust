@@ -16,7 +16,7 @@
  */
 
 const path = require( 'path' );
-const { launch, URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle, isolate, login, wp, getSettings, setSettings, resetFormLimits, formToken, postForm } = require( './lib' );
+const { launch, URL, OUT, check, finish, clearLog, checkLog, collectConsoleErrors, routeMockupFonts, mockupUrl, comparePng, settle, isolate, login, wp, ensureUser, getSettings, setSettings, resetFormLimits, formToken, postForm } = require( './lib' );
 
 const POST = `${ URL }/blog/robots-txt-proverka/`;
 const BROWSER_UA = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36';
@@ -280,6 +280,79 @@ function state( page ) {
 		check( '«Обсуждение» по умолчанию (один раз): модерация вручную, древовидные комментарии на 2 уровня', JSON.stringify( discussion ) === JSON.stringify( [ '1', '1', '2' ] ), JSON.stringify( discussion ) );
 		cleanTests();
 
+		// ===== Админка: «Ответить от имени» (правка заказчика) =====
+		const authorId = Number( wp( 'eval', `echo (int) get_post( ${ id } )->post_author;` ) );
+		const authorPerson = JSON.parse( wp( 'eval', `echo wp_json_encode( Trust\\Comments::person( get_userdata( ${ authorId } ) ) );` ) );
+		const other = Number( wp( 'user', 'get', 'trust-demo-ceo', '--field=ID' ) );
+		const subscriber = ( ensureUser( 'trust-test-reader', 'subscriber' ), Number( wp( 'user', 'get', 'trust-test-reader', '--field=ID' ) ) );
+		const adminPage = await browser.newPage( { viewport: { width: 1280, height: 900 } } );
+		const adminErrors = collectConsoleErrors( adminPage );
+		await login( adminPage );
+		await adminPage.goto( `${ URL }/wp-admin/edit-comments.php?p=${ id }`, { waitUntil: 'networkidle' } );
+		const replyAs = async ( cid, value, text ) => {
+			await adminPage.hover( `#comment-${ cid }` );
+			await adminPage.click( `#comment-${ cid } button[data-action="replyto"]` );
+			await adminPage.waitForSelector( '#replyrow #trust-reply-as', { state: 'visible' } );
+			const field = await adminPage.evaluate( () => {
+				const select = document.getElementById( 'trust-reply-as' );
+				return [ select.closest( 'label' ) ? select.closest( 'label' ).textContent.trim() : document.querySelector( '.trust-reply-as label' ).textContent.trim(), [ ...select.options ].map( ( o ) => [ o.value, o.textContent ] ), select.value ];
+			} );
+			if ( value ) {
+				await adminPage.selectOption( '#trust-reply-as', String( value ) );
+			}
+			await adminPage.fill( '#replycontent', `${ MARK } ${ text }` );
+			await Promise.all( [ adminPage.waitForResponse( ( r ) => r.url().includes( 'admin-ajax.php' ) && 'POST' === r.request().method() ), adminPage.click( '#replysubmit .save' ) ] );
+			await adminPage.waitForTimeout( 800 );
+			return field;
+		};
+		const field = await replyAs( first, null, 'ответ автора из админки' );
+		const asAuthor = testComments().find( ( c ) => c.text.includes( 'ответ автора из админки' ) );
+		const asAuthorUser = asAuthor ? Number( wp( 'comment', 'get', asAuthor.id, '--field=user_id' ) ) : 0;
+		await adminPage.goto( `${ URL }/wp-admin/edit-comments.php?p=${ id }`, { waitUntil: 'networkidle' } );
+		await replyAs( first, other, 'ответ сотрудника из админки' );
+		const asOther = testComments().find( ( c ) => c.text.includes( 'ответ сотрудника из админки' ) );
+		const asOtherUser = asOther ? Number( wp( 'comment', 'get', asOther.id, '--field=user_id' ) ) : 0;
+		// «Свойства» (редактирование): списка нет, значение очищено.
+		await adminPage.goto( `${ URL }/wp-admin/edit-comments.php?p=${ id }`, { waitUntil: 'networkidle' } );
+		await adminPage.hover( `#comment-${ first }` );
+		await adminPage.click( `#comment-${ first } button[data-action="edit"]` );
+		await adminPage.waitForFunction( () => 'edit-comment' === document.getElementById( 'action' ).value && null !== document.getElementById( 'replyrow' ).offsetParent );
+		const editMode = await adminPage.evaluate( () => [ null === document.querySelector( '.trust-reply-as' ).offsetParent, document.querySelector( '#replyrow input[name="trust_reply_as"]' ).value ] );
+		await adminPage.click( '#replysubmit .cancel' );
+		await adminPage.goto( `${ URL }/wp-admin/`, { waitUntil: 'networkidle' } );
+		const dashboard = await adminPage.evaluate( () => !! document.querySelector( '#replyrow #trust-reply-as' ) );
+		await adminPage.close();
+		check( 'Админка, «Ответить»: список «Ответить от имени» — первым «Автор статьи» (выбран), дальше пишущие статьи с должностью и логином, без подписчиков; есть и в «Активности» консоли',
+			/^Ответить от имени/.test( field[ 0 ] ) && 'post_author' === field[ 2 ] && 'Автор статьи' === field[ 1 ][ 0 ][ 1 ] &&
+				field[ 1 ].some( ( o ) => String( other ) === o[ 0 ] && o[ 1 ].includes( '(trust-demo-ceo)' ) && o[ 1 ].includes( ' — ' ) ) && field[ 1 ].some( ( o ) => o[ 1 ].includes( 'admin, вы)' ) ) &&
+				! field[ 1 ].some( ( o ) => String( subscriber ) === o[ 0 ] ) && dashboard,
+			JSON.stringify( [ field, dashboard ] ) );
+		check( 'Ответ от имени автора статьи: автор — он (user_id, имя сотрудника, email), опубликован сразу, ответ этому комментарию',
+			!! asAuthor && authorId === asAuthorUser && authorPerson.name === asAuthor.author && authorPerson.email === asAuthor.email && '1' === asAuthor.approved && Number( first ) === asAuthor.parent,
+			JSON.stringify( [ asAuthor, asAuthorUser, authorId, authorPerson ] ) );
+		check( 'Ответ от имени выбранного сотрудника (роль «Автор», без права модерации) — его user_id, опубликован сразу; при «Свойствах» списка нет и значение пустое',
+			!! asOther && other === asOtherUser && '1' === asOther.approved && JSON.stringify( editMode ) === JSON.stringify( [ true, '' ] ),
+			JSON.stringify( [ asOther, asOtherUser, other, editMode ] ) );
+		await page.goto( POST, { waitUntil: 'networkidle' } );
+		const badges = await page.evaluate( ( ids ) => ids.map( ( cid ) => { const el = document.getElementById( `comment-${ cid }` ); return el ? [ null !== el.offsetParent, !! el.querySelector( ':scope > .comment__body .comment__badge' ) ] : null; } ), [ asAuthor && asAuthor.id, asOther && asOther.id ] );
+		check( 'На сайте оба ответа видны сразу; у ответа автора статьи — плашка «Автор», у ответа другого сотрудника — нет',
+			JSON.stringify( badges ) === JSON.stringify( [ [ true, true ], [ true, false ] ] ), JSON.stringify( badges ) );
+		// Защита: без права модерации, с неверным nonce или выбором подписчика — автор не меняется.
+		const guard = JSON.parse( wp( 'eval', `
+			add_filter( 'wp_doing_ajax', '__return_true' );
+			$base = array( 'comment_post_ID' => ${ id }, 'user_id' => 0, 'comment_author' => 'X', 'comment_author_email' => 'x@example.com' );
+			$try = static function ( $user, $choice, $nonce = null ) use ( $base ) {
+				wp_set_current_user( $user );
+				$_POST = array( 'action' => 'replyto-comment', 'trust_reply_as' => $choice, '_ajax_nonce-replyto-comment' => $nonce ?? wp_create_nonce( 'replyto-comment' ) );
+				return (int) Trust\\Comments::reply_as( $base )['user_id'];
+			};
+			echo wp_json_encode( array( $try( ${ other }, 'post_author' ), $try( 1, 'post_author', 'bad' ), $try( 1, '${ subscriber }' ), $try( 1, '${ other }' ) ) );
+		` ) );
+		check( 'Защита: пользователь без права модерации, неверный nonce, выбор подписчика — автор не меняется; модератор с верным nonce — меняется',
+			JSON.stringify( guard ) === JSON.stringify( [ 0, 0, 0, other ] ), JSON.stringify( guard ) );
+		check( 'Админка: без ошибок в консоли', 0 === adminErrors.length, adminErrors.join( ' | ' ) );
+		cleanTests();
+
 		// ===== Настройки и закрытые комментарии =====
 		setSettings( { blog_comments_shown: 5, blog_show_likes: 0, tpl_post_comments: 'Обсуждение' } );
 		await page.goto( POST, { waitUntil: 'networkidle' } );
@@ -318,7 +391,22 @@ function state( page ) {
 			const cancel = box.querySelector( '[data-comment-cancel]' ).getBoundingClientRect();
 			return [ ! box.hidden, r.right <= innerWidth, document.documentElement.scrollWidth <= innerWidth, Math.round( r.right - send.right ), cancel.right <= send.left ];
 		} );
+		const againRight = ( pg ) => pg.evaluate( () => {
+			document.getElementById( 'comment-form' ).hidden = true;
+			const sent = document.getElementById( 'comment-sent' );
+			sent.hidden = false;
+			const cs = getComputedStyle( sent );
+			const box = sent.getBoundingClientRect();
+			const again = sent.querySelector( '[data-comment-again]' ).getBoundingClientRect();
+			const text = sent.querySelector( '.comment-sent__text' ).getBoundingClientRect();
+			return [ Math.round( box.right - parseFloat( cs.paddingRight ) - parseFloat( cs.borderRightWidth ) - again.right ), again.left >= text.left ];
+		} );
+		const againPhone = await againRight( phone );
 		await phone.close();
+		await page.goto( POST, { waitUntil: 'networkidle' } );
+		const againDesk = await againRight( page );
+		check( '«Написать ещё» под «Спасибо!…» — справа на телефоне и на компьютере (правка заказчика)',
+			JSON.stringify( [ againPhone, againDesk ] ) === JSON.stringify( [ [ 0, true ], [ 0, true ] ] ), JSON.stringify( [ againPhone, againDesk ] ) );
 		check( 'Телефон 390 px: имя и email — друг под другом, «Отправить» справа (правка заказчика), ответы со сдвигом 10 px, аватар 36 px; форма ответа помещается, «Отмена» и «Отправить» справа; без прокрутки вбок',
 			JSON.stringify( mob ) === JSON.stringify( [ true, '10px', '36px', true, 0 ] ) && JSON.stringify( mobReply ) === JSON.stringify( [ true, true, true, 0, true ] ), JSON.stringify( [ mob, mobReply ] ) );
 
